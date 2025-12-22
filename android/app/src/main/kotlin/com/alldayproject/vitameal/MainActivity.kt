@@ -1,4 +1,4 @@
-package com.example.vitameal
+package com.alldayproject.vitameal
 
 import io.flutter.embedding.android.FlutterActivity
 
