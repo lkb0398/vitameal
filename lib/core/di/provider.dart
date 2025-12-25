@@ -3,7 +3,6 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:vitameal/data/data_source/allergies_data_source.dart';
 import 'package:vitameal/data/data_source/diseases_data_source.dart';
 import 'package:vitameal/data/data_source/profiles_data_source.dart';
-import 'package:vitameal/data/data_source/profiles_storage_data_source.dart';
 import 'package:vitameal/data/data_source/user_allergies_data_source.dart';
 import 'package:vitameal/data/data_source/user_diseases_data_source.dart';
 import 'package:vitameal/data/repository_impl/allergies_repository_impl.dart';
@@ -30,12 +29,6 @@ SupabaseClient supabaseClient(Ref ref) {
 ProfilesDataSource profilesDataSource(Ref ref) {
   final client = ref.read(supabaseClientProvider);
   return ProfilesDataSourceImpl(client);
-}
-
-@riverpod
-ProfilesStorageDataSource profilesStorageDataSource(Ref ref) {
-  final client = ref.read(supabaseClientProvider);
-  return ProfilesStorageDataSourceImpl(client);
 }
 
 @riverpod
@@ -66,14 +59,14 @@ AllergiesDataSource allergiesDataSource(Ref ref) {
 @riverpod
 ProfilesRepository profilesRepository(Ref ref) {
   final dataSource = ref.read(profilesDataSourceProvider);
-  final storageDataSource = ref.read(profilesStorageDataSourceProvider);
-  return ProfilesRepositoryImpl(dataSource, storageDataSource);
+  return ProfilesRepositoryImpl(dataSource);
 }
 
 @riverpod
 UserDiseasesRepository userDiseasesRepository(Ref ref) {
-  final dataSource = ref.read(userDiseasesDataSourceProvider);
-  return UserDiseasesRepositoryImpl(dataSource);
+  final userDiseasesDS = ref.read(userDiseasesDataSourceProvider);
+  final diseasesDS = ref.read(diseasesDataSourceProvider);
+  return UserDiseasesRepositoryImpl(userDiseasesDS, diseasesDS);
 }
 
 @riverpod
@@ -84,8 +77,9 @@ DiseasesRepository diseasesRepository(Ref ref) {
 
 @riverpod
 UserAllergiesRepository userAllergiesRepository(Ref ref) {
-  final dataSource = ref.read(userAllergiesDataSourceProvider);
-  return UserAllergiesRepositoryImpl(dataSource);
+  final userAllergiesDS = ref.read(userAllergiesDataSourceProvider);
+  final allergiesDS = ref.read(allergiesDataSourceProvider);
+  return UserAllergiesRepositoryImpl(userAllergiesDS, allergiesDS);
 }
 
 @riverpod

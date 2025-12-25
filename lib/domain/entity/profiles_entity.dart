@@ -8,10 +8,10 @@ abstract class ProfilesEntity with _$ProfilesEntity {
   const ProfilesEntity._(); // getter 사용 위해
 
   const factory ProfilesEntity({
-    String? userId,
+    required String userId,
     String? nickname,
     String? photoUrl,
-    GenderType? gender,
+    GenderType? genderType,
     double? heightCm,
     double? weightKg,
     int? birthYear,
@@ -21,5 +21,12 @@ abstract class ProfilesEntity with _$ProfilesEntity {
   int? get age {
     if (birthYear == null) return null;
     return DateTime.now().year - birthYear!;
+  }
+
+  // 성별 한글 변환
+  String? get gender {
+    if (genderType == GenderType.male) return "남성";
+    if (genderType == GenderType.female) return "여성";
+    return null;
   }
 }

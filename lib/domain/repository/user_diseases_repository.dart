@@ -3,5 +3,5 @@ abstract class UserDiseasesRepository {
     required String userId,
     required List<int> diseaseIds,
   });
-  Future<List<int>> getUserDiseaseIds(String userId);
+  Future<List<String>> getUserDiseaseNames(String userId);
 }

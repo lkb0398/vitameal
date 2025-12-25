@@ -110,7 +110,7 @@ final class CurrentUserIdProvider
   }
 }
 
-String _$currentUserIdHash() => r'3b2fc4ff722695de0a46f365c9a06523c3cb1851';
+String _$currentUserIdHash() => r'53e36a8b79d432a69abb79cd85449ab0b1142454';
 
 /// 읽기 전용 Provider
 
@@ -235,7 +235,7 @@ final class UserSelectedDiseasesProvider
 }
 
 String _$userSelectedDiseasesHash() =>
-    r'df52379e0c08054a0aa5d1be11b7c42420c60a93';
+    r'5c4a0748e96397731d715657f676bc822644c7d5';
 
 @ProviderFor(allergiesList)
 const allergiesListProvider = AllergiesListProvider._();
@@ -316,4 +316,4 @@ final class UserSelectedAllergiesProvider
 }
 
 String _$userSelectedAllergiesHash() =>
-    r'c8c695c48cfc9389c17f54f589a66c9b04b74cc0';
+    r'a70f21c8383c6a42eda912fd0ecdbdb1df94e561';

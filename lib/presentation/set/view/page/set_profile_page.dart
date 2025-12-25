@@ -4,8 +4,10 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:tap_debouncer/tap_debouncer.dart';
 import 'package:vitameal/presentation/set/view/widget/validate_textformfield.dart';
-import 'package:vitameal/presentation/set/viewmodel/set_provider.dart';
+import 'package:vitameal/core/di/set_provider.dart';
 import 'package:vitameal/presentation/set/viewmodel/set_view_model.dart';
 
 class SetProfilePage extends HookConsumerWidget {
@@ -13,7 +15,9 @@ class SetProfilePage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // 프로필 사진 : 사용자 갤러리에서 사진 가져오기
+    print('my userId : 🩷 ${Supabase.instance.client.auth.currentUser!.id}');
+
+    // 프로필 사진 : 사용자 갤러리에서 사진 가져오기 TODO : image picker 공통 위젯으로 바꾸기
     final selectedImage = useState<File?>(null);
     final imageUrl = useState<String?>(null);
     Future<void> pickFromGallery() async {
@@ -45,7 +49,7 @@ class SetProfilePage extends HookConsumerWidget {
     }
 
     // 수정모드 여부
-    final isEditing = ref.read(isEditingProvider);
+    final isEditing = ref.watch(isEditingProvider);
 
     // 수정모드 시 기존값 불러오기
     final profileAsync = ref.watch(myProfileProvider);
@@ -56,11 +60,11 @@ class SetProfilePage extends HookConsumerWidget {
         if (profile == null) return;
         if (didInit.value) return;
         didInit.value = true;
-        if (profile.nickname != null) {
-          nicknameController.text = profile.nickname!;
-        }
         if (profile.photoUrl != null && profile.photoUrl!.isNotEmpty) {
           imageUrl.value = profile.photoUrl;
+        }
+        if (profile.nickname != null) {
+          nicknameController.text = profile.nickname!;
         }
       });
       return null;
@@ -77,7 +81,7 @@ class SetProfilePage extends HookConsumerWidget {
             /// 설명
             Text(isEditing ? "프로필 수정" : "VitaMeal 에서 사용할 사진과 닉네임을 설정해주세요."),
 
-            /// 프로필 이미지 TODO : image picker 공통 위젯으로 바꾸기
+            /// 프로필 이미지
             InkWell(
               onTap: () => pickFromGallery(),
               child: imageUrl.value == null
@@ -92,7 +96,7 @@ class SetProfilePage extends HookConsumerWidget {
                       child: Text("프로필 이미지 추가"),
                     )
                   : ClipRRect(
-                      borderRadius: BorderRadiusGeometry.circular(300),
+                      borderRadius: BorderRadius.circular(300),
                       child: Image.network(
                         imageUrl.value!,
                         height: 150,
@@ -113,14 +117,18 @@ class SetProfilePage extends HookConsumerWidget {
       ),
 
       /// 하단 버튼
-      bottomNavigationBar: InkWell(
+      bottomNavigationBar: TapDebouncer(
         onTap: () async {
           // 사용자 입력값 검증 > 통과 안되면 페이지 이동 막기
           final nickname = nicknameController.text.trim();
           if (validateNickname(nickname) != null) {
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(const SnackBar(content: Text('정보를 입력해주세요')));
+            ScaffoldMessenger.of(context).clearSnackBars();
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('정보를 입력해주세요'),
+                duration: Duration(seconds: 1),
+              ),
+            );
             return;
           }
 
@@ -143,13 +151,21 @@ class SetProfilePage extends HookConsumerWidget {
             ref.read(isEditingProvider.notifier).stopEditing(); // 수정모드 off
           }
         },
-        child: Container(
-          decoration: BoxDecoration(border: Border.all(color: Colors.black)),
-          alignment: Alignment.center,
-          height: 50,
-          width: double.infinity,
-          child: Text(isEditing ? "완료" : "다음"),
-        ),
+
+        builder: (BuildContext context, TapDebouncerFunc? onTap) {
+          return InkWell(
+            onTap: onTap,
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.black),
+              ),
+              alignment: Alignment.center,
+              height: 50,
+              width: double.infinity,
+              child: Text(isEditing ? "완료" : "다음"),
+            ),
+          );
+        },
       ),
     );
   }

@@ -2,30 +2,26 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:vitameal/presentation/home/view/home_page.dart';
+import 'package:vitameal/presentation/set/view/page/set_allergy_page.dart';
+import 'package:vitameal/presentation/set/view/page/set_disease_page.dart';
+import 'package:vitameal/presentation/set/view/page/set_done_page.dart';
+import 'package:vitameal/presentation/set/view/page/set_physical_page.dart';
+import 'package:vitameal/presentation/set/view/page/set_profile_page.dart';
 import '../../presentation/auth/view/login_page.dart';
 import '../../presentation/auth/view_model/auth_view_model.dart';
-// import 'package:vitameal/presentation/info/view/goal_page.dart';
-// import 'package:vitameal/presentation/info/view/info_page.dart';
-// import 'package:vitameal/presentation/set/view/set_allergy_page.dart';
-// import 'package:vitameal/presentation/set/view/set_disease_page.dart';
-// import 'package:vitameal/presentation/set/view/set_done_page.dart';
-// import 'package:vitameal/presentation/set/view/set_physical_page.dart';
-// import 'package:vitameal/presentation/set/view/set_profile_page.dart';
 
 class AppRoutePath {
   static const setting = '/setting';
   static const melon = '/melon';
   static const login = '/login';
-  static const home = '/home'; // 임시 홈
+  static const home = '/';
   // 사용자 정보 설정
   static const setProfile = '/set-profile';
   static const setPhysical = '/set-physical';
   static const setDisease = '/set-disease';
   static const setAllergy = '/set-allergy';
   static const setDone = '/set-done';
-  // 내 정보
-  static const info = '/info';
-  static const goal = '/goal';
 }
 
 final routerProvider = Provider<GoRouter>((ref) {
@@ -49,7 +45,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         return isLoggingIn ? null : AppRoutePath.login;
       }
       if (isLoggingIn) {
-        return AppRoutePath.home;
+        return AppRoutePath.setProfile;
       }
       return null;
     },
@@ -60,38 +56,29 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const LoginPage(),
       ),
       GoRoute(
-        path: AppRoutePath.home,
-        builder: (context, state) =>
-            const Scaffold(body: Center(child: Text('메롱 메롱 메롱 메롱 메롱 메롱 '))),
+        path: AppRoutePath.setProfile,
+        builder: (context, state) => const SetProfilePage(),
       ),
-      // GoRoute(
-      //   path: AppRoutePath.setProfile,
-      //   builder: (context, state) => const SetProfilePage(),
-      // ),
-      // GoRoute(
-      //   path: AppRoutePath.setPhysical,
-      //   builder: (context, state) => const SetPhysicalPage(),
-      // ),
-      // GoRoute(
-      //   path: AppRoutePath.setDisease,
-      //   builder: (context, state) => const SetDiseasePage(),
-      // ),
-      // GoRoute(
-      //   path: AppRoutePath.setAllergy,
-      //   builder: (context, state) => const SetAllergyPage(),
-      // ),
-      // GoRoute(
-      //   path: AppRoutePath.setDone,
-      //   builder: (context, state) => const SetDonePage(),
-      // ),
-      // GoRoute(
-      //   path: AppRoutePath.info,
-      //   builder: (context, state) => const InfoPage(),
-      // ),
-      // GoRoute(
-      //   path: AppRoutePath.goal,
-      //   builder: (context, state) => const GoalPage(),
-      // ),
+      GoRoute(
+        path: AppRoutePath.setPhysical,
+        builder: (context, state) => const SetPhysicalPage(),
+      ),
+      GoRoute(
+        path: AppRoutePath.setDisease,
+        builder: (context, state) => const SetDiseasePage(),
+      ),
+      GoRoute(
+        path: AppRoutePath.setAllergy,
+        builder: (context, state) => const SetAllergyPage(),
+      ),
+      GoRoute(
+        path: AppRoutePath.setDone,
+        builder: (context, state) => const SetDonePage(),
+      ),
+      GoRoute(
+        path: AppRoutePath.home,
+        builder: (context, state) => const HomePage(),
+      ),
     ],
   );
 });

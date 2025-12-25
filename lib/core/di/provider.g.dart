@@ -107,54 +107,6 @@ final class ProfilesDataSourceProvider
 String _$profilesDataSourceHash() =>
     r'30aae55e04069365c11dd90155ce8c67a3d49a62';
 
-@ProviderFor(profilesStorageDataSource)
-const profilesStorageDataSourceProvider = ProfilesStorageDataSourceProvider._();
-
-final class ProfilesStorageDataSourceProvider
-    extends
-        $FunctionalProvider<
-          ProfilesStorageDataSource,
-          ProfilesStorageDataSource,
-          ProfilesStorageDataSource
-        >
-    with $Provider<ProfilesStorageDataSource> {
-  const ProfilesStorageDataSourceProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'profilesStorageDataSourceProvider',
-        isAutoDispose: true,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
-
-  @override
-  String debugGetCreateSourceHash() => _$profilesStorageDataSourceHash();
-
-  @$internal
-  @override
-  $ProviderElement<ProfilesStorageDataSource> $createElement(
-    $ProviderPointer pointer,
-  ) => $ProviderElement(pointer);
-
-  @override
-  ProfilesStorageDataSource create(Ref ref) {
-    return profilesStorageDataSource(ref);
-  }
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(ProfilesStorageDataSource value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<ProfilesStorageDataSource>(value),
-    );
-  }
-}
-
-String _$profilesStorageDataSourceHash() =>
-    r'ccb0e138fcdeed508ef2adb144907c32317efe71';
-
 @ProviderFor(userDiseasesDataSource)
 const userDiseasesDataSourceProvider = UserDiseasesDataSourceProvider._();
 
@@ -398,7 +350,7 @@ final class ProfilesRepositoryProvider
 }
 
 String _$profilesRepositoryHash() =>
-    r'fa04cee5756ca670ab7fd73dd92baa51e8331157';
+    r'7ff6d8926664bccda7add95dc573e13be8b2fd62';
 
 @ProviderFor(userDiseasesRepository)
 const userDiseasesRepositoryProvider = UserDiseasesRepositoryProvider._();
@@ -446,7 +398,7 @@ final class UserDiseasesRepositoryProvider
 }
 
 String _$userDiseasesRepositoryHash() =>
-    r'5331d1b52885560643eb8e2e2c85b11bb9635ee0';
+    r'c8c2ab2c4827fab365be8db8a5fc8dd60e735521';
 
 @ProviderFor(diseasesRepository)
 const diseasesRepositoryProvider = DiseasesRepositoryProvider._();
@@ -542,7 +494,7 @@ final class UserAllergiesRepositoryProvider
 }
 
 String _$userAllergiesRepositoryHash() =>
-    r'e12156fb93f46b38f22e7fea1f55e19d3670ffbc';
+    r'c6516d9dda75205a9d59f94f1430b228ff8a45f9';
 
 @ProviderFor(allergiesRepository)
 const allergiesRepositoryProvider = AllergiesRepositoryProvider._();

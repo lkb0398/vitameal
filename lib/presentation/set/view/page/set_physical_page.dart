@@ -3,10 +3,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:tap_debouncer/tap_debouncer.dart';
 import 'package:vitameal/domain/enum/gender_type_enum.dart';
 import 'package:vitameal/presentation/set/view/widget/select_box.dart';
 import 'package:vitameal/presentation/set/view/widget/validate_textformfield.dart';
-import 'package:vitameal/presentation/set/viewmodel/set_provider.dart';
+import 'package:vitameal/core/di/set_provider.dart';
 import 'package:vitameal/presentation/set/viewmodel/set_view_model.dart';
 
 class SetPhysicalPage extends HookConsumerWidget {
@@ -69,7 +70,7 @@ class SetPhysicalPage extends HookConsumerWidget {
     }
 
     // 수정모드 여부
-    final isEditing = ref.read(isEditingProvider);
+    final isEditing = ref.watch(isEditingProvider);
 
     // 수정모드 시 기존값 불러오기
     final profileAsync = ref.watch(myProfileProvider);
@@ -81,7 +82,7 @@ class SetPhysicalPage extends HookConsumerWidget {
         if (didInit.value) return;
         didInit.value = true;
         if (profile.gender != null) {
-          selectedGender.value = profile.gender!;
+          selectedGender.value = profile.genderType!;
         }
         if (profile.birthYear != null) {
           birthyearController.text = profile.birthYear.toString();
@@ -225,7 +226,7 @@ class SetPhysicalPage extends HookConsumerWidget {
       ),
 
       /// 하단 버튼
-      bottomNavigationBar: InkWell(
+      bottomNavigationBar: TapDebouncer(
         onTap: () async {
           // 사용자 입력값 검증 > 통과 안되면 페이지 이동 막기
           final birthYear = birthyearController.text.trim();
@@ -234,9 +235,12 @@ class SetPhysicalPage extends HookConsumerWidget {
           if (validateBirthYear(birthYear) != null ||
               validateHeight(heightCm) != null ||
               validateWeight(weightKg) != null) {
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(const SnackBar(content: Text('정보를 입력해주세요')));
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('정보를 입력해주세요'),
+                duration: Duration(seconds: 1),
+              ),
+            );
             return;
           }
 
@@ -256,13 +260,21 @@ class SetPhysicalPage extends HookConsumerWidget {
           // 페이지 이동
           context.push('/set-disease');
         },
-        child: Container(
-          decoration: BoxDecoration(border: Border.all(color: Colors.black)),
-          alignment: Alignment.center,
-          height: 50,
-          width: double.infinity,
-          child: Text("다음"),
-        ),
+
+        builder: (BuildContext context, TapDebouncerFunc? onTap) {
+          return InkWell(
+            onTap: onTap,
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.black),
+              ),
+              alignment: Alignment.center,
+              height: 50,
+              width: double.infinity,
+              child: Text("다음"),
+            ),
+          );
+        },
       ),
     );
   }

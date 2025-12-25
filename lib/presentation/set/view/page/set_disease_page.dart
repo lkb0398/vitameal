@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:tap_debouncer/tap_debouncer.dart';
 import 'package:vitameal/presentation/set/view/widget/select_box.dart';
-import 'package:vitameal/presentation/set/viewmodel/set_provider.dart';
+import 'package:vitameal/core/di/set_provider.dart';
 import 'package:vitameal/presentation/set/viewmodel/set_view_model.dart';
 
 class SetDiseasePage extends HookConsumerWidget {
@@ -18,7 +19,7 @@ class SetDiseasePage extends HookConsumerWidget {
     final selectedDiseases = useState<List<String>>([]);
 
     // 수정모드 여부
-    final isEditing = ref.read(isEditingProvider);
+    final isEditing = ref.watch(isEditingProvider);
 
     // 수정모드 시 기존값 불러오기
     final selectedAsync = ref.watch(userSelectedDiseasesProvider);
@@ -83,7 +84,7 @@ class SetDiseasePage extends HookConsumerWidget {
       ),
 
       /// 하단 버튼
-      bottomNavigationBar: InkWell(
+      bottomNavigationBar: TapDebouncer(
         onTap: () async {
           // 질병 정보 업데이트
           await ref
@@ -96,13 +97,20 @@ class SetDiseasePage extends HookConsumerWidget {
           // 페이지 이동
           context.push('/set-allergy');
         },
-        child: Container(
-          decoration: BoxDecoration(border: Border.all(color: Colors.black)),
-          alignment: Alignment.center,
-          height: 50,
-          width: double.infinity,
-          child: Text("다음"),
-        ),
+        builder: (BuildContext context, TapDebouncerFunc? onTap) {
+          return InkWell(
+            onTap: onTap,
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.black),
+              ),
+              alignment: Alignment.center,
+              height: 50,
+              width: double.infinity,
+              child: Text("다음"),
+            ),
+          );
+        },
       ),
     );
   }

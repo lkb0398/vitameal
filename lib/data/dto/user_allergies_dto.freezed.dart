@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$UserAllergiesDto {
 
-@JsonKey(name: 'user_id') String get userId;@JsonKey(name: 'allergy_id') int get allergyId;@JsonKey(name: 'created_at') DateTime? get createdAt;
+@JsonKey(name: 'user_id') String get userId;@JsonKey(name: 'allergy_id') int get allergyId;
 /// Create a copy of UserAllergiesDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $UserAllergiesDtoCopyWith<UserAllergiesDto> get copyWith => _$UserAllergiesDtoCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserAllergiesDto&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.allergyId, allergyId) || other.allergyId == allergyId)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserAllergiesDto&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.allergyId, allergyId) || other.allergyId == allergyId));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,userId,allergyId,createdAt);
+int get hashCode => Object.hash(runtimeType,userId,allergyId);
 
 @override
 String toString() {
-  return 'UserAllergiesDto(userId: $userId, allergyId: $allergyId, createdAt: $createdAt)';
+  return 'UserAllergiesDto(userId: $userId, allergyId: $allergyId)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $UserAllergiesDtoCopyWith<$Res>  {
   factory $UserAllergiesDtoCopyWith(UserAllergiesDto value, $Res Function(UserAllergiesDto) _then) = _$UserAllergiesDtoCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'user_id') String userId,@JsonKey(name: 'allergy_id') int allergyId,@JsonKey(name: 'created_at') DateTime? createdAt
+@JsonKey(name: 'user_id') String userId,@JsonKey(name: 'allergy_id') int allergyId
 });
 
 
@@ -65,12 +65,11 @@ class _$UserAllergiesDtoCopyWithImpl<$Res>
 
 /// Create a copy of UserAllergiesDto
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? userId = null,Object? allergyId = null,Object? createdAt = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? userId = null,Object? allergyId = null,}) {
   return _then(_self.copyWith(
 userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as String,allergyId: null == allergyId ? _self.allergyId : allergyId // ignore: cast_nullable_to_non_nullable
-as int,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
-as DateTime?,
+as int,
   ));
 }
 
@@ -155,10 +154,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'user_id')  String userId, @JsonKey(name: 'allergy_id')  int allergyId, @JsonKey(name: 'created_at')  DateTime? createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'user_id')  String userId, @JsonKey(name: 'allergy_id')  int allergyId)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _UserAllergiesDto() when $default != null:
-return $default(_that.userId,_that.allergyId,_that.createdAt);case _:
+return $default(_that.userId,_that.allergyId);case _:
   return orElse();
 
 }
@@ -176,10 +175,10 @@ return $default(_that.userId,_that.allergyId,_that.createdAt);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'user_id')  String userId, @JsonKey(name: 'allergy_id')  int allergyId, @JsonKey(name: 'created_at')  DateTime? createdAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'user_id')  String userId, @JsonKey(name: 'allergy_id')  int allergyId)  $default,) {final _that = this;
 switch (_that) {
 case _UserAllergiesDto():
-return $default(_that.userId,_that.allergyId,_that.createdAt);case _:
+return $default(_that.userId,_that.allergyId);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -196,10 +195,10 @@ return $default(_that.userId,_that.allergyId,_that.createdAt);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'user_id')  String userId, @JsonKey(name: 'allergy_id')  int allergyId, @JsonKey(name: 'created_at')  DateTime? createdAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'user_id')  String userId, @JsonKey(name: 'allergy_id')  int allergyId)?  $default,) {final _that = this;
 switch (_that) {
 case _UserAllergiesDto() when $default != null:
-return $default(_that.userId,_that.allergyId,_that.createdAt);case _:
+return $default(_that.userId,_that.allergyId);case _:
   return null;
 
 }
@@ -211,12 +210,11 @@ return $default(_that.userId,_that.allergyId,_that.createdAt);case _:
 @JsonSerializable()
 
 class _UserAllergiesDto implements UserAllergiesDto {
-  const _UserAllergiesDto({@JsonKey(name: 'user_id') required this.userId, @JsonKey(name: 'allergy_id') required this.allergyId, @JsonKey(name: 'created_at') this.createdAt});
+  const _UserAllergiesDto({@JsonKey(name: 'user_id') required this.userId, @JsonKey(name: 'allergy_id') required this.allergyId});
   factory _UserAllergiesDto.fromJson(Map<String, dynamic> json) => _$UserAllergiesDtoFromJson(json);
 
 @override@JsonKey(name: 'user_id') final  String userId;
 @override@JsonKey(name: 'allergy_id') final  int allergyId;
-@override@JsonKey(name: 'created_at') final  DateTime? createdAt;
 
 /// Create a copy of UserAllergiesDto
 /// with the given fields replaced by the non-null parameter values.
@@ -231,16 +229,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserAllergiesDto&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.allergyId, allergyId) || other.allergyId == allergyId)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserAllergiesDto&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.allergyId, allergyId) || other.allergyId == allergyId));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,userId,allergyId,createdAt);
+int get hashCode => Object.hash(runtimeType,userId,allergyId);
 
 @override
 String toString() {
-  return 'UserAllergiesDto(userId: $userId, allergyId: $allergyId, createdAt: $createdAt)';
+  return 'UserAllergiesDto(userId: $userId, allergyId: $allergyId)';
 }
 
 
@@ -251,7 +249,7 @@ abstract mixin class _$UserAllergiesDtoCopyWith<$Res> implements $UserAllergiesD
   factory _$UserAllergiesDtoCopyWith(_UserAllergiesDto value, $Res Function(_UserAllergiesDto) _then) = __$UserAllergiesDtoCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'user_id') String userId,@JsonKey(name: 'allergy_id') int allergyId,@JsonKey(name: 'created_at') DateTime? createdAt
+@JsonKey(name: 'user_id') String userId,@JsonKey(name: 'allergy_id') int allergyId
 });
 
 
@@ -268,12 +266,11 @@ class __$UserAllergiesDtoCopyWithImpl<$Res>
 
 /// Create a copy of UserAllergiesDto
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? userId = null,Object? allergyId = null,Object? createdAt = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? userId = null,Object? allergyId = null,}) {
   return _then(_UserAllergiesDto(
 userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as String,allergyId: null == allergyId ? _self.allergyId : allergyId // ignore: cast_nullable_to_non_nullable
-as int,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
-as DateTime?,
+as int,
   ));
 }
 

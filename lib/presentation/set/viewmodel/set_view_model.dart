@@ -3,7 +3,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:vitameal/core/di/provider.dart';
 import 'package:vitameal/domain/entity/profiles_entity.dart';
 import 'package:vitameal/domain/enum/gender_type_enum.dart';
-import 'package:vitameal/presentation/set/viewmodel/set_provider.dart';
+import 'package:vitameal/core/di/set_provider.dart';
 
 part 'set_view_model.g.dart';
 
@@ -40,7 +40,7 @@ class SetViewModel extends _$SetViewModel {
             userId: userId,
             nickname: nickname,
             photoUrl: photoUrl,
-            gender: gender,
+            genderType: gender,
             birthYear: birthYear,
             heightCm: heightCm,
             weightKg: weightKg,
@@ -57,6 +57,7 @@ class SetViewModel extends _$SetViewModel {
     await ref
         .read(userDiseasesRepositoryProvider)
         .saveUserDiseases(userId: userId, diseaseIds: diseaseIds);
+    ref.invalidate(userSelectedDiseasesProvider);
   }
 
   Future<void> saveAllergies(List<String> selectedNames) async {
@@ -67,5 +68,6 @@ class SetViewModel extends _$SetViewModel {
     await ref
         .read(userAllergiesRepositoryProvider)
         .saveUserAllergies(userId: userId, allergyIds: allergyIds);
+    ref.invalidate(userSelectedAllergiesProvider);
   }
 }

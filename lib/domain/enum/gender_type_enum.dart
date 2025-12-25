@@ -1,1 +1,1 @@
-enum GenderType { male, female }
+enum GenderType { male, female, unknown }

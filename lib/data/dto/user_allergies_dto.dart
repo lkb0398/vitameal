@@ -8,7 +8,6 @@ abstract class UserAllergiesDto with _$UserAllergiesDto {
   const factory UserAllergiesDto({
     @JsonKey(name: 'user_id') required String userId,
     @JsonKey(name: 'allergy_id') required int allergyId,
-    @JsonKey(name: 'created_at') DateTime? createdAt,
   }) = _UserAllergiesDto;
 
   factory UserAllergiesDto.fromJson(Map<String, dynamic> json) =>

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:vitameal/presentation/set/viewmodel/set_provider.dart';
+import 'package:vitameal/core/di/set_provider.dart';
 
 class SetDonePage extends HookConsumerWidget {
   const SetDonePage({super.key});
@@ -21,7 +21,7 @@ class SetDonePage extends HookConsumerWidget {
             // TODO :  애니메이션 적용
             Text("🎉", style: TextStyle(fontSize: 150)),
             profileAsync.when(
-              data: (name) => Text("환영합니다 ${name ?? '회원'}님!"),
+              data: (profile) => Text("환영합니다 ${profile?.nickname ?? '회원'}님!"),
               loading: () => const Text("환영합니다!"),
               error: (_, __) => const Text("환영합니다!"),
             ),
@@ -33,7 +33,7 @@ class SetDonePage extends HookConsumerWidget {
       /// 하단 버튼
       bottomNavigationBar: InkWell(
         onTap: () {
-          context.go('/info');
+          context.go('/');
         },
         child: Container(
           decoration: BoxDecoration(border: Border.all(color: Colors.black)),
