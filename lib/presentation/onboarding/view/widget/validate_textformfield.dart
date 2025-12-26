@@ -9,6 +9,7 @@ class ValidateTextformfield extends StatelessWidget {
     required this.controller,
     this.keyboardType,
     this.inputFormatters,
+    this.errorText,
   });
 
   final String hintText;
@@ -16,12 +17,14 @@ class ValidateTextformfield extends StatelessWidget {
   final TextEditingController controller;
   final TextInputType? keyboardType;
   final List<TextInputFormatter>? inputFormatters;
+  final String? errorText;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       decoration: InputDecoration(
         hintText: hintText,
+        errorText: errorText,
         helperText: "",
         helperMaxLines: 1,
         errorMaxLines: 1,

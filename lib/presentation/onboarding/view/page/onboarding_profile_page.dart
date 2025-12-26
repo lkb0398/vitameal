@@ -6,12 +6,13 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:tap_debouncer/tap_debouncer.dart';
-import 'package:vitameal/presentation/set/view/widget/validate_textformfield.dart';
-import 'package:vitameal/presentation/ui_provider/set_provider.dart';
-import 'package:vitameal/presentation/set/viewmodel/set_view_model.dart';
+import 'package:vitameal/data/data_source/profiles_data_source.dart';
+import 'package:vitameal/presentation/onboarding/view/widget/validate_textformfield.dart';
+import 'package:vitameal/presentation/ui_provider/onboarding_provider.dart';
+import 'package:vitameal/presentation/onboarding/viewmodel/onboarding_view_model.dart';
 
-class SetProfilePage extends HookConsumerWidget {
-  const SetProfilePage({super.key});
+class OnboardingProfilePage extends HookConsumerWidget {
+  const OnboardingProfilePage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -30,20 +31,28 @@ class SetProfilePage extends HookConsumerWidget {
       final file = File(image.path);
       selectedImage.value = file;
       final url = await ref
-          .read(setViewModelProvider.notifier)
+          .read(onboardingViewModelProvider.notifier)
           .uploadProfileImage(file);
       imageUrl.value = url;
     }
 
     // 닉네임 : 사용자 입력값 받기 + 검증 메시지
     final nicknameController = useTextEditingController();
+    // 서버 닉네임 중복 체크 용
+    final nicknameError = useState<String?>(null);
+    useEffect(() {
+      void listener() => nicknameError.value = null;
+      nicknameController.addListener(listener);
+      return () => nicknameController.removeListener(listener);
+    }, []);
+
     String? validateNickname(String? value) {
       if (value == null || value.trim().isEmpty) {
         return '닉네임을 입력해주세요.'; // 입력값 없을 때
       }
       final nickname = value.trim();
       if (nickname.length > 10) {
-        return '닉네임은 1~10자로 입력해주세요.'; // 길이 제한 (1~10)
+        return '닉네임은 10글자 이하로 입력해주세요.'; // 길이 제한 (1~10)
       }
       return null; // 통과
     }
@@ -111,6 +120,7 @@ class SetProfilePage extends HookConsumerWidget {
               hintText: "닉네임",
               validator: validateNickname,
               controller: nicknameController,
+              errorText: nicknameError.value,
             ),
           ],
         ),
@@ -132,19 +142,24 @@ class SetProfilePage extends HookConsumerWidget {
             return;
           }
 
-          // 닉네임 서버 중복 체크
-          await ref.read(setViewModelProvider.notifier).checkNickname(nickname);
+          nicknameError.value = null;
 
-          // 프로필 업데이트
-          await ref
-              .read(setViewModelProvider.notifier)
-              .updateProfile(nickname: nickname, photoUrl: imageUrl.value);
+          try {
+            // 프로필 업데이트
+            await ref
+                .read(onboardingViewModelProvider.notifier)
+                .updateProfile(nickname: nickname, photoUrl: imageUrl.value);
 
-          // mounted 체크
-          if (!context.mounted) return;
+            // mounted 체크
+            if (!context.mounted) return;
 
-          // 페이지 이동
-          isEditing ? context.go('/') : context.push('/set/physical');
+            // 페이지 이동
+            isEditing ? context.go('/') : context.push('/onboarding/physical');
+
+            // 닉네임 중복 시
+          } on DuplicateNicknameException {
+            nicknameError.value = '이미 사용 중인 닉네임입니다.';
+          }
         },
 
         builder: (BuildContext context, TapDebouncerFunc? onTap) {

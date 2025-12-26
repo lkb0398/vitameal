@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:vitameal/presentation/ui_provider/set_provider.dart';
+import 'package:vitameal/presentation/home/view/widget/custom_appbar.dart';
+import 'package:vitameal/presentation/ui_provider/onboarding_provider.dart';
 
 class InfoPage extends HookConsumerWidget {
   const InfoPage({super.key});
@@ -24,6 +25,17 @@ class InfoPage extends HookConsumerWidget {
       child: Column(
         spacing: 20,
         children: [
+          /// 앱바
+          CustomAppBar(
+            title: Text("내 정보", style: TextStyle(fontSize: 20)),
+            actions: IconButton(
+              icon: const Icon(Icons.settings),
+              onPressed: () {
+                context.push('/setting');
+              },
+            ),
+          ),
+
           /// 프로필 이미지 + 닉네임
           InkWell(
             onTap: () {

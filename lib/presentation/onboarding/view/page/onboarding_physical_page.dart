@@ -5,13 +5,13 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tap_debouncer/tap_debouncer.dart';
 import 'package:vitameal/domain/enum/gender_type_enum.dart';
-import 'package:vitameal/presentation/set/view/widget/select_box.dart';
-import 'package:vitameal/presentation/set/view/widget/validate_textformfield.dart';
-import 'package:vitameal/presentation/ui_provider/set_provider.dart';
-import 'package:vitameal/presentation/set/viewmodel/set_view_model.dart';
+import 'package:vitameal/presentation/onboarding/view/widget/select_box.dart';
+import 'package:vitameal/presentation/onboarding/view/widget/validate_textformfield.dart';
+import 'package:vitameal/presentation/ui_provider/onboarding_provider.dart';
+import 'package:vitameal/presentation/onboarding/viewmodel/onboarding_view_model.dart';
 
-class SetPhysicalPage extends HookConsumerWidget {
-  const SetPhysicalPage({super.key});
+class OnboardingPhysicalPage extends HookConsumerWidget {
+  const OnboardingPhysicalPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -246,7 +246,7 @@ class SetPhysicalPage extends HookConsumerWidget {
 
           // 프로필 업데이트
           await ref
-              .read(setViewModelProvider.notifier)
+              .read(onboardingViewModelProvider.notifier)
               .updateProfile(
                 gender: selectedGender.value,
                 birthYear: int.tryParse(birthYear),
@@ -260,7 +260,7 @@ class SetPhysicalPage extends HookConsumerWidget {
           // 페이지 이동
           isEditing
               ? context.push('/edit/disease')
-              : context.push('/set/disease');
+              : context.push('/onboarding/disease');
         },
 
         builder: (BuildContext context, TapDebouncerFunc? onTap) {

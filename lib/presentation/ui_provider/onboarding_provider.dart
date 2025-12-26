@@ -6,7 +6,7 @@ import 'package:vitameal/domain/entity/diseases_entity.dart';
 import 'package:vitameal/domain/entity/profiles_entity.dart';
 import 'package:vitameal/presentation/ui_provider/router_location_provider.dart';
 
-part 'set_provider.g.dart';
+part 'onboarding_provider.g.dart';
 
 /// 수정모드 여부 Provider
 @riverpod

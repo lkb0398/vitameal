@@ -3,13 +3,13 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:vitameal/core/di/provider.dart';
 import 'package:vitameal/domain/entity/profiles_entity.dart';
 import 'package:vitameal/domain/enum/gender_type_enum.dart';
-import 'package:vitameal/presentation/ui_provider/set_provider.dart';
+import 'package:vitameal/presentation/ui_provider/onboarding_provider.dart';
 
-part 'set_view_model.g.dart';
+part 'onboarding_view_model.g.dart';
 
 /// 액션 전용 ViewModel
 @Riverpod(keepAlive: true)
-class SetViewModel extends _$SetViewModel {
+class OnboardingViewModel extends _$OnboardingViewModel {
   @override
   void build() {}
 

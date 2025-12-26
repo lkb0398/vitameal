@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'set_view_model.dart';
+part of 'onboarding_view_model.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -10,29 +10,30 @@ part of 'set_view_model.dart';
 // ignore_for_file: type=lint, type=warning
 /// 액션 전용 ViewModel
 
-@ProviderFor(SetViewModel)
-const setViewModelProvider = SetViewModelProvider._();
+@ProviderFor(OnboardingViewModel)
+const onboardingViewModelProvider = OnboardingViewModelProvider._();
 
 /// 액션 전용 ViewModel
-final class SetViewModelProvider extends $NotifierProvider<SetViewModel, void> {
+final class OnboardingViewModelProvider
+    extends $NotifierProvider<OnboardingViewModel, void> {
   /// 액션 전용 ViewModel
-  const SetViewModelProvider._()
+  const OnboardingViewModelProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'setViewModelProvider',
+        name: r'onboardingViewModelProvider',
         isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$setViewModelHash();
+  String debugGetCreateSourceHash() => _$onboardingViewModelHash();
 
   @$internal
   @override
-  SetViewModel create() => SetViewModel();
+  OnboardingViewModel create() => OnboardingViewModel();
 
   /// {@macro riverpod.override_with_value}
   Override overrideWithValue(void value) {
@@ -43,11 +44,12 @@ final class SetViewModelProvider extends $NotifierProvider<SetViewModel, void> {
   }
 }
 
-String _$setViewModelHash() => r'3fdc5721dda125aa9c74a4ce23cd57ef81b4e6bf';
+String _$onboardingViewModelHash() =>
+    r'c0409bf7756f224af61309b1d60d2505855c35b2';
 
 /// 액션 전용 ViewModel
 
-abstract class _$SetViewModel extends $Notifier<void> {
+abstract class _$OnboardingViewModel extends $Notifier<void> {
   void build();
   @$mustCallSuper
   @override

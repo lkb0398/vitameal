@@ -3,12 +3,12 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tap_debouncer/tap_debouncer.dart';
-import 'package:vitameal/presentation/set/view/widget/select_box.dart';
-import 'package:vitameal/presentation/ui_provider/set_provider.dart';
-import 'package:vitameal/presentation/set/viewmodel/set_view_model.dart';
+import 'package:vitameal/presentation/onboarding/view/widget/select_box.dart';
+import 'package:vitameal/presentation/ui_provider/onboarding_provider.dart';
+import 'package:vitameal/presentation/onboarding/viewmodel/onboarding_view_model.dart';
 
-class SetDiseasePage extends HookConsumerWidget {
-  const SetDiseasePage({super.key});
+class OnboardingDiseasePage extends HookConsumerWidget {
+  const OnboardingDiseasePage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -88,7 +88,7 @@ class SetDiseasePage extends HookConsumerWidget {
         onTap: () async {
           // 질병 정보 업데이트
           await ref
-              .read(setViewModelProvider.notifier)
+              .read(onboardingViewModelProvider.notifier)
               .saveDiseases(selectedDiseases.value);
 
           // mounted 체크
@@ -97,7 +97,7 @@ class SetDiseasePage extends HookConsumerWidget {
           // 페이지 이동
           isEditing
               ? context.push('/edit/allergy')
-              : context.push('/set/allergy');
+              : context.push('/onboarding/allergy');
         },
         builder: (BuildContext context, TapDebouncerFunc? onTap) {
           return InkWell(

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:vitameal/presentation/set/viewmodel/set_view_model.dart';
-import 'package:vitameal/presentation/ui_provider/set_provider.dart';
+import 'package:vitameal/presentation/onboarding/viewmodel/onboarding_view_model.dart';
+import 'package:vitameal/presentation/ui_provider/onboarding_provider.dart';
 
-class SetDonePage extends HookConsumerWidget {
-  const SetDonePage({super.key});
+class OnboardingDonePage extends HookConsumerWidget {
+  const OnboardingDonePage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -36,7 +36,7 @@ class SetDonePage extends HookConsumerWidget {
         onTap: () async {
           // 프로필 업데이트
           await ref
-              .read(setViewModelProvider.notifier)
+              .read(onboardingViewModelProvider.notifier)
               .updateProfile(onboardingCompleted: true);
 
           // 로컬 라우팅 상태도 즉시 true로 반영

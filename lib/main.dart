@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:vitameal/presentation/ui_provider/set_provider.dart';
+import 'package:vitameal/presentation/ui_provider/onboarding_provider.dart';
 import 'core/config/routes.dart';
 
 void main() async {
