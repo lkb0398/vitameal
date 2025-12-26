@@ -48,3 +48,7 @@ class VitamealApp extends HookConsumerWidget {
     );
   }
 }
+
+// url: 'https://ykqdcgrimdsvuincvmtu.supabase.co'
+// anonKey:
+//     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlrcWRjZ3JpbWRzdnVpbmN2bXR1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU5MzM0OTcsImV4cCI6MjA4MTUwOTQ5N30.QJnEx7gDulSj8-8PayKYxyu5Aze8IBk7jJU-N-VRHCw'
