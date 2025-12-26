@@ -1,12 +1,23 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:vitameal/core/config/routes.dart';
 import 'package:vitameal/core/di/provider.dart';
 import 'package:vitameal/domain/entity/allergies_entity.dart';
 import 'package:vitameal/domain/entity/diseases_entity.dart';
 import 'package:vitameal/domain/entity/profiles_entity.dart';
-import 'package:vitameal/presentation/ui_provider/router_location_provider.dart';
 
 part 'onboarding_provider.g.dart';
+
+/// 현재 router location 얻기 Provider
+@riverpod
+String routerLocation(Ref ref) {
+  final router = ref.watch(routerProvider);
+  final configuration = router.routerDelegate.currentConfiguration;
+  if (configuration.routes.isEmpty) {
+    return '/';
+  }
+  return configuration.last.matchedLocation;
+}
 
 /// 수정모드 여부 Provider
 @riverpod
