@@ -7,7 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:tap_debouncer/tap_debouncer.dart';
 import 'package:vitameal/presentation/set/view/widget/validate_textformfield.dart';
-import 'package:vitameal/core/di/set_provider.dart';
+import 'package:vitameal/presentation/ui_provider/set_provider.dart';
 import 'package:vitameal/presentation/set/viewmodel/set_view_model.dart';
 
 class SetProfilePage extends HookConsumerWidget {
@@ -49,7 +49,7 @@ class SetProfilePage extends HookConsumerWidget {
     }
 
     // 수정모드 여부
-    final isEditing = ref.watch(isEditingProvider);
+    final isEditing = ref.watch(isEditFlowProvider);
 
     // 수정모드 시 기존값 불러오기
     final profileAsync = ref.watch(myProfileProvider);
@@ -144,12 +144,7 @@ class SetProfilePage extends HookConsumerWidget {
           if (!context.mounted) return;
 
           // 페이지 이동
-          if (!isEditing) {
-            context.push('/set-physical');
-          } else {
-            context.go('/info');
-            ref.read(isEditingProvider.notifier).stopEditing(); // 수정모드 off
-          }
+          isEditing ? context.go('/') : context.push('/set/physical');
         },
 
         builder: (BuildContext context, TapDebouncerFunc? onTap) {

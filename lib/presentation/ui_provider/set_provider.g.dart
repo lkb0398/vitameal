@@ -8,31 +8,39 @@ part of 'set_provider.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// UI 상태 (수정모드) Provider
+/// 수정모드 여부 Provider
 
-@ProviderFor(IsEditing)
-const isEditingProvider = IsEditingProvider._();
+@ProviderFor(isEditFlow)
+const isEditFlowProvider = IsEditFlowProvider._();
 
-/// UI 상태 (수정모드) Provider
-final class IsEditingProvider extends $NotifierProvider<IsEditing, bool> {
-  /// UI 상태 (수정모드) Provider
-  const IsEditingProvider._()
+/// 수정모드 여부 Provider
+
+final class IsEditFlowProvider extends $FunctionalProvider<bool, bool, bool>
+    with $Provider<bool> {
+  /// 수정모드 여부 Provider
+  const IsEditFlowProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'isEditingProvider',
+        name: r'isEditFlowProvider',
         isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$isEditingHash();
+  String debugGetCreateSourceHash() => _$isEditFlowHash();
 
   @$internal
   @override
-  IsEditing create() => IsEditing();
+  $ProviderElement<bool> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  bool create(Ref ref) {
+    return isEditFlow(ref);
+  }
 
   /// {@macro riverpod.override_with_value}
   Override overrideWithValue(bool value) {
@@ -43,11 +51,49 @@ final class IsEditingProvider extends $NotifierProvider<IsEditing, bool> {
   }
 }
 
-String _$isEditingHash() => r'9303d0d1727e973f5477074b905a9e1fe9a3f83d';
+String _$isEditFlowHash() => r'77c4e6f922c3af4e8c8ddb035d0d623f4ab4b763';
 
-/// UI 상태 (수정모드) Provider
+/// 온보딩 완료여부 Provider
 
-abstract class _$IsEditing extends $Notifier<bool> {
+@ProviderFor(OnboardingState)
+const onboardingStateProvider = OnboardingStateProvider._();
+
+/// 온보딩 완료여부 Provider
+final class OnboardingStateProvider
+    extends $NotifierProvider<OnboardingState, bool> {
+  /// 온보딩 완료여부 Provider
+  const OnboardingStateProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'onboardingStateProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$onboardingStateHash();
+
+  @$internal
+  @override
+  OnboardingState create() => OnboardingState();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(bool value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<bool>(value),
+    );
+  }
+}
+
+String _$onboardingStateHash() => r'92771166c984c1f183718096bed57d56197531d8';
+
+/// 온보딩 완료여부 Provider
+
+abstract class _$OnboardingState extends $Notifier<bool> {
   bool build();
   @$mustCallSuper
   @override
@@ -66,17 +112,51 @@ abstract class _$IsEditing extends $Notifier<bool> {
   }
 }
 
-/// 인증/세션 (userId) Provider
+@ProviderFor(onboardingCompleted)
+const onboardingCompletedProvider = OnboardingCompletedProvider._();
+
+final class OnboardingCompletedProvider
+    extends $FunctionalProvider<AsyncValue<bool>, bool, FutureOr<bool>>
+    with $FutureModifier<bool>, $FutureProvider<bool> {
+  const OnboardingCompletedProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'onboardingCompletedProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$onboardingCompletedHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<bool> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<bool> create(Ref ref) {
+    return onboardingCompleted(ref);
+  }
+}
+
+String _$onboardingCompletedHash() =>
+    r'c471ccf943e8ed24762cd020237ee69e5a5246a7';
+
+/// userId Provider
 
 @ProviderFor(currentUserId)
 const currentUserIdProvider = CurrentUserIdProvider._();
 
-/// 인증/세션 (userId) Provider
+/// userId Provider
 
 final class CurrentUserIdProvider
     extends $FunctionalProvider<String, String, String>
     with $Provider<String> {
-  /// 인증/세션 (userId) Provider
+  /// userId Provider
   const CurrentUserIdProvider._()
     : super(
         from: null,
@@ -112,12 +192,12 @@ final class CurrentUserIdProvider
 
 String _$currentUserIdHash() => r'53e36a8b79d432a69abb79cd85449ab0b1142454';
 
-/// 읽기 전용 Provider
+/// 사용자 정보 읽기 전용 Provider
 
 @ProviderFor(myProfile)
 const myProfileProvider = MyProfileProvider._();
 
-/// 읽기 전용 Provider
+/// 사용자 정보 읽기 전용 Provider
 
 final class MyProfileProvider
     extends
@@ -127,7 +207,7 @@ final class MyProfileProvider
           FutureOr<ProfilesEntity?>
         >
     with $FutureModifier<ProfilesEntity?>, $FutureProvider<ProfilesEntity?> {
-  /// 읽기 전용 Provider
+  /// 사용자 정보 읽기 전용 Provider
   const MyProfileProvider._()
     : super(
         from: null,

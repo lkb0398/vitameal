@@ -4,25 +4,41 @@ import 'package:vitameal/core/di/provider.dart';
 import 'package:vitameal/domain/entity/allergies_entity.dart';
 import 'package:vitameal/domain/entity/diseases_entity.dart';
 import 'package:vitameal/domain/entity/profiles_entity.dart';
+import 'package:vitameal/presentation/ui_provider/router_location_provider.dart';
 
 part 'set_provider.g.dart';
 
-/// UI 상태 (수정모드) Provider
+/// 수정모드 여부 Provider
 @riverpod
-class IsEditing extends _$IsEditing {
-  @override
-  bool build() => false;
-  void startEditing() => state = true;
-  void stopEditing() => state = false;
+bool isEditFlow(Ref ref) {
+  final location = ref.watch(routerLocationProvider);
+  return location.startsWith('/edit');
 }
 
-/// 인증/세션 (userId) Provider
+/// 온보딩 완료여부 Provider
+@riverpod
+class OnboardingState extends _$OnboardingState {
+  @override
+  bool build() => false;
+  void set(bool value) => state = value;
+}
+
+@riverpod
+Future<bool> onboardingCompleted(Ref ref) async {
+  final userId = ref.read(currentUserIdProvider);
+  final profile = await ref
+      .read(profilesRepositoryProvider)
+      .getMyProfile(userId);
+  return profile?.onboardingCompleted ?? false;
+}
+
+/// userId Provider
 @riverpod
 String currentUserId(Ref ref) {
   return Supabase.instance.client.auth.currentUser!.id;
 }
 
-/// 읽기 전용 Provider
+/// 사용자 정보 읽기 전용 Provider
 @riverpod
 Future<ProfilesEntity?> myProfile(Ref ref) async {
   final userId = ref.read(currentUserIdProvider);

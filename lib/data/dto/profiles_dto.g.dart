@@ -14,6 +14,7 @@ _ProfilesDto _$ProfilesDtoFromJson(Map<String, dynamic> json) => _ProfilesDto(
   heightCm: json['height_cm'] as num?,
   weightKg: json['weight_kg'] as num?,
   birthYear: (json['birth_year'] as num?)?.toInt(),
+  onboardingCompleted: json['onboarding_completed'] as bool?,
 );
 
 Map<String, dynamic> _$ProfilesDtoToJson(_ProfilesDto instance) =>
@@ -25,4 +26,5 @@ Map<String, dynamic> _$ProfilesDtoToJson(_ProfilesDto instance) =>
       'height_cm': instance.heightCm,
       'weight_kg': instance.weightKg,
       'birth_year': instance.birthYear,
+      'onboarding_completed': instance.onboardingCompleted,
     };

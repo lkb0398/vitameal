@@ -13,6 +13,7 @@ abstract class ProfilesDto with _$ProfilesDto {
     @JsonKey(name: 'height_cm') num? heightCm,
     @JsonKey(name: 'weight_kg') num? weightKg,
     @JsonKey(name: 'birth_year') int? birthYear,
+    @JsonKey(name: 'onboarding_completed') bool? onboardingCompleted,
   }) = _ProfilesDto;
 
   factory ProfilesDto.fromJson(Map<String, dynamic> json) =>

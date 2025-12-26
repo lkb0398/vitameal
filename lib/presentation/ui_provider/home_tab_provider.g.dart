@@ -8,11 +8,14 @@ part of 'home_tab_provider.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
+/// HomePage 바텀네비게이션 인덱스 상태 Provider
 
 @ProviderFor(HomeTab)
 const homeTabProvider = HomeTabProvider._();
 
+/// HomePage 바텀네비게이션 인덱스 상태 Provider
 final class HomeTabProvider extends $NotifierProvider<HomeTab, int> {
+  /// HomePage 바텀네비게이션 인덱스 상태 Provider
   const HomeTabProvider._()
     : super(
         from: null,
@@ -41,6 +44,8 @@ final class HomeTabProvider extends $NotifierProvider<HomeTab, int> {
 }
 
 String _$homeTabHash() => r'b7516d0d8374fa514db8ba2783007f84aa0974f6';
+
+/// HomePage 바텀네비게이션 인덱스 상태 Provider
 
 abstract class _$HomeTab extends $Notifier<int> {
   int build();

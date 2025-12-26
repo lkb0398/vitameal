@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:vitameal/presentation/home/view/info_page.dart';
-import 'package:vitameal/core/di/home_tab_provider.dart';
+import 'package:vitameal/presentation/ui_provider/home_tab_provider.dart';
 
 class HomePage extends HookConsumerWidget {
   const HomePage({super.key});

@@ -7,7 +7,7 @@ import 'package:tap_debouncer/tap_debouncer.dart';
 import 'package:vitameal/domain/enum/gender_type_enum.dart';
 import 'package:vitameal/presentation/set/view/widget/select_box.dart';
 import 'package:vitameal/presentation/set/view/widget/validate_textformfield.dart';
-import 'package:vitameal/core/di/set_provider.dart';
+import 'package:vitameal/presentation/ui_provider/set_provider.dart';
 import 'package:vitameal/presentation/set/viewmodel/set_view_model.dart';
 
 class SetPhysicalPage extends HookConsumerWidget {
@@ -70,7 +70,7 @@ class SetPhysicalPage extends HookConsumerWidget {
     }
 
     // 수정모드 여부
-    final isEditing = ref.watch(isEditingProvider);
+    final isEditing = ref.watch(isEditFlowProvider);
 
     // 수정모드 시 기존값 불러오기
     final profileAsync = ref.watch(myProfileProvider);
@@ -258,7 +258,9 @@ class SetPhysicalPage extends HookConsumerWidget {
           if (!context.mounted) return;
 
           // 페이지 이동
-          context.push('/set-disease');
+          isEditing
+              ? context.push('/edit/disease')
+              : context.push('/set/disease');
         },
 
         builder: (BuildContext context, TapDebouncerFunc? onTap) {

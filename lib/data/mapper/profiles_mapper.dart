@@ -13,6 +13,7 @@ class ProfilesMapper {
       heightCm: entity.heightCm,
       weightKg: entity.weightKg,
       birthYear: entity.birthYear,
+      onboardingCompleted: entity.onboardingCompleted,
     );
   }
 
@@ -28,6 +29,7 @@ class ProfilesMapper {
       heightCm: dto.heightCm?.toDouble(),
       weightKg: dto.weightKg?.toDouble(),
       birthYear: dto.birthYear,
+      onboardingCompleted: dto.onboardingCompleted,
     );
   }
 
@@ -40,6 +42,10 @@ class ProfilesMapper {
     if (entity.birthYear != null) map['birth_year'] = entity.birthYear;
     if (entity.heightCm != null) map['height_cm'] = entity.heightCm;
     if (entity.weightKg != null) map['weight_kg'] = entity.weightKg;
+    if (entity.onboardingCompleted != null) {
+      map['onboarding_completed'] = entity.onboardingCompleted;
+    }
+
     return map;
   }
 }

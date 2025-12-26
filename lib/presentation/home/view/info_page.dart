@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:vitameal/core/di/set_provider.dart';
+import 'package:vitameal/presentation/ui_provider/set_provider.dart';
 
 class InfoPage extends HookConsumerWidget {
   const InfoPage({super.key});
@@ -27,8 +27,7 @@ class InfoPage extends HookConsumerWidget {
           /// 프로필 이미지 + 닉네임
           InkWell(
             onTap: () {
-              ref.watch(isEditingProvider.notifier).startEditing(); // 수정모드 on
-              context.push('/set-profile');
+              context.push('/edit/profile');
             },
             child: Row(
               spacing: 5,
@@ -100,10 +99,7 @@ class InfoPage extends HookConsumerWidget {
                     Text("내 정보"),
                     IconButton(
                       onPressed: () {
-                        ref
-                            .watch(isEditingProvider.notifier)
-                            .startEditing(); // 수정모드 on
-                        context.push('/set-physical');
+                        context.push('/edit/physical');
                       },
                       icon: Icon(Icons.arrow_forward_ios),
                     ),

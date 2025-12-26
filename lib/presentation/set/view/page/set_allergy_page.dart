@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tap_debouncer/tap_debouncer.dart';
 import 'package:vitameal/presentation/set/view/widget/select_box.dart';
-import 'package:vitameal/core/di/set_provider.dart';
+import 'package:vitameal/presentation/ui_provider/set_provider.dart';
 import 'package:vitameal/presentation/set/viewmodel/set_view_model.dart';
 
 class SetAllergyPage extends HookConsumerWidget {
@@ -19,7 +19,7 @@ class SetAllergyPage extends HookConsumerWidget {
     final selectedAllergies = useState<List<String>>([]);
 
     // 수정모드 여부
-    final isEditing = ref.watch(isEditingProvider);
+    final isEditing = ref.watch(isEditFlowProvider);
 
     // 수정모드 시 기존값 불러오기
     final selectedAsync = ref.watch(userSelectedAllergiesProvider);
@@ -95,12 +95,7 @@ class SetAllergyPage extends HookConsumerWidget {
           if (!context.mounted) return;
 
           // 페이지 이동
-          if (!isEditing) {
-            context.push('/set-done');
-          } else {
-            context.go('/info');
-            ref.read(isEditingProvider.notifier).stopEditing(); // 수정모드 off
-          }
+          isEditing ? context.go('/') : context.push('/set/done');
         },
 
         builder: (BuildContext context, TapDebouncerFunc? onTap) {

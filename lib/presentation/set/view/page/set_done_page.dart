@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:vitameal/core/di/set_provider.dart';
+import 'package:vitameal/presentation/set/viewmodel/set_view_model.dart';
+import 'package:vitameal/presentation/ui_provider/set_provider.dart';
 
 class SetDonePage extends HookConsumerWidget {
   const SetDonePage({super.key});
@@ -32,7 +33,19 @@ class SetDonePage extends HookConsumerWidget {
 
       /// 하단 버튼
       bottomNavigationBar: InkWell(
-        onTap: () {
+        onTap: () async {
+          // 프로필 업데이트
+          await ref
+              .read(setViewModelProvider.notifier)
+              .updateProfile(onboardingCompleted: true);
+
+          // 로컬 라우팅 상태도 즉시 true로 반영
+          ref.read(onboardingStateProvider.notifier).set(true);
+
+          // mounted 체크
+          if (!context.mounted) return;
+
+          // 페이지 이동
           context.go('/');
         },
         child: Container(

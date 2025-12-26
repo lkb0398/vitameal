@@ -3,7 +3,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:vitameal/core/di/provider.dart';
 import 'package:vitameal/domain/entity/profiles_entity.dart';
 import 'package:vitameal/domain/enum/gender_type_enum.dart';
-import 'package:vitameal/core/di/set_provider.dart';
+import 'package:vitameal/presentation/ui_provider/set_provider.dart';
 
 part 'set_view_model.g.dart';
 
@@ -31,6 +31,7 @@ class SetViewModel extends _$SetViewModel {
     int? birthYear,
     double? heightCm,
     double? weightKg,
+    bool? onboardingCompleted,
   }) async {
     final userId = ref.read(currentUserIdProvider);
     await ref
@@ -44,6 +45,7 @@ class SetViewModel extends _$SetViewModel {
             birthYear: birthYear,
             heightCm: heightCm,
             weightKg: weightKg,
+            onboardingCompleted: onboardingCompleted,
           ),
         );
     ref.invalidate(myProfileProvider);

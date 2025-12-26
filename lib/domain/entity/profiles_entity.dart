@@ -15,6 +15,7 @@ abstract class ProfilesEntity with _$ProfilesEntity {
     double? heightCm,
     double? weightKg,
     int? birthYear,
+    bool? onboardingCompleted,
   }) = _ProfilesEntity;
 
   // 나이 계산
