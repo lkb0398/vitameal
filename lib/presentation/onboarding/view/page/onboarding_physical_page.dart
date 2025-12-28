@@ -6,7 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tap_debouncer/tap_debouncer.dart';
 import 'package:vitameal/domain/enum/gender_type_enum.dart';
 import 'package:vitameal/presentation/onboarding/view/widget/select_box.dart';
-import 'package:vitameal/presentation/onboarding/view/widget/validate_textformfield.dart';
+import 'package:vitameal/presentation/widget/validate_textformfield.dart';
 import 'package:vitameal/presentation/ui_provider/onboarding_provider.dart';
 import 'package:vitameal/presentation/onboarding/viewmodel/onboarding_view_model.dart';
 
@@ -143,6 +143,7 @@ class OnboardingPhysicalPage extends HookConsumerWidget {
             /// 출생년도 입력창
             Text("출생년도"),
             ValidateTextformfield(
+              readOnly: false,
               hintText: "1988",
               validator: validateBirthYear,
               controller: birthyearController,
@@ -157,66 +158,60 @@ class OnboardingPhysicalPage extends HookConsumerWidget {
                 /// 키 입력창
                 Expanded(
                   flex: 1,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("키"),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: ValidateTextformfield(
-                              hintText: "180",
-                              validator: validateHeight,
-                              controller: heightController,
-                              keyboardType:
-                                  const TextInputType.numberWithOptions(
-                                    decimal: true,
-                                  ),
-                              inputFormatters: [
-                                FilteringTextInputFormatter.allow(
-                                  // 정수 3자리 + 소수점 1자리 까지
-                                  RegExp(r'^\d{0,3}\.?\d{0,1}$'),
-                                ),
-                              ],
-                            ),
+                  child: SizedBox(
+                    height: 100,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("키"),
+                        ValidateTextformfield(
+                          readOnly: false,
+                          hintText: "180",
+                          validator: validateHeight,
+                          controller: heightController,
+                          keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true,
                           ),
-                          Text("cm"),
-                        ],
-                      ),
-                    ],
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(
+                              // 정수 3자리 + 소수점 1자리 까지
+                              RegExp(r'^\d{0,3}\.?\d{0,1}$'),
+                            ),
+                          ],
+                          unit: "cm",
+                        ),
+                      ],
+                    ),
                   ),
                 ),
 
                 /// 몸무게 입력창
                 Expanded(
                   flex: 1,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("몸무게"),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: ValidateTextformfield(
-                              hintText: "80",
-                              validator: validateWeight,
-                              controller: weightController,
-                              keyboardType:
-                                  const TextInputType.numberWithOptions(
-                                    decimal: true,
-                                  ),
-                              inputFormatters: [
-                                FilteringTextInputFormatter.allow(
-                                  // 정수 3자리 + 소수점 1자리
-                                  RegExp(r'^\d{0,3}\.?\d{0,1}$'),
-                                ),
-                              ],
-                            ),
+                  child: SizedBox(
+                    height: 100,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("몸무게"),
+                        ValidateTextformfield(
+                          readOnly: false,
+                          hintText: "80",
+                          validator: validateWeight,
+                          controller: weightController,
+                          keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true,
                           ),
-                          Text("kg"),
-                        ],
-                      ),
-                    ],
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(
+                              // 정수 3자리 + 소수점 1자리
+                              RegExp(r'^\d{0,3}\.?\d{0,1}$'),
+                            ),
+                          ],
+                          unit: "kg",
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],

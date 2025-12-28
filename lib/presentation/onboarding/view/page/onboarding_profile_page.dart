@@ -7,7 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:tap_debouncer/tap_debouncer.dart';
 import 'package:vitameal/data/data_source/profiles_data_source.dart';
-import 'package:vitameal/presentation/onboarding/view/widget/validate_textformfield.dart';
+import 'package:vitameal/presentation/widget/validate_textformfield.dart';
 import 'package:vitameal/presentation/ui_provider/onboarding_provider.dart';
 import 'package:vitameal/presentation/onboarding/viewmodel/onboarding_view_model.dart';
 
@@ -117,6 +117,7 @@ class OnboardingProfilePage extends HookConsumerWidget {
 
             /// 닉네임 입력창
             ValidateTextformfield(
+              readOnly: false,
               hintText: "닉네임",
               validator: validateNickname,
               controller: nicknameController,

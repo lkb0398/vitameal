@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:vitameal/presentation/goal/view/add_goal_page.dart';
+import 'package:vitameal/presentation/goal/view/entity.dart';
+import 'package:vitameal/presentation/goal/view/goal_page.dart';
 import 'package:vitameal/presentation/home/view/page/home_page.dart';
 import 'package:vitameal/presentation/onboarding/view/page/onboarding_allergy_page.dart';
 import 'package:vitameal/presentation/onboarding/view/page/onboarding_disease_page.dart';
@@ -20,17 +23,20 @@ class AppRoutePath {
   static const login = '/login';
   static const splash = '/splash';
   static const home = '/';
-  // 사용자 정보 입력
+  // 사용자 정보 입력/수정
   static const onboardingProfile = '/onboarding/profile';
   static const onboardingPhysical = '/onboarding/physical';
   static const onboardingDisease = '/onboarding/disease';
   static const onboardingAllergy = '/onboarding/allergy';
   static const onboardingDone = '/onboarding/done';
-  // 사용자 정보 수정
   static const editProfile = '/edit/profile';
   static const editPhysical = '/edit/physical';
   static const editDisease = '/edit/disease';
   static const editAllergy = '/edit/allergy';
+  // 목표 입력/수정
+  static const goal = '/goal';
+  static const addGoal = '/add/goal';
+  static const editGoal = '/edit/goal';
 }
 
 final routerProvider = Provider<GoRouter>((ref) {
@@ -131,6 +137,21 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: AppRoutePath.setting,
         builder: (context, state) => const SettingPage(),
+      ),
+      GoRoute(
+        path: AppRoutePath.goal,
+        builder: (context, state) => const GoalPage(),
+      ),
+      GoRoute(
+        path: AppRoutePath.addGoal,
+        builder: (context, state) => const AddGoalPage(),
+      ),
+      GoRoute(
+        path: AppRoutePath.editGoal,
+        builder: (context, state) {
+          final goal = state.extra as GoalEntity;
+          return AddGoalPage(goal: goal);
+        },
       ),
     ],
   );
