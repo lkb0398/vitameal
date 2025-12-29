@@ -1,7 +1,26 @@
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/repository/auth_repository.dart';
-import '../data_source/auth_data_source.dart';
+import 'package:vitameal/data/data_source/auth_data_source.dart';
+import 'package:vitameal/core/supabase/supabase_client.dart';
+
+part 'auth_repository_impl.g.dart';
+
+// DataSource 프로바이더
+@riverpod
+AuthDataSource authDataSource(Ref ref) {
+  // supabaseClientProvider 사용
+  final client = ref.watch(supabaseClientProvider);
+  return AuthDataSource(client);
+}
+
+// Repository 프로바이더
+@riverpod
+AuthRepository authRepository(Ref ref) {
+  // 위에 authDataSourceProvider 주입
+  final dataSource = ref.watch(authDataSourceProvider);
+  return AuthRepositoryImpl(dataSource);
+}
 
 class AuthRepositoryImpl implements AuthRepository {
   final AuthDataSource _dataSource;
@@ -21,11 +40,3 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Session? get currentSession => _dataSource.currentSession;
 }
-
-// 의존성 주입 = Client => DataSource => Repository 순으로 주입
-final authDataSourceProvider = Provider(
-  (ref) => AuthDataSource(Supabase.instance.client),
-);
-final authRepositoryProvider = Provider<AuthRepository>(
-  (ref) => AuthRepositoryImpl(ref.watch(authDataSourceProvider)),
-);

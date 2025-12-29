@@ -13,6 +13,7 @@ class LoginPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // 세션 상태 감시 (로그인 여부)
     final session = ref.watch(authViewModelProvider);
 
     // 로그인 성공 이후 라우팅 처리
@@ -35,18 +36,36 @@ class LoginPage extends HookConsumerWidget {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 40),
-          child: session != null
-              ? _buildLoggedInState(session, vm)
-              : _buildLoginState(vm),
-        ),
+      body: Stack(
+        children: [
+          SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 40),
+              child: session != null
+                  ? _buildLoggedInState(ref, session) // ref를 전달하여 내부에서 vm 접근
+                  : _buildLoginState(ref), // ref를 전달하여 내부에서 vm 접근
+            ),
+          ),
+
+          // 로딩 오버레이 레이어 (로그인 진행 중일 때만 표시)
+          if (vm.isLoading)
+            Container(
+              color: Colors.black.withOpacity(0.3), // 배경을 어둡게 해서 터치 차단
+              child: const Center(
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }
 
-  Widget _buildLoggedInState(Session session, AuthViewModel vm) {
+  // 로그인 된 상태의 UI
+  Widget _buildLoggedInState(WidgetRef ref, Session session) {
+    final vm = ref.read(authViewModelProvider.notifier);
+
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -59,7 +78,10 @@ class LoginPage extends HookConsumerWidget {
     );
   }
 
-  Widget _buildLoginState(AuthViewModel vm) {
+  // 로그인 전 상태의 UI
+  Widget _buildLoginState(WidgetRef ref) {
+    final vm = ref.read(authViewModelProvider.notifier);
+
     return Column(
       children: [
         const Spacer(flex: 2),
@@ -72,7 +94,8 @@ class LoginPage extends HookConsumerWidget {
           label: 'Apple로 시작하기(미구현)',
           backgroundColor: Colors.black,
           textColor: Colors.white,
-          onPressed: () => vm.login(OAuthProvider.apple),
+          // 로딩 중이면 버튼 클릭 무시
+          onPressed: vm.isLoading ? () {} : () => vm.login(OAuthProvider.apple),
         ),
         const SizedBox(height: 16),
 
@@ -80,7 +103,9 @@ class LoginPage extends HookConsumerWidget {
           label: 'Google로 시작하기(미구현)',
           backgroundColor: Colors.white,
           textColor: Colors.black,
-          onPressed: () => vm.login(OAuthProvider.google),
+          onPressed: vm.isLoading
+              ? () {}
+              : () => vm.login(OAuthProvider.google),
         ),
         const SizedBox(height: 16),
 
@@ -88,7 +113,7 @@ class LoginPage extends HookConsumerWidget {
           label: '카카오로 시작하기',
           backgroundColor: const Color(0xfffee500),
           textColor: Colors.black,
-          onPressed: () => vm.login(OAuthProvider.kakao),
+          onPressed: vm.isLoading ? () {} : () => vm.login(OAuthProvider.kakao),
         ),
 
         const Spacer(flex: 1),

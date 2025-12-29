@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -45,10 +44,7 @@ final routerProvider = Provider<GoRouter>((ref) {
   return GoRouter(
     initialLocation: AppRoutePath.splash,
 
-    // 인증 상태가 변경될 때마다 redirect 다시 실행
-    refreshListenable: _RouterRefreshStream(
-      ref.read(authViewModelProvider.notifier).stream,
-    ),
+    refreshListenable: _RouterRefreshListenable(ref),
 
     redirect: (context, state) {
       // final isLoggedIn = authState != null;
@@ -146,18 +142,9 @@ final routerProvider = Provider<GoRouter>((ref) {
   );
 });
 
-// Stream을 GoRouter가 이해할 수 있는 Listenable로 변환
-class _RouterRefreshStream extends ChangeNotifier {
-  _RouterRefreshStream(Stream<dynamic> stream) {
-    _subscription = stream.asBroadcastStream().listen((_) => notifyListeners());
-  }
-
-  late final StreamSubscription<dynamic> _subscription;
-
-  @override
-  void dispose() {
-    _subscription.cancel();
-
-    super.dispose();
+class _RouterRefreshListenable extends ChangeNotifier {
+  _RouterRefreshListenable(Ref ref) {
+    // authViewModelProvider의 상태가 변할 때마다 notifyListeners() 호출
+    ref.listen(authViewModelProvider, (_, __) => notifyListeners());
   }
 }
