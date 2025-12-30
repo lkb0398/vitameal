@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:vitameal/core/config/routes.dart';
+import 'package:vitameal/presentation/ui_provider/onboarding_provider.dart';
 import '../view_model/auth_view_model.dart';
 import 'widgets/social_login_button.dart';
 
@@ -10,6 +14,23 @@ class LoginPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final session = ref.watch(authViewModelProvider);
+
+    // 로그인 성공 이후 라우팅 처리
+    useEffect(() {
+      if (session == null) return null;
+      Future.microtask(() async {
+        if (!context.mounted) return;
+        final isOnboarded = await ref.read(onboardingCompletedProvider.future);
+        if (!context.mounted) return;
+        if (isOnboarded) {
+          context.go(AppRoutePath.home); // 온보딩 O > 홈 페이지
+        } else {
+          context.go(AppRoutePath.onboardingProfile); // 온보딩 X > 온보딩 페이지
+        }
+      });
+      return null;
+    }, [session]);
+
     final vm = ref.read(authViewModelProvider.notifier);
 
     return Scaffold(
