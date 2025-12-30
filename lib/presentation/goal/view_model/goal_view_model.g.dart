@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'onboarding_view_model.dart';
+part of 'goal_view_model.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -8,32 +8,29 @@ part of 'onboarding_view_model.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// 액션 전용 ViewModel
 
-@ProviderFor(OnboardingViewModel)
-const onboardingViewModelProvider = OnboardingViewModelProvider._();
+@ProviderFor(GoalViewModel)
+const goalViewModelProvider = GoalViewModelProvider._();
 
-/// 액션 전용 ViewModel
-final class OnboardingViewModelProvider
-    extends $NotifierProvider<OnboardingViewModel, void> {
-  /// 액션 전용 ViewModel
-  const OnboardingViewModelProvider._()
+final class GoalViewModelProvider
+    extends $NotifierProvider<GoalViewModel, void> {
+  const GoalViewModelProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'onboardingViewModelProvider',
-        isAutoDispose: false,
+        name: r'goalViewModelProvider',
+        isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$onboardingViewModelHash();
+  String debugGetCreateSourceHash() => _$goalViewModelHash();
 
   @$internal
   @override
-  OnboardingViewModel create() => OnboardingViewModel();
+  GoalViewModel create() => GoalViewModel();
 
   /// {@macro riverpod.override_with_value}
   Override overrideWithValue(void value) {
@@ -44,12 +41,9 @@ final class OnboardingViewModelProvider
   }
 }
 
-String _$onboardingViewModelHash() =>
-    r'fbfe77ec557cf769e86a9f962b1ba71a7f9e9332';
+String _$goalViewModelHash() => r'a5b4cf8d08a46914eb5d6ae382f3ad7416f9a6f7';
 
-/// 액션 전용 ViewModel
-
-abstract class _$OnboardingViewModel extends $Notifier<void> {
+abstract class _$GoalViewModel extends $Notifier<void> {
   void build();
   @$mustCallSuper
   @override

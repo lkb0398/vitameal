@@ -14,6 +14,7 @@ import 'package:vitameal/presentation/onboarding/view/page/onboarding_physical_p
 import 'package:vitameal/presentation/onboarding/view/page/onboarding_profile_page.dart';
 import 'package:vitameal/presentation/setting/view/setting_page.dart';
 import 'package:vitameal/presentation/splash/view/splash_page.dart';
+import 'package:vitameal/presentation/ui_provider/onboarding_provider.dart';
 import '../../presentation/auth/view/login_page.dart';
 import '../../presentation/auth/view_model/auth_view_model.dart';
 
@@ -66,19 +67,9 @@ final routerProvider = Provider<GoRouter>((ref) {
       final session = Supabase.instance.client.auth.currentSession;
       final location = state.matchedLocation;
 
-      // splash 허용
-      if (location == AppRoutePath.splash) {
-        return null;
-      }
-
-      // 비로그인 상태 보호
+      // 비로그인 접근 차단
       if (session == null && location != AppRoutePath.login) {
         return AppRoutePath.login;
-      }
-
-      // 로그인 상태에서 login 접근 차단
-      if (session != null && location == AppRoutePath.login) {
-        return AppRoutePath.home;
       }
 
       return null;
@@ -149,7 +140,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: AppRoutePath.editGoal,
         builder: (context, state) {
-          final goal = state.extra as GoalEntity;
+          final goal = state.extra as GoalsEntity;
           return AddGoalPage(goal: goal);
         },
       ),

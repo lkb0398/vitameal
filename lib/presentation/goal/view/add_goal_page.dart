@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:vitameal/presentation/goal/view_model/goal_view_model.dart';
 import 'package:vitameal/presentation/goal/view/entity.dart';
 import 'package:vitameal/presentation/widget/bordered_container.dart';
 import 'package:vitameal/presentation/widget/validate_textformfield.dart';
@@ -8,17 +9,16 @@ import 'package:vitameal/presentation/widget/validate_textformfield.dart';
 class AddGoalPage extends HookConsumerWidget {
   const AddGoalPage({super.key, this.goal});
 
-  final GoalEntity? goal;
+  final GoalsEntity? goal;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     /// 사용자 입력값 받기
     final goalTitleController = useTextEditingController();
     final goalUnitController = useTextEditingController();
-    final goalFigureController = useTextEditingController();
+    final goalValueController = useTextEditingController();
     final goalDateController = useTextEditingController();
     final dataDateController = useTextEditingController();
-    final dataTimeController = useTextEditingController();
     final dataFigureController = useTextEditingController();
 
     String? validateExample(String? value) {
@@ -29,18 +29,35 @@ class AddGoalPage extends HookConsumerWidget {
     }
 
     // 날짜 선택
-    Future<DateTime?> pickDate(BuildContext context) {
-      return showDatePicker(
+    Future<DateTime?> pickDate(BuildContext context) async {
+      final goalDate = await showDatePicker(
         context: context,
         initialDate: DateTime.now(),
         firstDate: DateTime(2000),
         lastDate: DateTime(2100),
       );
+      if (goalDate == null) return null;
+      return DateTime(goalDate.year, goalDate.month, goalDate.day);
     }
 
-    // 시간 선택
-    Future<TimeOfDay?> pickTime(BuildContext context) {
-      return showTimePicker(context: context, initialTime: TimeOfDay.now());
+    DateTime? selectedGoalDate;
+
+    // 날짜+시간 선택
+    Future<DateTime?> pickDateTime(BuildContext context) async {
+      final date = await showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime(2000),
+        lastDate: DateTime(2100),
+      );
+      if (date == null) return null;
+      if (!context.mounted) return null;
+      final time = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay.now(),
+      );
+      if (time == null) return null;
+      return DateTime(date.year, date.month, date.day, time.hour, time.minute);
     }
 
     return Scaffold(
@@ -65,7 +82,27 @@ class AddGoalPage extends HookConsumerWidget {
             /// 나의 건강 목표
             BorderedContainer(
               title: "나의 건강 목표",
-              action: Text("편집", style: TextStyle(color: Colors.grey)),
+              action: TextButton(
+                onPressed: () {
+                  // 목표 추가
+                  ref
+                      .read(goalViewModelProvider.notifier)
+                      .saveGoal(
+                        goalTitle: goalTitleController.text,
+                        goalUnit: goalUnitController.text,
+                        goalValue: double.tryParse(goalValueController.text)!,
+                        goalDate: selectedGoalDate!,
+                        isDone: false,
+                      );
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('저장이 완료되었습니다'),
+                      duration: Duration(seconds: 1),
+                    ),
+                  );
+                },
+                child: Text("저장"),
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 spacing: 10,
@@ -89,7 +126,7 @@ class AddGoalPage extends HookConsumerWidget {
                     title: "목표 수치",
                     hintText: "ex. 2.46",
                     validator: validateExample,
-                    controller: goalFigureController,
+                    controller: goalValueController,
                   ),
                   ValidateTextformfield(
                     readOnly: true,
@@ -98,11 +135,17 @@ class AddGoalPage extends HookConsumerWidget {
                     validator: validateExample,
                     controller: goalDateController,
                     onTap: () async {
-                      final selectedDate = await pickDate(context);
-                      if (selectedDate != null) {
-                        goalDateController.text =
-                            '${selectedDate.year}.${selectedDate.month}.${selectedDate.day}';
-                      }
+                      final date = await pickDate(context);
+                      if (date == null) return;
+
+                      selectedGoalDate = DateTime(
+                        date.year,
+                        date.month,
+                        date.day,
+                      );
+
+                      goalDateController.text =
+                          '${date.year}.${date.month.toString().padLeft(2, '0')}.${date.day.toString().padLeft(2, '0')}';
                     },
                   ),
                 ],
@@ -119,29 +162,15 @@ class AddGoalPage extends HookConsumerWidget {
                 children: [
                   ValidateTextformfield(
                     readOnly: true,
-                    title: "날짜",
-                    hintText: "ex. 2025.12.22",
+                    title: "일자",
+                    hintText: "ex. 2025-12-22 14:20",
                     validator: validateExample,
                     controller: dataDateController,
                     onTap: () async {
-                      final selectedDate = await pickDate(context);
-                      if (selectedDate != null) {
+                      final selectedDateTime = await pickDateTime(context);
+                      if (selectedDateTime != null) {
                         dataDateController.text =
-                            '${selectedDate.year}.${selectedDate.month.toString().padLeft(2, '0')}.${selectedDate.day.toString().padLeft(2, '0')}';
-                      }
-                    },
-                  ),
-                  ValidateTextformfield(
-                    readOnly: true,
-                    title: "시간",
-                    hintText: "ex. 14:20",
-                    validator: validateExample,
-                    controller: dataTimeController,
-                    onTap: () async {
-                      final selectedTime = await pickTime(context);
-                      if (selectedTime != null) {
-                        dataTimeController.text =
-                            '${selectedTime.hour.toString().padLeft(2, '0')}:${selectedTime.minute.toString().padLeft(2, '0')}';
+                            '${selectedDateTime.year}.${selectedDateTime.month.toString().padLeft(2, '0')}.${selectedDateTime.day.toString().padLeft(2, '0')} ${selectedDateTime.hour.toString().padLeft(2, '0')}:${selectedDateTime.minute.toString().padLeft(2, '0')}';
                       }
                     },
                   ),
@@ -185,7 +214,7 @@ class AddGoalPage extends HookConsumerWidget {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  "${data.dataDate}\n${data.dataTime}",
+                                  "${DateTime.now().day}\n${DateTime.now().hour}",
                                   style: TextStyle(color: Colors.grey),
                                 ),
                                 Row(
@@ -196,15 +225,10 @@ class AddGoalPage extends HookConsumerWidget {
                                     ),
                                     IconButton(
                                       onPressed: () {},
-                                      icon: data.isChecked
-                                          ? Icon(
-                                              Icons.check_circle,
-                                              color: Colors.red,
-                                            )
-                                          : Icon(
-                                              Icons.circle_outlined,
-                                              color: Colors.grey,
-                                            ),
+                                      icon: Icon(
+                                        Icons.circle_outlined,
+                                        color: Colors.grey,
+                                      ),
                                     ),
                                   ],
                                 ),

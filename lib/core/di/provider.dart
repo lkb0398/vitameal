@@ -5,6 +5,7 @@ import 'package:vitameal/data/data_source/diseases_data_source.dart';
 import 'package:vitameal/data/data_source/profiles_data_source.dart';
 import 'package:vitameal/data/data_source/user_allergies_data_source.dart';
 import 'package:vitameal/data/data_source/user_diseases_data_source.dart';
+import 'package:vitameal/presentation/goal/view_model/user_goals/user_goals_data_source.dart';
 import 'package:vitameal/data/repository_impl/allergies_repository_impl.dart';
 import 'package:vitameal/data/repository_impl/diseases_repository_impl.dart';
 import 'package:vitameal/data/repository_impl/profiles_repository_impl.dart';
@@ -15,16 +16,18 @@ import 'package:vitameal/domain/repository/diseases_repository.dart';
 import 'package:vitameal/domain/repository/profiles_repository.dart';
 import 'package:vitameal/domain/repository/user_allergies_repository.dart';
 import 'package:vitameal/domain/repository/user_diseases_repository.dart';
+import 'package:vitameal/presentation/goal/view_model/user_goals/user_goals_repository.dart';
+import 'package:vitameal/presentation/goal/view_model/user_goals/user_goals_repository_impl.dart';
 
 part 'provider.g.dart';
 
-/// Supabase Client
+/// 🤍 Supabase Client
 @riverpod
 SupabaseClient supabaseClient(Ref ref) {
   return Supabase.instance.client;
 }
 
-/// DataSource
+/// 🤍 DataSource
 @riverpod
 ProfilesDataSource profilesDataSource(Ref ref) {
   final client = ref.read(supabaseClientProvider);
@@ -55,7 +58,13 @@ AllergiesDataSource allergiesDataSource(Ref ref) {
   return AllergiesDataSourceImpl(client);
 }
 
-/// Repository
+@riverpod
+UserGoalsDataSource userGoalsDataSource(Ref ref) {
+  final client = ref.read(supabaseClientProvider);
+  return UserGoalsDataSourceImpl(client);
+}
+
+/// 🤍 Repository
 @riverpod
 ProfilesRepository profilesRepository(Ref ref) {
   final dataSource = ref.read(profilesDataSourceProvider);
@@ -86,4 +95,10 @@ UserAllergiesRepository userAllergiesRepository(Ref ref) {
 AllergiesRepository allergiesRepository(Ref ref) {
   final dataSource = ref.read(allergiesDataSourceProvider);
   return AllergiesRepositoryImpl(dataSource);
+}
+
+@riverpod
+UserGoalsRepository userGoalsRepository(Ref ref) {
+  final dataSource = ref.read(userGoalsDataSourceProvider);
+  return UserGoalsRepositoryImpl(dataSource);
 }
