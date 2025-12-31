@@ -1,67 +1,86 @@
 import 'dart:math';
-
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:vitameal/domain/entity/goal_datas_entity.dart';
 
 class Graph extends StatelessWidget {
-  const Graph({super.key, required this.recentDatas});
+  const Graph({super.key, required this.datas});
 
-  final List<double> recentDatas;
+  final List<GoalDatasEntity> datas;
 
   @override
   Widget build(BuildContext context) {
-    final maxValue = recentDatas.reduce(max);
-    final minValue = recentDatas.reduce(min);
-    final interval = (maxValue - minValue) / 5;
+    if (datas.isEmpty) {
+      return Center(child: Text("데이터를 입력해주세요"));
+    }
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+    // data_value 리스트 추출
+    final sortedDatas = [...datas]
+      ..sort((a, b) => a.dataDate.compareTo(b.dataDate));
+    final values = sortedDatas.map((e) => e.dataValue).toList();
+
+    final maxValue = values.reduce(max);
+    final minValue = values.reduce(min);
+    final gap = maxValue - minValue;
+    final interval = (gap / 4 + minValue).toInt();
+
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+      height: 220,
       child: LineChart(
         LineChartData(
           minY: minValue,
           maxY: maxValue,
+
+          /// ===== Grid =====
           gridData: FlGridData(
             show: true,
-            // 가로 그리드 선
             drawHorizontalLine: true,
-            horizontalInterval: 25, // 5개
+            horizontalInterval: interval.toDouble(),
             getDrawingHorizontalLine: (value) =>
                 FlLine(color: Colors.grey[200], strokeWidth: 1),
-            // 세로 그리드 선
             drawVerticalLine: true,
-            verticalInterval: 1, // 5개
+            verticalInterval: 1,
             getDrawingVerticalLine: (value) =>
                 FlLine(color: Colors.grey[200], strokeWidth: 1),
           ),
+
+          /// ===== Titles =====
           titlesData: FlTitlesData(
-            // 좌측 타이틀
+            /// 좌측 (data_value)
             leftTitles: AxisTitles(
               sideTitles: SideTitles(
                 showTitles: true,
-                interval: interval, // 5개
+                interval: interval.toDouble(),
+                reservedSize: 30,
                 getTitlesWidget: (value, _) {
                   return Text(
-                    value.toInt().toString(),
-                    style: TextStyle(fontSize: 10),
+                    value % 1 == 0
+                        ? value.toInt().toString()
+                        : value.toStringAsFixed(1),
+                    style: const TextStyle(fontSize: 10),
                   );
                 },
               ),
             ),
-            // 하단 타이틀
+
+            /// 하단 (data_date)
             bottomTitles: AxisTitles(
               sideTitles: SideTitles(
                 showTitles: true,
-                interval: 1, // 1칸마다 1개 (5개)
+                interval: 1,
                 getTitlesWidget: (value, _) {
                   final index = value.toInt();
-                  if (index < 0 || index >= recentDatas.length) {
-                    return SizedBox.shrink();
+                  if (index < 0 || index >= sortedDatas.length) {
+                    return const SizedBox.shrink();
                   }
+
+                  final date = sortedDatas[index].dataDate;
                   return Padding(
-                    padding: EdgeInsets.only(top: 8),
+                    padding: const EdgeInsets.only(top: 8),
                     child: Text(
-                      '$value', // 데이터 날짜+시간 바꾸기
-                      style: TextStyle(fontSize: 10),
+                      '${date.month}/${date.day}',
+                      style: const TextStyle(fontSize: 10),
                     ),
                   );
                 },
@@ -71,12 +90,16 @@ class Graph extends StatelessWidget {
             rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
             topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
           ),
+
           borderData: FlBorderData(show: false),
+
+          /// ===== Line =====
           lineBarsData: [
             LineChartBarData(
               spots: List.generate(
-                recentDatas.length,
-                (index) => FlSpot(index.toDouble(), recentDatas[index]),
+                sortedDatas.length,
+                (index) =>
+                    FlSpot(index.toDouble(), sortedDatas[index].dataValue),
               ),
               isCurved: false,
               color: Colors.redAccent,

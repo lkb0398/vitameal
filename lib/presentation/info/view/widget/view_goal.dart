@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:vitameal/presentation/info/view/widget/graph.dart';
 import 'package:vitameal/presentation/info/view/widget/guage.dart';
+import 'package:vitameal/presentation/ui_provider/goal_provider.dart';
 import 'package:vitameal/presentation/widget/bordered_container.dart';
 
 class ViewGoal extends HookConsumerWidget {
@@ -10,32 +11,46 @@ class ViewGoal extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final mainGoal = ref.watch(getMainGoalProvider);
+    final startData = ref.watch(oldestMainGoalDataProvider);
+    final currentData = ref.watch(latestMainGoalDataProvider);
+    final current5Datas = ref.watch(latest5MainGoalDatasProvider);
+
     return Column(
       spacing: 20,
       children: [
         /// 건강 목표
         BorderedContainer(
           title: "건강 목표",
-          subtitle: "요산 2025.01.23",
+          subtitle: mainGoal != null
+              ? "${mainGoal.goalTitle} ${mainGoal.goalDate.year}.${mainGoal.goalDate.month}.${mainGoal.goalDate.day}"
+              : "",
           action: IconButton(
             onPressed: () => context.push('/goal'),
             icon: Icon(Icons.arrow_forward_ios),
           ),
-          child: Guage(startValue: 8.00, currentValue: 3.0, targetValue: 2.46),
+          child: mainGoal != null
+              ? Guage(
+                  startData: startData,
+                  currentData: currentData,
+                  targetValue: mainGoal.goalValue,
+                )
+              : Center(child: Text("대표 설정된 목표가 없어요")),
         ),
 
         /// 최근 그래프
         BorderedContainer(
           title: "최근 그래프",
-          subtitle: "요산 mg/dL",
+          subtitle: mainGoal != null
+              ? "${mainGoal.goalTitle} ${mainGoal.goalUnit}"
+              : "",
           action: IconButton(
             onPressed: () => context.push('/goal'),
             icon: Icon(Icons.arrow_forward_ios),
           ),
-          child: SizedBox(
-            height: 220,
-            child: Graph(recentDatas: [5, 30, 12, 60, 100]),
-          ),
+          child: mainGoal != null
+              ? Graph(datas: current5Datas ?? [])
+              : Center(child: Text("대표 설정된 목표가 없어요")),
         ),
       ],
     );

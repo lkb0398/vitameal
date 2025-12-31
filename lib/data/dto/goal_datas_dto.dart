@@ -6,6 +6,8 @@ part 'goal_datas_dto.g.dart';
 @freezed
 abstract class GoalDatasDto with _$GoalDatasDto {
   const factory GoalDatasDto({
+    @JsonKey(name: 'goal_id') String? goalId,
+    @JsonKey(name: 'data_id') String? dataId,
     @JsonKey(name: 'data_date') required DateTime dataDate,
     @JsonKey(name: 'data_value') required double dataValue,
   }) = _GoalDatasDto;

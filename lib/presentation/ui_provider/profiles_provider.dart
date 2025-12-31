@@ -1,12 +1,18 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:vitameal/core/config/routes.dart';
 import 'package:vitameal/core/di/provider.dart';
 import 'package:vitameal/domain/entity/allergies_entity.dart';
 import 'package:vitameal/domain/entity/diseases_entity.dart';
 import 'package:vitameal/domain/entity/profiles_entity.dart';
-import 'package:vitameal/presentation/ui_provider/user_id_provider.dart';
 
-part 'onboarding_provider.g.dart';
+part 'profiles_provider.g.dart';
+
+/// 현재 로그인된 userId 가져오기 Provider
+@riverpod
+String userId(Ref ref) {
+  return Supabase.instance.client.auth.currentUser!.id;
+}
 
 /// 현재 router location 얻기 Provider
 @riverpod

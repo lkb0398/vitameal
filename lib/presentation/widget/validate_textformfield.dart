@@ -6,8 +6,8 @@ class ValidateTextformfield extends StatelessWidget {
     super.key,
     required this.readOnly,
     required this.hintText,
-    required this.validator,
     required this.controller,
+    this.validator,
     this.title,
     this.onTap,
     this.keyboardType,
@@ -18,8 +18,8 @@ class ValidateTextformfield extends StatelessWidget {
   });
   final bool readOnly;
   final String hintText;
-  final FormFieldValidator<String> validator;
   final TextEditingController controller;
+  final FormFieldValidator<String>? validator;
   final String? title;
   final void Function()? onTap;
   final TextInputType? keyboardType;

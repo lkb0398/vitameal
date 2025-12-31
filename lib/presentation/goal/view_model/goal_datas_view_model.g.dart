@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'goal_view_model.dart';
+part of 'goal_datas_view_model.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -9,28 +9,28 @@ part of 'goal_view_model.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
-@ProviderFor(GoalViewModel)
-const goalViewModelProvider = GoalViewModelProvider._();
+@ProviderFor(GoalDatasViewModel)
+const goalDatasViewModelProvider = GoalDatasViewModelProvider._();
 
-final class GoalViewModelProvider
-    extends $NotifierProvider<GoalViewModel, void> {
-  const GoalViewModelProvider._()
+final class GoalDatasViewModelProvider
+    extends $NotifierProvider<GoalDatasViewModel, void> {
+  const GoalDatasViewModelProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'goalViewModelProvider',
+        name: r'goalDatasViewModelProvider',
         isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$goalViewModelHash();
+  String debugGetCreateSourceHash() => _$goalDatasViewModelHash();
 
   @$internal
   @override
-  GoalViewModel create() => GoalViewModel();
+  GoalDatasViewModel create() => GoalDatasViewModel();
 
   /// {@macro riverpod.override_with_value}
   Override overrideWithValue(void value) {
@@ -41,9 +41,10 @@ final class GoalViewModelProvider
   }
 }
 
-String _$goalViewModelHash() => r'a5b4cf8d08a46914eb5d6ae382f3ad7416f9a6f7';
+String _$goalDatasViewModelHash() =>
+    r'a2ac9d4f3bd69867ddeab224222b992d586a964b';
 
-abstract class _$GoalViewModel extends $Notifier<void> {
+abstract class _$GoalDatasViewModel extends $Notifier<void> {
   void build();
   @$mustCallSuper
   @override

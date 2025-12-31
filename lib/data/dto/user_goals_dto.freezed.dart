@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$UserGoalsDto {
 
-@JsonKey(name: 'user_id') String? get userId;@JsonKey(name: 'goal_title') String get goalTitle;@JsonKey(name: 'goal_unit') String get goalUnit;@JsonKey(name: 'goal_value') num get goalValue;@JsonKey(name: 'goal_date') String get goalDate;@JsonKey(name: 'is_done') bool get isDone;@JsonKey(name: 'is_main') bool? get isMain;
+@JsonKey(name: 'user_id') String? get userId;@JsonKey(name: 'goal_id') String? get goalId;@JsonKey(name: 'goal_title') String get goalTitle;@JsonKey(name: 'goal_unit') String get goalUnit;@JsonKey(name: 'goal_value') num get goalValue;@JsonKey(name: 'goal_date') String get goalDate;@JsonKey(name: 'is_done') bool get isDone;@JsonKey(name: 'is_main') bool get isMain;
 /// Create a copy of UserGoalsDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $UserGoalsDtoCopyWith<UserGoalsDto> get copyWith => _$UserGoalsDtoCopyWithImpl<U
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserGoalsDto&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.goalTitle, goalTitle) || other.goalTitle == goalTitle)&&(identical(other.goalUnit, goalUnit) || other.goalUnit == goalUnit)&&(identical(other.goalValue, goalValue) || other.goalValue == goalValue)&&(identical(other.goalDate, goalDate) || other.goalDate == goalDate)&&(identical(other.isDone, isDone) || other.isDone == isDone)&&(identical(other.isMain, isMain) || other.isMain == isMain));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserGoalsDto&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.goalId, goalId) || other.goalId == goalId)&&(identical(other.goalTitle, goalTitle) || other.goalTitle == goalTitle)&&(identical(other.goalUnit, goalUnit) || other.goalUnit == goalUnit)&&(identical(other.goalValue, goalValue) || other.goalValue == goalValue)&&(identical(other.goalDate, goalDate) || other.goalDate == goalDate)&&(identical(other.isDone, isDone) || other.isDone == isDone)&&(identical(other.isMain, isMain) || other.isMain == isMain));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,userId,goalTitle,goalUnit,goalValue,goalDate,isDone,isMain);
+int get hashCode => Object.hash(runtimeType,userId,goalId,goalTitle,goalUnit,goalValue,goalDate,isDone,isMain);
 
 @override
 String toString() {
-  return 'UserGoalsDto(userId: $userId, goalTitle: $goalTitle, goalUnit: $goalUnit, goalValue: $goalValue, goalDate: $goalDate, isDone: $isDone, isMain: $isMain)';
+  return 'UserGoalsDto(userId: $userId, goalId: $goalId, goalTitle: $goalTitle, goalUnit: $goalUnit, goalValue: $goalValue, goalDate: $goalDate, isDone: $isDone, isMain: $isMain)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $UserGoalsDtoCopyWith<$Res>  {
   factory $UserGoalsDtoCopyWith(UserGoalsDto value, $Res Function(UserGoalsDto) _then) = _$UserGoalsDtoCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'user_id') String? userId,@JsonKey(name: 'goal_title') String goalTitle,@JsonKey(name: 'goal_unit') String goalUnit,@JsonKey(name: 'goal_value') num goalValue,@JsonKey(name: 'goal_date') String goalDate,@JsonKey(name: 'is_done') bool isDone,@JsonKey(name: 'is_main') bool? isMain
+@JsonKey(name: 'user_id') String? userId,@JsonKey(name: 'goal_id') String? goalId,@JsonKey(name: 'goal_title') String goalTitle,@JsonKey(name: 'goal_unit') String goalUnit,@JsonKey(name: 'goal_value') num goalValue,@JsonKey(name: 'goal_date') String goalDate,@JsonKey(name: 'is_done') bool isDone,@JsonKey(name: 'is_main') bool isMain
 });
 
 
@@ -65,16 +65,17 @@ class _$UserGoalsDtoCopyWithImpl<$Res>
 
 /// Create a copy of UserGoalsDto
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? userId = freezed,Object? goalTitle = null,Object? goalUnit = null,Object? goalValue = null,Object? goalDate = null,Object? isDone = null,Object? isMain = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? userId = freezed,Object? goalId = freezed,Object? goalTitle = null,Object? goalUnit = null,Object? goalValue = null,Object? goalDate = null,Object? isDone = null,Object? isMain = null,}) {
   return _then(_self.copyWith(
 userId: freezed == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
+as String?,goalId: freezed == goalId ? _self.goalId : goalId // ignore: cast_nullable_to_non_nullable
 as String?,goalTitle: null == goalTitle ? _self.goalTitle : goalTitle // ignore: cast_nullable_to_non_nullable
 as String,goalUnit: null == goalUnit ? _self.goalUnit : goalUnit // ignore: cast_nullable_to_non_nullable
 as String,goalValue: null == goalValue ? _self.goalValue : goalValue // ignore: cast_nullable_to_non_nullable
 as num,goalDate: null == goalDate ? _self.goalDate : goalDate // ignore: cast_nullable_to_non_nullable
 as String,isDone: null == isDone ? _self.isDone : isDone // ignore: cast_nullable_to_non_nullable
-as bool,isMain: freezed == isMain ? _self.isMain : isMain // ignore: cast_nullable_to_non_nullable
-as bool?,
+as bool,isMain: null == isMain ? _self.isMain : isMain // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 
@@ -159,10 +160,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'user_id')  String? userId, @JsonKey(name: 'goal_title')  String goalTitle, @JsonKey(name: 'goal_unit')  String goalUnit, @JsonKey(name: 'goal_value')  num goalValue, @JsonKey(name: 'goal_date')  String goalDate, @JsonKey(name: 'is_done')  bool isDone, @JsonKey(name: 'is_main')  bool? isMain)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'user_id')  String? userId, @JsonKey(name: 'goal_id')  String? goalId, @JsonKey(name: 'goal_title')  String goalTitle, @JsonKey(name: 'goal_unit')  String goalUnit, @JsonKey(name: 'goal_value')  num goalValue, @JsonKey(name: 'goal_date')  String goalDate, @JsonKey(name: 'is_done')  bool isDone, @JsonKey(name: 'is_main')  bool isMain)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _UserGoalsDto() when $default != null:
-return $default(_that.userId,_that.goalTitle,_that.goalUnit,_that.goalValue,_that.goalDate,_that.isDone,_that.isMain);case _:
+return $default(_that.userId,_that.goalId,_that.goalTitle,_that.goalUnit,_that.goalValue,_that.goalDate,_that.isDone,_that.isMain);case _:
   return orElse();
 
 }
@@ -180,10 +181,10 @@ return $default(_that.userId,_that.goalTitle,_that.goalUnit,_that.goalValue,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'user_id')  String? userId, @JsonKey(name: 'goal_title')  String goalTitle, @JsonKey(name: 'goal_unit')  String goalUnit, @JsonKey(name: 'goal_value')  num goalValue, @JsonKey(name: 'goal_date')  String goalDate, @JsonKey(name: 'is_done')  bool isDone, @JsonKey(name: 'is_main')  bool? isMain)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'user_id')  String? userId, @JsonKey(name: 'goal_id')  String? goalId, @JsonKey(name: 'goal_title')  String goalTitle, @JsonKey(name: 'goal_unit')  String goalUnit, @JsonKey(name: 'goal_value')  num goalValue, @JsonKey(name: 'goal_date')  String goalDate, @JsonKey(name: 'is_done')  bool isDone, @JsonKey(name: 'is_main')  bool isMain)  $default,) {final _that = this;
 switch (_that) {
 case _UserGoalsDto():
-return $default(_that.userId,_that.goalTitle,_that.goalUnit,_that.goalValue,_that.goalDate,_that.isDone,_that.isMain);case _:
+return $default(_that.userId,_that.goalId,_that.goalTitle,_that.goalUnit,_that.goalValue,_that.goalDate,_that.isDone,_that.isMain);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -200,10 +201,10 @@ return $default(_that.userId,_that.goalTitle,_that.goalUnit,_that.goalValue,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'user_id')  String? userId, @JsonKey(name: 'goal_title')  String goalTitle, @JsonKey(name: 'goal_unit')  String goalUnit, @JsonKey(name: 'goal_value')  num goalValue, @JsonKey(name: 'goal_date')  String goalDate, @JsonKey(name: 'is_done')  bool isDone, @JsonKey(name: 'is_main')  bool? isMain)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'user_id')  String? userId, @JsonKey(name: 'goal_id')  String? goalId, @JsonKey(name: 'goal_title')  String goalTitle, @JsonKey(name: 'goal_unit')  String goalUnit, @JsonKey(name: 'goal_value')  num goalValue, @JsonKey(name: 'goal_date')  String goalDate, @JsonKey(name: 'is_done')  bool isDone, @JsonKey(name: 'is_main')  bool isMain)?  $default,) {final _that = this;
 switch (_that) {
 case _UserGoalsDto() when $default != null:
-return $default(_that.userId,_that.goalTitle,_that.goalUnit,_that.goalValue,_that.goalDate,_that.isDone,_that.isMain);case _:
+return $default(_that.userId,_that.goalId,_that.goalTitle,_that.goalUnit,_that.goalValue,_that.goalDate,_that.isDone,_that.isMain);case _:
   return null;
 
 }
@@ -215,16 +216,17 @@ return $default(_that.userId,_that.goalTitle,_that.goalUnit,_that.goalValue,_tha
 @JsonSerializable()
 
 class _UserGoalsDto implements UserGoalsDto {
-  const _UserGoalsDto({@JsonKey(name: 'user_id') this.userId, @JsonKey(name: 'goal_title') required this.goalTitle, @JsonKey(name: 'goal_unit') required this.goalUnit, @JsonKey(name: 'goal_value') required this.goalValue, @JsonKey(name: 'goal_date') required this.goalDate, @JsonKey(name: 'is_done') required this.isDone, @JsonKey(name: 'is_main') this.isMain});
+  const _UserGoalsDto({@JsonKey(name: 'user_id') this.userId, @JsonKey(name: 'goal_id') this.goalId, @JsonKey(name: 'goal_title') required this.goalTitle, @JsonKey(name: 'goal_unit') required this.goalUnit, @JsonKey(name: 'goal_value') required this.goalValue, @JsonKey(name: 'goal_date') required this.goalDate, @JsonKey(name: 'is_done') required this.isDone, @JsonKey(name: 'is_main') required this.isMain});
   factory _UserGoalsDto.fromJson(Map<String, dynamic> json) => _$UserGoalsDtoFromJson(json);
 
 @override@JsonKey(name: 'user_id') final  String? userId;
+@override@JsonKey(name: 'goal_id') final  String? goalId;
 @override@JsonKey(name: 'goal_title') final  String goalTitle;
 @override@JsonKey(name: 'goal_unit') final  String goalUnit;
 @override@JsonKey(name: 'goal_value') final  num goalValue;
 @override@JsonKey(name: 'goal_date') final  String goalDate;
 @override@JsonKey(name: 'is_done') final  bool isDone;
-@override@JsonKey(name: 'is_main') final  bool? isMain;
+@override@JsonKey(name: 'is_main') final  bool isMain;
 
 /// Create a copy of UserGoalsDto
 /// with the given fields replaced by the non-null parameter values.
@@ -239,16 +241,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserGoalsDto&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.goalTitle, goalTitle) || other.goalTitle == goalTitle)&&(identical(other.goalUnit, goalUnit) || other.goalUnit == goalUnit)&&(identical(other.goalValue, goalValue) || other.goalValue == goalValue)&&(identical(other.goalDate, goalDate) || other.goalDate == goalDate)&&(identical(other.isDone, isDone) || other.isDone == isDone)&&(identical(other.isMain, isMain) || other.isMain == isMain));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserGoalsDto&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.goalId, goalId) || other.goalId == goalId)&&(identical(other.goalTitle, goalTitle) || other.goalTitle == goalTitle)&&(identical(other.goalUnit, goalUnit) || other.goalUnit == goalUnit)&&(identical(other.goalValue, goalValue) || other.goalValue == goalValue)&&(identical(other.goalDate, goalDate) || other.goalDate == goalDate)&&(identical(other.isDone, isDone) || other.isDone == isDone)&&(identical(other.isMain, isMain) || other.isMain == isMain));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,userId,goalTitle,goalUnit,goalValue,goalDate,isDone,isMain);
+int get hashCode => Object.hash(runtimeType,userId,goalId,goalTitle,goalUnit,goalValue,goalDate,isDone,isMain);
 
 @override
 String toString() {
-  return 'UserGoalsDto(userId: $userId, goalTitle: $goalTitle, goalUnit: $goalUnit, goalValue: $goalValue, goalDate: $goalDate, isDone: $isDone, isMain: $isMain)';
+  return 'UserGoalsDto(userId: $userId, goalId: $goalId, goalTitle: $goalTitle, goalUnit: $goalUnit, goalValue: $goalValue, goalDate: $goalDate, isDone: $isDone, isMain: $isMain)';
 }
 
 
@@ -259,7 +261,7 @@ abstract mixin class _$UserGoalsDtoCopyWith<$Res> implements $UserGoalsDtoCopyWi
   factory _$UserGoalsDtoCopyWith(_UserGoalsDto value, $Res Function(_UserGoalsDto) _then) = __$UserGoalsDtoCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'user_id') String? userId,@JsonKey(name: 'goal_title') String goalTitle,@JsonKey(name: 'goal_unit') String goalUnit,@JsonKey(name: 'goal_value') num goalValue,@JsonKey(name: 'goal_date') String goalDate,@JsonKey(name: 'is_done') bool isDone,@JsonKey(name: 'is_main') bool? isMain
+@JsonKey(name: 'user_id') String? userId,@JsonKey(name: 'goal_id') String? goalId,@JsonKey(name: 'goal_title') String goalTitle,@JsonKey(name: 'goal_unit') String goalUnit,@JsonKey(name: 'goal_value') num goalValue,@JsonKey(name: 'goal_date') String goalDate,@JsonKey(name: 'is_done') bool isDone,@JsonKey(name: 'is_main') bool isMain
 });
 
 
@@ -276,16 +278,17 @@ class __$UserGoalsDtoCopyWithImpl<$Res>
 
 /// Create a copy of UserGoalsDto
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? userId = freezed,Object? goalTitle = null,Object? goalUnit = null,Object? goalValue = null,Object? goalDate = null,Object? isDone = null,Object? isMain = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? userId = freezed,Object? goalId = freezed,Object? goalTitle = null,Object? goalUnit = null,Object? goalValue = null,Object? goalDate = null,Object? isDone = null,Object? isMain = null,}) {
   return _then(_UserGoalsDto(
 userId: freezed == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
+as String?,goalId: freezed == goalId ? _self.goalId : goalId // ignore: cast_nullable_to_non_nullable
 as String?,goalTitle: null == goalTitle ? _self.goalTitle : goalTitle // ignore: cast_nullable_to_non_nullable
 as String,goalUnit: null == goalUnit ? _self.goalUnit : goalUnit // ignore: cast_nullable_to_non_nullable
 as String,goalValue: null == goalValue ? _self.goalValue : goalValue // ignore: cast_nullable_to_non_nullable
 as num,goalDate: null == goalDate ? _self.goalDate : goalDate // ignore: cast_nullable_to_non_nullable
 as String,isDone: null == isDone ? _self.isDone : isDone // ignore: cast_nullable_to_non_nullable
-as bool,isMain: freezed == isMain ? _self.isMain : isMain // ignore: cast_nullable_to_non_nullable
-as bool?,
+as bool,isMain: null == isMain ? _self.isMain : isMain // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 

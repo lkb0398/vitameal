@@ -7,7 +7,7 @@ import 'package:tap_debouncer/tap_debouncer.dart';
 import 'package:vitameal/domain/enum/gender_type_enum.dart';
 import 'package:vitameal/presentation/onboarding/view/widget/select_box.dart';
 import 'package:vitameal/presentation/widget/validate_textformfield.dart';
-import 'package:vitameal/presentation/ui_provider/onboarding_provider.dart';
+import 'package:vitameal/presentation/ui_provider/profiles_provider.dart';
 import 'package:vitameal/presentation/onboarding/viewmodel/onboarding_view_model.dart';
 
 class OnboardingPhysicalPage extends HookConsumerWidget {

@@ -3,9 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:vitameal/presentation/goal/view/add_goal_page.dart';
-import 'package:vitameal/presentation/goal/view/entity.dart';
-import 'package:vitameal/presentation/goal/view/goal_page.dart';
+import 'package:vitameal/presentation/goal/view/page/add_goal_page.dart';
+import 'package:vitameal/presentation/goal/view/page/goal_page.dart';
 import 'package:vitameal/presentation/home/view/page/home_page.dart';
 import 'package:vitameal/presentation/onboarding/view/page/onboarding_allergy_page.dart';
 import 'package:vitameal/presentation/onboarding/view/page/onboarding_disease_page.dart';
@@ -14,7 +13,6 @@ import 'package:vitameal/presentation/onboarding/view/page/onboarding_physical_p
 import 'package:vitameal/presentation/onboarding/view/page/onboarding_profile_page.dart';
 import 'package:vitameal/presentation/setting/view/setting_page.dart';
 import 'package:vitameal/presentation/splash/view/splash_page.dart';
-import 'package:vitameal/presentation/ui_provider/onboarding_provider.dart';
 import '../../presentation/auth/view/login_page.dart';
 import '../../presentation/auth/view_model/auth_view_model.dart';
 
@@ -140,8 +138,8 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: AppRoutePath.editGoal,
         builder: (context, state) {
-          final goal = state.extra as GoalsEntity;
-          return AddGoalPage(goal: goal);
+          final goalId = state.extra as String;
+          return AddGoalPage(goalId: goalId);
         },
       ),
     ],

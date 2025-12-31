@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$GoalDatasDto {
 
-@JsonKey(name: 'data_date') DateTime get dataDate;@JsonKey(name: 'data_value') double get dataValue;
+@JsonKey(name: 'goal_id') String? get goalId;@JsonKey(name: 'data_id') String? get dataId;@JsonKey(name: 'data_date') DateTime get dataDate;@JsonKey(name: 'data_value') double get dataValue;
 /// Create a copy of GoalDatasDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $GoalDatasDtoCopyWith<GoalDatasDto> get copyWith => _$GoalDatasDtoCopyWithImpl<G
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is GoalDatasDto&&(identical(other.dataDate, dataDate) || other.dataDate == dataDate)&&(identical(other.dataValue, dataValue) || other.dataValue == dataValue));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is GoalDatasDto&&(identical(other.goalId, goalId) || other.goalId == goalId)&&(identical(other.dataId, dataId) || other.dataId == dataId)&&(identical(other.dataDate, dataDate) || other.dataDate == dataDate)&&(identical(other.dataValue, dataValue) || other.dataValue == dataValue));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,dataDate,dataValue);
+int get hashCode => Object.hash(runtimeType,goalId,dataId,dataDate,dataValue);
 
 @override
 String toString() {
-  return 'GoalDatasDto(dataDate: $dataDate, dataValue: $dataValue)';
+  return 'GoalDatasDto(goalId: $goalId, dataId: $dataId, dataDate: $dataDate, dataValue: $dataValue)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $GoalDatasDtoCopyWith<$Res>  {
   factory $GoalDatasDtoCopyWith(GoalDatasDto value, $Res Function(GoalDatasDto) _then) = _$GoalDatasDtoCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'data_date') DateTime dataDate,@JsonKey(name: 'data_value') double dataValue
+@JsonKey(name: 'goal_id') String? goalId,@JsonKey(name: 'data_id') String? dataId,@JsonKey(name: 'data_date') DateTime dataDate,@JsonKey(name: 'data_value') double dataValue
 });
 
 
@@ -65,9 +65,11 @@ class _$GoalDatasDtoCopyWithImpl<$Res>
 
 /// Create a copy of GoalDatasDto
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? dataDate = null,Object? dataValue = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? goalId = freezed,Object? dataId = freezed,Object? dataDate = null,Object? dataValue = null,}) {
   return _then(_self.copyWith(
-dataDate: null == dataDate ? _self.dataDate : dataDate // ignore: cast_nullable_to_non_nullable
+goalId: freezed == goalId ? _self.goalId : goalId // ignore: cast_nullable_to_non_nullable
+as String?,dataId: freezed == dataId ? _self.dataId : dataId // ignore: cast_nullable_to_non_nullable
+as String?,dataDate: null == dataDate ? _self.dataDate : dataDate // ignore: cast_nullable_to_non_nullable
 as DateTime,dataValue: null == dataValue ? _self.dataValue : dataValue // ignore: cast_nullable_to_non_nullable
 as double,
   ));
@@ -154,10 +156,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'data_date')  DateTime dataDate, @JsonKey(name: 'data_value')  double dataValue)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'goal_id')  String? goalId, @JsonKey(name: 'data_id')  String? dataId, @JsonKey(name: 'data_date')  DateTime dataDate, @JsonKey(name: 'data_value')  double dataValue)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _GoalDatasDto() when $default != null:
-return $default(_that.dataDate,_that.dataValue);case _:
+return $default(_that.goalId,_that.dataId,_that.dataDate,_that.dataValue);case _:
   return orElse();
 
 }
@@ -175,10 +177,10 @@ return $default(_that.dataDate,_that.dataValue);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'data_date')  DateTime dataDate, @JsonKey(name: 'data_value')  double dataValue)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'goal_id')  String? goalId, @JsonKey(name: 'data_id')  String? dataId, @JsonKey(name: 'data_date')  DateTime dataDate, @JsonKey(name: 'data_value')  double dataValue)  $default,) {final _that = this;
 switch (_that) {
 case _GoalDatasDto():
-return $default(_that.dataDate,_that.dataValue);case _:
+return $default(_that.goalId,_that.dataId,_that.dataDate,_that.dataValue);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -195,10 +197,10 @@ return $default(_that.dataDate,_that.dataValue);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'data_date')  DateTime dataDate, @JsonKey(name: 'data_value')  double dataValue)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'goal_id')  String? goalId, @JsonKey(name: 'data_id')  String? dataId, @JsonKey(name: 'data_date')  DateTime dataDate, @JsonKey(name: 'data_value')  double dataValue)?  $default,) {final _that = this;
 switch (_that) {
 case _GoalDatasDto() when $default != null:
-return $default(_that.dataDate,_that.dataValue);case _:
+return $default(_that.goalId,_that.dataId,_that.dataDate,_that.dataValue);case _:
   return null;
 
 }
@@ -210,9 +212,11 @@ return $default(_that.dataDate,_that.dataValue);case _:
 @JsonSerializable()
 
 class _GoalDatasDto implements GoalDatasDto {
-  const _GoalDatasDto({@JsonKey(name: 'data_date') required this.dataDate, @JsonKey(name: 'data_value') required this.dataValue});
+  const _GoalDatasDto({@JsonKey(name: 'goal_id') this.goalId, @JsonKey(name: 'data_id') this.dataId, @JsonKey(name: 'data_date') required this.dataDate, @JsonKey(name: 'data_value') required this.dataValue});
   factory _GoalDatasDto.fromJson(Map<String, dynamic> json) => _$GoalDatasDtoFromJson(json);
 
+@override@JsonKey(name: 'goal_id') final  String? goalId;
+@override@JsonKey(name: 'data_id') final  String? dataId;
 @override@JsonKey(name: 'data_date') final  DateTime dataDate;
 @override@JsonKey(name: 'data_value') final  double dataValue;
 
@@ -229,16 +233,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _GoalDatasDto&&(identical(other.dataDate, dataDate) || other.dataDate == dataDate)&&(identical(other.dataValue, dataValue) || other.dataValue == dataValue));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _GoalDatasDto&&(identical(other.goalId, goalId) || other.goalId == goalId)&&(identical(other.dataId, dataId) || other.dataId == dataId)&&(identical(other.dataDate, dataDate) || other.dataDate == dataDate)&&(identical(other.dataValue, dataValue) || other.dataValue == dataValue));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,dataDate,dataValue);
+int get hashCode => Object.hash(runtimeType,goalId,dataId,dataDate,dataValue);
 
 @override
 String toString() {
-  return 'GoalDatasDto(dataDate: $dataDate, dataValue: $dataValue)';
+  return 'GoalDatasDto(goalId: $goalId, dataId: $dataId, dataDate: $dataDate, dataValue: $dataValue)';
 }
 
 
@@ -249,7 +253,7 @@ abstract mixin class _$GoalDatasDtoCopyWith<$Res> implements $GoalDatasDtoCopyWi
   factory _$GoalDatasDtoCopyWith(_GoalDatasDto value, $Res Function(_GoalDatasDto) _then) = __$GoalDatasDtoCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'data_date') DateTime dataDate,@JsonKey(name: 'data_value') double dataValue
+@JsonKey(name: 'goal_id') String? goalId,@JsonKey(name: 'data_id') String? dataId,@JsonKey(name: 'data_date') DateTime dataDate,@JsonKey(name: 'data_value') double dataValue
 });
 
 
@@ -266,9 +270,11 @@ class __$GoalDatasDtoCopyWithImpl<$Res>
 
 /// Create a copy of GoalDatasDto
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? dataDate = null,Object? dataValue = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? goalId = freezed,Object? dataId = freezed,Object? dataDate = null,Object? dataValue = null,}) {
   return _then(_GoalDatasDto(
-dataDate: null == dataDate ? _self.dataDate : dataDate // ignore: cast_nullable_to_non_nullable
+goalId: freezed == goalId ? _self.goalId : goalId // ignore: cast_nullable_to_non_nullable
+as String?,dataId: freezed == dataId ? _self.dataId : dataId // ignore: cast_nullable_to_non_nullable
+as String?,dataDate: null == dataDate ? _self.dataDate : dataDate // ignore: cast_nullable_to_non_nullable
 as DateTime,dataValue: null == dataValue ? _self.dataValue : dataValue // ignore: cast_nullable_to_non_nullable
 as double,
   ));

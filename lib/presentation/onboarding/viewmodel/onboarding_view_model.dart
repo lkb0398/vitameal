@@ -3,8 +3,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:vitameal/core/di/provider.dart';
 import 'package:vitameal/domain/entity/profiles_entity.dart';
 import 'package:vitameal/domain/enum/gender_type_enum.dart';
-import 'package:vitameal/presentation/ui_provider/onboarding_provider.dart';
-import 'package:vitameal/presentation/ui_provider/user_id_provider.dart';
+import 'package:vitameal/presentation/ui_provider/profiles_provider.dart';
 
 part 'onboarding_view_model.g.dart';
 

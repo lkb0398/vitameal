@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$GoalDatasEntity {
 
- DateTime get dataDate;// 데이터 날짜
+ String? get goalId; String? get dataId; DateTime get dataDate;// 데이터 날짜
  double get dataValue;
 /// Create a copy of GoalDatasEntity
 /// with the given fields replaced by the non-null parameter values.
@@ -26,16 +26,16 @@ $GoalDatasEntityCopyWith<GoalDatasEntity> get copyWith => _$GoalDatasEntityCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is GoalDatasEntity&&(identical(other.dataDate, dataDate) || other.dataDate == dataDate)&&(identical(other.dataValue, dataValue) || other.dataValue == dataValue));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is GoalDatasEntity&&(identical(other.goalId, goalId) || other.goalId == goalId)&&(identical(other.dataId, dataId) || other.dataId == dataId)&&(identical(other.dataDate, dataDate) || other.dataDate == dataDate)&&(identical(other.dataValue, dataValue) || other.dataValue == dataValue));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,dataDate,dataValue);
+int get hashCode => Object.hash(runtimeType,goalId,dataId,dataDate,dataValue);
 
 @override
 String toString() {
-  return 'GoalDatasEntity(dataDate: $dataDate, dataValue: $dataValue)';
+  return 'GoalDatasEntity(goalId: $goalId, dataId: $dataId, dataDate: $dataDate, dataValue: $dataValue)';
 }
 
 
@@ -46,7 +46,7 @@ abstract mixin class $GoalDatasEntityCopyWith<$Res>  {
   factory $GoalDatasEntityCopyWith(GoalDatasEntity value, $Res Function(GoalDatasEntity) _then) = _$GoalDatasEntityCopyWithImpl;
 @useResult
 $Res call({
- DateTime dataDate, double dataValue
+ String? goalId, String? dataId, DateTime dataDate, double dataValue
 });
 
 
@@ -63,9 +63,11 @@ class _$GoalDatasEntityCopyWithImpl<$Res>
 
 /// Create a copy of GoalDatasEntity
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? dataDate = null,Object? dataValue = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? goalId = freezed,Object? dataId = freezed,Object? dataDate = null,Object? dataValue = null,}) {
   return _then(_self.copyWith(
-dataDate: null == dataDate ? _self.dataDate : dataDate // ignore: cast_nullable_to_non_nullable
+goalId: freezed == goalId ? _self.goalId : goalId // ignore: cast_nullable_to_non_nullable
+as String?,dataId: freezed == dataId ? _self.dataId : dataId // ignore: cast_nullable_to_non_nullable
+as String?,dataDate: null == dataDate ? _self.dataDate : dataDate // ignore: cast_nullable_to_non_nullable
 as DateTime,dataValue: null == dataValue ? _self.dataValue : dataValue // ignore: cast_nullable_to_non_nullable
 as double,
   ));
@@ -152,10 +154,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( DateTime dataDate,  double dataValue)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? goalId,  String? dataId,  DateTime dataDate,  double dataValue)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _GoalDatasEntity() when $default != null:
-return $default(_that.dataDate,_that.dataValue);case _:
+return $default(_that.goalId,_that.dataId,_that.dataDate,_that.dataValue);case _:
   return orElse();
 
 }
@@ -173,10 +175,10 @@ return $default(_that.dataDate,_that.dataValue);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( DateTime dataDate,  double dataValue)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? goalId,  String? dataId,  DateTime dataDate,  double dataValue)  $default,) {final _that = this;
 switch (_that) {
 case _GoalDatasEntity():
-return $default(_that.dataDate,_that.dataValue);case _:
+return $default(_that.goalId,_that.dataId,_that.dataDate,_that.dataValue);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -193,10 +195,10 @@ return $default(_that.dataDate,_that.dataValue);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( DateTime dataDate,  double dataValue)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? goalId,  String? dataId,  DateTime dataDate,  double dataValue)?  $default,) {final _that = this;
 switch (_that) {
 case _GoalDatasEntity() when $default != null:
-return $default(_that.dataDate,_that.dataValue);case _:
+return $default(_that.goalId,_that.dataId,_that.dataDate,_that.dataValue);case _:
   return null;
 
 }
@@ -208,9 +210,11 @@ return $default(_that.dataDate,_that.dataValue);case _:
 
 
 class _GoalDatasEntity implements GoalDatasEntity {
-  const _GoalDatasEntity({required this.dataDate, required this.dataValue});
+  const _GoalDatasEntity({this.goalId, this.dataId, required this.dataDate, required this.dataValue});
   
 
+@override final  String? goalId;
+@override final  String? dataId;
 @override final  DateTime dataDate;
 // 데이터 날짜
 @override final  double dataValue;
@@ -225,16 +229,16 @@ _$GoalDatasEntityCopyWith<_GoalDatasEntity> get copyWith => __$GoalDatasEntityCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _GoalDatasEntity&&(identical(other.dataDate, dataDate) || other.dataDate == dataDate)&&(identical(other.dataValue, dataValue) || other.dataValue == dataValue));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _GoalDatasEntity&&(identical(other.goalId, goalId) || other.goalId == goalId)&&(identical(other.dataId, dataId) || other.dataId == dataId)&&(identical(other.dataDate, dataDate) || other.dataDate == dataDate)&&(identical(other.dataValue, dataValue) || other.dataValue == dataValue));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,dataDate,dataValue);
+int get hashCode => Object.hash(runtimeType,goalId,dataId,dataDate,dataValue);
 
 @override
 String toString() {
-  return 'GoalDatasEntity(dataDate: $dataDate, dataValue: $dataValue)';
+  return 'GoalDatasEntity(goalId: $goalId, dataId: $dataId, dataDate: $dataDate, dataValue: $dataValue)';
 }
 
 
@@ -245,7 +249,7 @@ abstract mixin class _$GoalDatasEntityCopyWith<$Res> implements $GoalDatasEntity
   factory _$GoalDatasEntityCopyWith(_GoalDatasEntity value, $Res Function(_GoalDatasEntity) _then) = __$GoalDatasEntityCopyWithImpl;
 @override @useResult
 $Res call({
- DateTime dataDate, double dataValue
+ String? goalId, String? dataId, DateTime dataDate, double dataValue
 });
 
 
@@ -262,9 +266,11 @@ class __$GoalDatasEntityCopyWithImpl<$Res>
 
 /// Create a copy of GoalDatasEntity
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? dataDate = null,Object? dataValue = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? goalId = freezed,Object? dataId = freezed,Object? dataDate = null,Object? dataValue = null,}) {
   return _then(_GoalDatasEntity(
-dataDate: null == dataDate ? _self.dataDate : dataDate // ignore: cast_nullable_to_non_nullable
+goalId: freezed == goalId ? _self.goalId : goalId // ignore: cast_nullable_to_non_nullable
+as String?,dataId: freezed == dataId ? _self.dataId : dataId // ignore: cast_nullable_to_non_nullable
+as String?,dataDate: null == dataDate ? _self.dataDate : dataDate // ignore: cast_nullable_to_non_nullable
 as DateTime,dataValue: null == dataValue ? _self.dataValue : dataValue // ignore: cast_nullable_to_non_nullable
 as double,
   ));

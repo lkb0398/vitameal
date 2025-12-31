@@ -347,6 +347,54 @@ final class UserGoalsDataSourceProvider
 String _$userGoalsDataSourceHash() =>
     r'd4c5f6f160379303d427f86d49d810d3ec73e23b';
 
+@ProviderFor(goalDatasDataSource)
+const goalDatasDataSourceProvider = GoalDatasDataSourceProvider._();
+
+final class GoalDatasDataSourceProvider
+    extends
+        $FunctionalProvider<
+          GoalDatasDataSource,
+          GoalDatasDataSource,
+          GoalDatasDataSource
+        >
+    with $Provider<GoalDatasDataSource> {
+  const GoalDatasDataSourceProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'goalDatasDataSourceProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$goalDatasDataSourceHash();
+
+  @$internal
+  @override
+  $ProviderElement<GoalDatasDataSource> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  GoalDatasDataSource create(Ref ref) {
+    return goalDatasDataSource(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(GoalDatasDataSource value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<GoalDatasDataSource>(value),
+    );
+  }
+}
+
+String _$goalDatasDataSourceHash() =>
+    r'6f4ee3215c60cc67c92e507b3078db6829dd52c4';
+
 /// 🤍 Repository
 
 @ProviderFor(profilesRepository)
@@ -639,3 +687,51 @@ final class UserGoalsRepositoryProvider
 
 String _$userGoalsRepositoryHash() =>
     r'a2913ec16db4df22c02ffc28ff52c84d4a0fca90';
+
+@ProviderFor(goalDatasRepository)
+const goalDatasRepositoryProvider = GoalDatasRepositoryProvider._();
+
+final class GoalDatasRepositoryProvider
+    extends
+        $FunctionalProvider<
+          GoalDatasRepository,
+          GoalDatasRepository,
+          GoalDatasRepository
+        >
+    with $Provider<GoalDatasRepository> {
+  const GoalDatasRepositoryProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'goalDatasRepositoryProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$goalDatasRepositoryHash();
+
+  @$internal
+  @override
+  $ProviderElement<GoalDatasRepository> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  GoalDatasRepository create(Ref ref) {
+    return goalDatasRepository(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(GoalDatasRepository value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<GoalDatasRepository>(value),
+    );
+  }
+}
+
+String _$goalDatasRepositoryHash() =>
+    r'd12c5429e9dd7c9232be3e18e6cef69ec918336c';

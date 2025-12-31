@@ -1,24 +1,33 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:vitameal/domain/entity/goal_datas_entity.dart';
 
 class Guage extends StatelessWidget {
   const Guage({
     super.key,
-    required this.startValue,
-    required this.currentValue,
+    this.startData,
+    this.currentData,
     required this.targetValue,
   });
 
-  final double startValue;
-  final double currentValue;
+  final GoalDatasEntity? startData;
+  final GoalDatasEntity? currentData;
   final double targetValue;
 
   @override
   Widget build(BuildContext context) {
+    if (startData == null || currentData == null) {
+      return Center(child: Text("데이터를 입력해주세요"));
+    }
+
+    final startValue = startData!.dataValue;
+    final currentValue = currentData!.dataValue;
+
     double percent =
         (currentValue - startValue).abs() / (targetValue - startValue).abs();
     if (percent > 1) percent = 1;
+    if (percent < 0) percent = 0;
 
     return Column(
       spacing: 20,
