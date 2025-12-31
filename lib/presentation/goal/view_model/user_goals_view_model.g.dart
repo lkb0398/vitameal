@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'onboarding_view_model.dart';
+part of 'user_goals_view_model.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -8,32 +8,29 @@ part of 'onboarding_view_model.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// 액션 전용 ViewModel
 
-@ProviderFor(OnboardingViewModel)
-const onboardingViewModelProvider = OnboardingViewModelProvider._();
+@ProviderFor(UserGoalsViewModel)
+const userGoalsViewModelProvider = UserGoalsViewModelProvider._();
 
-/// 액션 전용 ViewModel
-final class OnboardingViewModelProvider
-    extends $NotifierProvider<OnboardingViewModel, void> {
-  /// 액션 전용 ViewModel
-  const OnboardingViewModelProvider._()
+final class UserGoalsViewModelProvider
+    extends $NotifierProvider<UserGoalsViewModel, void> {
+  const UserGoalsViewModelProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'onboardingViewModelProvider',
-        isAutoDispose: false,
+        name: r'userGoalsViewModelProvider',
+        isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$onboardingViewModelHash();
+  String debugGetCreateSourceHash() => _$userGoalsViewModelHash();
 
   @$internal
   @override
-  OnboardingViewModel create() => OnboardingViewModel();
+  UserGoalsViewModel create() => UserGoalsViewModel();
 
   /// {@macro riverpod.override_with_value}
   Override overrideWithValue(void value) {
@@ -44,12 +41,10 @@ final class OnboardingViewModelProvider
   }
 }
 
-String _$onboardingViewModelHash() =>
-    r'fbfe77ec557cf769e86a9f962b1ba71a7f9e9332';
+String _$userGoalsViewModelHash() =>
+    r'5b2041721535c7abdf58cb41bdb7ef4b4b91bc09';
 
-/// 액션 전용 ViewModel
-
-abstract class _$OnboardingViewModel extends $Notifier<void> {
+abstract class _$UserGoalsViewModel extends $Notifier<void> {
   void build();
   @$mustCallSuper
   @override

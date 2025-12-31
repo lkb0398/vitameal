@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:vitameal/presentation/onboarding/viewmodel/onboarding_view_model.dart';
-import 'package:vitameal/presentation/ui_provider/onboarding_provider.dart';
+import 'package:vitameal/presentation/ui_provider/profiles_provider.dart';
 
 class OnboardingDonePage extends HookConsumerWidget {
   const OnboardingDonePage({super.key});

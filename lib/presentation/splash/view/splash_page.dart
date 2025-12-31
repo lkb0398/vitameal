@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:vitameal/core/config/routes.dart';
-import 'package:vitameal/presentation/ui_provider/onboarding_provider.dart';
+import 'package:vitameal/presentation/ui_provider/profiles_provider.dart';
 
 class SplashPage extends HookConsumerWidget {
   const SplashPage({super.key});

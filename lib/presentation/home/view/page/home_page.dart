@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:vitameal/presentation/home/view/page/info_page.dart';
+import 'package:vitameal/presentation/info/view/page/info_page.dart';
 import 'package:vitameal/presentation/ui_provider/home_tab_provider.dart';
 
 class HomePage extends HookConsumerWidget {
