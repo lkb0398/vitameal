@@ -6,6 +6,7 @@ import 'package:vitameal/presentation/goal/view/page/add_goal_page.dart';
 import 'package:vitameal/presentation/goal/view/page/goal_page.dart';
 import 'package:vitameal/presentation/home/view/page/home_page.dart';
 import 'package:vitameal/presentation/meal_editor/view/meal_editor_page.dart';
+import 'package:vitameal/presentation/alarm/view/alarm_page.dart';
 import 'package:vitameal/presentation/onboarding/view/page/onboarding_allergy_page.dart';
 import 'package:vitameal/presentation/onboarding/view/page/onboarding_disease_page.dart';
 import 'package:vitameal/presentation/onboarding/view/page/onboarding_done_page.dart';
@@ -25,6 +26,8 @@ class AppRoutePath {
   static const intro = '/intro';
   static const home = '/';
   // 사용자 정보 입력/수정
+  static const alarm = '/alarm';
+  // 사용자 정보 입력
   static const onboardingProfile = '/onboarding/profile';
   static const onboardingPhysical = '/onboarding/physical';
   static const onboardingDisease = '/onboarding/disease';
@@ -169,6 +172,10 @@ final routerProvider = Provider<GoRouter>((ref) {
             date: extra?['date'] as DateTime? ?? DateTime.now(),
           );
         },
+      ),
+      GoRoute(
+        path: AppRoutePath.alarm,
+        builder: (context, state) => const AlarmPage(),
       ),
     ],
   );
