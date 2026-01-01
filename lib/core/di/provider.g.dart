@@ -611,8 +611,58 @@ final class StorageDataSourceProvider
 
 String _$storageDataSourceHash() => r'c8e30e822b695967f22912d6d5d8b40811101ddd';
 
+@ProviderFor(alarmsDataSource)
+const alarmsDataSourceProvider = AlarmsDataSourceProvider._();
+
+final class AlarmsDataSourceProvider
+    extends
+        $FunctionalProvider<
+          AlarmsDataSource,
+          AlarmsDataSource,
+          AlarmsDataSource
+        >
+    with $Provider<AlarmsDataSource> {
+  const AlarmsDataSourceProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'alarmsDataSourceProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$alarmsDataSourceHash();
+
+  @$internal
+  @override
+  $ProviderElement<AlarmsDataSource> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  AlarmsDataSource create(Ref ref) {
+    return alarmsDataSource(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(AlarmsDataSource value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<AlarmsDataSource>(value),
+    );
+  }
+}
+
+String _$alarmsDataSourceHash() => r'814307fd8bc9569276921f34deafc39e0b3771a3';
+
+/// 🤍 Repository
+
 @ProviderFor(profilesRepository)
 const profilesRepositoryProvider = ProfilesRepositoryProvider._();
+
+/// 🤍 Repository
 
 final class ProfilesRepositoryProvider
     extends
@@ -622,6 +672,7 @@ final class ProfilesRepositoryProvider
           ProfilesRepository
         >
     with $Provider<ProfilesRepository> {
+  /// 🤍 Repository
   const ProfilesRepositoryProvider._()
     : super(
         from: null,

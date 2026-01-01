@@ -31,13 +31,14 @@ import 'package:vitameal/domain/repository/user_allergies_repository.dart';
 import 'package:vitameal/domain/repository/user_diseases_repository.dart';
 import 'package:vitameal/domain/repository/user_goals_repository.dart';
 import 'package:vitameal/data/repository_impl/user_goals_repository_impl.dart';
-
+import 'package:vitameal/presentation/alarm/view_model/alarms_data_source.dart';
+import 'package:vitameal/presentation/alarm/view_model/alarms_repository.dart';
+import 'package:vitameal/presentation/alarm/view_model/alarms_repository_impl.dart';
 import 'package:vitameal/data/data_source/auth_data_source.dart';
 import 'package:vitameal/data/repository_impl/auth_repository_impl.dart';
 import 'package:vitameal/domain/repository/auth_repository.dart';
 import 'package:vitameal/domain/usecase/login_usecase.dart';
 import 'package:vitameal/domain/usecase/logout_usecase.dart';
-
 import 'package:vitameal/domain/repository/user_repository.dart';
 import 'package:vitameal/data/repository_impl/user_repository_impl.dart';
 
@@ -126,7 +127,13 @@ StorageDataSource storageDataSource(Ref ref) {
   return StorageDataSource(supabase);
 }
 
-// 🤍 Repository
+@riverpod
+AlarmsDataSource alarmsDataSource(Ref ref) {
+  final client = ref.read(supabaseClientProvider);
+  return AlarmsDataSourceImpl(client);
+}
+
+/// 🤍 Repository
 @riverpod
 ProfilesRepository profilesRepository(Ref ref) {
   final dataSource = ref.read(profilesDataSourceProvider);
@@ -198,6 +205,11 @@ StorageRepository storageRepository(Ref ref) {
   return StorageRepositoryImpl(storageDataSource);
 }
 
+AlarmsRepository alarmsRepository(Ref ref) {
+  final dataSource = ref.read(alarmsDataSourceProvider);
+  return AlarmsRepositoryImpl(dataSource);
+}
+
 // 🤍 UseCase
 @riverpod
 LoginUseCase loginUseCase(Ref ref) {
@@ -230,6 +242,5 @@ SyncService syncService(Ref ref) {
   ref.onDispose(() {
     service.stop();
   });
-
   return service;
 }
