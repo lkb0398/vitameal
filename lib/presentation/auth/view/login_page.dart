@@ -3,10 +3,15 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+<<<<<<< HEAD
 import 'package:vitameal/core/config/routes.dart';
 import 'package:vitameal/presentation/ui_provider/profiles_provider.dart';
 import '../view_model/auth_view_model.dart';
 import 'widgets/social_login_button.dart';
+=======
+import 'package:vitameal/presentation/auth/view_model/auth_view_model.dart';
+import 'package:vitameal/presentation/auth/view/widgets/social_login_button.dart';
+>>>>>>> 3f1cbb3 (feat: UI를 제외한 기능구현 및 리팩토링 완료)
 
 class LoginPage extends HookConsumerWidget {
   const LoginPage({super.key});
@@ -42,7 +47,7 @@ class LoginPage extends HookConsumerWidget {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 40),
               child: session != null
-                  ? _buildLoggedInState(ref, session) // ref를 전달하여 내부에서 vm 접근
+                  ? const Center(child: CircularProgressIndicator())
                   : _buildLoginState(ref), // ref를 전달하여 내부에서 vm 접근
             ),
           ),
@@ -57,22 +62,6 @@ class LoginPage extends HookConsumerWidget {
                 ),
               ),
             ),
-        ],
-      ),
-    );
-  }
-
-  // 로그인 된 상태의 UI
-  Widget _buildLoggedInState(WidgetRef ref, Session session) {
-    final vm = ref.read(authViewModelProvider.notifier);
-
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Text('로그인 되었습니다.', style: TextStyle(fontSize: 20)),
-          const SizedBox(height: 20),
-          ElevatedButton(onPressed: vm.logout, child: const Text('로그아웃')),
         ],
       ),
     );
@@ -100,7 +89,7 @@ class LoginPage extends HookConsumerWidget {
         const SizedBox(height: 16),
 
         SocialLoginButton(
-          label: 'Google로 시작하기(미구현)',
+          label: 'Google로 시작하기',
           backgroundColor: Colors.white,
           textColor: Colors.black,
           onPressed: vm.isLoading

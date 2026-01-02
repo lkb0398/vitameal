@@ -1,14 +1,5 @@
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import '../repository/auth_repository.dart';
-import '../../data/repository_impl/auth_repository_impl.dart';
-
-part 'login_usecase.g.dart';
-
-@riverpod
-LoginUseCase loginUseCase(Ref ref) {
-  return LoginUseCase(ref.watch(authRepositoryProvider));
-}
+import 'package:vitameal/domain/repository/auth_repository.dart';
 
 class LoginUseCase {
   final AuthRepository _repository;

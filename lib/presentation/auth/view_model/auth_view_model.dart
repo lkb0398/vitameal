@@ -2,9 +2,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:vitameal/data/repository_impl/auth_repository_impl.dart';
-import 'package:vitameal/domain/usecase/login_usecase.dart';
-import 'package:vitameal/domain/usecase/logout_usecase.dart';
+import 'package:vitameal/core/di/provider.dart';
 
 part 'auth_view_model.g.dart';
 
@@ -59,6 +57,31 @@ class AuthViewModel extends _$AuthViewModel {
       // 로그아웃 시 state는 sessionStream의 listen에 의해 자동으로 null
     } catch (e) {
       debugPrint('로그아웃 에러: $e');
+    }
+  }
+
+  Future<void> withdraw({
+    VoidCallback? onSuccess,
+    VoidCallback? onError,
+  }) async {
+    if (_isLoading) return;
+
+    _isLoading = true;
+    ref.notifyListeners();
+
+    try {
+      final repository = ref.read(authRepositoryProvider);
+      await repository.withdraw();
+
+      state = null;
+
+      if (onSuccess != null) onSuccess();
+    } catch (e) {
+      debugPrint('회원 탈퇴 에러: $e');
+      if (onError != null) onError();
+    } finally {
+      _isLoading = false;
+      ref.notifyListeners();
     }
   }
 }

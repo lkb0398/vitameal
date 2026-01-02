@@ -22,6 +22,15 @@ import 'package:vitameal/domain/repository/user_diseases_repository.dart';
 import 'package:vitameal/domain/repository/user_goals_repository.dart';
 import 'package:vitameal/data/repository_impl/user_goals_repository_impl.dart';
 
+import 'package:vitameal/data/data_source/auth_data_source.dart';
+import 'package:vitameal/data/repository_impl/auth_repository_impl.dart';
+import 'package:vitameal/domain/repository/auth_repository.dart';
+import 'package:vitameal/domain/usecase/login_usecase.dart';
+import 'package:vitameal/domain/usecase/logout_usecase.dart';
+
+import 'package:vitameal/domain/repository/user_repository.dart';
+import 'package:vitameal/data/repository_impl/user_repository_impl.dart';
+
 part 'provider.g.dart';
 
 /// 🤍 Supabase Client
@@ -62,6 +71,7 @@ AllergiesDataSource allergiesDataSource(Ref ref) {
 }
 
 @riverpod
+<<<<<<< HEAD
 UserGoalsDataSource userGoalsDataSource(Ref ref) {
   final client = ref.read(supabaseClientProvider);
   return UserGoalsDataSourceImpl(client);
@@ -74,6 +84,14 @@ GoalDatasDataSource goalDatasDataSource(Ref ref) {
 }
 
 /// 🤍 Repository
+=======
+AuthDataSource authDataSource(Ref ref) {
+  final client = ref.watch(supabaseClientProvider);
+  return AuthDataSource(client);
+}
+
+/// Repository
+>>>>>>> 3f1cbb3 (feat: UI를 제외한 기능구현 및 리팩토링 완료)
 @riverpod
 ProfilesRepository profilesRepository(Ref ref) {
   final dataSource = ref.read(profilesDataSourceProvider);
@@ -107,6 +125,7 @@ AllergiesRepository allergiesRepository(Ref ref) {
 }
 
 @riverpod
+<<<<<<< HEAD
 UserGoalsRepository userGoalsRepository(Ref ref) {
   final dataSource = ref.read(userGoalsDataSourceProvider);
   return UserGoalsRepositoryImpl(dataSource);
@@ -116,4 +135,26 @@ UserGoalsRepository userGoalsRepository(Ref ref) {
 GoalDatasRepository goalDatasRepository(Ref ref) {
   final dataSource = ref.read(goalDatasDataSourceProvider);
   return GoalDatasRepositoryImpl(dataSource);
+=======
+AuthRepository authRepository(Ref ref) {
+  final dataSource = ref.watch(authDataSourceProvider);
+  return AuthRepositoryImpl(dataSource);
+}
+
+@riverpod
+UserRepository userRepository(Ref ref) {
+  final client = ref.watch(supabaseClientProvider);
+  return UserRepositoryImpl(client);
+}
+
+/// UseCase
+@riverpod
+LoginUseCase loginUseCase(Ref ref) {
+  return LoginUseCase(ref.watch(authRepositoryProvider));
+}
+
+@riverpod
+LogoutUseCase logoutUseCase(Ref ref) {
+  return LogoutUseCase(ref.watch(authRepositoryProvider));
+>>>>>>> 3f1cbb3 (feat: UI를 제외한 기능구현 및 리팩토링 완료)
 }

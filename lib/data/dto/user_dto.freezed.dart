@@ -15,9 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$UserDto {
 
-@JsonKey(name: 'user_id') String get userId; String? get nickname;@JsonKey(name: 'photo_url') String? get photoUrl; String? get gender;// Supabase의 numeric 타입은 json_serializable이 자동으로 num을 처리해주지만,
-// 아래와 같이 명시적으로 스네이크 케이스를 매핑해줍니다.
-@JsonKey(name: 'height_cm') double? get heightCm;@JsonKey(name: 'weight_kg') double? get weightKg;
+@JsonKey(name: 'user_id') String get userId; String? get nickname;@JsonKey(name: 'photo_url') String? get photoUrl; String? get gender;@JsonKey(name: 'height_cm') double? get heightCm;@JsonKey(name: 'weight_kg') double? get weightKg;
 /// Create a copy of UserDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -223,8 +221,6 @@ class _UserDto implements UserDto {
 @override final  String? nickname;
 @override@JsonKey(name: 'photo_url') final  String? photoUrl;
 @override final  String? gender;
-// Supabase의 numeric 타입은 json_serializable이 자동으로 num을 처리해주지만,
-// 아래와 같이 명시적으로 스네이크 케이스를 매핑해줍니다.
 @override@JsonKey(name: 'height_cm') final  double? heightCm;
 @override@JsonKey(name: 'weight_kg') final  double? weightKg;
 
