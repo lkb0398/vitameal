@@ -2,17 +2,8 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-<<<<<<< HEAD
 import 'package:vitameal/core/di/provider.dart';
-<<<<<<< HEAD
 import 'package:vitameal/core/service/firebase_service.dart';
-=======
-=======
-import 'package:vitameal/data/repository_impl/auth_repository_impl.dart';
-import 'package:vitameal/domain/usecase/login_usecase.dart';
-import 'package:vitameal/domain/usecase/logout_usecase.dart';
->>>>>>> 005c1d3 (feat: 로그인 리팩토링 & 주석 추가 및 수정)
->>>>>>> d47d3a6 (feat: 로그인 리팩토링 & 주석 추가 및 수정)
 
 part 'auth_view_model.g.dart';
 

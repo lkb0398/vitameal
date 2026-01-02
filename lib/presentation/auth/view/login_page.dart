@@ -37,41 +37,6 @@ class LoginPage extends HookConsumerWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Stack(
-<<<<<<< HEAD
-=======
-        children: [
-          SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 40),
-              child: session != null
-                  ? _buildLoggedInState(ref, session) // ref를 전달하여 내부에서 vm 접근
-                  : _buildLoginState(ref), // ref를 전달하여 내부에서 vm 접근
-            ),
-          ),
-
-          // 로딩 오버레이 레이어 (로그인 진행 중일 때만 표시)
-          if (vm.isLoading)
-            Container(
-              color: Colors.black.withOpacity(0.3), // 배경을 어둡게 해서 터치 차단
-              child: const Center(
-                child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                ),
-              ),
-            ),
-        ],
-      ),
-    );
-  }
-
-  // 로그인 된 상태의 UI
-  Widget _buildLoggedInState(WidgetRef ref, Session session) {
-    final vm = ref.read(authViewModelProvider.notifier);
-
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
->>>>>>> 005c1d3 (feat: 로그인 리팩토링 & 주석 추가 및 수정)
         children: [
           SafeArea(
             child: Padding(

@@ -16,12 +16,16 @@ T _$identity<T>(T value) => value;
 mixin _$UserDto {
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 @JsonKey(name: 'user_id') String get userId; String? get nickname;@JsonKey(name: 'photo_url') String? get photoUrl; String? get gender;@JsonKey(name: 'height_cm') double? get heightCm;@JsonKey(name: 'weight_kg') double? get weightKg;
 =======
 @JsonKey(name: 'user_id') String get userId; String? get nickname;@JsonKey(name: 'photo_url') String? get photoUrl; String? get gender;// Supabase의 numeric 타입은 json_serializable이 자동으로 num을 처리해주지만,
 // 아래와 같이 명시적으로 스네이크 케이스를 매핑해줍니다.
 @JsonKey(name: 'height_cm') double? get heightCm;@JsonKey(name: 'weight_kg') double? get weightKg;
 >>>>>>> 005c1d3 (feat: 로그인 리팩토링 & 주석 추가 및 수정)
+=======
+@JsonKey(name: 'user_id') String get userId; String? get nickname;@JsonKey(name: 'photo_url') String? get photoUrl; String? get gender;@JsonKey(name: 'height_cm') double? get heightCm;@JsonKey(name: 'weight_kg') double? get weightKg;
+>>>>>>> 33dc0ef (feat: UI를 제외한 기능구현 및 리팩토링 완료)
 /// Create a copy of UserDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -228,10 +232,13 @@ class _UserDto implements UserDto {
 @override@JsonKey(name: 'photo_url') final  String? photoUrl;
 @override final  String? gender;
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 // Supabase의 numeric 타입은 json_serializable이 자동으로 num을 처리해주지만,
 // 아래와 같이 명시적으로 스네이크 케이스를 매핑해줍니다.
 >>>>>>> 005c1d3 (feat: 로그인 리팩토링 & 주석 추가 및 수정)
+=======
+>>>>>>> 33dc0ef (feat: UI를 제외한 기능구현 및 리팩토링 완료)
 @override@JsonKey(name: 'height_cm') final  double? heightCm;
 @override@JsonKey(name: 'weight_kg') final  double? weightKg;
 
