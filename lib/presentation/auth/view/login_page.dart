@@ -43,7 +43,11 @@ class LoginPage extends HookConsumerWidget {
         children: [
           SafeArea(
             child: Padding(
+<<<<<<< HEAD
               padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+=======
+              padding: const EdgeInsets.symmetric(horizontal: 40),
+>>>>>>> d24068e (feat: UI를 제외한 기능구현 및 리팩토링 완료)
               child: session != null
                   ? const Center(child: CircularProgressIndicator())
                   : _buildLoginState(context, ref), // ref를 전달하여 내부에서 vm 접근
