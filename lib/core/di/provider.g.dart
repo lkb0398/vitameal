@@ -299,7 +299,6 @@ final class AllergiesDataSourceProvider
 String _$allergiesDataSourceHash() =>
     r'3a9ed2f77f37d387165b860a0d742f6b7cf6b125';
 
-<<<<<<< HEAD
 @ProviderFor(userGoalsDataSource)
 const userGoalsDataSourceProvider = UserGoalsDataSourceProvider._();
 
@@ -312,31 +311,17 @@ final class UserGoalsDataSourceProvider
         >
     with $Provider<UserGoalsDataSource> {
   const UserGoalsDataSourceProvider._()
-=======
-@ProviderFor(authDataSource)
-const authDataSourceProvider = AuthDataSourceProvider._();
-
-final class AuthDataSourceProvider
-    extends $FunctionalProvider<AuthDataSource, AuthDataSource, AuthDataSource>
-    with $Provider<AuthDataSource> {
-  const AuthDataSourceProvider._()
->>>>>>> 3f1cbb3 (feat: UI를 제외한 기능구현 및 리팩토링 완료)
     : super(
         from: null,
         argument: null,
         retry: null,
-<<<<<<< HEAD
         name: r'userGoalsDataSourceProvider',
-=======
-        name: r'authDataSourceProvider',
->>>>>>> 3f1cbb3 (feat: UI를 제외한 기능구현 및 리팩토링 완료)
         isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-<<<<<<< HEAD
   String debugGetCreateSourceHash() => _$userGoalsDataSourceHash();
 
   @$internal
@@ -355,30 +340,10 @@ final class AuthDataSourceProvider
     return $ProviderOverride(
       origin: this,
       providerOverride: $SyncValueProvider<UserGoalsDataSource>(value),
-=======
-  String debugGetCreateSourceHash() => _$authDataSourceHash();
-
-  @$internal
-  @override
-  $ProviderElement<AuthDataSource> $createElement($ProviderPointer pointer) =>
-      $ProviderElement(pointer);
-
-  @override
-  AuthDataSource create(Ref ref) {
-    return authDataSource(ref);
-  }
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(AuthDataSource value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<AuthDataSource>(value),
->>>>>>> 3f1cbb3 (feat: UI를 제외한 기능구현 및 리팩토링 완료)
     );
   }
 }
 
-<<<<<<< HEAD
 String _$userGoalsDataSourceHash() =>
     r'd4c5f6f160379303d427f86d49d810d3ec73e23b';
 
@@ -430,12 +395,48 @@ final class GoalDatasDataSourceProvider
 String _$goalDatasDataSourceHash() =>
     r'6f4ee3215c60cc67c92e507b3078db6829dd52c4';
 
-/// 🤍 Repository
-=======
+@ProviderFor(authDataSource)
+const authDataSourceProvider = AuthDataSourceProvider._();
+
+final class AuthDataSourceProvider
+    extends $FunctionalProvider<AuthDataSource, AuthDataSource, AuthDataSource>
+    with $Provider<AuthDataSource> {
+  const AuthDataSourceProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'authDataSourceProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$authDataSourceHash();
+
+  @$internal
+  @override
+  $ProviderElement<AuthDataSource> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  AuthDataSource create(Ref ref) {
+    return authDataSource(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(AuthDataSource value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<AuthDataSource>(value),
+    );
+  }
+}
+
 String _$authDataSourceHash() => r'44d7483bd3e3f976234c8799cbd2cba79c3b851b';
 
-/// Repository
->>>>>>> 3f1cbb3 (feat: UI를 제외한 기능구현 및 리팩토링 완료)
+/// 🤍 Repository
 
 @ProviderFor(profilesRepository)
 const profilesRepositoryProvider = ProfilesRepositoryProvider._();
@@ -680,7 +681,6 @@ final class AllergiesRepositoryProvider
 String _$allergiesRepositoryHash() =>
     r'774f4f8117b569bc29d92c0ee796d97752a1544b';
 
-<<<<<<< HEAD
 @ProviderFor(userGoalsRepository)
 const userGoalsRepositoryProvider = UserGoalsRepositoryProvider._();
 
@@ -693,31 +693,17 @@ final class UserGoalsRepositoryProvider
         >
     with $Provider<UserGoalsRepository> {
   const UserGoalsRepositoryProvider._()
-=======
-@ProviderFor(authRepository)
-const authRepositoryProvider = AuthRepositoryProvider._();
-
-final class AuthRepositoryProvider
-    extends $FunctionalProvider<AuthRepository, AuthRepository, AuthRepository>
-    with $Provider<AuthRepository> {
-  const AuthRepositoryProvider._()
->>>>>>> 3f1cbb3 (feat: UI를 제외한 기능구현 및 리팩토링 완료)
     : super(
         from: null,
         argument: null,
         retry: null,
-<<<<<<< HEAD
         name: r'userGoalsRepositoryProvider',
-=======
-        name: r'authRepositoryProvider',
->>>>>>> 3f1cbb3 (feat: UI를 제외한 기능구현 및 리팩토링 완료)
         isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-<<<<<<< HEAD
   String debugGetCreateSourceHash() => _$userGoalsRepositoryHash();
 
   @$internal
@@ -736,30 +722,10 @@ final class AuthRepositoryProvider
     return $ProviderOverride(
       origin: this,
       providerOverride: $SyncValueProvider<UserGoalsRepository>(value),
-=======
-  String debugGetCreateSourceHash() => _$authRepositoryHash();
-
-  @$internal
-  @override
-  $ProviderElement<AuthRepository> $createElement($ProviderPointer pointer) =>
-      $ProviderElement(pointer);
-
-  @override
-  AuthRepository create(Ref ref) {
-    return authRepository(ref);
-  }
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(AuthRepository value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<AuthRepository>(value),
->>>>>>> 3f1cbb3 (feat: UI를 제외한 기능구현 및 리팩토링 완료)
     );
   }
 }
 
-<<<<<<< HEAD
 String _$userGoalsRepositoryHash() =>
     r'a2913ec16db4df22c02ffc28ff52c84d4a0fca90';
 
@@ -775,33 +741,17 @@ final class GoalDatasRepositoryProvider
         >
     with $Provider<GoalDatasRepository> {
   const GoalDatasRepositoryProvider._()
-=======
-String _$authRepositoryHash() => r'ec654f5fa69e7facde94d755bb72d46efdc77a1b';
-
-@ProviderFor(userRepository)
-const userRepositoryProvider = UserRepositoryProvider._();
-
-final class UserRepositoryProvider
-    extends $FunctionalProvider<UserRepository, UserRepository, UserRepository>
-    with $Provider<UserRepository> {
-  const UserRepositoryProvider._()
->>>>>>> 3f1cbb3 (feat: UI를 제외한 기능구현 및 리팩토링 완료)
     : super(
         from: null,
         argument: null,
         retry: null,
-<<<<<<< HEAD
         name: r'goalDatasRepositoryProvider',
-=======
-        name: r'userRepositoryProvider',
->>>>>>> 3f1cbb3 (feat: UI를 제외한 기능구현 및 리팩토링 완료)
         isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-<<<<<<< HEAD
   String debugGetCreateSourceHash() => _$goalDatasRepositoryHash();
 
   @$internal
@@ -820,7 +770,72 @@ final class UserRepositoryProvider
     return $ProviderOverride(
       origin: this,
       providerOverride: $SyncValueProvider<GoalDatasRepository>(value),
-=======
+    );
+  }
+}
+
+String _$goalDatasRepositoryHash() =>
+    r'd12c5429e9dd7c9232be3e18e6cef69ec918336c';
+
+@ProviderFor(authRepository)
+const authRepositoryProvider = AuthRepositoryProvider._();
+
+final class AuthRepositoryProvider
+    extends $FunctionalProvider<AuthRepository, AuthRepository, AuthRepository>
+    with $Provider<AuthRepository> {
+  const AuthRepositoryProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'authRepositoryProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$authRepositoryHash();
+
+  @$internal
+  @override
+  $ProviderElement<AuthRepository> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  AuthRepository create(Ref ref) {
+    return authRepository(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(AuthRepository value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<AuthRepository>(value),
+    );
+  }
+}
+
+String _$authRepositoryHash() => r'ec654f5fa69e7facde94d755bb72d46efdc77a1b';
+
+@ProviderFor(userRepository)
+const userRepositoryProvider = UserRepositoryProvider._();
+
+final class UserRepositoryProvider
+    extends $FunctionalProvider<UserRepository, UserRepository, UserRepository>
+    with $Provider<UserRepository> {
+  const UserRepositoryProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'userRepositoryProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
   String debugGetCreateSourceHash() => _$userRepositoryHash();
 
   @$internal
@@ -838,15 +853,10 @@ final class UserRepositoryProvider
     return $ProviderOverride(
       origin: this,
       providerOverride: $SyncValueProvider<UserRepository>(value),
->>>>>>> 3f1cbb3 (feat: UI를 제외한 기능구현 및 리팩토링 완료)
     );
   }
 }
 
-<<<<<<< HEAD
-String _$goalDatasRepositoryHash() =>
-    r'd12c5429e9dd7c9232be3e18e6cef69ec918336c';
-=======
 String _$userRepositoryHash() => r'8b0605fafd52b9cfc60166961f45fe91fa4e80fa';
 
 /// UseCase
@@ -935,4 +945,3 @@ final class LogoutUseCaseProvider
 }
 
 String _$logoutUseCaseHash() => r'2b963e9e0eff2155f687d45b1b5c652ddb695d62';
->>>>>>> 3f1cbb3 (feat: UI를 제외한 기능구현 및 리팩토링 완료)

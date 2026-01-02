@@ -71,7 +71,6 @@ AllergiesDataSource allergiesDataSource(Ref ref) {
 }
 
 @riverpod
-<<<<<<< HEAD
 UserGoalsDataSource userGoalsDataSource(Ref ref) {
   final client = ref.read(supabaseClientProvider);
   return UserGoalsDataSourceImpl(client);
@@ -83,15 +82,13 @@ GoalDatasDataSource goalDatasDataSource(Ref ref) {
   return GoalDatasDataSourceImpl(client);
 }
 
-/// 🤍 Repository
-=======
+@riverpod
 AuthDataSource authDataSource(Ref ref) {
   final client = ref.watch(supabaseClientProvider);
   return AuthDataSource(client);
 }
 
-/// Repository
->>>>>>> 3f1cbb3 (feat: UI를 제외한 기능구현 및 리팩토링 완료)
+/// 🤍 Repository
 @riverpod
 ProfilesRepository profilesRepository(Ref ref) {
   final dataSource = ref.read(profilesDataSourceProvider);
@@ -125,7 +122,6 @@ AllergiesRepository allergiesRepository(Ref ref) {
 }
 
 @riverpod
-<<<<<<< HEAD
 UserGoalsRepository userGoalsRepository(Ref ref) {
   final dataSource = ref.read(userGoalsDataSourceProvider);
   return UserGoalsRepositoryImpl(dataSource);
@@ -135,7 +131,9 @@ UserGoalsRepository userGoalsRepository(Ref ref) {
 GoalDatasRepository goalDatasRepository(Ref ref) {
   final dataSource = ref.read(goalDatasDataSourceProvider);
   return GoalDatasRepositoryImpl(dataSource);
-=======
+}
+
+@riverpod
 AuthRepository authRepository(Ref ref) {
   final dataSource = ref.watch(authDataSourceProvider);
   return AuthRepositoryImpl(dataSource);
@@ -156,5 +154,4 @@ LoginUseCase loginUseCase(Ref ref) {
 @riverpod
 LogoutUseCase logoutUseCase(Ref ref) {
   return LogoutUseCase(ref.watch(authRepositoryProvider));
->>>>>>> 3f1cbb3 (feat: UI를 제외한 기능구현 및 리팩토링 완료)
 }

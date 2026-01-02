@@ -63,9 +63,6 @@ final routerProvider = Provider<GoRouter>((ref) {
       final session = Supabase.instance.client.auth.currentSession;
       final location = state.matchedLocation;
 
-<<<<<<< HEAD
-      // 비로그인 접근 차단
-=======
       print('현재 위치: $location | 세션 존재 여부: ${session != null}');
 
       // splash 허용
@@ -74,19 +71,15 @@ final routerProvider = Provider<GoRouter>((ref) {
       }
 
       // 비로그인 상태 보호
->>>>>>> 3f1cbb3 (feat: UI를 제외한 기능구현 및 리팩토링 완료)
       if (session == null && location != AppRoutePath.login) {
         return AppRoutePath.login;
       }
 
-<<<<<<< HEAD
-=======
       // 로그인 상태에서 login 접근 차단
       if (session != null && location == AppRoutePath.login) {
         return AppRoutePath.splash;
       }
 
->>>>>>> 3f1cbb3 (feat: UI를 제외한 기능구현 및 리팩토링 완료)
       return null;
     },
 
