@@ -7,8 +7,27 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:vitameal/core/config/routes.dart';
 import 'package:vitameal/core/service/analytics_service.dart';
 import 'package:vitameal/presentation/ui_provider/profiles_provider.dart';
+<<<<<<< HEAD
 import 'package:vitameal/presentation/auth/view_model/auth_view_model.dart';
 import 'package:vitameal/presentation/auth/view/widgets/social_login_button.dart';
+=======
+<<<<<<< HEAD
+<<<<<<< HEAD
+import 'package:vitameal/presentation/auth/view_model/auth_view_model.dart';
+import 'package:vitameal/presentation/auth/view/widgets/social_login_button.dart';
+=======
+import '../view_model/auth_view_model.dart';
+import 'widgets/social_login_button.dart';
+=======
+import 'package:vitameal/presentation/auth/view_model/auth_view_model.dart';
+import 'package:vitameal/presentation/auth/view/widgets/social_login_button.dart';
+>>>>>>> 3f1cbb3 (feat: UI를 제외한 기능구현 및 리팩토링 완료)
+>>>>>>> 33dc0ef (feat: UI를 제외한 기능구현 및 리팩토링 완료)
+=======
+import 'package:vitameal/presentation/auth/view_model/auth_view_model.dart';
+import 'package:vitameal/presentation/auth/view/widgets/social_login_button.dart';
+>>>>>>> 5f0aade (feat: UI를 제외한 기능구현 및 리팩토링 완료!)
+>>>>>>> d6679d5 (feat: UI를 제외한 기능구현 및 리팩토링 완료!)
 
 class LoginPage extends HookConsumerWidget {
   const LoginPage({super.key});
