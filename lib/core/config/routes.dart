@@ -58,12 +58,63 @@ final routerProvider = Provider<GoRouter>((ref) {
       final session = Supabase.instance.client.auth.currentSession;
       final location = state.matchedLocation;
 
+<<<<<<< HEAD
       print('현재 위치: $location | 세션 존재 여부: ${session != null}');
 
       // 비로그인 접근 차단
       if (session == null && location != AppRoutePath.login) {
         return AppRoutePath.login;
       }
+=======
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+      // 비로그인 접근 차단
+=======
+>>>>>>> 33dc0ef (feat: UI를 제외한 기능구현 및 리팩토링 완료)
+=======
+>>>>>>> 5f0aade (feat: UI를 제외한 기능구현 및 리팩토링 완료!)
+      print('현재 위치: $location | 세션 존재 여부: ${session != null}');
+
+      // splash 허용
+      if (location == AppRoutePath.splash || location == AppRoutePath.intro) {
+        return null;
+      }
+
+      // 비로그인 상태 보호
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 3f1cbb3 (feat: UI를 제외한 기능구현 및 리팩토링 완료)
+>>>>>>> 33dc0ef (feat: UI를 제외한 기능구현 및 리팩토링 완료)
+=======
+>>>>>>> 5f0aade (feat: UI를 제외한 기능구현 및 리팩토링 완료!)
+      if (session == null && location != AppRoutePath.login) {
+        return AppRoutePath.login;
+      }
+
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> 33dc0ef (feat: UI를 제외한 기능구현 및 리팩토링 완료)
+=======
+>>>>>>> 5f0aade (feat: UI를 제외한 기능구현 및 리팩토링 완료!)
+      // 로그인 상태에서 login 접근 차단
+      if (session != null && location == AppRoutePath.login) {
+        return AppRoutePath.splash;
+      }
+
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 3f1cbb3 (feat: UI를 제외한 기능구현 및 리팩토링 완료)
+>>>>>>> 33dc0ef (feat: UI를 제외한 기능구현 및 리팩토링 완료)
+=======
+>>>>>>> 5f0aade (feat: UI를 제외한 기능구현 및 리팩토링 완료!)
+>>>>>>> d6679d5 (feat: UI를 제외한 기능구현 및 리팩토링 완료!)
       return null;
     },
 
