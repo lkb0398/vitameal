@@ -3,7 +3,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:vitameal/core/di/provider.dart';
 import 'package:vitameal/domain/entity/profiles_entity.dart';
 import 'package:vitameal/domain/enum/gender_type_enum.dart';
-import 'package:vitameal/presentation/ui_provider/onboarding_provider.dart';
+import 'package:vitameal/presentation/ui_provider/profiles_provider.dart';
 
 part 'onboarding_view_model.g.dart';
 
@@ -14,7 +14,7 @@ class OnboardingViewModel extends _$OnboardingViewModel {
   void build() {}
 
   Future<String> uploadProfileImage(File file) async {
-    final userId = ref.read(currentUserIdProvider);
+    final userId = ref.read(userIdProvider);
     return ref
         .read(profilesRepositoryProvider)
         .uploadProfileImage(userId: userId, file: file);
@@ -33,7 +33,7 @@ class OnboardingViewModel extends _$OnboardingViewModel {
     double? weightKg,
     bool? onboardingCompleted,
   }) async {
-    final userId = ref.read(currentUserIdProvider);
+    final userId = ref.read(userIdProvider);
     await ref
         .read(profilesRepositoryProvider)
         .updateProfile(
@@ -52,7 +52,7 @@ class OnboardingViewModel extends _$OnboardingViewModel {
   }
 
   Future<void> saveDiseases(List<String> selectedNames) async {
-    final userId = ref.read(currentUserIdProvider);
+    final userId = ref.read(userIdProvider);
     final diseaseIds = await ref
         .read(diseasesRepositoryProvider)
         .findDiseaseIdsByNames(selectedNames);
@@ -63,7 +63,7 @@ class OnboardingViewModel extends _$OnboardingViewModel {
   }
 
   Future<void> saveAllergies(List<String> selectedNames) async {
-    final userId = ref.read(currentUserIdProvider);
+    final userId = ref.read(userIdProvider);
     final allergyIds = await ref
         .read(allergiesRepositoryProvider)
         .findAllergyIdsByNames(selectedNames);

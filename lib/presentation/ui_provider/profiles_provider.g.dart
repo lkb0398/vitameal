@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'onboarding_provider.dart';
+part of 'profiles_provider.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -8,6 +8,51 @@ part of 'onboarding_provider.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
+/// 현재 로그인된 userId 가져오기 Provider
+
+@ProviderFor(userId)
+const userIdProvider = UserIdProvider._();
+
+/// 현재 로그인된 userId 가져오기 Provider
+
+final class UserIdProvider extends $FunctionalProvider<String, String, String>
+    with $Provider<String> {
+  /// 현재 로그인된 userId 가져오기 Provider
+  const UserIdProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'userIdProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$userIdHash();
+
+  @$internal
+  @override
+  $ProviderElement<String> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  String create(Ref ref) {
+    return userId(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(String value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<String>(value),
+    );
+  }
+}
+
+String _$userIdHash() => r'b0225d12e233d634cad0b8135457258f584fe2f1';
+
 /// 현재 router location 얻기 Provider
 
 @ProviderFor(routerLocation)
@@ -190,53 +235,7 @@ final class OnboardingCompletedProvider
 }
 
 String _$onboardingCompletedHash() =>
-    r'c471ccf943e8ed24762cd020237ee69e5a5246a7';
-
-/// userId Provider
-
-@ProviderFor(currentUserId)
-const currentUserIdProvider = CurrentUserIdProvider._();
-
-/// userId Provider
-
-final class CurrentUserIdProvider
-    extends $FunctionalProvider<String, String, String>
-    with $Provider<String> {
-  /// userId Provider
-  const CurrentUserIdProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'currentUserIdProvider',
-        isAutoDispose: true,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
-
-  @override
-  String debugGetCreateSourceHash() => _$currentUserIdHash();
-
-  @$internal
-  @override
-  $ProviderElement<String> $createElement($ProviderPointer pointer) =>
-      $ProviderElement(pointer);
-
-  @override
-  String create(Ref ref) {
-    return currentUserId(ref);
-  }
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(String value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<String>(value),
-    );
-  }
-}
-
-String _$currentUserIdHash() => r'53e36a8b79d432a69abb79cd85449ab0b1142454';
+    r'4a44bb1599dc8433994bbcfc99e5661f4a0965d3';
 
 /// 사용자 정보 읽기 전용 Provider
 
@@ -280,7 +279,7 @@ final class MyProfileProvider
   }
 }
 
-String _$myProfileHash() => r'0614a4c0b8b7c640f06b0ac1e842de7b245ea8f1';
+String _$myProfileHash() => r'a6c2985b892dfb68aee3c12f53011cb6a0a06047';
 
 @ProviderFor(diseasesList)
 const diseasesListProvider = DiseasesListProvider._();
@@ -361,7 +360,7 @@ final class UserSelectedDiseasesProvider
 }
 
 String _$userSelectedDiseasesHash() =>
-    r'5c4a0748e96397731d715657f676bc822644c7d5';
+    r'a037dbca10641bd66a1a4c0d2cb4c251c24b1122';
 
 @ProviderFor(allergiesList)
 const allergiesListProvider = AllergiesListProvider._();
@@ -442,4 +441,4 @@ final class UserSelectedAllergiesProvider
 }
 
 String _$userSelectedAllergiesHash() =>
-    r'a70f21c8383c6a42eda912fd0ecdbdb1df94e561';
+    r'6cf9203807b5832da301e70098399f50d69e6e51';
