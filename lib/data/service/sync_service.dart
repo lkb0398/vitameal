@@ -188,7 +188,8 @@ class SyncService {
         await _supabase.from('meal_entries').update(payload).eq('id', recordId);
         break;
       case 'delete':
-        await _supabase.from('meal_entries').update(payload).eq('id', recordId);
+        // Delete RLS 에러 -> 삭제를 RPC로 전환해서 RLS 문제 해결
+        await _supabase.rpc('soft_delete_meal_entry', params: {'p_entry_id': recordId});
         break;
     }
     debugPrint('📦🌈 MealEntry 동기화 [$operation, id=${recordId.substring(0, 8)}]');
