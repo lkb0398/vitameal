@@ -1,8 +1,9 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:vitameal/presentation/goal/view/page/add_goal_page.dart';
+import 'package:vitameal/presentation/goal/view/page/goal_page.dart';
 import 'package:vitameal/presentation/home/view/page/home_page.dart';
 import 'package:vitameal/presentation/onboarding/view/page/onboarding_allergy_page.dart';
 import 'package:vitameal/presentation/onboarding/view/page/onboarding_disease_page.dart';
@@ -11,26 +12,31 @@ import 'package:vitameal/presentation/onboarding/view/page/onboarding_physical_p
 import 'package:vitameal/presentation/onboarding/view/page/onboarding_profile_page.dart';
 import 'package:vitameal/presentation/setting/view/setting_page.dart';
 import 'package:vitameal/presentation/splash/view/splash_page.dart';
-import '../../presentation/auth/view/login_page.dart';
-import '../../presentation/auth/view_model/auth_view_model.dart';
+import 'package:vitameal/presentation/auth/view/login_page.dart';
+import 'package:vitameal/presentation/auth/view_model/auth_view_model.dart';
+import 'package:vitameal/presentation/intro/view/intro_page.dart';
 
 class AppRoutePath {
   static const setting = '/setting';
   static const melon = '/melon';
   static const login = '/login';
   static const splash = '/splash';
+  static const intro = '/intro';
   static const home = '/';
-  // 사용자 정보 입력
+  // 사용자 정보 입력/수정
   static const onboardingProfile = '/onboarding/profile';
   static const onboardingPhysical = '/onboarding/physical';
   static const onboardingDisease = '/onboarding/disease';
   static const onboardingAllergy = '/onboarding/allergy';
   static const onboardingDone = '/onboarding/done';
-  // 사용자 정보 수정
   static const editProfile = '/edit/profile';
   static const editPhysical = '/edit/physical';
   static const editDisease = '/edit/disease';
   static const editAllergy = '/edit/allergy';
+  // 목표 입력/수정
+  static const goal = '/goal';
+  static const addGoal = '/add/goal';
+  static const editGoal = '/edit/goal';
 }
 
 final routerProvider = Provider<GoRouter>((ref) {
@@ -40,10 +46,7 @@ final routerProvider = Provider<GoRouter>((ref) {
   return GoRouter(
     initialLocation: AppRoutePath.splash,
 
-    // 인증 상태가 변경될 때마다 redirect 다시 실행
-    refreshListenable: _RouterRefreshStream(
-      ref.read(authViewModelProvider.notifier).stream,
-    ),
+    refreshListenable: _RouterRefreshListenable(ref),
 
     redirect: (context, state) {
       // final isLoggedIn = authState != null;
@@ -60,8 +63,10 @@ final routerProvider = Provider<GoRouter>((ref) {
       final session = Supabase.instance.client.auth.currentSession;
       final location = state.matchedLocation;
 
+      print('현재 위치: $location | 세션 존재 여부: ${session != null}');
+
       // splash 허용
-      if (location == AppRoutePath.splash) {
+      if (location == AppRoutePath.splash || location == AppRoutePath.intro) {
         return null;
       }
 
@@ -72,7 +77,7 @@ final routerProvider = Provider<GoRouter>((ref) {
 
       // 로그인 상태에서 login 접근 차단
       if (session != null && location == AppRoutePath.login) {
-        return AppRoutePath.home;
+        return AppRoutePath.splash;
       }
 
       return null;
@@ -87,6 +92,10 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: AppRoutePath.login,
         builder: (context, state) => const LoginPage(),
+      ),
+      GoRoute(
+        path: AppRoutePath.intro,
+        builder: (context, state) => const IntroPage(),
       ),
       GoRoute(
         path: AppRoutePath.onboardingProfile,
@@ -132,22 +141,28 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: AppRoutePath.setting,
         builder: (context, state) => const SettingPage(),
       ),
+      GoRoute(
+        path: AppRoutePath.goal,
+        builder: (context, state) => const GoalPage(),
+      ),
+      GoRoute(
+        path: AppRoutePath.addGoal,
+        builder: (context, state) => const AddGoalPage(),
+      ),
+      GoRoute(
+        path: AppRoutePath.editGoal,
+        builder: (context, state) {
+          final goalId = state.extra as String;
+          return AddGoalPage(goalId: goalId);
+        },
+      ),
     ],
   );
 });
 
-// Stream을 GoRouter가 이해할 수 있는 Listenable로 변환
-class _RouterRefreshStream extends ChangeNotifier {
-  _RouterRefreshStream(Stream<dynamic> stream) {
-    _subscription = stream.asBroadcastStream().listen((_) => notifyListeners());
-  }
-
-  late final StreamSubscription<dynamic> _subscription;
-
-  @override
-  void dispose() {
-    _subscription.cancel();
-
-    super.dispose();
+class _RouterRefreshListenable extends ChangeNotifier {
+  _RouterRefreshListenable(Ref ref) {
+    // authViewModelProvider의 상태가 변할 때마다 notifyListeners() 호출
+    ref.listen(authViewModelProvider, (_, __) => notifyListeners());
   }
 }

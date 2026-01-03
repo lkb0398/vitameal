@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tap_debouncer/tap_debouncer.dart';
 import 'package:vitameal/presentation/onboarding/view/widget/select_box.dart';
-import 'package:vitameal/presentation/ui_provider/onboarding_provider.dart';
+import 'package:vitameal/presentation/ui_provider/profiles_provider.dart';
 import 'package:vitameal/presentation/onboarding/viewmodel/onboarding_view_model.dart';
 
 class OnboardingAllergyPage extends HookConsumerWidget {

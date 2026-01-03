@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:vitameal/core/theme/app_theme.dart';
 import 'package:vitameal/presentation/ui_provider/onboarding_provider.dart';
 import 'core/config/routes.dart';
 
@@ -45,10 +46,9 @@ class VitamealApp extends HookConsumerWidget {
       title: 'Vitameal',
       debugShowCheckedModeBanner: false,
       routerConfig: router,
+      themeMode: ThemeMode.system,
+      theme: AppTheme.light,
+      darkTheme: AppTheme.dark,
     );
   }
 }
-
-// url: 'https://ykqdcgrimdsvuincvmtu.supabase.co'
-// anonKey:
-//     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlrcWRjZ3JpbWRzdnVpbmN2bXR1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU5MzM0OTcsImV4cCI6MjA4MTUwOTQ5N30.QJnEx7gDulSj8-8PayKYxyu5Aze8IBk7jJU-N-VRHCw'

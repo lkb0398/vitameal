@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:vitameal/presentation/auth/view_model/auth_view_model.dart';
 
-class SettingPage extends StatelessWidget {
+class SettingPage extends HookConsumerWidget {
   const SettingPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(title: Text("메뉴", style: TextStyle(fontSize: 20))),
       body: Column(
@@ -41,12 +44,33 @@ class SettingPage extends StatelessWidget {
               ),
             ),
           ),
+
           InkWell(
             onTap: () {
               // TODO : 로그아웃 기능 구현하기
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: const Text("로그아웃"),
+                  content: const Text("로그아웃 하시겠습니까?"),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text("취소"),
+                    ),
+                    TextButton(
+                      onPressed: () async {
+                        Navigator.pop(context);
+                        await ref.read(authViewModelProvider.notifier).logout();
+                      },
+                      child: const Text("확인"),
+                    ),
+                  ],
+                ),
+              );
             },
             child: Container(
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 border: Border(bottom: BorderSide(color: Colors.grey)),
               ),
               alignment: AlignmentDirectional.centerStart,
@@ -55,9 +79,46 @@ class SettingPage extends StatelessWidget {
               child: Text("로그아웃"),
             ),
           ),
+
           InkWell(
             onTap: () {
               // TODO : 회원 탈퇴 기능 구현하기
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: const Text("회원 탈퇴"),
+                  content: const Text(
+                    "정말로 탈퇴 하시겠습니까?\n모든 데이터가 즉시 삭제되며 복구할 수 없습니다.",
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text("취소"),
+                    ),
+                    TextButton(
+                      onPressed: () async {
+                        Navigator.of(context).pop();
+
+                        await ref
+                            .read(authViewModelProvider.notifier)
+                            .withdraw(
+                              onError: () {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text("회원 탈퇴 중 오류가 발생했습니다."),
+                                  ),
+                                );
+                              },
+                            );
+                      },
+                      child: const Text(
+                        "확인",
+                        style: TextStyle(color: Colors.red),
+                      ),
+                    ),
+                  ],
+                ),
+              );
             },
             child: Container(
               decoration: BoxDecoration(
@@ -66,7 +127,7 @@ class SettingPage extends StatelessWidget {
               alignment: AlignmentDirectional.centerStart,
               height: 60,
               width: double.infinity,
-              child: Text("회원 탈퇴"),
+              child: const Text("회원 탈퇴", style: TextStyle(color: Colors.red)),
             ),
           ),
         ],

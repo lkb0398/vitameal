@@ -6,7 +6,13 @@ import 'package:vitameal/domain/entity/allergies_entity.dart';
 import 'package:vitameal/domain/entity/diseases_entity.dart';
 import 'package:vitameal/domain/entity/profiles_entity.dart';
 
-part 'onboarding_provider.g.dart';
+part 'profiles_provider.g.dart';
+
+/// 현재 로그인된 userId 가져오기 Provider
+@riverpod
+String userId(Ref ref) {
+  return Supabase.instance.client.auth.currentUser!.id;
+}
 
 /// 현재 router location 얻기 Provider
 @riverpod
@@ -36,23 +42,17 @@ class OnboardingState extends _$OnboardingState {
 
 @riverpod
 Future<bool> onboardingCompleted(Ref ref) async {
-  final userId = ref.read(currentUserIdProvider);
+  final userId = ref.read(userIdProvider);
   final profile = await ref
       .read(profilesRepositoryProvider)
       .getMyProfile(userId);
   return profile?.onboardingCompleted ?? false;
 }
 
-/// userId Provider
-@riverpod
-String currentUserId(Ref ref) {
-  return Supabase.instance.client.auth.currentUser!.id;
-}
-
 /// 사용자 정보 읽기 전용 Provider
 @riverpod
 Future<ProfilesEntity?> myProfile(Ref ref) async {
-  final userId = ref.read(currentUserIdProvider);
+  final userId = ref.read(userIdProvider);
   return ref.read(profilesRepositoryProvider).getMyProfile(userId);
 }
 
@@ -63,7 +63,7 @@ Future<List<DiseasesEntity>> diseasesList(Ref ref) {
 
 @riverpod
 Future<List<String>> userSelectedDiseases(Ref ref) async {
-  final userId = ref.read(currentUserIdProvider);
+  final userId = ref.read(userIdProvider);
   return ref.read(userDiseasesRepositoryProvider).getUserDiseaseNames(userId);
 }
 
@@ -74,6 +74,6 @@ Future<List<AllergiesEntity>> allergiesList(Ref ref) {
 
 @riverpod
 Future<List<String>> userSelectedAllergies(Ref ref) async {
-  final userId = ref.read(currentUserIdProvider);
+  final userId = ref.read(userIdProvider);
   return ref.read(userAllergiesRepositoryProvider).getUserAllergyNames(userId);
 }

@@ -1,5 +1,5 @@
-import '../../domain/entity/user_entity.dart';
-import '../dto/user_dto.dart';
+import 'package:vitameal/domain/entity/user_entity.dart';
+import 'package:vitameal/data/dto/user_dto.dart';
 
 extension UserMapper on UserDto {
   UserEntity toEntity() {

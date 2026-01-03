@@ -1,4 +1,4 @@
-import '../repository/auth_repository.dart';
+import 'package:vitameal/domain/repository/auth_repository.dart';
 
 class LogoutUseCase {
   final AuthRepository _repository;
