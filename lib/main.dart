@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:vitameal/core/theme/app_theme.dart';
 import 'package:vitameal/presentation/ui_provider/onboarding_provider.dart';
 import 'core/config/routes.dart';
 
@@ -45,6 +46,9 @@ class VitamealApp extends HookConsumerWidget {
       title: 'Vitameal',
       debugShowCheckedModeBanner: false,
       routerConfig: router,
+      themeMode: ThemeMode.system,
+      theme: AppTheme.light,
+      darkTheme: AppTheme.dark,
     );
   }
 }
