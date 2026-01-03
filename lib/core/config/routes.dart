@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -13,14 +12,16 @@ import 'package:vitameal/presentation/onboarding/view/page/onboarding_physical_p
 import 'package:vitameal/presentation/onboarding/view/page/onboarding_profile_page.dart';
 import 'package:vitameal/presentation/setting/view/setting_page.dart';
 import 'package:vitameal/presentation/splash/view/splash_page.dart';
-import '../../presentation/auth/view/login_page.dart';
-import '../../presentation/auth/view_model/auth_view_model.dart';
+import 'package:vitameal/presentation/auth/view/login_page.dart';
+import 'package:vitameal/presentation/auth/view_model/auth_view_model.dart';
+import 'package:vitameal/presentation/intro/view/intro_page.dart';
 
 class AppRoutePath {
   static const setting = '/setting';
   static const melon = '/melon';
   static const login = '/login';
   static const splash = '/splash';
+  static const intro = '/intro';
   static const home = '/';
   // 사용자 정보 입력/수정
   static const onboardingProfile = '/onboarding/profile';
@@ -45,10 +46,7 @@ final routerProvider = Provider<GoRouter>((ref) {
   return GoRouter(
     initialLocation: AppRoutePath.splash,
 
-    // 인증 상태가 변경될 때마다 redirect 다시 실행
-    refreshListenable: _RouterRefreshStream(
-      ref.read(authViewModelProvider.notifier).stream,
-    ),
+    refreshListenable: _RouterRefreshListenable(ref),
 
     redirect: (context, state) {
       // final isLoggedIn = authState != null;
@@ -65,9 +63,21 @@ final routerProvider = Provider<GoRouter>((ref) {
       final session = Supabase.instance.client.auth.currentSession;
       final location = state.matchedLocation;
 
-      // 비로그인 접근 차단
+      print('현재 위치: $location | 세션 존재 여부: ${session != null}');
+
+      // splash 허용
+      if (location == AppRoutePath.splash || location == AppRoutePath.intro) {
+        return null;
+      }
+
+      // 비로그인 상태 보호
       if (session == null && location != AppRoutePath.login) {
         return AppRoutePath.login;
+      }
+
+      // 로그인 상태에서 login 접근 차단
+      if (session != null && location == AppRoutePath.login) {
+        return AppRoutePath.splash;
       }
 
       return null;
@@ -82,6 +92,10 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: AppRoutePath.login,
         builder: (context, state) => const LoginPage(),
+      ),
+      GoRoute(
+        path: AppRoutePath.intro,
+        builder: (context, state) => const IntroPage(),
       ),
       GoRoute(
         path: AppRoutePath.onboardingProfile,
@@ -146,18 +160,9 @@ final routerProvider = Provider<GoRouter>((ref) {
   );
 });
 
-// Stream을 GoRouter가 이해할 수 있는 Listenable로 변환
-class _RouterRefreshStream extends ChangeNotifier {
-  _RouterRefreshStream(Stream<dynamic> stream) {
-    _subscription = stream.asBroadcastStream().listen((_) => notifyListeners());
-  }
-
-  late final StreamSubscription<dynamic> _subscription;
-
-  @override
-  void dispose() {
-    _subscription.cancel();
-
-    super.dispose();
+class _RouterRefreshListenable extends ChangeNotifier {
+  _RouterRefreshListenable(Ref ref) {
+    // authViewModelProvider의 상태가 변할 때마다 notifyListeners() 호출
+    ref.listen(authViewModelProvider, (_, __) => notifyListeners());
   }
 }

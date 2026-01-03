@@ -1,30 +1,19 @@
-class UserDto {
-  final String userId;
-  final String? nickname;
-  final String? photoUrl;
-  final String? gender;
-  final double? heightCm;
-  final double? weightKg;
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-  UserDto({
-    required this.userId,
-    this.nickname,
-    this.photoUrl,
-    this.gender,
-    this.heightCm,
-    this.weightKg,
-  });
+part 'user_dto.freezed.dart';
+part 'user_dto.g.dart';
 
-  factory UserDto.fromJson(Map<String, dynamic> json) {
-    return UserDto(
-      userId: json['user_id'] as String,
-      nickname: json['nickname'] as String?,
-      photoUrl: json['photo_url'] as String?,
-      gender: json['gender'] as String?,
+@freezed
+abstract class UserDto with _$UserDto {
+  const factory UserDto({
+    @JsonKey(name: 'user_id') required String userId,
+    String? nickname,
+    @JsonKey(name: 'photo_url') String? photoUrl,
+    String? gender,
+    @JsonKey(name: 'height_cm') double? heightCm,
+    @JsonKey(name: 'weight_kg') double? weightKg,
+  }) = _UserDto;
 
-      // Supabase의 numeric 타입 대응 => num으로 받은 후 double 변환
-      heightCm: (json['height_cm'] as num?)?.toDouble(),
-      weightKg: (json['weight_kg'] as num?)?.toDouble(),
-    );
-  }
+  factory UserDto.fromJson(Map<String, dynamic> json) =>
+      _$UserDtoFromJson(json);
 }

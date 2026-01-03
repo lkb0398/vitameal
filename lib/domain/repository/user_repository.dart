@@ -1,4 +1,4 @@
-import '../entity/user_entity.dart';
+import 'package:vitameal/domain/entity/user_entity.dart';
 
 abstract class UserRepository {
   Future<UserEntity?> getProfile(String uid);

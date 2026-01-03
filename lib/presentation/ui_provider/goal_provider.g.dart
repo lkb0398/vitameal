@@ -194,7 +194,7 @@ final class GetMainGoalProvider
   }
 }
 
-String _$getMainGoalHash() => r'51e1ac4fb1b64fc482b70303a1eb84d393d24d6b';
+String _$getMainGoalHash() => r'c20cd1bdca269be926f577d60ba3a95265510d3f';
 
 /// 특정 목표의 전체 데이터 가져오기 Provider
 
