@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 
-class DotPicker extends StatelessWidget {
-  /// 성취도 자가평가 위젯
-  const DotPicker({
+class AdherencePicker extends StatelessWidget {
+  /// 성취도 자가평가 선택
+  const AdherencePicker({
     super.key,
     required this.selectedDay,
-    required this.rating,
+    required this.adherence,
     required this.onPick,
   });
 
   final DateTime selectedDay;
-  final Color? rating;
+  final Color? adherence;
   final void Function(Color c) onPick;
 
   @override
@@ -26,17 +26,17 @@ class DotPicker extends StatelessWidget {
             children: [
               _DotPickerItem(
                 color: Colors.redAccent,
-                selected: rating == Colors.redAccent,
+                selected: adherence == Colors.redAccent,
                 onTap: () => onPick(Colors.redAccent),
               ),
               _DotPickerItem(
                 color: Colors.orangeAccent,
-                selected: rating == Colors.orangeAccent,
+                selected: adherence == Colors.orangeAccent,
                 onTap: () => onPick(Colors.orangeAccent),
               ),
               _DotPickerItem(
                 color: Colors.green,
-                selected: rating == Colors.green,
+                selected: adherence == Colors.green,
                 onTap: () => onPick(Colors.green),
               ),
             ],

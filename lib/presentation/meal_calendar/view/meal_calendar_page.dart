@@ -1,18 +1,26 @@
 import 'dart:math' as math;
 import 'dart:ui';
 
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:go_router/go_router.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:vitameal/presentation/home/view/page/meal_calendar/view/widget/ai_analysis_card.dart';
-import 'package:vitameal/presentation/home/view/page/meal_calendar/view/widget/calendar_header.dart';
-import 'package:vitameal/presentation/home/view/page/meal_calendar/view/util/calendar_utils.dart';
-import 'package:vitameal/presentation/home/view/page/meal_calendar/view/widget/dot_picker.dart';
-import 'package:vitameal/presentation/home/view/page/meal_calendar/view/widget/meal_card.dart';
-import 'package:vitameal/presentation/home/view/page/meal_calendar/view/widget/meal_calendar.dart';
-import 'package:vitameal/presentation/util/date_time_utils.dart';
+import 'package:vitameal/core/config/routes.dart';
+import 'package:vitameal/core/di/provider.dart';
+import 'package:vitameal/presentation/auth/view_model/auth_view_model.dart';
+import 'package:vitameal/presentation/meal_calendar/view/widget/ai_analysis_card.dart';
+import 'package:vitameal/presentation/meal_calendar/view/widget/calendar_header.dart';
+import 'package:vitameal/presentation/meal_calendar/view/util/calendar_utils.dart';
+import 'package:vitameal/presentation/meal_calendar/view/widget/adherence_picker.dart';
+import 'package:vitameal/presentation/meal_calendar/view/widget/meal_card.dart';
+import 'package:vitameal/presentation/meal_calendar/view/widget/meal_calendar.dart';
+import 'package:vitameal/presentation/meal_calendar/view/util/adherence_color_utils.dart';
+import 'package:vitameal/core/util/date_time_utils.dart';
+import 'package:vitameal/presentation/meal_calendar/view_model/meal_calendar_viewmodel.dart';
 
-class MealCalendarPage extends HookWidget {
+class MealCalendarPage extends HookConsumerWidget {
   const MealCalendarPage({super.key});
 
   // 년.월 라벨 + 요일 고정 영역 (40 + 40)
@@ -25,18 +33,56 @@ class MealCalendarPage extends HookWidget {
   static const double _monthCalendarRatio = 1.0;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    // 인증 정보
+    final session = ref.watch(authViewModelProvider);
+    final userId = session?.user.id;
+
+    // userId가 없으면 로딩 표시
+    if (userId == null) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
     // UI 상태 값들
     final contentScrollController = useScrollController();
     final focusedDay = useState(DateTime.now()); // 현재 캘린더 페이지의 렌더링 기준이 되는 날
     final selectedDay = useState(DateTime.now().dateOnly); // 선택된 날짜
     final lastTappedDay = useState<DateTime?>(null); // 마지막으로 선택된 날짜
-    final colorOfDay = useState<Map<DateTime, Color>>({}); // 성취도 평가 색상 바
     final dragStartY = useState<double?>(null); // 세로 드래그
     final dragEndY = useState<double?>(null); // 세로 드래그
 
     // 애니메이션 컨트롤러
     final collapseCtrl = useAnimationController(duration: const Duration(milliseconds: 360));
+
+    // 월의 시작/끝 날짜 계산 (focusedDay 기준)
+    final startOfMonth = DateTime(focusedDay.value.year, focusedDay.value.month, 1);
+    final endOfMonth = DateTime(focusedDay.value.year, focusedDay.value.month + 1, 0);
+
+    // MealCalendarViewModel - 캘린더 색상 바용
+    final calendarViewModel = ref.watch(
+      mealCalendarViewModelProvider(userId, startOfMonth, endOfMonth),
+    );
+
+    // 캘린더 색상 맵 생성
+    final colorOfDay = calendarViewModel.maybeWhen(
+      data: (mealDays) => AdherenceColorUtils.buildColorMap(mealDays),
+      orElse: () => <DateTime, Color>{},
+    );
+
+    // 선택된 날짜의 MealDay 찾기
+    final selectedMealDay = calendarViewModel.maybeWhen(
+      data: (mealDays) => mealDays.firstWhereOrNull(
+        (day) => CalendarUtils.isSameDay(day.mealDate, selectedDay.value),
+      ),
+      orElse: () => null,
+    );
+
+    // 선택된 날짜의 식단 항목 조회
+    final mealEntriesAsync = selectedMealDay != null
+        ? ref.watch(mealEntriesProvider(selectedMealDay.id))
+        : null;
 
     /// 날짜 탭 인터렉션
     void onDayTapped(DateTime day) {
@@ -79,9 +125,34 @@ class MealCalendarPage extends HookWidget {
       }
     }
 
-    // 성취도 평가 색상 바
-    void setColorBar(Color c) {
-      colorOfDay.value = {...colorOfDay.value, selectedDay.value: c};
+    // 성취도 평가 업데이트
+    Future<void> setColorBar(Color color) async {
+      final adherence = AdherenceColorUtils.colorToAdherence(color);
+
+      try {
+        String mealDayId;
+
+        // MealDay가 없으면 먼저 생성 (식단 추가와 동일한 로직)
+        if (selectedMealDay == null) {
+          final mealDay = await ref.read(mealRepositoryProvider).getOrCreateMealDay(
+            userId: userId,
+            date: selectedDay.value,
+          );
+          mealDayId = mealDay.id;
+        } else {
+          mealDayId = selectedMealDay.id;
+        }
+
+        // Adherence 업데이트 (UI 즉시 반영)
+        await ref.read(mealCalendarViewModelProvider(userId, startOfMonth, endOfMonth).notifier)
+          .updateAdherence(
+            mealDayId: mealDayId,
+            adherence: adherence,
+          );
+      } catch (e) {
+        // 에러 처리 (필요 시 SnackBar 등으로 사용자에게 알림)
+        debugPrint('성취도 업데이트 실패: $e');
+      }
     }
 
     // 애니메이션 진행도 (0.0: Month 모드, 1.0: Week 모드)
@@ -148,7 +219,7 @@ class MealCalendarPage extends HookWidget {
                               selectedDay: selectedDay.value,
                               rowHeight: rowHeight,
                               barAreaHeight: barArea,
-                              barColorByDay: colorOfDay.value,
+                              barColorByDay: colorOfDay,
                               onDayTap: onDayTapped,
                               calendarFormat: isWeekMode ? CalendarFormat.week : CalendarFormat.month,
                               onPageChanged: onPageChanged,
@@ -204,15 +275,97 @@ class MealCalendarPage extends HookWidget {
                     child: Column(
                       children: [
                         // 성취도 평가 위젯
-                        DotPicker(
+                        AdherencePicker(
                           selectedDay: selectedDay.value,
-                          rating: colorOfDay.value[selectedDay.value],
+                          adherence: colorOfDay[selectedDay.value],
                           onPick: setColorBar,
                         ),
                         // 분석 카드
-                        AiAnalysisCard(),
+                        AiAnalysisCard(
+                          initialResultText: selectedMealDay?.latestAiSummary,
+                        ),
                         // 식단 카드 리스트
-                        ...List.generate(12, (idx) => MealCard(index: idx)),
+                        if (mealEntriesAsync != null)
+                          mealEntriesAsync.when(
+                            data: (entries) {
+                              if (entries.isEmpty) {
+                                return const Padding(
+                                  padding: EdgeInsets.all(32.0),
+                                  child: Center(
+                                    child: Text(
+                                      '식단 기록이 없습니다',
+                                      style: TextStyle(
+                                        color: Colors.black38,
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              }
+
+                              // 시간순 정렬
+                              final sortedEntries = entries.toList()
+                                ..sort((a, b) {
+                                  final aTime = a.eatenAt ?? DateTime(2000);
+                                  final bTime = b.eatenAt ?? DateTime(2000);
+                                  return aTime.compareTo(bTime);
+                                });
+
+                              return Column(
+                                children: sortedEntries
+                                    .map(
+                                      (entry) => MealCard(
+                                        entryId: entry.id,
+                                        category: entry.category,
+                                        content: entry.content,
+                                        photoUrl: entry.photoUrl,
+                                        eatenAt: entry.eatenAt,
+                                        onTap: () async {
+                                          // MealEditor로 이동 (수정 모드)
+                                          await context.push(
+                                            AppRoutePath.mealEditor,
+                                            extra: {
+                                              'mealEntryId': entry.id,
+                                              'mealDayId': selectedMealDay!.id,
+                                              'date': selectedDay.value,
+                                            },
+                                          );
+                                          // Provider로 따로 뺀거라 돌아온 후 갱신 해줘야함
+                                          // TODO: vm에서 state 클래스로 같이 관리하도록 리팩토링 하기
+                                          ref.invalidate(mealEntriesProvider(selectedMealDay.id));
+                                        },
+                                      ),
+                                    )
+                                    .toList(),
+                              );
+                            },
+                            loading: () => const Padding(
+                              padding: EdgeInsets.all(32.0),
+                              child: Center(child: CircularProgressIndicator()),
+                            ),
+                            error: (error, stack) => Padding(
+                              padding: const EdgeInsets.all(32.0),
+                              child: Center(
+                                child: Text(
+                                  '에러 발생: $error',
+                                  style: const TextStyle(color: Colors.red),
+                                ),
+                              ),
+                            ),
+                          )
+                        else
+                          const Padding(
+                            padding: EdgeInsets.all(32.0),
+                            child: Center(
+                              child: Text(
+                                '날짜를 선택해주세요',
+                                style: TextStyle(
+                                  color: Colors.black38,
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ),
+                          ),
                         const SizedBox(height: 24),
                       ],
                     ),
@@ -224,8 +377,19 @@ class MealCalendarPage extends HookWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // TODO: 식단 추가 기능 구현
+        onPressed: () async {
+          await context.push(
+            AppRoutePath.mealEditor,
+            extra: {
+              'mealDayId': selectedMealDay?.id,
+              'date': selectedDay.value,
+            },
+          );
+          // Provider로 따로 뺀거라 돌아온 후 갱신 해줘야함
+          // TODO: vm에서 state 클래스로 같이 관리하도록 리팩토링 하기
+          if (selectedMealDay != null) {
+            ref.invalidate(mealEntriesProvider(selectedMealDay.id));
+          }
         },
         elevation: 0,
         shape: const CircleBorder(),

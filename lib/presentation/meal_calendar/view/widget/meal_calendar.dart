@@ -2,10 +2,10 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:vitameal/presentation/util/date_time_utils.dart';
+import 'package:vitameal/core/util/date_time_utils.dart';
 
 class MonthCalendar extends StatelessWidget {
-  /// TableCalendar 기반 캘린더 위잿
+  /// TableCalendar 기반 월/주 캘린더 위젯
   const MonthCalendar({
     super.key,
     required this.focusedDay,
@@ -24,7 +24,7 @@ class MonthCalendar extends StatelessWidget {
   final double barAreaHeight; // 날짜 아래에 있는 색상바 영역의 높이
   final Map<DateTime, Color> barColorByDay; // 날짜별 바 색상
   final void Function(DateTime day) onDayTap; // 호출할 함수
-  final CalendarFormat calendarFormat; // 달력 포맷 (month/week)
+  final CalendarFormat calendarFormat; // 달력 포맷 (Month/Week)
   final void Function(DateTime newFocused)? onPageChanged; // 페이지 변경 콜백
 
   @override
