@@ -5,6 +5,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:vitameal/presentation/goal/view/page/add_goal_page.dart';
 import 'package:vitameal/presentation/goal/view/page/goal_page.dart';
 import 'package:vitameal/presentation/home/view/page/home_page.dart';
+import 'package:vitameal/presentation/meal_editor/view/meal_editor_page.dart';
 import 'package:vitameal/presentation/onboarding/view/page/onboarding_allergy_page.dart';
 import 'package:vitameal/presentation/onboarding/view/page/onboarding_disease_page.dart';
 import 'package:vitameal/presentation/onboarding/view/page/onboarding_done_page.dart';
@@ -37,6 +38,8 @@ class AppRoutePath {
   static const goal = '/goal';
   static const addGoal = '/add/goal';
   static const editGoal = '/edit/goal';
+  // 식단 작성 및 편집 페이지
+  static const mealEditor = '/meal-editor';
 }
 
 final routerProvider = Provider<GoRouter>((ref) {
@@ -154,6 +157,17 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) {
           final goalId = state.extra as String;
           return AddGoalPage(goalId: goalId);
+        },
+      ),
+      GoRoute(
+        path: AppRoutePath.mealEditor,
+        builder: (context, state) {
+          final extra = state.extra as Map<String, dynamic>?;
+          return MealEditorPage(
+            mealEntryId: extra?['mealEntryId'] as String?,
+            mealDayId: extra?['mealDayId'] as String?,
+            date: extra?['date'] as DateTime? ?? DateTime.now(),
+          );
         },
       ),
     ],

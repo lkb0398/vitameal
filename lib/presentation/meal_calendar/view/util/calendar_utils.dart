@@ -1,5 +1,5 @@
 import 'package:table_calendar/table_calendar.dart';
-import 'package:vitameal/presentation/util/date_time_utils.dart';
+import 'package:vitameal/core/util/date_time_utils.dart';
 
 /// 캘린더 관련 유틸 함수들
 class CalendarUtils {

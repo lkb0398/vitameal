@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:vitameal/core/di/provider.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
-import 'package:vitameal/presentation/ui_provider/onboarding_provider.dart';
+import 'package:vitameal/presentation/ui_provider/profiles_provider.dart';
 import 'core/config/routes.dart';
 
 void main() async {
@@ -39,6 +40,9 @@ class VitamealApp extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // SyncService 초기화 (앱 시작 시 한 번 동기화)
+    ref.read(syncServiceProvider);
+    
     // routerProvider를 Stream으로 실시간 경로 변경
     final router = ref.watch(routerProvider);
 

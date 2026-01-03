@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class CalendarHeader extends StatelessWidget {
-  /// 캘린더 헤더 위젯
+  /// 캘린더 헤더
   const CalendarHeader({super.key, required this.focused});
 
   final DateTime focused;

@@ -1,11 +1,19 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:vitameal/data/data_source/allergies_data_source.dart';
 import 'package:vitameal/data/data_source/diseases_data_source.dart';
+import 'package:vitameal/data/data_source/meal_local_data_source.dart';
+import 'package:vitameal/data/data_source/meal_remote_data_source.dart';
 import 'package:vitameal/data/data_source/profiles_data_source.dart';
+import 'package:vitameal/data/data_source/storage_data_source.dart';
 import 'package:vitameal/data/data_source/user_allergies_data_source.dart';
 import 'package:vitameal/data/data_source/user_diseases_data_source.dart';
 import 'package:vitameal/data/data_source/goal_datas_data_source.dart';
+import 'package:vitameal/data/database/database.dart';
+import 'package:vitameal/data/repository_impl/meal_repository_impl.dart';
+import 'package:vitameal/data/repository_impl/storage_repository_impl.dart';
+import 'package:vitameal/data/service/sync_service.dart';
 import 'package:vitameal/domain/repository/goal_datas_repository.dart';
 import 'package:vitameal/data/repository_impl/goal_datas_repository_impl.dart';
 import 'package:vitameal/data/data_source/user_goals_data_source.dart';
@@ -16,7 +24,9 @@ import 'package:vitameal/data/repository_impl/user_allergies_repository_impl.dar
 import 'package:vitameal/data/repository_impl/user_diseases_repository_impl.dart';
 import 'package:vitameal/domain/repository/allergies_repository.dart';
 import 'package:vitameal/domain/repository/diseases_repository.dart';
+import 'package:vitameal/domain/repository/meal_repository.dart';
 import 'package:vitameal/domain/repository/profiles_repository.dart';
+import 'package:vitameal/domain/repository/storage_repository.dart';
 import 'package:vitameal/domain/repository/user_allergies_repository.dart';
 import 'package:vitameal/domain/repository/user_diseases_repository.dart';
 import 'package:vitameal/domain/repository/user_goals_repository.dart';
@@ -33,13 +43,23 @@ import 'package:vitameal/data/repository_impl/user_repository_impl.dart';
 
 part 'provider.g.dart';
 
-/// 🤍 Supabase Client
+// 🤍 Supabase Client
 @riverpod
 SupabaseClient supabaseClient(Ref ref) {
   return Supabase.instance.client;
 }
 
-/// 🤍 DataSource
+// 🤍 Drift Database
+@Riverpod(keepAlive: true)
+AppDatabase appDatabase(Ref ref) {
+  final database = AppDatabase();
+  ref.onDispose(() {
+    database.close();
+  });
+  return database;
+}
+
+// 🤍 DataSource
 @riverpod
 ProfilesDataSource profilesDataSource(Ref ref) {
   final client = ref.read(supabaseClientProvider);
@@ -88,7 +108,25 @@ AuthDataSource authDataSource(Ref ref) {
   return AuthDataSource(client);
 }
 
-/// 🤍 Repository
+@riverpod
+MealLocalDataSource mealLocalDataSource(Ref ref) {
+  final database = ref.watch(appDatabaseProvider);
+  return MealLocalDataSourceImpl(database);
+}
+
+@riverpod
+MealRemoteDataSource mealRemoteDataSource(Ref ref) {
+  final supabase = ref.watch(supabaseClientProvider);
+  return MealRemoteDataSourceImpl(supabase);
+}
+
+@riverpod
+StorageDataSource storageDataSource(Ref ref) {
+  final supabase = ref.watch(supabaseClientProvider);
+  return StorageDataSource(supabase);
+}
+
+// 🤍 Repository
 @riverpod
 ProfilesRepository profilesRepository(Ref ref) {
   final dataSource = ref.read(profilesDataSourceProvider);
@@ -145,7 +183,22 @@ UserRepository userRepository(Ref ref) {
   return UserRepositoryImpl(client);
 }
 
-/// UseCase
+@riverpod
+MealRepository mealRepository(Ref ref) {
+  final localDataSource = ref.watch(mealLocalDataSourceProvider);
+  final database = ref.watch(appDatabaseProvider);
+  final syncService = ref.watch(syncServiceProvider);
+
+  return MealRepositoryImpl(localDataSource, database, syncService);
+}
+
+@riverpod
+StorageRepository storageRepository(Ref ref) {
+  final storageDataSource = ref.watch(storageDataSourceProvider);
+  return StorageRepositoryImpl(storageDataSource);
+}
+
+// 🤍 UseCase
 @riverpod
 LoginUseCase loginUseCase(Ref ref) {
   return LoginUseCase(ref.watch(authRepositoryProvider));
@@ -154,4 +207,29 @@ LoginUseCase loginUseCase(Ref ref) {
 @riverpod
 LogoutUseCase logoutUseCase(Ref ref) {
   return LogoutUseCase(ref.watch(authRepositoryProvider));
+}
+
+// 🤍 Sync Service
+@Riverpod(keepAlive: true)
+SyncService syncService(Ref ref) {
+  final database = ref.watch(appDatabaseProvider);
+  final remoteDataSource = ref.watch(mealRemoteDataSourceProvider);
+  final supabase = ref.watch(supabaseClientProvider);
+
+  final service = SyncService(
+    database: database,
+    remoteDataSource: remoteDataSource,
+    supabase: supabase,
+    connectivity: Connectivity(),
+  );
+
+  // 서비스 시작
+  service.start();
+
+  // 앱 종료 시 서비스 중지
+  ref.onDispose(() {
+    service.stop();
+  });
+
+  return service;
 }
