@@ -26,7 +26,7 @@ class LoginPage extends HookConsumerWidget {
         if (isOnboarded) {
           context.go(AppRoutePath.home); // 온보딩 O > 홈 페이지
         } else {
-          context.go(AppRoutePath.onboardingProfile); // 온보딩 X > 온보딩 페이지
+          context.go(AppRoutePath.intro); // 온보딩 X > 온보딩 페이지
         }
       });
       return null;

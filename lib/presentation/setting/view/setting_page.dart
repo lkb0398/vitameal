@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:vitameal/presentation/auth/view_model/auth_view_model.dart';
+import 'package:go_router/go_router.dart';
 
 class SettingPage extends HookConsumerWidget {
   const SettingPage({super.key});
@@ -15,7 +15,7 @@ class SettingPage extends HookConsumerWidget {
           InkWell(
             onTap: () {
               // TODO : 페이지 연결
-              // context.go('/language');
+              // context.push('/language');
             },
             child: Container(
               decoration: BoxDecoration(
@@ -30,8 +30,7 @@ class SettingPage extends HookConsumerWidget {
           ),
           InkWell(
             onTap: () {
-              // TODO : 페이지 연결
-              // context.go('/notification');
+              context.push('/noti');
             },
             child: Container(
               decoration: BoxDecoration(

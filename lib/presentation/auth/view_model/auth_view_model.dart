@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:vitameal/core/di/provider.dart';
+import 'package:vitameal/core/service/firebase_service.dart';
 
 part 'auth_view_model.g.dart';
 
@@ -41,6 +42,8 @@ class AuthViewModel extends _$AuthViewModel {
     try {
       final loginUseCase = ref.read(loginUseCaseProvider);
       await loginUseCase.execute(provider);
+      // 로그인 성공 직후 강제 토큰 저장 (앱 삭제 후 재설치 시 토큰 갱신 위해)
+      await FirebaseService.saveFcmToken();
     } catch (e) {
       debugPrint('로그인 에러: $e');
       if (onError != null) onError();

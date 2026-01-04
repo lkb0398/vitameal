@@ -6,6 +6,7 @@ import 'package:vitameal/presentation/goal/view/page/add_goal_page.dart';
 import 'package:vitameal/presentation/goal/view/page/goal_page.dart';
 import 'package:vitameal/presentation/home/view/page/home_page.dart';
 import 'package:vitameal/presentation/meal_editor/view/meal_editor_page.dart';
+import 'package:vitameal/presentation/notification/view/notification_page.dart';
 import 'package:vitameal/presentation/onboarding/view/page/onboarding_allergy_page.dart';
 import 'package:vitameal/presentation/onboarding/view/page/onboarding_disease_page.dart';
 import 'package:vitameal/presentation/onboarding/view/page/onboarding_done_page.dart';
@@ -25,6 +26,8 @@ class AppRoutePath {
   static const intro = '/intro';
   static const home = '/';
   // 사용자 정보 입력/수정
+  static const noti = '/noti';
+  // 사용자 정보 입력
   static const onboardingProfile = '/onboarding/profile';
   static const onboardingPhysical = '/onboarding/physical';
   static const onboardingDisease = '/onboarding/disease';
@@ -52,37 +55,15 @@ final routerProvider = Provider<GoRouter>((ref) {
     refreshListenable: _RouterRefreshListenable(ref),
 
     redirect: (context, state) {
-      // final isLoggedIn = authState != null;
-      // final isLoggingIn = state.matchedLocation == AppRoutePath.login;
-      //
-      // if (!isLoggedIn) {
-      //         return isLoggingIn ? null : AppRoutePath.login;
-      //       }
-      //       if (isLoggingIn) {
-      //         return AppRoutePath.home;
-      //       }
-      //       return null;
-
       final session = Supabase.instance.client.auth.currentSession;
       final location = state.matchedLocation;
 
       print('현재 위치: $location | 세션 존재 여부: ${session != null}');
 
-      // splash 허용
-      if (location == AppRoutePath.splash || location == AppRoutePath.intro) {
-        return null;
-      }
-
-      // 비로그인 상태 보호
+      // 비로그인 접근 차단
       if (session == null && location != AppRoutePath.login) {
         return AppRoutePath.login;
       }
-
-      // 로그인 상태에서 login 접근 차단
-      if (session != null && location == AppRoutePath.login) {
-        return AppRoutePath.splash;
-      }
-
       return null;
     },
 
@@ -169,6 +150,10 @@ final routerProvider = Provider<GoRouter>((ref) {
             date: extra?['date'] as DateTime? ?? DateTime.now(),
           );
         },
+      ),
+      GoRoute(
+        path: AppRoutePath.noti,
+        builder: (context, state) => const NotificationPage(),
       ),
     ],
   );
