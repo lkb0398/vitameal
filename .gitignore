@@ -46,3 +46,4 @@ app.*.map.json
 
 ios/Runner.xcworkspace/
 .vscode/settings.json
+ios/build/

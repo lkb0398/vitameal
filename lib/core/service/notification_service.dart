@@ -56,7 +56,6 @@ class NotificationService {
       playSound: true, // 알림 소리
       enableVibration: true, // 진동
       visibility: NotificationVisibility.public, // 잠금화면 표시
-      icon: 'ic_notification', // TODO : 리소스 만들기
     );
 
     // iOS

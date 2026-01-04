@@ -55,37 +55,15 @@ final routerProvider = Provider<GoRouter>((ref) {
     refreshListenable: _RouterRefreshListenable(ref),
 
     redirect: (context, state) {
-      // final isLoggedIn = authState != null;
-      // final isLoggingIn = state.matchedLocation == AppRoutePath.login;
-      //
-      // if (!isLoggedIn) {
-      //         return isLoggingIn ? null : AppRoutePath.login;
-      //       }
-      //       if (isLoggingIn) {
-      //         return AppRoutePath.home;
-      //       }
-      //       return null;
-
       final session = Supabase.instance.client.auth.currentSession;
       final location = state.matchedLocation;
 
       print('현재 위치: $location | 세션 존재 여부: ${session != null}');
 
-      // splash 허용
-      if (location == AppRoutePath.splash || location == AppRoutePath.intro) {
-        return null;
-      }
-
-      // 비로그인 상태 보호
+      // 비로그인 접근 차단
       if (session == null && location != AppRoutePath.login) {
         return AppRoutePath.login;
       }
-
-      // 로그인 상태에서 login 접근 차단
-      if (session != null && location == AppRoutePath.login) {
-        return AppRoutePath.splash;
-      }
-
       return null;
     },
 
