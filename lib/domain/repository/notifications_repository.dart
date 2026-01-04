@@ -1,4 +1,4 @@
-import 'package:vitameal/presentation/notification/view_model/notifications_entity.dart';
+import 'package:vitameal/domain/entity/notifications_entity.dart';
 
 abstract interface class NotificationsRepository {
   Future<List<NotificationsEntity>?> getAllNotis();

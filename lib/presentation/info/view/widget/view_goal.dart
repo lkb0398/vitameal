@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:vitameal/presentation/info/view/widget/graph.dart';
 import 'package:vitameal/presentation/info/view/widget/guage.dart';
-import 'package:vitameal/presentation/ui_provider/goal_provider.dart';
+import 'package:vitameal/presentation/ui_provider/goals_provider.dart';
 import 'package:vitameal/presentation/widget/bordered_container.dart';
 
 class ViewGoal extends HookConsumerWidget {

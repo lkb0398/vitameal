@@ -6,7 +6,7 @@ import 'package:vitameal/presentation/goal/view/page/add_goal_page.dart';
 import 'package:vitameal/presentation/goal/view/page/goal_page.dart';
 import 'package:vitameal/presentation/home/view/page/home_page.dart';
 import 'package:vitameal/presentation/meal_editor/view/meal_editor_page.dart';
-import 'package:vitameal/presentation/notification/view/notification_page.dart';
+import 'package:vitameal/presentation/notification/view/page/notification_page.dart';
 import 'package:vitameal/presentation/onboarding/view/page/onboarding_allergy_page.dart';
 import 'package:vitameal/presentation/onboarding/view/page/onboarding_disease_page.dart';
 import 'package:vitameal/presentation/onboarding/view/page/onboarding_done_page.dart';

@@ -5,8 +5,8 @@ import 'package:tap_debouncer/tap_debouncer.dart';
 import 'package:vitameal/presentation/goal/view/widget/view_add_data.dart';
 import 'package:vitameal/presentation/goal/view/widget/view_my_data.dart';
 import 'package:vitameal/presentation/goal/view/widget/view_my_goal.dart';
-import 'package:vitameal/presentation/goal/view_model/user_goals_view_model.dart';
-import 'package:vitameal/presentation/ui_provider/goal_provider.dart';
+import 'package:vitameal/presentation/goal/view_model/goals_view_model.dart';
+import 'package:vitameal/presentation/ui_provider/goals_provider.dart';
 
 class AddGoalPage extends HookConsumerWidget {
   const AddGoalPage({super.key, this.goalId});
@@ -45,7 +45,7 @@ class AddGoalPage extends HookConsumerWidget {
                               onPressed: () async {
                                 // 목표 삭제
                                 await ref
-                                    .read(userGoalsViewModelProvider.notifier)
+                                    .read(goalsViewModelProvider.notifier)
                                     .deleteGoal(goalId!);
 
                                 // mounted 체크

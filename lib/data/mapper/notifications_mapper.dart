@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:vitameal/presentation/notification/view_model/notifications_dto.dart';
-import 'package:vitameal/presentation/notification/view_model/notifications_entity.dart';
+import 'package:vitameal/data/dto/notifications_dto.dart';
+import 'package:vitameal/domain/entity/notifications_entity.dart';
 
 class NotificationsMapper {
   // Entity > Dto

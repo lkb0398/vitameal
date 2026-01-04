@@ -3,9 +3,9 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tap_debouncer/tap_debouncer.dart';
-import 'package:vitameal/domain/entity/user_goals_entity.dart';
-import 'package:vitameal/presentation/goal/view_model/user_goals_view_model.dart';
-import 'package:vitameal/presentation/ui_provider/goal_provider.dart';
+import 'package:vitameal/domain/entity/goals_entity.dart';
+import 'package:vitameal/presentation/goal/view_model/goals_view_model.dart';
+import 'package:vitameal/presentation/ui_provider/goals_provider.dart';
 import 'package:vitameal/presentation/widget/bordered_container.dart';
 import 'package:vitameal/presentation/widget/validate_textformfield.dart';
 
@@ -51,7 +51,7 @@ class ViewMyGoal extends HookConsumerWidget {
 
     // 수정 화면에서 기존값 불러오기
     final didInit = useRef(false);
-    final savedGoalRef = useRef<UserGoalsEntity?>(null);
+    final savedGoalRef = useRef<GoalsEntity?>(null);
     useEffect(() {
       if (goal == null) return null;
       if (didInit.value) return null;
@@ -116,7 +116,7 @@ class ViewMyGoal extends HookConsumerWidget {
                 if (goal != null) {
                   // 목표 수정
                   await ref
-                      .read(userGoalsViewModelProvider.notifier)
+                      .read(goalsViewModelProvider.notifier)
                       .updateGoal(
                         goalId: goal.goalId!,
                         goalTitle: goalTitleController.text,
@@ -128,7 +128,7 @@ class ViewMyGoal extends HookConsumerWidget {
                       );
 
                   // 기존값 업데이트
-                  savedGoalRef.value = UserGoalsEntity(
+                  savedGoalRef.value = GoalsEntity(
                     goalId: goal.goalId,
                     goalTitle: goalTitleController.text.trim(),
                     goalUnit: goalUnitController.text.trim(),
@@ -156,7 +156,7 @@ class ViewMyGoal extends HookConsumerWidget {
                 } else {
                   // 목표 추가
                   await ref
-                      .read(userGoalsViewModelProvider.notifier)
+                      .read(goalsViewModelProvider.notifier)
                       .saveGoal(
                         goalTitle: goalTitleController.text,
                         goalUnit: goalUnitController.text,

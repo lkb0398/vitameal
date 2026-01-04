@@ -4,8 +4,8 @@ import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:timezone/timezone.dart' as tz;
-import 'package:vitameal/presentation/notification/view/add_noti_bottom_sheet.dart';
-import 'package:vitameal/presentation/notification/view_model/notifications_provider.dart';
+import 'package:vitameal/presentation/notification/view/widget/add_noti_bottom_sheet.dart';
+import 'package:vitameal/presentation/ui_provider/notifications_provider.dart';
 import 'package:vitameal/presentation/notification/view_model/notifications_view_model.dart';
 
 class NotificationPage extends HookConsumerWidget {

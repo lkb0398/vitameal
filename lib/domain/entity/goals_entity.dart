@@ -1,10 +1,10 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'user_goals_entity.freezed.dart';
+part 'goals_entity.freezed.dart';
 
 @freezed
-abstract class UserGoalsEntity with _$UserGoalsEntity {
-  const factory UserGoalsEntity({
+abstract class GoalsEntity with _$GoalsEntity {
+  const factory GoalsEntity({
     String? userId,
     String? goalId,
     required String goalTitle, // 목표명
@@ -13,5 +13,5 @@ abstract class UserGoalsEntity with _$UserGoalsEntity {
     required DateTime goalDate, // 목표 날짜
     required bool isDone, // 달성 여부
     required bool isMain, // 대표설정 여부
-  }) = _UserGoalsEntity;
+  }) = _GoalsEntity;
 }

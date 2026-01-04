@@ -1,19 +1,19 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:vitameal/core/di/provider.dart';
-import 'package:vitameal/domain/entity/user_goals_entity.dart';
+import 'package:vitameal/domain/entity/goals_entity.dart';
 import 'package:vitameal/domain/entity/goal_datas_entity.dart';
 
-part 'goal_provider.g.dart';
+part 'goals_provider.g.dart';
 
 /// 전체 목표 가져오기 Provider
 @riverpod
-Future<List<UserGoalsEntity>?> getAllGoals(Ref ref) async {
-  return ref.read(userGoalsRepositoryProvider).getAllGoals();
+Future<List<GoalsEntity>?> getAllGoals(Ref ref) async {
+  return ref.read(goalsRepositoryProvider).getAllGoals();
 }
 
 /// 특정 목표 가져오기 Provider
 @riverpod
-UserGoalsEntity? getGoal(Ref ref, String goalId) {
+GoalsEntity? getGoal(Ref ref, String goalId) {
   final goalsAsync = ref.watch(getAllGoalsProvider);
   return goalsAsync.whenOrNull(
     data: (goals) {
@@ -29,7 +29,7 @@ UserGoalsEntity? getGoal(Ref ref, String goalId) {
 
 /// 대표 설정된 목표 가져오기 Provider
 @riverpod
-UserGoalsEntity? getMainGoal(Ref ref) {
+GoalsEntity? getMainGoal(Ref ref) {
   final goalsAsync = ref.watch(getAllGoalsProvider);
   return goalsAsync.whenOrNull(
     data: (goals) {

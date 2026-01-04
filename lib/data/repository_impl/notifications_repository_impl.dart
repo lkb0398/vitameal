@@ -1,7 +1,7 @@
-import 'package:vitameal/presentation/notification/view_model/notifications_data_source.dart';
-import 'package:vitameal/presentation/notification/view_model/notifications_entity.dart';
-import 'package:vitameal/presentation/notification/view_model/notifications_mapper.dart';
-import 'package:vitameal/presentation/notification/view_model/notifications_repository.dart';
+import 'package:vitameal/data/data_source/notifications_data_source.dart';
+import 'package:vitameal/domain/entity/notifications_entity.dart';
+import 'package:vitameal/data/mapper/notifications_mapper.dart';
+import 'package:vitameal/domain/repository/notifications_repository.dart';
 
 class NotificationsRepositoryImpl implements NotificationsRepository {
   NotificationsRepositoryImpl(this.dataSource);

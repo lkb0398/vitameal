@@ -3,7 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tap_debouncer/tap_debouncer.dart';
 import 'package:vitameal/presentation/goal/view_model/goal_datas_view_model.dart';
-import 'package:vitameal/presentation/ui_provider/goal_provider.dart';
+import 'package:vitameal/presentation/ui_provider/goals_provider.dart';
 import 'package:vitameal/presentation/widget/bordered_container.dart';
 
 class ViewMyData extends HookConsumerWidget {

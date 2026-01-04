@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'goal_provider.dart';
+part of 'goals_provider.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -18,13 +18,13 @@ const getAllGoalsProvider = GetAllGoalsProvider._();
 final class GetAllGoalsProvider
     extends
         $FunctionalProvider<
-          AsyncValue<List<UserGoalsEntity>?>,
-          List<UserGoalsEntity>?,
-          FutureOr<List<UserGoalsEntity>?>
+          AsyncValue<List<GoalsEntity>?>,
+          List<GoalsEntity>?,
+          FutureOr<List<GoalsEntity>?>
         >
     with
-        $FutureModifier<List<UserGoalsEntity>?>,
-        $FutureProvider<List<UserGoalsEntity>?> {
+        $FutureModifier<List<GoalsEntity>?>,
+        $FutureProvider<List<GoalsEntity>?> {
   /// 전체 목표 가져오기 Provider
   const GetAllGoalsProvider._()
     : super(
@@ -42,17 +42,17 @@ final class GetAllGoalsProvider
 
   @$internal
   @override
-  $FutureProviderElement<List<UserGoalsEntity>?> $createElement(
+  $FutureProviderElement<List<GoalsEntity>?> $createElement(
     $ProviderPointer pointer,
   ) => $FutureProviderElement(pointer);
 
   @override
-  FutureOr<List<UserGoalsEntity>?> create(Ref ref) {
+  FutureOr<List<GoalsEntity>?> create(Ref ref) {
     return getAllGoals(ref);
   }
 }
 
-String _$getAllGoalsHash() => r'b9b600d0f625d1c808fbefd38096cc86f0370daa';
+String _$getAllGoalsHash() => r'0a643bdc144f0314f36a8bcba4eec8c132404ade';
 
 /// 특정 목표 가져오기 Provider
 
@@ -62,13 +62,8 @@ const getGoalProvider = GetGoalFamily._();
 /// 특정 목표 가져오기 Provider
 
 final class GetGoalProvider
-    extends
-        $FunctionalProvider<
-          UserGoalsEntity?,
-          UserGoalsEntity?,
-          UserGoalsEntity?
-        >
-    with $Provider<UserGoalsEntity?> {
+    extends $FunctionalProvider<GoalsEntity?, GoalsEntity?, GoalsEntity?>
+    with $Provider<GoalsEntity?> {
   /// 특정 목표 가져오기 Provider
   const GetGoalProvider._({
     required GetGoalFamily super.from,
@@ -93,20 +88,20 @@ final class GetGoalProvider
 
   @$internal
   @override
-  $ProviderElement<UserGoalsEntity?> $createElement($ProviderPointer pointer) =>
+  $ProviderElement<GoalsEntity?> $createElement($ProviderPointer pointer) =>
       $ProviderElement(pointer);
 
   @override
-  UserGoalsEntity? create(Ref ref) {
+  GoalsEntity? create(Ref ref) {
     final argument = this.argument as String;
     return getGoal(ref, argument);
   }
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(UserGoalsEntity? value) {
+  Override overrideWithValue(GoalsEntity? value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<UserGoalsEntity?>(value),
+      providerOverride: $SyncValueProvider<GoalsEntity?>(value),
     );
   }
 
@@ -121,12 +116,12 @@ final class GetGoalProvider
   }
 }
 
-String _$getGoalHash() => r'0a90d636c09bcdfc088114632405fd40861441f8';
+String _$getGoalHash() => r'e17ec3203137bbd93b5cfede02ed2f02ac1be072';
 
 /// 특정 목표 가져오기 Provider
 
 final class GetGoalFamily extends $Family
-    with $FunctionalFamilyOverride<UserGoalsEntity?, String> {
+    with $FunctionalFamilyOverride<GoalsEntity?, String> {
   const GetGoalFamily._()
     : super(
         retry: null,
@@ -153,13 +148,8 @@ const getMainGoalProvider = GetMainGoalProvider._();
 /// 대표 설정된 목표 가져오기 Provider
 
 final class GetMainGoalProvider
-    extends
-        $FunctionalProvider<
-          UserGoalsEntity?,
-          UserGoalsEntity?,
-          UserGoalsEntity?
-        >
-    with $Provider<UserGoalsEntity?> {
+    extends $FunctionalProvider<GoalsEntity?, GoalsEntity?, GoalsEntity?>
+    with $Provider<GoalsEntity?> {
   /// 대표 설정된 목표 가져오기 Provider
   const GetMainGoalProvider._()
     : super(
@@ -177,24 +167,24 @@ final class GetMainGoalProvider
 
   @$internal
   @override
-  $ProviderElement<UserGoalsEntity?> $createElement($ProviderPointer pointer) =>
+  $ProviderElement<GoalsEntity?> $createElement($ProviderPointer pointer) =>
       $ProviderElement(pointer);
 
   @override
-  UserGoalsEntity? create(Ref ref) {
+  GoalsEntity? create(Ref ref) {
     return getMainGoal(ref);
   }
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(UserGoalsEntity? value) {
+  Override overrideWithValue(GoalsEntity? value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<UserGoalsEntity?>(value),
+      providerOverride: $SyncValueProvider<GoalsEntity?>(value),
     );
   }
 }
 
-String _$getMainGoalHash() => r'c20cd1bdca269be926f577d60ba3a95265510d3f';
+String _$getMainGoalHash() => r'8a520d44dfa874f9dfd6499ea890f39894b4768f';
 
 /// 특정 목표의 전체 데이터 가져오기 Provider
 

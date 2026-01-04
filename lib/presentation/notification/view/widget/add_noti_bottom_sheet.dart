@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tap_debouncer/tap_debouncer.dart';
-import 'package:vitameal/presentation/notification/view_model/notifications_entity.dart';
+import 'package:vitameal/domain/entity/notifications_entity.dart';
 import 'package:vitameal/presentation/widget/validate_textformfield.dart';
 
 class AddNotiBottomSheet extends HookConsumerWidget {

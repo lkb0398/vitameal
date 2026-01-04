@@ -1,12 +1,12 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:vitameal/core/di/provider.dart';
-import 'package:vitameal/domain/entity/user_goals_entity.dart';
+import 'package:vitameal/domain/entity/goals_entity.dart';
 import 'package:vitameal/presentation/ui_provider/profiles_provider.dart';
 
-part 'user_goals_view_model.g.dart';
+part 'goals_view_model.g.dart';
 
 @riverpod
-class UserGoalsViewModel extends _$UserGoalsViewModel {
+class GoalsViewModel extends _$GoalsViewModel {
   @override
   void build() {}
 
@@ -20,9 +20,9 @@ class UserGoalsViewModel extends _$UserGoalsViewModel {
   }) async {
     final userId = ref.read(userIdProvider);
     await ref
-        .read(userGoalsRepositoryProvider)
+        .read(goalsRepositoryProvider)
         .saveGoal(
-          UserGoalsEntity(
+          GoalsEntity(
             userId: userId,
             goalTitle: goalTitle,
             goalUnit: goalUnit,
@@ -44,9 +44,9 @@ class UserGoalsViewModel extends _$UserGoalsViewModel {
     required bool isMain,
   }) async {
     await ref
-        .read(userGoalsRepositoryProvider)
+        .read(goalsRepositoryProvider)
         .updateGoal(
-          UserGoalsEntity(
+          GoalsEntity(
             goalId: goalId,
             goalTitle: goalTitle,
             goalUnit: goalUnit,
@@ -58,11 +58,7 @@ class UserGoalsViewModel extends _$UserGoalsViewModel {
         );
   }
 
-  Future<void> updateMainGoal(String goalId) async {
-    await ref.read(userGoalsRepositoryProvider).updateMainGoal(goalId);
-  }
-
   Future<void> deleteGoal(String goalId) async {
-    await ref.read(userGoalsRepositoryProvider).deleteGoal(goalId);
+    await ref.read(goalsRepositoryProvider).deleteGoal(goalId);
   }
 }

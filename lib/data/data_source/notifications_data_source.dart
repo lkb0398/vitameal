@@ -1,6 +1,6 @@
 import 'dart:developer';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:vitameal/presentation/notification/view_model/notifications_dto.dart';
+import 'package:vitameal/data/dto/notifications_dto.dart';
 
 abstract interface class NotificationDataSource {
   Future<List<NotificationsDto>?> getAllNotis();

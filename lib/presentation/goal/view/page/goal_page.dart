@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:vitameal/presentation/goal/view_model/user_goals_view_model.dart';
-import 'package:vitameal/presentation/ui_provider/goal_provider.dart';
+import 'package:vitameal/presentation/goal/view_model/goals_view_model.dart';
+import 'package:vitameal/presentation/ui_provider/goals_provider.dart';
 
 class GoalPage extends HookConsumerWidget {
   const GoalPage({super.key});
@@ -77,10 +77,16 @@ class GoalPage extends HookConsumerWidget {
                                   onPressed: () async {
                                     // 목표 업데이트
                                     await ref
-                                        .read(
-                                          userGoalsViewModelProvider.notifier,
-                                        )
-                                        .updateMainGoal(goal.goalId!);
+                                        .read(goalsViewModelProvider.notifier)
+                                        .updateGoal(
+                                          goalId: goal.goalId!,
+                                          goalTitle: goal.goalTitle,
+                                          goalUnit: goal.goalUnit,
+                                          goalValue: goal.goalValue,
+                                          goalDate: goal.goalDate,
+                                          isDone: goal.isDone,
+                                          isMain: !goal.isMain,
+                                        );
 
                                     // mounted 체크
                                     if (!context.mounted) return;

@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'user_goals_entity.dart';
+part of 'goals_entity.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -12,7 +12,7 @@ part of 'user_goals_entity.dart';
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
-mixin _$UserGoalsEntity {
+mixin _$GoalsEntity {
 
  String? get userId; String? get goalId; String get goalTitle;// 목표명
  String get goalUnit;// 목표 단위
@@ -20,17 +20,17 @@ mixin _$UserGoalsEntity {
  DateTime get goalDate;// 목표 날짜
  bool get isDone;// 달성 여부
  bool get isMain;
-/// Create a copy of UserGoalsEntity
+/// Create a copy of GoalsEntity
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-$UserGoalsEntityCopyWith<UserGoalsEntity> get copyWith => _$UserGoalsEntityCopyWithImpl<UserGoalsEntity>(this as UserGoalsEntity, _$identity);
+$GoalsEntityCopyWith<GoalsEntity> get copyWith => _$GoalsEntityCopyWithImpl<GoalsEntity>(this as GoalsEntity, _$identity);
 
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserGoalsEntity&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.goalId, goalId) || other.goalId == goalId)&&(identical(other.goalTitle, goalTitle) || other.goalTitle == goalTitle)&&(identical(other.goalUnit, goalUnit) || other.goalUnit == goalUnit)&&(identical(other.goalValue, goalValue) || other.goalValue == goalValue)&&(identical(other.goalDate, goalDate) || other.goalDate == goalDate)&&(identical(other.isDone, isDone) || other.isDone == isDone)&&(identical(other.isMain, isMain) || other.isMain == isMain));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is GoalsEntity&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.goalId, goalId) || other.goalId == goalId)&&(identical(other.goalTitle, goalTitle) || other.goalTitle == goalTitle)&&(identical(other.goalUnit, goalUnit) || other.goalUnit == goalUnit)&&(identical(other.goalValue, goalValue) || other.goalValue == goalValue)&&(identical(other.goalDate, goalDate) || other.goalDate == goalDate)&&(identical(other.isDone, isDone) || other.isDone == isDone)&&(identical(other.isMain, isMain) || other.isMain == isMain));
 }
 
 
@@ -39,15 +39,15 @@ int get hashCode => Object.hash(runtimeType,userId,goalId,goalTitle,goalUnit,goa
 
 @override
 String toString() {
-  return 'UserGoalsEntity(userId: $userId, goalId: $goalId, goalTitle: $goalTitle, goalUnit: $goalUnit, goalValue: $goalValue, goalDate: $goalDate, isDone: $isDone, isMain: $isMain)';
+  return 'GoalsEntity(userId: $userId, goalId: $goalId, goalTitle: $goalTitle, goalUnit: $goalUnit, goalValue: $goalValue, goalDate: $goalDate, isDone: $isDone, isMain: $isMain)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class $UserGoalsEntityCopyWith<$Res>  {
-  factory $UserGoalsEntityCopyWith(UserGoalsEntity value, $Res Function(UserGoalsEntity) _then) = _$UserGoalsEntityCopyWithImpl;
+abstract mixin class $GoalsEntityCopyWith<$Res>  {
+  factory $GoalsEntityCopyWith(GoalsEntity value, $Res Function(GoalsEntity) _then) = _$GoalsEntityCopyWithImpl;
 @useResult
 $Res call({
  String? userId, String? goalId, String goalTitle, String goalUnit, double goalValue, DateTime goalDate, bool isDone, bool isMain
@@ -58,14 +58,14 @@ $Res call({
 
 }
 /// @nodoc
-class _$UserGoalsEntityCopyWithImpl<$Res>
-    implements $UserGoalsEntityCopyWith<$Res> {
-  _$UserGoalsEntityCopyWithImpl(this._self, this._then);
+class _$GoalsEntityCopyWithImpl<$Res>
+    implements $GoalsEntityCopyWith<$Res> {
+  _$GoalsEntityCopyWithImpl(this._self, this._then);
 
-  final UserGoalsEntity _self;
-  final $Res Function(UserGoalsEntity) _then;
+  final GoalsEntity _self;
+  final $Res Function(GoalsEntity) _then;
 
-/// Create a copy of UserGoalsEntity
+/// Create a copy of GoalsEntity
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? userId = freezed,Object? goalId = freezed,Object? goalTitle = null,Object? goalUnit = null,Object? goalValue = null,Object? goalDate = null,Object? isDone = null,Object? isMain = null,}) {
   return _then(_self.copyWith(
@@ -84,8 +84,8 @@ as bool,
 }
 
 
-/// Adds pattern-matching-related methods to [UserGoalsEntity].
-extension UserGoalsEntityPatterns on UserGoalsEntity {
+/// Adds pattern-matching-related methods to [GoalsEntity].
+extension GoalsEntityPatterns on GoalsEntity {
 /// A variant of `map` that fallback to returning `orElse`.
 ///
 /// It is equivalent to doing:
@@ -98,10 +98,10 @@ extension UserGoalsEntityPatterns on UserGoalsEntity {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _UserGoalsEntity value)?  $default,{required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _GoalsEntity value)?  $default,{required TResult orElse(),}){
 final _that = this;
 switch (_that) {
-case _UserGoalsEntity() when $default != null:
+case _GoalsEntity() when $default != null:
 return $default(_that);case _:
   return orElse();
 
@@ -120,10 +120,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _UserGoalsEntity value)  $default,){
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _GoalsEntity value)  $default,){
 final _that = this;
 switch (_that) {
-case _UserGoalsEntity():
+case _GoalsEntity():
 return $default(_that);case _:
   throw StateError('Unexpected subclass');
 
@@ -141,10 +141,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _UserGoalsEntity value)?  $default,){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _GoalsEntity value)?  $default,){
 final _that = this;
 switch (_that) {
-case _UserGoalsEntity() when $default != null:
+case _GoalsEntity() when $default != null:
 return $default(_that);case _:
   return null;
 
@@ -164,7 +164,7 @@ return $default(_that);case _:
 
 @optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? userId,  String? goalId,  String goalTitle,  String goalUnit,  double goalValue,  DateTime goalDate,  bool isDone,  bool isMain)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
-case _UserGoalsEntity() when $default != null:
+case _GoalsEntity() when $default != null:
 return $default(_that.userId,_that.goalId,_that.goalTitle,_that.goalUnit,_that.goalValue,_that.goalDate,_that.isDone,_that.isMain);case _:
   return orElse();
 
@@ -185,7 +185,7 @@ return $default(_that.userId,_that.goalId,_that.goalTitle,_that.goalUnit,_that.g
 
 @optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? userId,  String? goalId,  String goalTitle,  String goalUnit,  double goalValue,  DateTime goalDate,  bool isDone,  bool isMain)  $default,) {final _that = this;
 switch (_that) {
-case _UserGoalsEntity():
+case _GoalsEntity():
 return $default(_that.userId,_that.goalId,_that.goalTitle,_that.goalUnit,_that.goalValue,_that.goalDate,_that.isDone,_that.isMain);case _:
   throw StateError('Unexpected subclass');
 
@@ -205,7 +205,7 @@ return $default(_that.userId,_that.goalId,_that.goalTitle,_that.goalUnit,_that.g
 
 @optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? userId,  String? goalId,  String goalTitle,  String goalUnit,  double goalValue,  DateTime goalDate,  bool isDone,  bool isMain)?  $default,) {final _that = this;
 switch (_that) {
-case _UserGoalsEntity() when $default != null:
+case _GoalsEntity() when $default != null:
 return $default(_that.userId,_that.goalId,_that.goalTitle,_that.goalUnit,_that.goalValue,_that.goalDate,_that.isDone,_that.isMain);case _:
   return null;
 
@@ -217,8 +217,8 @@ return $default(_that.userId,_that.goalId,_that.goalTitle,_that.goalUnit,_that.g
 /// @nodoc
 
 
-class _UserGoalsEntity implements UserGoalsEntity {
-  const _UserGoalsEntity({this.userId, this.goalId, required this.goalTitle, required this.goalUnit, required this.goalValue, required this.goalDate, required this.isDone, required this.isMain});
+class _GoalsEntity implements GoalsEntity {
+  const _GoalsEntity({this.userId, this.goalId, required this.goalTitle, required this.goalUnit, required this.goalValue, required this.goalDate, required this.isDone, required this.isMain});
   
 
 @override final  String? userId;
@@ -235,17 +235,17 @@ class _UserGoalsEntity implements UserGoalsEntity {
 // 달성 여부
 @override final  bool isMain;
 
-/// Create a copy of UserGoalsEntity
+/// Create a copy of GoalsEntity
 /// with the given fields replaced by the non-null parameter values.
 @override @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-_$UserGoalsEntityCopyWith<_UserGoalsEntity> get copyWith => __$UserGoalsEntityCopyWithImpl<_UserGoalsEntity>(this, _$identity);
+_$GoalsEntityCopyWith<_GoalsEntity> get copyWith => __$GoalsEntityCopyWithImpl<_GoalsEntity>(this, _$identity);
 
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserGoalsEntity&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.goalId, goalId) || other.goalId == goalId)&&(identical(other.goalTitle, goalTitle) || other.goalTitle == goalTitle)&&(identical(other.goalUnit, goalUnit) || other.goalUnit == goalUnit)&&(identical(other.goalValue, goalValue) || other.goalValue == goalValue)&&(identical(other.goalDate, goalDate) || other.goalDate == goalDate)&&(identical(other.isDone, isDone) || other.isDone == isDone)&&(identical(other.isMain, isMain) || other.isMain == isMain));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _GoalsEntity&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.goalId, goalId) || other.goalId == goalId)&&(identical(other.goalTitle, goalTitle) || other.goalTitle == goalTitle)&&(identical(other.goalUnit, goalUnit) || other.goalUnit == goalUnit)&&(identical(other.goalValue, goalValue) || other.goalValue == goalValue)&&(identical(other.goalDate, goalDate) || other.goalDate == goalDate)&&(identical(other.isDone, isDone) || other.isDone == isDone)&&(identical(other.isMain, isMain) || other.isMain == isMain));
 }
 
 
@@ -254,15 +254,15 @@ int get hashCode => Object.hash(runtimeType,userId,goalId,goalTitle,goalUnit,goa
 
 @override
 String toString() {
-  return 'UserGoalsEntity(userId: $userId, goalId: $goalId, goalTitle: $goalTitle, goalUnit: $goalUnit, goalValue: $goalValue, goalDate: $goalDate, isDone: $isDone, isMain: $isMain)';
+  return 'GoalsEntity(userId: $userId, goalId: $goalId, goalTitle: $goalTitle, goalUnit: $goalUnit, goalValue: $goalValue, goalDate: $goalDate, isDone: $isDone, isMain: $isMain)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class _$UserGoalsEntityCopyWith<$Res> implements $UserGoalsEntityCopyWith<$Res> {
-  factory _$UserGoalsEntityCopyWith(_UserGoalsEntity value, $Res Function(_UserGoalsEntity) _then) = __$UserGoalsEntityCopyWithImpl;
+abstract mixin class _$GoalsEntityCopyWith<$Res> implements $GoalsEntityCopyWith<$Res> {
+  factory _$GoalsEntityCopyWith(_GoalsEntity value, $Res Function(_GoalsEntity) _then) = __$GoalsEntityCopyWithImpl;
 @override @useResult
 $Res call({
  String? userId, String? goalId, String goalTitle, String goalUnit, double goalValue, DateTime goalDate, bool isDone, bool isMain
@@ -273,17 +273,17 @@ $Res call({
 
 }
 /// @nodoc
-class __$UserGoalsEntityCopyWithImpl<$Res>
-    implements _$UserGoalsEntityCopyWith<$Res> {
-  __$UserGoalsEntityCopyWithImpl(this._self, this._then);
+class __$GoalsEntityCopyWithImpl<$Res>
+    implements _$GoalsEntityCopyWith<$Res> {
+  __$GoalsEntityCopyWithImpl(this._self, this._then);
 
-  final _UserGoalsEntity _self;
-  final $Res Function(_UserGoalsEntity) _then;
+  final _GoalsEntity _self;
+  final $Res Function(_GoalsEntity) _then;
 
-/// Create a copy of UserGoalsEntity
+/// Create a copy of GoalsEntity
 /// with the given fields replaced by the non-null parameter values.
 @override @pragma('vm:prefer-inline') $Res call({Object? userId = freezed,Object? goalId = freezed,Object? goalTitle = null,Object? goalUnit = null,Object? goalValue = null,Object? goalDate = null,Object? isDone = null,Object? isMain = null,}) {
-  return _then(_UserGoalsEntity(
+  return _then(_GoalsEntity(
 userId: freezed == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as String?,goalId: freezed == goalId ? _self.goalId : goalId // ignore: cast_nullable_to_non_nullable
 as String?,goalTitle: null == goalTitle ? _self.goalTitle : goalTitle // ignore: cast_nullable_to_non_nullable
