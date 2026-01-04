@@ -3,19 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tap_debouncer/tap_debouncer.dart';
-import 'package:vitameal/presentation/alarm/view_model/alarms_entity.dart';
+import 'package:vitameal/presentation/notification/view_model/notifications_entity.dart';
 import 'package:vitameal/presentation/widget/validate_textformfield.dart';
 
-class AlarmBottomSheet extends HookConsumerWidget {
-  const AlarmBottomSheet({
+class AddNotiBottomSheet extends HookConsumerWidget {
+  const AddNotiBottomSheet({
     super.key,
-    this.alarm,
+    this.noti,
     required this.controller,
     required this.initialTime,
     required this.onConfirm,
   });
 
-  final AlarmsEntity? alarm;
+  final NotificationsEntity? noti;
   final TextEditingController controller;
   final TimeOfDay initialTime;
   final void Function(TimeOfDay newTime) onConfirm;
@@ -24,7 +24,7 @@ class AlarmBottomSheet extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     TimeOfDay selectedTime = initialTime;
 
-    // 알람명 : 입력값 검증 메시지
+    // 알림명 : 입력값 검증 메시지
     String? validateLabel(String? value) {
       if (value == null || value.trim().isEmpty) {
         return '이름을 입력해주세요.'; // 입력값 없을 때
@@ -34,15 +34,15 @@ class AlarmBottomSheet extends HookConsumerWidget {
 
     // 수정 화면에서 기존값 불러오기
     final didInit = useRef(false);
-    final savedGoalRef = useRef<AlarmsEntity?>(null);
+    final savedGoalRef = useRef<NotificationsEntity?>(null);
     useEffect(() {
-      if (alarm == null) return null;
+      if (noti == null) return null;
       if (didInit.value) return null;
       didInit.value = true;
-      controller.text = alarm!.label;
-      savedGoalRef.value = alarm;
+      controller.text = noti!.label;
+      savedGoalRef.value = noti;
       return null;
-    }, [alarm]);
+    }, [noti]);
 
     return SizedBox(
       height: 300,
@@ -59,7 +59,7 @@ class AlarmBottomSheet extends HookConsumerWidget {
             ),
           ),
 
-          /// 알람명 입력창
+          /// 알림명 입력창
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Row(

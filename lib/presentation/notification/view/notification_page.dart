@@ -1,33 +1,68 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:vitameal/presentation/alarm/view/alarm_bottom_sheet.dart';
-import 'package:vitameal/presentation/alarm/view_model/alarms_provider.dart';
-import 'package:vitameal/presentation/alarm/view_model/alarms_view_model.dart';
+import 'package:timezone/timezone.dart' as tz;
+import 'package:vitameal/presentation/notification/view/add_noti_bottom_sheet.dart';
+import 'package:vitameal/presentation/notification/view_model/notifications_provider.dart';
+import 'package:vitameal/presentation/notification/view_model/notifications_view_model.dart';
 
-class AlarmPage extends HookConsumerWidget {
-  const AlarmPage({super.key});
+class NotificationPage extends HookConsumerWidget {
+  const NotificationPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final alarmsAsync = ref.watch(getAllAlarmsProvider);
+    final notisAsync = ref.watch(getAllNotisProvider);
 
-    // 알람명 : 사용자 입력값 받기
+    // 알림명 : 사용자 입력값 받기
     final labelController = useTextEditingController();
+
+    // 사용자 timezone 가져오기
+    final timezoneState = useState<String>('Asia/Seoul');
+    useEffect(() {
+      () async {
+        final tzName = await FlutterNativeTimezone.getLocalTimezone();
+        timezoneState.value = tzName;
+      }();
+      return null;
+    }, const []);
+
+    // next_fire_at 계산
+    DateTime calculateNextFireAt({
+      required TimeOfDay time,
+      required String timezone,
+    }) {
+      final now = tz.TZDateTime.now(tz.getLocation(timezone));
+      // 오늘 알림 시각
+      tz.TZDateTime scheduled = tz.TZDateTime(
+        tz.getLocation(timezone),
+        now.year,
+        now.month,
+        now.day,
+        time.hour,
+        time.minute,
+      );
+      // 이미 지났으면 내일
+      if (scheduled.isBefore(now)) {
+        scheduled = scheduled.add(const Duration(days: 1));
+      }
+      // DB > UTC로 저장
+      return scheduled.toUtc();
+    }
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("알람 설정"),
+        title: Text("알림 설정"),
         actions: [TextButton(onPressed: () {}, child: Text("편집"))],
       ),
 
-      /// 알람 목록
-      body: alarmsAsync.when(
+      /// 알림 목록
+      body: notisAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(child: Text('에러 발생: $e')),
-        data: (alarms) {
-          final list = alarms ?? [];
+        data: (notis) {
+          final list = notis ?? [];
 
           return ListView.builder(
             itemCount: list.length + 1,
@@ -56,24 +91,34 @@ class AlarmPage extends HookConsumerWidget {
                             ),
                           ),
                           builder: (context) {
-                            return AlarmBottomSheet(
+                            return AddNotiBottomSheet(
                               controller: labelController,
                               initialTime: TimeOfDay.now(),
                               onConfirm: (newTime) async {
-                                // 알람 추가
+                                final tzName = timezoneState.value;
+                                final nextFireAt = calculateNextFireAt(
+                                  time: newTime,
+                                  timezone: tzName,
+                                );
+
+                                // 알림 추가
                                 await ref
-                                    .read(alarmsViewModelProvider.notifier)
-                                    .saveAlarm(
+                                    .read(
+                                      notificationsViewModelProvider.notifier,
+                                    )
+                                    .saveNoti(
                                       label: labelController.text,
                                       time: newTime,
                                       isEnabled: true,
+                                      timezone: tzName,
+                                      nextFireAt: nextFireAt,
                                     );
 
                                 // mounted 체크
                                 if (!context.mounted) return;
 
                                 // UI 반영
-                                ref.invalidate(getAllAlarmsProvider);
+                                ref.invalidate(getAllNotisProvider);
                               },
                             );
                           },
@@ -83,11 +128,11 @@ class AlarmPage extends HookConsumerWidget {
                   ],
                 );
               }
-              final alarm = list[index];
+              final noti = list[index];
 
               /// 스와이프
               return Slidable(
-                key: ValueKey(alarm.alarmId),
+                key: ValueKey(noti.notiId),
                 endActionPane: ActionPane(
                   motion: DrawerMotion(),
                   extentRatio: 0.25,
@@ -97,8 +142,8 @@ class AlarmPage extends HookConsumerWidget {
                         final ok = await showDialog<bool>(
                           context: context,
                           builder: (_) => AlertDialog(
-                            title: const Text('알람 삭제'),
-                            content: const Text('이 알람을 삭제할까요?'),
+                            title: const Text('알림 삭제'),
+                            content: const Text('이 알림을 삭제할까요?'),
                             actions: [
                               TextButton(
                                 onPressed: () => Navigator.pop(context, false),
@@ -114,16 +159,16 @@ class AlarmPage extends HookConsumerWidget {
 
                         if (ok != true) return;
 
-                        // 알람 삭제
+                        // 알림 삭제
                         await ref
-                            .read(alarmsViewModelProvider.notifier)
-                            .deleteAlarm(alarm.alarmId!);
+                            .read(notificationsViewModelProvider.notifier)
+                            .deleteNoti(noti.notiId!);
 
                         // mounted 체크
                         if (!context.mounted) return;
 
                         // UI 반영
-                        ref.invalidate(getAllAlarmsProvider);
+                        ref.invalidate(getAllNotisProvider);
                       },
                       backgroundColor: Colors.red,
                       foregroundColor: Colors.white,
@@ -141,16 +186,16 @@ class AlarmPage extends HookConsumerWidget {
                   child: Row(
                     spacing: 10,
                     children: [
-                      /// 알람명
+                      /// 알림명
                       Text(
-                        alarm.label,
+                        noti.label,
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
 
-                      /// 알람 시간
+                      /// 알림 시간
                       Expanded(
                         child: InkWell(
                           onTap: () async {
@@ -163,33 +208,41 @@ class AlarmPage extends HookConsumerWidget {
                                 ),
                               ),
                               builder: (context) {
-                                return AlarmBottomSheet(
-                                  alarm: alarm,
+                                return AddNotiBottomSheet(
+                                  noti: noti,
                                   controller: labelController,
-                                  initialTime: alarm.time,
+                                  initialTime: noti.time,
                                   onConfirm: (newTime) async {
-                                    // 알람 수정
+                                    // 알림 업데이트
                                     await ref
-                                        .read(alarmsViewModelProvider.notifier)
-                                        .updateAlarm(
-                                          alarmId: alarm.alarmId!,
+                                        .read(
+                                          notificationsViewModelProvider
+                                              .notifier,
+                                        )
+                                        .updateNoti(
+                                          notiId: noti.notiId!,
                                           label: labelController.text,
                                           time: newTime,
-                                          isEnabled: true,
+                                          isEnabled: noti.isEnabled,
+                                          timezone: noti.timezone,
+                                          nextFireAt: calculateNextFireAt(
+                                            time: newTime,
+                                            timezone: noti.timezone,
+                                          ),
                                         );
 
                                     // mounted 체크
                                     if (!context.mounted) return;
 
                                     // UI 반영
-                                    ref.invalidate(getAllAlarmsProvider);
+                                    ref.invalidate(getAllNotisProvider);
                                   },
                                 );
                               },
                             );
                           },
                           child: Text(
-                            alarm.time.format(context),
+                            noti.time.format(context),
                             style: TextStyle(fontSize: 50),
                             textAlign: TextAlign.right,
                           ),
@@ -198,20 +251,30 @@ class AlarmPage extends HookConsumerWidget {
 
                       /// on/off 토글
                       Switch.adaptive(
-                        value: alarm.isEnabled,
+                        value: noti.isEnabled,
                         activeThumbColor: Colors.white,
                         activeTrackColor: Colors.green,
                         onChanged: (value) async {
-                          // 알람 활성화 업데이트
+                          // 알림 업데이트
                           await ref
-                              .read(alarmsViewModelProvider.notifier)
-                              .updateEnableAlarm(alarm);
+                              .read(notificationsViewModelProvider.notifier)
+                              .updateNoti(
+                                notiId: noti.notiId!,
+                                label: noti.label,
+                                time: noti.time,
+                                isEnabled: value,
+                                timezone: noti.timezone,
+                                nextFireAt: calculateNextFireAt(
+                                  time: noti.time,
+                                  timezone: noti.timezone,
+                                ),
+                              );
 
                           // mounted 체크
                           if (!context.mounted) return;
 
                           // UI 반영
-                          ref.invalidate(getAllAlarmsProvider);
+                          ref.invalidate(getAllNotisProvider);
                         },
                       ),
                     ],

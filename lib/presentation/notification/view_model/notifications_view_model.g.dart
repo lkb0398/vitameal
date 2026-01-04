@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'alarms_view_model.dart';
+part of 'notifications_view_model.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -9,28 +9,28 @@ part of 'alarms_view_model.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
-@ProviderFor(AlarmsViewModel)
-const alarmsViewModelProvider = AlarmsViewModelProvider._();
+@ProviderFor(NotificationsViewModel)
+const notificationsViewModelProvider = NotificationsViewModelProvider._();
 
-final class AlarmsViewModelProvider
-    extends $NotifierProvider<AlarmsViewModel, void> {
-  const AlarmsViewModelProvider._()
+final class NotificationsViewModelProvider
+    extends $NotifierProvider<NotificationsViewModel, void> {
+  const NotificationsViewModelProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'alarmsViewModelProvider',
+        name: r'notificationsViewModelProvider',
         isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$alarmsViewModelHash();
+  String debugGetCreateSourceHash() => _$notificationsViewModelHash();
 
   @$internal
   @override
-  AlarmsViewModel create() => AlarmsViewModel();
+  NotificationsViewModel create() => NotificationsViewModel();
 
   /// {@macro riverpod.override_with_value}
   Override overrideWithValue(void value) {
@@ -41,9 +41,10 @@ final class AlarmsViewModelProvider
   }
 }
 
-String _$alarmsViewModelHash() => r'a2426abbb76b8eee55eaa10cfc01a43ee0183913';
+String _$notificationsViewModelHash() =>
+    r'bfec037ba2ec2f12684c7aea05d8c1e3de68269e';
 
-abstract class _$AlarmsViewModel extends $Notifier<void> {
+abstract class _$NotificationsViewModel extends $Notifier<void> {
   void build();
   @$mustCallSuper
   @override

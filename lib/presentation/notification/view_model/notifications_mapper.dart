@@ -1,27 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:vitameal/presentation/alarm/view_model/alarms_dto.dart';
-import 'package:vitameal/presentation/alarm/view_model/alarms_entity.dart';
+import 'package:vitameal/presentation/notification/view_model/notifications_dto.dart';
+import 'package:vitameal/presentation/notification/view_model/notifications_entity.dart';
 
-class AlarmsMapper {
+class NotificationsMapper {
   // Entity > Dto
-  static AlarmsDto toDto(AlarmsEntity entity) {
-    return AlarmsDto(
+  static NotificationsDto toDto(NotificationsEntity entity) {
+    return NotificationsDto(
       userId: entity.userId,
-      alarmId: entity.alarmId,
+      notiId: entity.notiId,
       label: entity.label,
       time: timeOfDayToString(entity.time),
       isEnabled: entity.isEnabled,
+      timezone: entity.timezone,
+      nextFireAt: entity.nextFireAt.toIso8601String(),
     );
   }
 
   // Dto > Entity
-  static AlarmsEntity toEntity(AlarmsDto dto) {
-    return AlarmsEntity(
+  static NotificationsEntity toEntity(NotificationsDto dto) {
+    return NotificationsEntity(
       userId: dto.userId,
-      alarmId: dto.alarmId,
+      notiId: dto.notiId,
       label: dto.label,
       time: stringToTimeOfDay(dto.time),
       isEnabled: dto.isEnabled,
+      timezone: dto.timezone,
+      nextFireAt: DateTime.parse(dto.nextFireAt),
     );
   }
 

@@ -31,9 +31,6 @@ import 'package:vitameal/domain/repository/user_allergies_repository.dart';
 import 'package:vitameal/domain/repository/user_diseases_repository.dart';
 import 'package:vitameal/domain/repository/user_goals_repository.dart';
 import 'package:vitameal/data/repository_impl/user_goals_repository_impl.dart';
-import 'package:vitameal/presentation/alarm/view_model/alarms_data_source.dart';
-import 'package:vitameal/presentation/alarm/view_model/alarms_repository.dart';
-import 'package:vitameal/presentation/alarm/view_model/alarms_repository_impl.dart';
 import 'package:vitameal/data/data_source/auth_data_source.dart';
 import 'package:vitameal/data/repository_impl/auth_repository_impl.dart';
 import 'package:vitameal/domain/repository/auth_repository.dart';
@@ -41,6 +38,9 @@ import 'package:vitameal/domain/usecase/login_usecase.dart';
 import 'package:vitameal/domain/usecase/logout_usecase.dart';
 import 'package:vitameal/domain/repository/user_repository.dart';
 import 'package:vitameal/data/repository_impl/user_repository_impl.dart';
+import 'package:vitameal/presentation/notification/view_model/notifications_data_source.dart';
+import 'package:vitameal/presentation/notification/view_model/notifications_repository.dart';
+import 'package:vitameal/presentation/notification/view_model/notifications_repository_impl.dart';
 
 part 'provider.g.dart';
 
@@ -128,9 +128,9 @@ StorageDataSource storageDataSource(Ref ref) {
 }
 
 @riverpod
-AlarmsDataSource alarmsDataSource(Ref ref) {
+NotificationDataSource notificationsDataSource(Ref ref) {
   final client = ref.read(supabaseClientProvider);
-  return AlarmsDataSourceImpl(client);
+  return NotificationsDataSourceImpl(client);
 }
 
 /// 🤍 Repository
@@ -205,9 +205,10 @@ StorageRepository storageRepository(Ref ref) {
   return StorageRepositoryImpl(storageDataSource);
 }
 
-AlarmsRepository alarmsRepository(Ref ref) {
-  final dataSource = ref.read(alarmsDataSourceProvider);
-  return AlarmsRepositoryImpl(dataSource);
+@riverpod
+NotificationsRepository notificationsRepository(Ref ref) {
+  final dataSource = ref.read(notificationsDataSourceProvider);
+  return NotificationsRepositoryImpl(dataSource);
 }
 
 // 🤍 UseCase

@@ -30,7 +30,7 @@ class SettingPage extends HookConsumerWidget {
           ),
           InkWell(
             onTap: () {
-              context.push('/alarm');
+              context.push('/noti');
             },
             child: Container(
               decoration: BoxDecoration(
@@ -39,7 +39,7 @@ class SettingPage extends HookConsumerWidget {
               height: 60,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [Text("알람 설정"), Icon(Icons.arrow_forward_ios)],
+                children: [Text("알림 설정"), Icon(Icons.arrow_forward_ios)],
               ),
             ),
           ),

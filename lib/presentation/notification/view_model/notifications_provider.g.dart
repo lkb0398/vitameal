@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'alarms_provider.dart';
+part of 'notifications_provider.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -10,46 +10,46 @@ part of 'alarms_provider.dart';
 // ignore_for_file: type=lint, type=warning
 /// 전체 알람 가져오기 Provider
 
-@ProviderFor(getAllAlarms)
-const getAllAlarmsProvider = GetAllAlarmsProvider._();
+@ProviderFor(getAllNotis)
+const getAllNotisProvider = GetAllNotisProvider._();
 
 /// 전체 알람 가져오기 Provider
 
-final class GetAllAlarmsProvider
+final class GetAllNotisProvider
     extends
         $FunctionalProvider<
-          AsyncValue<List<AlarmsEntity>?>,
-          List<AlarmsEntity>?,
-          FutureOr<List<AlarmsEntity>?>
+          AsyncValue<List<NotificationsEntity>?>,
+          List<NotificationsEntity>?,
+          FutureOr<List<NotificationsEntity>?>
         >
     with
-        $FutureModifier<List<AlarmsEntity>?>,
-        $FutureProvider<List<AlarmsEntity>?> {
+        $FutureModifier<List<NotificationsEntity>?>,
+        $FutureProvider<List<NotificationsEntity>?> {
   /// 전체 알람 가져오기 Provider
-  const GetAllAlarmsProvider._()
+  const GetAllNotisProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'getAllAlarmsProvider',
+        name: r'getAllNotisProvider',
         isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$getAllAlarmsHash();
+  String debugGetCreateSourceHash() => _$getAllNotisHash();
 
   @$internal
   @override
-  $FutureProviderElement<List<AlarmsEntity>?> $createElement(
+  $FutureProviderElement<List<NotificationsEntity>?> $createElement(
     $ProviderPointer pointer,
   ) => $FutureProviderElement(pointer);
 
   @override
-  FutureOr<List<AlarmsEntity>?> create(Ref ref) {
-    return getAllAlarms(ref);
+  FutureOr<List<NotificationsEntity>?> create(Ref ref) {
+    return getAllNotis(ref);
   }
 }
 
-String _$getAllAlarmsHash() => r'b0e19250198bbbcd31b04f3e72d0eeaa397584d6';
+String _$getAllNotisHash() => r'572805f956caefc8b568707cf2bbe53104c8d957';
