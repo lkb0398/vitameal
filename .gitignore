@@ -46,3 +46,11 @@ app.*.map.json
 
 ios/Runner.xcworkspace/
 .vscode/settings.json
+.vscode/extensions.json
+devtools_options.yaml
+
+# Environment variables
+.env
+.env.*
+supabase/.env
+supabase/.env.*
