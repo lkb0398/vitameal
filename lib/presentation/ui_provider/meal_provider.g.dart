@@ -9,13 +9,13 @@ part of 'meal_provider.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 /// 선택된 날짜의 MealEntry 목록을 조회하는 프로바이더
-/// TODO : 나중에 state 클래스로 관리하도록 리펙토링 고려
+/// TODO : 나중에 vm에서 state 클래스로 관리하도록 리펙토링 고려
 
 @ProviderFor(mealEntries)
 const mealEntriesProvider = MealEntriesFamily._();
 
 /// 선택된 날짜의 MealEntry 목록을 조회하는 프로바이더
-/// TODO : 나중에 state 클래스로 관리하도록 리펙토링 고려
+/// TODO : 나중에 vm에서 state 클래스로 관리하도록 리펙토링 고려
 
 final class MealEntriesProvider
     extends
@@ -28,7 +28,7 @@ final class MealEntriesProvider
         $FutureModifier<List<MealEntryEntity>>,
         $FutureProvider<List<MealEntryEntity>> {
   /// 선택된 날짜의 MealEntry 목록을 조회하는 프로바이더
-  /// TODO : 나중에 state 클래스로 관리하도록 리펙토링 고려
+  /// TODO : 나중에 vm에서 state 클래스로 관리하도록 리펙토링 고려
   const MealEntriesProvider._({
     required MealEntriesFamily super.from,
     required String super.argument,
@@ -76,7 +76,7 @@ final class MealEntriesProvider
 String _$mealEntriesHash() => r'75da4b2a16b2b0dbfedcfb0029731050455ec77e';
 
 /// 선택된 날짜의 MealEntry 목록을 조회하는 프로바이더
-/// TODO : 나중에 state 클래스로 관리하도록 리펙토링 고려
+/// TODO : 나중에 vm에서 state 클래스로 관리하도록 리펙토링 고려
 
 final class MealEntriesFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<List<MealEntryEntity>>, String> {
@@ -90,7 +90,7 @@ final class MealEntriesFamily extends $Family
       );
 
   /// 선택된 날짜의 MealEntry 목록을 조회하는 프로바이더
-  /// TODO : 나중에 state 클래스로 관리하도록 리펙토링 고려
+  /// TODO : 나중에 vm에서 state 클래스로 관리하도록 리펙토링 고려
 
   MealEntriesProvider call(String mealDayId) =>
       MealEntriesProvider._(argument: mealDayId, from: this);
@@ -100,11 +100,13 @@ final class MealEntriesFamily extends $Family
 }
 
 /// 특정 MealDay의 최신 AI 분석 결과를 조회하는 프로바이더
+/// TODO : 나중에 vm에서 state 클래스로 관리하도록 리펙토링 고려
 
 @ProviderFor(latestMealAnalysis)
 const latestMealAnalysisProvider = LatestMealAnalysisFamily._();
 
 /// 특정 MealDay의 최신 AI 분석 결과를 조회하는 프로바이더
+/// TODO : 나중에 vm에서 state 클래스로 관리하도록 리펙토링 고려
 
 final class LatestMealAnalysisProvider
     extends
@@ -117,6 +119,7 @@ final class LatestMealAnalysisProvider
         $FutureModifier<MealAnalysisEntity?>,
         $FutureProvider<MealAnalysisEntity?> {
   /// 특정 MealDay의 최신 AI 분석 결과를 조회하는 프로바이더
+  /// TODO : 나중에 vm에서 state 클래스로 관리하도록 리펙토링 고려
   const LatestMealAnalysisProvider._({
     required LatestMealAnalysisFamily super.from,
     required String super.argument,
@@ -165,6 +168,7 @@ String _$latestMealAnalysisHash() =>
     r'469deb66027a047e079f5a614b4238faad240ef4';
 
 /// 특정 MealDay의 최신 AI 분석 결과를 조회하는 프로바이더
+/// TODO : 나중에 vm에서 state 클래스로 관리하도록 리펙토링 고려
 
 final class LatestMealAnalysisFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<MealAnalysisEntity?>, String> {
@@ -178,6 +182,7 @@ final class LatestMealAnalysisFamily extends $Family
       );
 
   /// 특정 MealDay의 최신 AI 분석 결과를 조회하는 프로바이더
+  /// TODO : 나중에 vm에서 state 클래스로 관리하도록 리펙토링 고려
 
   LatestMealAnalysisProvider call(String mealDayId) =>
       LatestMealAnalysisProvider._(argument: mealDayId, from: this);
