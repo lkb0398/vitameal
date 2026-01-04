@@ -19,6 +19,7 @@ import 'package:vitameal/presentation/meal_calendar/view/widget/meal_calendar.da
 import 'package:vitameal/presentation/meal_calendar/view/util/adherence_color_utils.dart';
 import 'package:vitameal/core/util/date_time_utils.dart';
 import 'package:vitameal/presentation/meal_calendar/view_model/meal_calendar_viewmodel.dart';
+import 'package:vitameal/presentation/ui_provider/meal_provider.dart';
 
 class MealCalendarPage extends HookConsumerWidget {
   const MealCalendarPage({super.key});

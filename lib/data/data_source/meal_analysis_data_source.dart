@@ -18,6 +18,7 @@ class MealAnalysisDataSourceImpl implements MealAnalysisDataSource {
   Future<Map<String, dynamic>> requestAnalysis(String mealDayId) async {
     try {
       debugPrint('🤖 AI 분석 요청 시작 [$mealDayId]');
+      // Edge Function : OpenAI API 호출 - DB에 저장 - 분석 결과 반환
       final response = await _supabase.functions.invoke(
         'analyze-meals',
         body: {'mealDayId': mealDayId},
