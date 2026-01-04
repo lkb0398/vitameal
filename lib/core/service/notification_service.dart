@@ -35,33 +35,16 @@ class NotificationService {
   static const String _channelName = 'VitaMeal Alarm'; // 채널명 (설정 화면에 노출됨)
   static const String _channelDesc = 'Scheduled alarm notifications'; // 채널설명
 
-  // 로컬 알림 표시
+  // 로컬 알림 표시 (Android Foreground 용)
   static Future<void> showLocalNotification(RemoteMessage message) async {
-    // ---- payload 추천 형태 ----
-    //     {
-    //   "message": {
-    //     "token": "DEVICE_TOKEN",
-    //     "data": {
-    //       "type": "alarm",
-    //       "alarm_id": "uuid",
-    //       "label": "아침",
-    //       "time": "07:30"
-    //     },
-    //     "android": { "priority": "high" },
-    //     "apns": { "payload": { "aps": { "sound": "default" } } }
-    //   }
-    // }
     final data = message.data;
-    print("🩷 푸시 메세지 데이터 : $data");
-
-    // FCM notification(title/body)이 있을 수도 있고, data-only일 수도 있음
     final label = (data['label'] ?? message.notification?.title ?? '알람')
         .toString();
     final time = (data['time'] ?? '').toString();
 
-    // 알림 제목 및 본문 (여기서 커스텀)
-    final title = '⏰ $label';
-    final body = time.isNotEmpty ? '$time 알람입니다.' : '알람 시간입니다.';
+    // 🤍 로컬 알림 커스텀
+    final title = 'Vitameal';
+    final body = '$time $label 알람입니다';
 
     // Android
     final androidDetails = AndroidNotificationDetails(
