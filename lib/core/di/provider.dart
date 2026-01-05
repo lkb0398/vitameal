@@ -3,6 +3,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:vitameal/data/data_source/allergies_data_source.dart';
 import 'package:vitameal/data/data_source/diseases_data_source.dart';
+import 'package:vitameal/data/data_source/meal_analysis_data_source.dart';
 import 'package:vitameal/data/data_source/meal_local_data_source.dart';
 import 'package:vitameal/data/data_source/meal_remote_data_source.dart';
 import 'package:vitameal/data/data_source/profiles_data_source.dart';
@@ -11,6 +12,7 @@ import 'package:vitameal/data/data_source/user_allergies_data_source.dart';
 import 'package:vitameal/data/data_source/user_diseases_data_source.dart';
 import 'package:vitameal/data/data_source/goal_datas_data_source.dart';
 import 'package:vitameal/data/database/database.dart';
+import 'package:vitameal/data/repository_impl/meal_analysis_repository_impl.dart';
 import 'package:vitameal/data/repository_impl/meal_repository_impl.dart';
 import 'package:vitameal/data/repository_impl/storage_repository_impl.dart';
 import 'package:vitameal/data/service/sync_service.dart';
@@ -24,6 +26,7 @@ import 'package:vitameal/data/repository_impl/user_allergies_repository_impl.dar
 import 'package:vitameal/data/repository_impl/user_diseases_repository_impl.dart';
 import 'package:vitameal/domain/repository/allergies_repository.dart';
 import 'package:vitameal/domain/repository/diseases_repository.dart';
+import 'package:vitameal/domain/repository/meal_analysis_repository.dart';
 import 'package:vitameal/domain/repository/meal_repository.dart';
 import 'package:vitameal/domain/repository/profiles_repository.dart';
 import 'package:vitameal/domain/repository/storage_repository.dart';
@@ -128,6 +131,12 @@ StorageDataSource storageDataSource(Ref ref) {
 }
 
 @riverpod
+MealAnalysisDataSource mealAnalysisDataSource(Ref ref) {
+  final supabase = ref.watch(supabaseClientProvider);
+  return MealAnalysisDataSourceImpl(supabase);
+}
+
+@riverpod
 NotificationDataSource notificationsDataSource(Ref ref) {
   final client = ref.read(supabaseClientProvider);
   return NotificationsDataSourceImpl(client);
@@ -203,6 +212,12 @@ MealRepository mealRepository(Ref ref) {
 StorageRepository storageRepository(Ref ref) {
   final storageDataSource = ref.watch(storageDataSourceProvider);
   return StorageRepositoryImpl(storageDataSource);
+}
+
+@riverpod
+MealAnalysisRepository mealAnalysisRepository(Ref ref) {
+  final dataSource = ref.watch(mealAnalysisDataSourceProvider);
+  return MealAnalysisRepositoryImpl(dataSource);
 }
 
 @riverpod

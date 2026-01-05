@@ -3,19 +3,10 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:vitameal/core/di/provider.dart';
 import 'package:vitameal/core/util/date_time_utils.dart';
 import 'package:vitameal/domain/entity/meal_day_entity.dart';
-import 'package:vitameal/domain/entity/meal_entry_entity.dart';
 import 'package:vitameal/domain/enum/adherence_level_enum.dart';
 import 'package:vitameal/domain/repository/meal_repository.dart';
 
 part 'meal_calendar_viewmodel.g.dart';
-
-/// 선택된 날짜의 MealEntry 목록을 조회하는 프로바이더
-/// TODO : 나중에 state 클래스로 관리하도록 리펙토링
-@riverpod
-Future<List<MealEntryEntity>> mealEntries(Ref ref, String mealDayId) async {
-  final repository = ref.read(mealRepositoryProvider);
-  return await repository.getMealEntriesByMealDayId(mealDayId: mealDayId);
-}
 
 @riverpod
 class MealCalendarViewModel extends _$MealCalendarViewModel {
