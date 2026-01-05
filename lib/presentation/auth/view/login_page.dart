@@ -1,31 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:vitameal/core/config/routes.dart';
 import 'package:vitameal/presentation/ui_provider/profiles_provider.dart';
-<<<<<<< HEAD
 import 'package:vitameal/presentation/auth/view_model/auth_view_model.dart';
 import 'package:vitameal/presentation/auth/view/widgets/social_login_button.dart';
-=======
-<<<<<<< HEAD
-<<<<<<< HEAD
-import 'package:vitameal/presentation/auth/view_model/auth_view_model.dart';
-import 'package:vitameal/presentation/auth/view/widgets/social_login_button.dart';
-=======
-import '../view_model/auth_view_model.dart';
-import 'widgets/social_login_button.dart';
-=======
-import 'package:vitameal/presentation/auth/view_model/auth_view_model.dart';
-import 'package:vitameal/presentation/auth/view/widgets/social_login_button.dart';
->>>>>>> 3f1cbb3 (feat: UI를 제외한 기능구현 및 리팩토링 완료)
->>>>>>> 33dc0ef (feat: UI를 제외한 기능구현 및 리팩토링 완료)
-=======
-import 'package:vitameal/presentation/auth/view_model/auth_view_model.dart';
-import 'package:vitameal/presentation/auth/view/widgets/social_login_button.dart';
->>>>>>> 5f0aade (feat: UI를 제외한 기능구현 및 리팩토링 완료!)
->>>>>>> d6679d5 (feat: UI를 제외한 기능구현 및 리팩토링 완료!)
 
 class LoginPage extends HookConsumerWidget {
   const LoginPage({super.key});
@@ -34,6 +16,9 @@ class LoginPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // 세션 상태 감시 (로그인 여부)
     final session = ref.watch(authViewModelProvider);
+    final vm = ref.watch(authViewModelProvider.notifier);
+
+    final double horizontalPadding = MediaQuery.of(context).size.width * 0.07;
 
     // 로그인 성공 이후 라우팅 처리
     useEffect(() {
@@ -51,18 +36,16 @@ class LoginPage extends HookConsumerWidget {
       return null;
     }, [session]);
 
-    final vm = ref.read(authViewModelProvider.notifier);
-
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Stack(
         children: [
           SafeArea(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 40),
+              padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
               child: session != null
                   ? const Center(child: CircularProgressIndicator())
-                  : _buildLoginState(ref), // ref를 전달하여 내부에서 vm 접근
+                  : _buildLoginState(context, ref), // ref를 전달하여 내부에서 vm 접근
             ),
           ),
 
@@ -82,44 +65,67 @@ class LoginPage extends HookConsumerWidget {
   }
 
   // 로그인 전 상태의 UI
-  Widget _buildLoginState(WidgetRef ref) {
+  Widget _buildLoginState(BuildContext context, WidgetRef ref) {
     final vm = ref.read(authViewModelProvider.notifier);
 
     return Column(
       children: [
         const Spacer(flex: 2),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: SvgPicture.asset(
+            'assets/images/logo.svg',
+            width: MediaQuery.of(context).size.width * 0.45,
+            fit: BoxFit.contain,
+          ),
+        ),
 
-        Image.asset('assets/images/logo.png', height: 180, fit: BoxFit.contain),
+        const Spacer(flex: 2),
 
-        const Spacer(flex: 1),
-
+        // 애플 로그인
         SocialLoginButton(
-          label: 'Apple로 시작하기(미구현)',
+          label: 'Apple 로그인',
           backgroundColor: Colors.black,
           textColor: Colors.white,
+          fontFamily: 'SF Pro',
+          iconPath: 'assets/images/apple_icon.svg',
+          iconWidth: 14,
+          iconHeight: 17,
           // 로딩 중이면 버튼 클릭 무시
           onPressed: vm.isLoading ? () {} : () => vm.login(OAuthProvider.apple),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 12),
 
+        // 카카오 로그인
         SocialLoginButton(
-          label: 'Google로 시작하기',
-          backgroundColor: Colors.white,
+          label: 'Kakao 로그인',
+          backgroundColor: const Color(0xfffee500),
+          textColor: Colors.black.withValues(alpha: 0.85),
+          fontFamily: 'Apple SD Gothic Neo',
+          height: 1.50,
+          iconPath: 'assets/images/kakao_icon.svg',
+          iconWidth: 18,
+          iconHeight: 16.8,
+          onPressed: vm.isLoading ? () {} : () => vm.login(OAuthProvider.kakao),
+        ),
+        const SizedBox(height: 12),
+
+        // 구글 로그인
+        SocialLoginButton(
+          label: 'Google 로그인',
+          backgroundColor: const Color(0xfff2f2f2),
           textColor: Colors.black,
+          fontFamily: 'ROBOTO',
+          fontWeight: FontWeight.w500,
+          iconPath: 'assets/images/google_icon.svg',
+          iconWidth: 20,
+          iconHeight: 20,
           onPressed: vm.isLoading
               ? () {}
               : () => vm.login(OAuthProvider.google),
         ),
-        const SizedBox(height: 16),
 
-        SocialLoginButton(
-          label: '카카오로 시작하기',
-          backgroundColor: const Color(0xfffee500),
-          textColor: Colors.black,
-          onPressed: vm.isLoading ? () {} : () => vm.login(OAuthProvider.kakao),
-        ),
-
-        const Spacer(flex: 1),
+        const Spacer(flex: 2),
       ],
     );
   }

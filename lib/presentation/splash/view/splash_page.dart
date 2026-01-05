@@ -12,6 +12,9 @@ class SplashPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final themeVrc = vrc(context);
+    final themeFxc = fxc(context);
+
     final hasNavigated = useRef(false);
 
     useEffect(() {
@@ -72,15 +75,26 @@ class SplashPage extends HookConsumerWidget {
       return null;
     }, const []);
 
-    // 로고 or 애니메이션 추가 예정
-    return const Scaffold(
+    // 로고
+    return Scaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            CircularProgressIndicator(), // 로딩 표시 (임시)
-            SizedBox(height: 20),
-            Text("스플래시 페이지", style: TextStyle(fontWeight: FontWeight.bold)),
+            SvgPicture.asset('assets/images/logo.svg', height: 124, width: 162),
+            const SizedBox(height: 40),
+            // 로고 아래 연한 로딩 인디케이ㅌㅓ
+            SizedBox(
+              width: 24,
+              height: 24,
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                valueColor: AlwaysStoppedAnimation<Color>(
+                  themeFxc.primary400!.withOpacity(0.5),
+                ),
+              ),
+            ),
           ],
         ),
       ),
