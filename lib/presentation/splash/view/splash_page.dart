@@ -5,7 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:vitameal/core/config/routes.dart';
 import 'package:vitameal/presentation/ui_provider/profiles_provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+// import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashPage extends HookConsumerWidget {
   const SplashPage({super.key});
@@ -35,15 +35,15 @@ class SplashPage extends HookConsumerWidget {
           }
 
           // 앱 최초 실행 여부
-          final prefs = await SharedPreferences.getInstance();
-          final isFirstRun = prefs.getBool('is_first_run') ?? true;
+          // final prefs = await SharedPreferences.getInstance();
+          // final isFirstRun = prefs.getBool('is_first_run') ?? true;
 
-          if (isFirstRun) {
-            await prefs.setBool('is_first_run', false); // 다음 실행부터는 false
-            hasNavigated.value = true;
-            if (context.mounted) context.go(AppRoutePath.intro);
-            return;
-          }
+          // if (isFirstRun) {
+          //   await prefs.setBool('is_first_run', false); // 다음 실행부터는 false
+          //   hasNavigated.value = true;
+          //   if (context.mounted) context.go(AppRoutePath.intro);
+          //   return;
+          // }
 
           // 온보딩 X > 온보딩 페이지 이동
           final isOnboarded = await ref.read(
@@ -54,7 +54,7 @@ class SplashPage extends HookConsumerWidget {
           hasNavigated.value = true;
           if (!isOnboarded) {
             // 로그인 O & 온보딩 X > 온보딩 페이지 이동
-            context.go(AppRoutePath.onboardingProfile);
+            context.go(AppRoutePath.intro);
           } else {
             // 로그인 O & 온보딩 O > 홈페이지 이동
             context.go(AppRoutePath.home);
