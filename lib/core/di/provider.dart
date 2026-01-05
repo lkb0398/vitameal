@@ -107,30 +107,12 @@ GoalDatasDataSource goalDatasDataSource(Ref ref) {
   return GoalDatasDataSourceImpl(client);
 }
 
-<<<<<<< HEAD
 @riverpod
-=======
-<<<<<<< HEAD
-<<<<<<< HEAD
-@riverpod
-=======
-/// 🤍 Repository
-=======
->>>>>>> 33dc0ef (feat: UI를 제외한 기능구현 및 리팩토링 완료)
-=======
-@riverpod
->>>>>>> 5f0aade (feat: UI를 제외한 기능구현 및 리팩토링 완료!)
->>>>>>> d6679d5 (feat: UI를 제외한 기능구현 및 리팩토링 완료!)
 AuthDataSource authDataSource(Ref ref) {
   final client = ref.watch(supabaseClientProvider);
   return AuthDataSource(client);
 }
 
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> d6679d5 (feat: UI를 제외한 기능구현 및 리팩토링 완료!)
 @riverpod
 MealLocalDataSource mealLocalDataSource(Ref ref) {
   final database = ref.watch(appDatabaseProvider);
@@ -149,7 +131,6 @@ StorageDataSource storageDataSource(Ref ref) {
   return StorageDataSource(supabase);
 }
 
-<<<<<<< HEAD
 @riverpod
 MealAnalysisDataSource mealAnalysisDataSource(Ref ref) {
   final supabase = ref.watch(supabaseClientProvider);
@@ -163,16 +144,6 @@ NotificationDataSource notificationsDataSource(Ref ref) {
 }
 
 /// 🤍 Repository
-=======
-// 🤍 Repository
-=======
-/// Repository
->>>>>>> 3f1cbb3 (feat: UI를 제외한 기능구현 및 리팩토링 완료)
->>>>>>> 33dc0ef (feat: UI를 제외한 기능구현 및 리팩토링 완료)
-=======
-/// 🤍 Repository
->>>>>>> 5f0aade (feat: UI를 제외한 기능구현 및 리팩토링 완료!)
->>>>>>> d6679d5 (feat: UI를 제외한 기능구현 및 리팩토링 완료!)
 @riverpod
 ProfilesRepository profilesRepository(Ref ref) {
   final dataSource = ref.read(profilesDataSourceProvider);
@@ -215,32 +186,6 @@ GoalsRepository goalsRepository(Ref ref) {
 GoalDatasRepository goalDatasRepository(Ref ref) {
   final dataSource = ref.read(goalDatasDataSourceProvider);
   return GoalDatasRepositoryImpl(dataSource);
-<<<<<<< HEAD
-=======
-}
-
-@riverpod
-AuthRepository authRepository(Ref ref) {
-  final dataSource = ref.watch(authDataSourceProvider);
-  return AuthRepositoryImpl(dataSource);
-}
-
-@riverpod
-UserRepository userRepository(Ref ref) {
-  final client = ref.watch(supabaseClientProvider);
-  return UserRepositoryImpl(client);
-}
-
-/// UseCase
-@riverpod
-LoginUseCase loginUseCase(Ref ref) {
-  return LoginUseCase(ref.watch(authRepositoryProvider));
-}
-
-@riverpod
-LogoutUseCase logoutUseCase(Ref ref) {
-  return LogoutUseCase(ref.watch(authRepositoryProvider));
->>>>>>> d6679d5 (feat: UI를 제외한 기능구현 및 리팩토링 완료!)
 }
 
 @riverpod

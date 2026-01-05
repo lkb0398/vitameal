@@ -507,10 +507,6 @@ final class GoalDatasDataSourceProvider
 String _$goalDatasDataSourceHash() =>
     r'6f4ee3215c60cc67c92e507b3078db6829dd52c4';
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 5f0aade (feat: UI를 제외한 기능구현 및 리팩토링 완료!)
 @ProviderFor(authDataSource)
 const authDataSourceProvider = AuthDataSourceProvider._();
 
@@ -550,7 +546,6 @@ final class AuthDataSourceProvider
   }
 }
 
-<<<<<<< HEAD
 String _$authDataSourceHash() => r'44d7483bd3e3f976234c8799cbd2cba79c3b851b';
 
 @ProviderFor(mealLocalDataSource)
@@ -695,19 +690,6 @@ final class StorageDataSourceProvider
 }
 
 String _$storageDataSourceHash() => r'c8e30e822b695967f22912d6d5d8b40811101ddd';
-=======
-/// 🤍 Repository
-=======
-String _$authDataSourceHash() => r'44d7483bd3e3f976234c8799cbd2cba79c3b851b';
-
-/// Repository
->>>>>>> 3f1cbb3 (feat: UI를 제외한 기능구현 및 리팩토링 완료)
->>>>>>> 33dc0ef (feat: UI를 제외한 기능구현 및 리팩토링 완료)
-=======
-String _$authDataSourceHash() => r'44d7483bd3e3f976234c8799cbd2cba79c3b851b';
-
-/// 🤍 Repository
->>>>>>> 5f0aade (feat: UI를 제외한 기능구현 및 리팩토링 완료!)
 
 @ProviderFor(mealAnalysisDataSource)
 const mealAnalysisDataSourceProvider = MealAnalysisDataSourceProvider._();
@@ -1308,6 +1290,7 @@ final class UserRepositoryProvider
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 String _$goalDatasRepositoryHash() =>
     r'd12c5429e9dd7c9232be3e18e6cef69ec918336c';
 <<<<<<< HEAD
@@ -1352,6 +1335,9 @@ final class AuthRepositoryProvider
 }
 
 String _$authRepositoryHash() => r'ec654f5fa69e7facde94d755bb72d46efdc77a1b';
+=======
+String _$userRepositoryHash() => r'8b0605fafd52b9cfc60166961f45fe91fa4e80fa';
+>>>>>>> 395ab76 (feat: UI 변경 및 이미지 추가)
 
 @ProviderFor(mealRepository)
 const mealRepositoryProvider = MealRepositoryProvider._();
@@ -1440,14 +1426,6 @@ final class StorageRepositoryProvider
 }
 
 String _$storageRepositoryHash() => r'af0a6a7425b8b6d146cd46a5193fdce6fd82ed50';
-=======
-=======
-=======
->>>>>>> 5f0aade (feat: UI를 제외한 기능구현 및 리팩토링 완료!)
-String _$userRepositoryHash() => r'8b0605fafd52b9cfc60166961f45fe91fa4e80fa';
-
-/// UseCase
->>>>>>> 33dc0ef (feat: UI를 제외한 기능구현 및 리팩토링 완료)
 
 @ProviderFor(mealAnalysisRepository)
 const mealAnalysisRepositoryProvider = MealAnalysisRepositoryProvider._();
@@ -1637,18 +1615,9 @@ String _$postRepositoryHash() => r'2c071dae34d9ae62e23736aaf769a7dbd164ae98';
 @ProviderFor(loginUseCase)
 const loginUseCaseProvider = LoginUseCaseProvider._();
 
-<<<<<<< HEAD
 final class LoginUseCaseProvider
     extends $FunctionalProvider<LoginUseCase, LoginUseCase, LoginUseCase>
     with $Provider<LoginUseCase> {
-=======
-/// UseCase
-
-final class LoginUseCaseProvider
-    extends $FunctionalProvider<LoginUseCase, LoginUseCase, LoginUseCase>
-    with $Provider<LoginUseCase> {
-  /// UseCase
->>>>>>> 33dc0ef (feat: UI를 제외한 기능구현 및 리팩토링 완료)
   const LoginUseCaseProvider._()
     : super(
         from: null,
@@ -1724,8 +1693,6 @@ final class LogoutUseCaseProvider
 }
 
 String _$logoutUseCaseHash() => r'2b963e9e0eff2155f687d45b1b5c652ddb695d62';
-<<<<<<< HEAD
-<<<<<<< HEAD
 
 @ProviderFor(syncService)
 const syncServiceProvider = SyncServiceProvider._();
@@ -1767,8 +1734,3 @@ final class SyncServiceProvider
 }
 
 String _$syncServiceHash() => r'a83bb640ca676ea37986ffbc494b2154740efdd7';
-=======
->>>>>>> 3f1cbb3 (feat: UI를 제외한 기능구현 및 리팩토링 완료)
->>>>>>> 33dc0ef (feat: UI를 제외한 기능구현 및 리팩토링 완료)
-=======
->>>>>>> 5f0aade (feat: UI를 제외한 기능구현 및 리팩토링 완료!)
