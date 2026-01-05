@@ -1,32 +1,70 @@
+import 'dart:ui';
+
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:vitameal/core/di/provider.dart';
 import 'package:vitameal/domain/entity/meal_analysis_entity.dart';
 import 'package:vitameal/presentation/meal_calendar/view/widget/ai_analysis_detail_dialog.dart';
 import 'package:vitameal/presentation/meal_calendar/view_model/meal_analysis_viewmodel.dart';
+import 'package:vitameal/presentation/meal_calendar/view_model/meal_calendar_viewmodel.dart';
 import 'package:vitameal/presentation/ui_provider/meal_provider.dart';
 
 class AiAnalysisCard extends HookConsumerWidget {
   // AI 식단분석 결과 카드 위젯
-  const AiAnalysisCard({super.key, required this.mealDayId, this.title = 'AI 분석 결과'});
+  const AiAnalysisCard({super.key, required this.mealDayId, required this.needsAiRefresh, this.latestAiSummary, this.title = 'AI 분석 결과'});
 
   final String mealDayId;
+  final bool needsAiRefresh;
+  final String? latestAiSummary;
   final String title;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final viewModel = ref.read(mealAnalysisViewModelProvider.notifier);
-    final analysisAsync = ref.watch(latestMealAnalysisProvider(mealDayId));
+    //final analysisAsync = ref.watch(latestMealAnalysisProvider(mealDayId));
     final isAnalyzing = useState(false);
 
-    // AI 분석 요청 핸들러
+    // 오프라인 체크
+    Future<bool> isOnline() async {
+      final connectivityResult = await Connectivity().checkConnectivity();
+      return connectivityResult != ConnectivityResult.none;
+    }
+
+    // AI 분석 요청
     Future<void> analyze() async {
       if (isAnalyzing.value) return;
+
+      // 오프라인 체크
+      final online = await isOnline();
+      if (!online) {
+        if (context.mounted) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(const SnackBar(content: Text('네트워크 연결을 확인해주세요'), duration: Duration(seconds: 2)));
+        }
+        return; // 버튼 상태 유지
+      }
+
       isAnalyzing.value = true;
       try {
-        await viewModel.requestAnalysis(mealDayId);
-        // 분석 완료 후 Provider 갱신
-        ref.invalidate(latestMealAnalysisProvider(mealDayId));
+        // Provider(vm)가 dispose 되는 문제 해결
+        // 1. disposed 체크
+        if (!context.mounted) return;
+
+        // 2. viewModel을 build 시점이 아닌 사용 시점에 읽기!
+        final viewModel = ref.read(mealAnalysisViewModelProvider.notifier);
+        final analysisResult = await viewModel.requestAnalysis(mealDayId);
+
+        // 3. 로컬 DB 업데이트 (summary + needs_ai_refresh=false 가정)
+        final database = ref.read(appDatabaseProvider);
+        await database.mealDao.updateMealDayAfterAnalysis(mealDayId: mealDayId, summary: analysisResult.overallSummary);
+
+        // 4. 분석 완료 후 Provider 갱신
+        if (context.mounted) {
+          // 캘린더 쪽을 갱신해서 needsAiRefresh/summary가 다시 내려오게 함
+          ref.invalidate(mealCalendarViewModelProvider);
+        }
       } catch (e) {
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('분석 실패: $e')));
@@ -36,88 +74,252 @@ class AiAnalysisCard extends HookConsumerWidget {
       }
     }
 
-    // 자세히 보기 대화상자 출력
-    void showDetailDialog(MealAnalysisEntity analysis) {
-      showDialog(
-        context: context,
-        builder: (context) => AiAnalysisDetailDialog(analysis: analysis),
-      );
+    /// "자세히 보기" 클릭 시에만 상세 로드 후 다이얼로그 표시
+    Future<void> handleOpenDetail() async {
+      final online = await isOnline();
+      if (!online) {
+        if (context.mounted) {
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: const Text('네트워크 연결 필요'),
+              content: const Text('자세한 분석 결과를 보려면 인터넷 연결이 필요합니다.'),
+              actions: [TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('확인'))],
+            ),
+          );
+        }
+        return;
+      }
+
+      try {
+        if (!context.mounted) return;
+        
+        final notifier = ref.read(mealAnalysisViewModelProvider.notifier);
+        // 클릭 시점의 최신 분석 로드
+        final analysis = await notifier.getLatestAnalysis(mealDayId);
+
+        if (!context.mounted) return;
+
+        if (analysis == null) {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('자세한 분석 결과가 아직 없습니다.')));
+          return;
+        }
+
+        showDialog(
+          context: context,
+          builder: (context) => AiAnalysisDetailDialog(analysis: analysis),
+        );
+      } catch (e, st) {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('실패 $e')));
+        }
+      }
     }
 
-    return analysisAsync.when(
-      data: (analysis) {
-        final hasAnalysis = analysis != null;
+    // 자세히 보기 대화상자 출력
+    Future<void> showDetailDialog() async {
+      // 오프라인 체크
+      final online = await isOnline();
+      if (!online) {
+        if (context.mounted) {
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: const Text('네트워크 연결 필요'),
+              content: const Text('자세한 분석 결과를 보려면 인터넷 연결이 필요합니다.'),
+              actions: [TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('확인'))],
+            ),
+          );
+        }
+        return;
+      }
 
-        return Container(
-          margin: const EdgeInsets.fromLTRB(16, 0, 16, 10),
-          width: double.infinity,
-          padding: const EdgeInsets.all(14),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: const Color(0xFFE9E9E9)),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _Header(title: title),
+      // 온라인일 때만 상세 대화상자 표시
+      if (!context.mounted) return;
+       try {
+        final notifier = ref.read(mealAnalysisViewModelProvider.notifier);
+        final analysis = await notifier.getLatestAnalysis(mealDayId);
+        if (!context.mounted) return;
+        if (analysis == null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('자세한 분석 결과가 아직 없습니다.')),
+          );
+          return;
+        }
+        showDialog(
+          context: context,
+          builder: (context) => AiAnalysisDetailDialog(analysis: analysis),
+        );
+      } catch (e, st) {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('실패 $e')),
+          );
+        }
+      }
+    }
+
+    final hasSummary = (latestAiSummary ?? '').trim().isNotEmpty;
+
+    return Container(
+      margin: const EdgeInsets.fromLTRB(16, 0, 16, 10),
+      width: double.infinity,
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: const Color(0xFFE9E9E9)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _Header(title: title),
+          const SizedBox(height: 10),
+
+          // 요약이 있으면 요약 보여주고 자세히 보기 제공 (상세는 클릭 시 로드)
+          if (hasSummary) ...[
+            _ResultTextWithDetail(
+              text: latestAiSummary!,
+              onDetailTap: () => handleOpenDetail(),
+            ),
+
+            // 식단 변경으로 재분석 필요하면 버튼
+            if (needsAiRefresh) ...[
               const SizedBox(height: 10),
-              // AnimatedSwitcher 사용하기 위해 위젯에 키 추가
-              AnimatedSwitcher(
-                duration: const Duration(milliseconds: 180),
-                child: hasAnalysis
-                    ? _ResultTextWithDetail(
-                        key: const ValueKey('result'),
-                        text: analysis.overallSummary,
-                        onDetailTap: () => showDetailDialog(analysis),
-                      )
-                    : _AnalyzeButton(
-                        key: const ValueKey('button'),
-                        label: isAnalyzing.value ? '분석 중...' : '분석하기',
-                        enabled: !isAnalyzing.value,
-                        onTap: analyze,
-                      ),
+              _AnalyzeButton(
+                label: isAnalyzing.value ? '분석 중...' : '다시 분석하기',
+                enabled: !isAnalyzing.value,
+                onTap: analyze,
               ),
             ],
-          ),
-        );
-      },
-      loading: () => Container(
-        margin: const EdgeInsets.fromLTRB(16, 0, 16, 10),
-        width: double.infinity,
-        padding: const EdgeInsets.all(14),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: const Color(0xFFE9E9E9)),
-        ),
-        child: const Center(child: CircularProgressIndicator()),
-      ),
-      error: (e, st) => Container(
-        margin: const EdgeInsets.fromLTRB(16, 0, 16, 10),
-        width: double.infinity,
-        padding: const EdgeInsets.all(14),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: const Color(0xFFE9E9E9)),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _Header(title: title),
-            const SizedBox(height: 10),
+            // if (needsAiRefresh)
+            //   Stack(
+            //     children: [
+            //       // 블러 처리될 분석 결과
+            //       _ResultTextWithDetail(
+            //         text: latestAiSummary!,
+            //         onDetailTap: () {}, // 재분석 필요 시 자세히 보기 비활성화
+            //       ),
+            //       // 블러 필터 + 버튼 오버레이
+            //       Positioned.fill(
+            //         child: ClipRect(
+            //           child: BackdropFilter(
+            //             filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
+            //             child: Container(
+            //               color: Colors.white.withOpacity(0.3),
+            //               child: Center(
+            //                 child: _AnalyzeButton(
+            //                   label: isAnalyzing.value ? '분석 중...' : '다시 분석하기',
+            //                   enabled: !isAnalyzing.value,
+            //                   onTap: analyze,
+            //                 ),
+            //               ),
+            //             ),
+            //           ),
+            //         ),
+            //       ),
+            //     ],
+            //   )
+            // else
+            //   // 재분석 필요 없으면 일반 표시
+            //   _ResultTextWithDetail(text: latestAiSummary!, onDetailTap: () => handleOpenDetail()),
+          ] else
+            // 요약이 없으면 분석 버튼만 표시
             _AnalyzeButton(
               label: isAnalyzing.value ? '분석 중...' : '분석하기',
               enabled: !isAnalyzing.value,
               onTap: analyze,
             ),
-          ],
-        ),
+        ],
       ),
     );
   }
 }
+//       if (context.mounted) {
+//         showDialog(
+//           context: context,
+//           builder: (context) => AiAnalysisDetailDialog(analysis: analysis),
+//         );
+//       }
+//     }
+
+//     return analysisAsync.when(
+//       data: (analysis) {
+//         // 분석 결과가 있으면 표시
+//         final hasAnalysis = analysis != null;
+        
+//         return Container(
+//           margin: const EdgeInsets.fromLTRB(16, 0, 16, 10),
+//           width: double.infinity,
+//           padding: const EdgeInsets.all(14),
+//           decoration: BoxDecoration(
+//             color: Colors.white,
+//             borderRadius: BorderRadius.circular(14),
+//             border: Border.all(color: const Color(0xFFE9E9E9)),
+//           ),
+//           child: Column(
+//             crossAxisAlignment: CrossAxisAlignment.start,
+//             children: [
+//               _Header(title: title),
+//               const SizedBox(height: 10),
+//               // AnimatedSwitcher 사용하기 위해 위젯에 키 추가
+//               AnimatedSwitcher(
+//                 duration: const Duration(milliseconds: 180),
+//                 child: hasAnalysis
+//                     ? _ResultTextWithDetail(
+//                         key: const ValueKey('result'),
+//                         text: analysis.overallSummary,
+//                         onDetailTap: () => showDetailDialog(analysis),
+//                       )
+//                     : _AnalyzeButton(
+//                         key: const ValueKey('button'),
+//                         label: isAnalyzing.value ? '분석 중...' : '분석하기',
+//                         enabled: !isAnalyzing.value,
+//                         onTap: analyze,
+//                       ),
+//               ),
+//             ],
+//           ),
+//         );
+//       },
+//       //
+//       loading: () => Container(
+//         margin: const EdgeInsets.fromLTRB(16, 0, 16, 10),
+//         width: double.infinity,
+//         padding: const EdgeInsets.all(14),
+//         decoration: BoxDecoration(
+//           color: Colors.white,
+//           borderRadius: BorderRadius.circular(14),
+//           border: Border.all(color: const Color(0xFFE9E9E9)),
+//         ),
+//         child: const Center(child: CircularProgressIndicator()),
+//       ),
+//       // 에러
+//       error: (e, st) => Container(
+//         margin: const EdgeInsets.fromLTRB(16, 0, 16, 10),
+//         width: double.infinity,
+//         padding: const EdgeInsets.all(14),
+//         decoration: BoxDecoration(
+//           color: Colors.white,
+//           borderRadius: BorderRadius.circular(14),
+//           border: Border.all(color: const Color(0xFFE9E9E9)),
+//         ),
+//         child: Column(
+//           crossAxisAlignment: CrossAxisAlignment.start,
+//           children: [
+//             _Header(title: title),
+//             const SizedBox(height: 10),
+//             _AnalyzeButton(
+//               label: isAnalyzing.value ? '분석 중...' : '분석하기',
+//               enabled: !isAnalyzing.value,
+//               onTap: analyze,
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
 
 class _Header extends StatelessWidget {
   // 카드 헤더
@@ -169,7 +371,7 @@ class _AnalyzeButton extends StatelessWidget {
 }
 
 class _ResultTextWithDetail extends StatelessWidget {
-  /// 결과 텍스트 + "자세히 보기" 버튼
+  /// 결과 텍스트 + 자세히 보기 버튼
   const _ResultTextWithDetail({super.key, required this.text, required this.onDetailTap});
   final String text;
   final VoidCallback onDetailTap;
@@ -189,7 +391,7 @@ class _ResultTextWithDetail extends StatelessWidget {
         GestureDetector(
           onTap: onDetailTap,
           child: const Text(
-            '자세히 보기',
+            '자세히보기',
             style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w600,

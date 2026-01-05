@@ -95,6 +95,20 @@ class MealDao extends DatabaseAccessor<AppDatabase> with _$MealDaoMixin {
     );
   }
 
+  /// AI 분석 완료 후 메타데이터 갱신
+  /// needs_ai_refresh = false, latest_ai_summary 업데이트
+  Future<void> updateMealDayAfterAnalysis({required String mealDayId, required String summary}) async {
+    await customUpdate(
+      'UPDATE meal_days SET '
+      'needs_ai_refresh = 0, '
+      'latest_ai_summary = ?, '
+      'updated_at = ? '
+      'WHERE id = ?',
+      variables: [Variable.withString(summary), Variable.withDateTime(DateTime.now()), Variable.withString(mealDayId)],
+      updates: {mealDays},
+    );
+  }
+
   /// MealDay에 속한 MealEntry 목록 조회
   Future<List<MealEntryData>> getMealEntriesByMealDayId({
     required String mealDayId,

@@ -624,7 +624,7 @@ final class MealAnalysisDataSourceProvider
         >
     with $Provider<MealAnalysisDataSource> {
   const MealAnalysisDataSourceProvider._()
-        : super(
+    : super(
         from: null,
         argument: null,
         retry: null,

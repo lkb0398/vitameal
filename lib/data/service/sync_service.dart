@@ -162,7 +162,8 @@ class SyncService {
   ) async {
     switch (operation) {
       case 'insert':
-        await _supabase.from('meal_days').insert(payload);
+        // upsert를 사용하여 중복 키 오류 방지
+        await _supabase.from('meal_days').upsert(payload);
         break;
       case 'update':
         await _supabase.from('meal_days').update(payload).eq('id', recordId);
@@ -182,7 +183,8 @@ class SyncService {
   ) async {
     switch (operation) {
       case 'insert':
-        await _supabase.from('meal_entries').insert(payload);
+        // upsert를 사용하여 중복 키 오류 방지
+        await _supabase.from('meal_entries').upsert(payload);
         break;
       case 'update':
         await _supabase.from('meal_entries').update(payload).eq('id', recordId);

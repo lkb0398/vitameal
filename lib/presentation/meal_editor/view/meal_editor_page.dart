@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:vitameal/domain/enum/meal_category_enum.dart';
 import 'package:vitameal/presentation/auth/view_model/auth_view_model.dart';
+import 'package:vitameal/presentation/meal_calendar/view_model/meal_calendar_viewmodel.dart';
 import 'package:vitameal/presentation/meal_editor/view/widget/category_selector.dart';
 import 'package:vitameal/presentation/meal_editor/view/widget/description_input.dart';
 import 'package:vitameal/presentation/meal_editor/view/widget/image_upload_card.dart';
@@ -117,6 +118,10 @@ class MealEditorPage extends HookConsumerWidget {
           entryId: mealEntryId,
         );
 
+        // MealDay 없을때 식단 추가 하면 UI갱신 안되는 문제 해결
+        // Provider 갱신해서 MealDay가 갱신되도록
+        ref.invalidate(mealCalendarViewModelProvider);
+
         // 성공 시 뒤로가기
         if (context.mounted) {
           context.pop();
@@ -159,6 +164,11 @@ class MealEditorPage extends HookConsumerWidget {
         isLoading.value = true;
         try {
           await viewModel.delete(entryId: mealEntryId!);
+
+          // MealDay 없을때 식단 추가 하면 UI갱신 안되는 문제 해결
+          // Provider 갱신해서 MealDay가 갱신되도록
+          ref.invalidate(mealCalendarViewModelProvider);
+          
           // 성공 시 뒤로가기
           if (context.mounted) {
             context.pop();
