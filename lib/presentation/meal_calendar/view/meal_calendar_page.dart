@@ -282,7 +282,8 @@ class MealCalendarPage extends HookConsumerWidget {
                           onPick: setColorBar,
                         ),
                         // 분석 카드
-                        if (selectedMealDay != null) AiAnalysisCard(mealDayId: selectedMealDay.id),
+                        if (selectedMealDay != null)
+                          AiAnalysisCard(mealDayId: selectedMealDay.id, needsAiRefresh: selectedMealDay.needsAiRefresh, latestAiSummary: selectedMealDay.latestAiSummary),
                         // 식단 카드 리스트
                         if (mealEntriesAsync != null)
                           mealEntriesAsync.when(

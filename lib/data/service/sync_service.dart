@@ -184,7 +184,7 @@ class SyncService {
     switch (operation) {
       case 'insert':
         // upsert를 사용하여 중복 키 오류 방지
-        await _supabase.from('meal_days').upsert(payload);
+        await _supabase.from('meal_entries').upsert(payload);
         break;
       case 'update':
         await _supabase.from('meal_entries').update(payload).eq('id', recordId);
