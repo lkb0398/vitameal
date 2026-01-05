@@ -18,7 +18,7 @@ class UserGoalsDataSourceImpl implements UserGoalsDataSource {
   @override // R (전체)
   Future<List<UserGoalsDto>?> getAllGoals() async {
     final response = await client
-        .from('user_goals')
+        .from('goals')
         .select()
         .order('is_done', ascending: true) // 1. 완료 여부에 따라 정렬
         .order('created_at', ascending: false); // 2. 최신순 정렬
@@ -27,7 +27,7 @@ class UserGoalsDataSourceImpl implements UserGoalsDataSource {
 
   @override // C
   Future<void> saveGoal(UserGoalsSaveDto dto) async {
-    await client.from('user_goals').insert(dto);
+    await client.from('goals').insert(dto);
   }
 
   @override // U
@@ -38,19 +38,16 @@ class UserGoalsDataSourceImpl implements UserGoalsDataSource {
       'goal_value': dto.goalValue,
       'goal_date': dto.goalDate,
     };
-    await client.from('user_goals').update(map).eq('goal_id', dto.goalId!);
+    await client.from('goals').update(map).eq('goal_id', dto.goalId!);
   }
 
   @override // U (isMain 업데이트)
   Future<void> updateMainGoal(String goalId) async {
-    await client
-        .from('user_goals')
-        .update({'is_main': true})
-        .eq('goal_id', goalId);
+    await client.from('goals').update({'is_main': true}).eq('goal_id', goalId);
   }
 
   @override // D
   Future<void> deleteGoal(String goalId) async {
-    await client.from('user_goals').delete().eq('goal_id', goalId);
+    await client.from('goals').delete().eq('goal_id', goalId);
   }
 }

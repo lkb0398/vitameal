@@ -611,6 +611,7 @@ final class StorageDataSourceProvider
 
 String _$storageDataSourceHash() => r'c8e30e822b695967f22912d6d5d8b40811101ddd';
 
+
 @ProviderFor(mealAnalysisDataSource)
 const mealAnalysisDataSourceProvider = MealAnalysisDataSourceProvider._();
 
@@ -633,12 +634,43 @@ final class MealAnalysisDataSourceProvider
         $allTransitiveDependencies: null,
       );
 
+@ProviderFor(notificationsDataSource)
+const notificationsDataSourceProvider = NotificationsDataSourceProvider._();
+
+final class NotificationsDataSourceProvider
+    extends
+        $FunctionalProvider<
+          NotificationDataSource,
+          NotificationDataSource,
+          NotificationDataSource
+        >
+    with $Provider<NotificationDataSource> {
+  const NotificationsDataSourceProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'notificationsDataSourceProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
   @override
   String debugGetCreateSourceHash() => _$mealAnalysisDataSourceHash();
 
   @$internal
   @override
   $ProviderElement<MealAnalysisDataSource> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+  
+  @override
+  String debugGetCreateSourceHash() => _$notificationsDataSourceHash();
+
+  @$internal
+  @override
+  $ProviderElement<NotificationDataSource> $createElement(
     $ProviderPointer pointer,
   ) => $ProviderElement(pointer);
 
@@ -658,6 +690,25 @@ final class MealAnalysisDataSourceProvider
 
 String _$mealAnalysisDataSourceHash() =>
     r'2092cd13a6c9b92cf68eca467a096e826666d107';
+            
+  @override
+  NotificationDataSource create(Ref ref) {
+    return notificationsDataSource(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(NotificationDataSource value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<NotificationDataSource>(value),
+    );
+  }
+}
+
+String _$notificationsDataSourceHash() =>
+    r'bd148e9a7785ffd9230502200f08ba8de50c20f9';
+
+/// 🤍 Repository
 
 @ProviderFor(profilesRepository)
 const profilesRepositoryProvider = ProfilesRepositoryProvider._();
@@ -670,6 +721,7 @@ final class ProfilesRepositoryProvider
           ProfilesRepository
         >
     with $Provider<ProfilesRepository> {
+  /// 🤍 Repository
   const ProfilesRepositoryProvider._()
     : super(
         from: null,
@@ -1186,6 +1238,29 @@ final class MealAnalysisRepositoryProvider
         dependencies: null,
         $allTransitiveDependencies: null,
       );
+    
+    
+@ProviderFor(notificationsRepository)
+const notificationsRepositoryProvider = NotificationsRepositoryProvider._();
+
+final class NotificationsRepositoryProvider
+    extends
+        $FunctionalProvider<
+          NotificationsRepository,
+          NotificationsRepository,
+          NotificationsRepository
+        >
+    with $Provider<NotificationsRepository> {
+  const NotificationsRepositoryProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'notificationsRepositoryProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
   @override
   String debugGetCreateSourceHash() => _$mealAnalysisRepositoryHash();
@@ -1193,6 +1268,15 @@ final class MealAnalysisRepositoryProvider
   @$internal
   @override
   $ProviderElement<MealAnalysisRepository> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+   
+  @override
+  String debugGetCreateSourceHash() => _$notificationsRepositoryHash();
+
+  @$internal
+  @override
+  $ProviderElement<NotificationsRepository> $createElement(
     $ProviderPointer pointer,
   ) => $ProviderElement(pointer);
 
@@ -1212,6 +1296,23 @@ final class MealAnalysisRepositoryProvider
 
 String _$mealAnalysisRepositoryHash() =>
     r'b938add69d51a245e8ce7274f5e0c5edcf09d5a4';
+
+  @override
+  NotificationsRepository create(Ref ref) {
+    return notificationsRepository(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(NotificationsRepository value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<NotificationsRepository>(value),
+    );
+  }
+}
+
+String _$notificationsRepositoryHash() =>
+    r'abcdb3c01c132670aca5801f847fc2b6fc9667cf';
 
 @ProviderFor(loginUseCase)
 const loginUseCaseProvider = LoginUseCaseProvider._();

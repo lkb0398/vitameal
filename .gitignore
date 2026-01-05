@@ -54,3 +54,4 @@ devtools_options.yaml
 .env.*
 supabase/.env
 supabase/.env.*
+ios/build/

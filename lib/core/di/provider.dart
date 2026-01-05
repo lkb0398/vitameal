@@ -34,15 +34,16 @@ import 'package:vitameal/domain/repository/user_allergies_repository.dart';
 import 'package:vitameal/domain/repository/user_diseases_repository.dart';
 import 'package:vitameal/domain/repository/user_goals_repository.dart';
 import 'package:vitameal/data/repository_impl/user_goals_repository_impl.dart';
-
 import 'package:vitameal/data/data_source/auth_data_source.dart';
 import 'package:vitameal/data/repository_impl/auth_repository_impl.dart';
 import 'package:vitameal/domain/repository/auth_repository.dart';
 import 'package:vitameal/domain/usecase/login_usecase.dart';
 import 'package:vitameal/domain/usecase/logout_usecase.dart';
-
 import 'package:vitameal/domain/repository/user_repository.dart';
 import 'package:vitameal/data/repository_impl/user_repository_impl.dart';
+import 'package:vitameal/presentation/notification/view_model/notifications_data_source.dart';
+import 'package:vitameal/presentation/notification/view_model/notifications_repository.dart';
+import 'package:vitameal/presentation/notification/view_model/notifications_repository_impl.dart';
 
 part 'provider.g.dart';
 
@@ -135,7 +136,13 @@ MealAnalysisDataSource mealAnalysisDataSource(Ref ref) {
   return MealAnalysisDataSourceImpl(supabase);
 }
 
-// 🤍 Repository
+@riverpod
+NotificationDataSource notificationsDataSource(Ref ref) {
+  final client = ref.read(supabaseClientProvider);
+  return NotificationsDataSourceImpl(client);
+}
+
+/// 🤍 Repository
 @riverpod
 ProfilesRepository profilesRepository(Ref ref) {
   final dataSource = ref.read(profilesDataSourceProvider);
@@ -213,6 +220,12 @@ MealAnalysisRepository mealAnalysisRepository(Ref ref) {
   return MealAnalysisRepositoryImpl(dataSource);
 }
 
+@riverpod
+NotificationsRepository notificationsRepository(Ref ref) {
+  final dataSource = ref.read(notificationsDataSourceProvider);
+  return NotificationsRepositoryImpl(dataSource);
+}
+
 // 🤍 UseCase
 @riverpod
 LoginUseCase loginUseCase(Ref ref) {
@@ -245,6 +258,5 @@ SyncService syncService(Ref ref) {
   ref.onDispose(() {
     service.stop();
   });
-
   return service;
 }
