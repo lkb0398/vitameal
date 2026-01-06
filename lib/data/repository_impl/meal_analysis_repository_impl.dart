@@ -30,4 +30,13 @@ class MealAnalysisRepositoryImpl implements MealAnalysisRepository {
       rethrow;
     }
   }
+
+  @override
+  Future<int> getTodayAnalysisCount(String userId) async {
+    try {
+      return await _dataSource.getTodayAnalysisCount(userId);
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

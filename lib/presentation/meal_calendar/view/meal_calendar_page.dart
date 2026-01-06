@@ -11,6 +11,7 @@ import 'package:vitameal/core/config/routes.dart';
 import 'package:vitameal/core/di/provider.dart';
 import 'package:vitameal/presentation/auth/view_model/auth_view_model.dart';
 import 'package:vitameal/presentation/meal_calendar/view/widget/ai_analysis_card.dart';
+import 'package:vitameal/presentation/meal_calendar/view/widget/ai_analysis_detail_dialog.dart';
 import 'package:vitameal/presentation/meal_calendar/view/widget/calendar_header.dart';
 import 'package:vitameal/presentation/meal_calendar/view/util/calendar_utils.dart';
 import 'package:vitameal/presentation/meal_calendar/view/widget/adherence_picker.dart';
@@ -18,6 +19,7 @@ import 'package:vitameal/presentation/meal_calendar/view/widget/meal_card.dart';
 import 'package:vitameal/presentation/meal_calendar/view/widget/meal_calendar.dart';
 import 'package:vitameal/presentation/meal_calendar/view/util/adherence_color_utils.dart';
 import 'package:vitameal/core/util/date_time_utils.dart';
+import 'package:vitameal/presentation/meal_calendar/view_model/meal_analysis_viewmodel.dart';
 import 'package:vitameal/presentation/meal_calendar/view_model/meal_calendar_viewmodel.dart';
 import 'package:vitameal/presentation/ui_provider/meal_provider.dart';
 
@@ -84,6 +86,14 @@ class MealCalendarPage extends HookConsumerWidget {
     final mealEntriesAsync = selectedMealDay != null
         ? ref.watch(mealEntriesProvider(selectedMealDay.id))
         : null;
+
+    // 오늘 사용한 분석 횟수 조회
+    final todayCountAsync = ref.watch(todayAnalysisCountProvider(userId));
+
+    // AI 분석 카드에 전달할 값들, 설명은 ai_analysis_card 변수에,,
+    final todayCount = todayCountAsync.maybeWhen(data: (count) => count, orElse: () => 0);
+    final isCountLoading = todayCountAsync.isLoading;
+    final hasEntries = mealEntriesAsync?.maybeWhen(data: (entries) => entries.isNotEmpty, orElse: () => false) ?? false;
 
     /// 날짜 탭 인터렉션
     void onDayTapped(DateTime day) {
@@ -153,6 +163,47 @@ class MealCalendarPage extends HookConsumerWidget {
       } catch (e) {
         // 에러 처리 (필요 시 SnackBar 등으로 사용자에게 알림)
         debugPrint('성취도 업데이트 실패: $e');
+      }
+    }
+
+    // AI 분석
+    Future<void> handleAnalyze() async {
+      if (selectedMealDay == null) return;
+
+      // 분석 수행 후 결과 받기
+      final viewModel = ref.read(mealAnalysisViewModelProvider.notifier);
+      final analysisResult = await viewModel.requestAnalysis(selectedMealDay.id);
+
+      // 로컬 DB 업데이트 (summary + needs_ai_refresh=false)
+      // TODO : data_source로 옮기기
+      final database = ref.read(appDatabaseProvider);
+      await database.mealDao.updateMealDayAfterAnalysis(
+        mealDayId: selectedMealDay.id,
+        summary: analysisResult.overallSummary,
+      );
+
+      // Provider 갱신
+      ref.invalidate(mealCalendarViewModelProvider); // 버튼 활성화 여부
+      ref.read(todayAnalysisCountProvider(userId).notifier).refresh(); // 사용한 분석 횟수
+    }
+
+    // 자세히 보기: 기저질환에 관한 피드백이 들어있는 대화상자 출력
+    Future<void> handleOpenDetail() async {
+      if (selectedMealDay == null) return;
+
+      // 분석 결과 받아오기 (원격 db)
+      final notifier = ref.read(mealAnalysisViewModelProvider.notifier);
+      final analysis = await notifier.getLatestAnalysis(selectedMealDay.id);
+
+      if (analysis == null) {
+        throw Exception('분석 결과가 없습니다.');
+      }
+
+      if (context.mounted) {
+        showDialog(
+          context: context,
+          builder: (context) => AiAnalysisDetailDialog(analysis: analysis),
+        );
       }
     }
 
@@ -283,7 +334,16 @@ class MealCalendarPage extends HookConsumerWidget {
                         ),
                         // 분석 카드
                         if (selectedMealDay != null)
-                          AiAnalysisCard(mealDayId: selectedMealDay.id, needsAiRefresh: selectedMealDay.needsAiRefresh, latestAiSummary: selectedMealDay.latestAiSummary),
+                          AiAnalysisCard(
+                            mealDayId: selectedMealDay.id,
+                            needsAiRefresh: selectedMealDay.needsAiRefresh,
+                            latestAiSummary: selectedMealDay.latestAiSummary,
+                            todayCount: todayCount,
+                            isCountLoading: isCountLoading,
+                            hasEntries: hasEntries,
+                            onAnalyze: handleAnalyze,
+                            onOpenDetail: handleOpenDetail,
+                          ),
                         // 식단 카드 리스트
                         if (mealEntriesAsync != null)
                           mealEntriesAsync.when(
