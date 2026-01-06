@@ -23,14 +23,14 @@ class FirebaseService {
     final userId = Supabase.instance.client.auth.currentUser?.id;
     if (userId == null) return;
 
-    // // 애뮬레이터에서 실행 하기 위해...
-    // if (Platform.isIOS) {
-    //   final apnsToken = await _messaging.getAPNSToken();
-    //   if (apnsToken == null || apnsToken.isEmpty) return;
-    // }
-    // final token = await _messaging.getToken();
-    // if (token == null) return;
+    // 애뮬레이터에서 실행 하기 위해...
+    if (Platform.isIOS) {
+      final apnsToken = await _messaging.getAPNSToken();
+      if (apnsToken == null || apnsToken.isEmpty) return;
+    }
     final token = await _messaging.getToken();
+    if (token == null) return;
+    // final token = await _messaging.getToken();
     
     print('my fcm token : 🩷 $token');
     await Supabase.instance.client.from('fcm_tokens').upsert({

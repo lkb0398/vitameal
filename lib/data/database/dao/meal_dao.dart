@@ -2,6 +2,7 @@ import 'package:drift/drift.dart';
 import 'package:vitameal/data/database/database.dart';
 import 'package:vitameal/data/database/table/meal_days_table.dart';
 import 'package:vitameal/data/database/table/meal_entries_table.dart';
+import 'package:vitameal/domain/enum/meal_category_enum.dart';
 
 part 'meal_dao.g.dart';
 
@@ -141,12 +142,14 @@ class MealDao extends DatabaseAccessor<AppDatabase> with _$MealDaoMixin {
   /// MealEntry 업데이트
   Future<int> updateMealEntry({
     required String entryId,
+    required MealCategory category,
     String? content,
     String? photoUrl,
     DateTime? eatenAt,
   }) {
     return (update(mealEntries)..where((t) => t.id.equals(entryId)))
         .write(MealEntriesCompanion(
+      category: Value(category.value),
       content: content != null ? Value(content) : const Value.absent(),
       photoUrl: photoUrl != null ? Value(photoUrl) : const Value.absent(),
       eatenAt: eatenAt != null ? Value(eatenAt) : const Value.absent(),

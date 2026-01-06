@@ -101,6 +101,7 @@ class MealEditorViewModel extends _$MealEditorViewModel {
       // 저장 (수정 모드)
       await _mealRepository.updateMealEntry(
         entryId: entryId,
+        category: category,
         content: contentToSave,
         photoUrl: finalPhotoUrl,
         eatenAt: selectedTime,

@@ -7,6 +7,7 @@ import 'package:vitameal/data/mapper/meal_entry_mapper.dart';
 import 'package:vitameal/domain/entity/meal_day_entity.dart';
 import 'package:vitameal/domain/entity/meal_entry_entity.dart';
 import 'package:vitameal/domain/enum/adherence_level_enum.dart';
+import 'package:vitameal/domain/enum/meal_category_enum.dart';
 
 abstract class MealLocalDataSource {
   /// 날짜 범위로 MealDay 목록 조회 (캘린더용)
@@ -32,7 +33,7 @@ abstract class MealLocalDataSource {
   Future<void> createMealEntry(MealEntryEntity entity);
 
   /// MealEntry 수정
-  Future<void> updateMealEntry({required String entryId, String? content, String? photoUrl, DateTime? eatenAt});
+  Future<void> updateMealEntry({required String entryId, required MealCategory category, String? content, String? photoUrl, DateTime? eatenAt});
 
   /// MealEntry 삭제 (Soft Delete)
   Future<void> deleteMealEntry(String entryId);
@@ -134,9 +135,9 @@ class MealLocalDataSourceImpl implements MealLocalDataSource {
   }
 
   @override
-  Future<void> updateMealEntry({required String entryId, String? content, String? photoUrl, DateTime? eatenAt}) async {
+  Future<void> updateMealEntry({required String entryId, required MealCategory category, String? content, String? photoUrl, DateTime? eatenAt}) async {
     try {
-      await _database.mealDao.updateMealEntry(entryId: entryId, content: content, photoUrl: photoUrl, eatenAt: eatenAt);
+      await _database.mealDao.updateMealEntry(entryId: entryId, category: category, content: content, photoUrl: photoUrl, eatenAt: eatenAt);
       debugPrint('🥕 MealEntry 수정 [${entryId.substring(0, 8)}]');
     } catch (e) {
       debugPrint('🥕 updateMealEntry: $e');
