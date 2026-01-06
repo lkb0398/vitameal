@@ -46,6 +46,7 @@ abstract class MealRepository {
   /// MealEntry 수정
   Future<MealEntryEntity> updateMealEntry({
     required String entryId,
+    required MealCategory category,
     String? content,
     String? photoUrl,
     DateTime? eatenAt,

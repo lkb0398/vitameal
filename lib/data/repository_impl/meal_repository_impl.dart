@@ -194,6 +194,7 @@ class MealRepositoryImpl implements MealRepository {
   @override
   Future<MealEntryEntity> updateMealEntry({
     required String entryId,
+    required MealCategory category,
     String? content,
     String? photoUrl,
     DateTime? eatenAt,
@@ -208,6 +209,7 @@ class MealRepositoryImpl implements MealRepository {
       // 로컬 업데이트
       await _localDataSource.updateMealEntry(
         entryId: entryId,
+        category: category,
         content: content,
         photoUrl: photoUrl,
         eatenAt: eatenAt,
@@ -220,8 +222,9 @@ class MealRepositoryImpl implements MealRepository {
       final updateData = <String, dynamic>{
         'updated_at': DateTime.now().toIso8601String(), // 일단 로컬시간 사용
       };
+      updateData['category'] = category.value;
+      updateData['photo_url'] = photoUrl;
       if (content != null) updateData['content'] = content;
-      if (photoUrl != null) updateData['photo_url'] = photoUrl;
       if (eatenAt != null) updateData['eaten_at'] = eatenAt.toIso8601String();
 
       await _addToOutbox(
