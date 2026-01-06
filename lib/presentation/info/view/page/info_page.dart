@@ -16,12 +16,9 @@ class InfoPage extends StatelessWidget {
       children: [
         /// appBar
         CustomAppBar(
-          title: Text("내 정보", style: TextStyle(fontSize: 20)),
           actions: IconButton(
-            icon: const Icon(Icons.settings),
-            onPressed: () {
-              context.push('/setting');
-            },
+            onPressed: () => context.push('/setting'),
+            icon: Icon(Icons.settings_outlined),
           ),
         ),
 
