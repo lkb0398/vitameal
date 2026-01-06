@@ -313,6 +313,7 @@ class DataPage extends HookConsumerWidget {
                         );
 
                         return Container(
+                          padding: EdgeInsets.only(left: 10),
                           decoration: BoxDecoration(
                             border: Border(
                               bottom: BorderSide(

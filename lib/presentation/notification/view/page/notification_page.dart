@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:timezone/timezone.dart' as tz;
 import 'package:vitameal/core/theme/app_theme.dart';
 import 'package:vitameal/presentation/notification/view/widget/add_noti_bottom_sheet.dart';
 import 'package:vitameal/presentation/ui_provider/notifications_provider.dart';
@@ -21,36 +19,24 @@ class NotificationPage extends HookConsumerWidget {
     // 알림명 : 사용자 입력값 받기
     final labelController = useTextEditingController();
 
-    // 사용자 timezone 가져오기
-    final timezoneState = useState<String>('Asia/Seoul');
-    useEffect(() {
-      () async {
-        final tzName = await FlutterNativeTimezone.getLocalTimezone();
-        timezoneState.value = tzName;
-      }();
-      return null;
-    }, const []);
-
     // next_fire_at 계산
-    DateTime calculateNextFireAt({
-      required TimeOfDay time,
-      required String timezone,
-    }) {
-      final now = tz.TZDateTime.now(tz.getLocation(timezone));
-      // 오늘 알림 시각
-      tz.TZDateTime scheduled = tz.TZDateTime(
-        tz.getLocation(timezone),
+    DateTime calculateNextFireAt({required TimeOfDay time}) {
+      final now = DateTime.now();
+
+      DateTime scheduled = DateTime(
         now.year,
         now.month,
         now.day,
         time.hour,
         time.minute,
       );
-      // 이미 지났으면 내일
+
+      // 이미 지났으면 다음 날
       if (scheduled.isBefore(now)) {
         scheduled = scheduled.add(const Duration(days: 1));
       }
-      // DB > UTC로 저장
+
+      // DB에는 무조건 UTC
       return scheduled.toUtc();
     }
 
@@ -99,11 +85,6 @@ class NotificationPage extends HookConsumerWidget {
                                 controller: labelController,
                                 initialTime: TimeOfDay.now(),
                                 onConfirm: (newTime) async {
-                                  final tzName = timezoneState.value;
-                                  final nextFireAt = calculateNextFireAt(
-                                    time: newTime,
-                                    timezone: tzName,
-                                  );
                                   // 알림 추가
                                   await ref
                                       .read(
@@ -113,8 +94,10 @@ class NotificationPage extends HookConsumerWidget {
                                         label: labelController.text,
                                         time: newTime,
                                         isEnabled: true,
-                                        timezone: tzName,
-                                        nextFireAt: nextFireAt,
+                                        timezone: "Asia/Seoul",
+                                        nextFireAt: calculateNextFireAt(
+                                          time: newTime,
+                                        ),
                                       );
                                   // mounted 체크
                                   if (!context.mounted) return;
@@ -192,7 +175,6 @@ class NotificationPage extends HookConsumerWidget {
                                     timezone: noti.timezone,
                                     nextFireAt: calculateNextFireAt(
                                       time: newTime,
-                                      timezone: noti.timezone,
                                     ),
                                   );
                               // mounted 체크
@@ -244,10 +226,7 @@ class NotificationPage extends HookConsumerWidget {
                                     time: noti.time,
                                     isEnabled: value,
                                     timezone: noti.timezone,
-                                    nextFireAt: calculateNextFireAt(
-                                      time: noti.time,
-                                      timezone: noti.timezone,
-                                    ),
+                                    nextFireAt: noti.nextFireAt,
                                   );
                               // mounted 체크
                               if (!context.mounted) return;
