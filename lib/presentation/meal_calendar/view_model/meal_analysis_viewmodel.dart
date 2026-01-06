@@ -23,3 +23,23 @@ class MealAnalysisViewModel extends _$MealAnalysisViewModel {
     return await _repository.getLatestAnalysis(mealDayId);
   }
 }
+
+/// 오늘 분석 횟수 Provider (State로 관리하도록)
+/// KeepAlive로 날짜 변경 시에도 깜빡임 방지 시도
+@Riverpod(keepAlive: true)
+class TodayAnalysisCount extends _$TodayAnalysisCount {
+  MealAnalysisRepository get _repository => ref.read(mealAnalysisRepositoryProvider);
+
+  @override
+  Future<int> build(String userId) async {
+    return await _repository.getTodayAnalysisCount(userId);
+  }
+
+  /// 분석 완료 후 횟수 새로고침 용도
+  Future<void> refresh() async {
+    state = const AsyncValue.loading();
+    state = await AsyncValue.guard(() async {
+      return await _repository.getTodayAnalysisCount(userId);
+    });
+  }
+}

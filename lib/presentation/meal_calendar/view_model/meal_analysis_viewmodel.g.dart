@@ -62,3 +62,110 @@ abstract class _$MealAnalysisViewModel extends $Notifier<void> {
     element.handleValue(ref, null);
   }
 }
+
+/// 오늘 분석 횟수 Provider (State로 관리하도록)
+/// KeepAlive로 날짜 변경 시에도 깜빡임 방지 시도
+
+@ProviderFor(TodayAnalysisCount)
+const todayAnalysisCountProvider = TodayAnalysisCountFamily._();
+
+/// 오늘 분석 횟수 Provider (State로 관리하도록)
+/// KeepAlive로 날짜 변경 시에도 깜빡임 방지 시도
+final class TodayAnalysisCountProvider
+    extends $AsyncNotifierProvider<TodayAnalysisCount, int> {
+  /// 오늘 분석 횟수 Provider (State로 관리하도록)
+  /// KeepAlive로 날짜 변경 시에도 깜빡임 방지 시도
+  const TodayAnalysisCountProvider._({
+    required TodayAnalysisCountFamily super.from,
+    required String super.argument,
+  }) : super(
+         retry: null,
+         name: r'todayAnalysisCountProvider',
+         isAutoDispose: false,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$todayAnalysisCountHash();
+
+  @override
+  String toString() {
+    return r'todayAnalysisCountProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  TodayAnalysisCount create() => TodayAnalysisCount();
+
+  @override
+  bool operator ==(Object other) {
+    return other is TodayAnalysisCountProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$todayAnalysisCountHash() =>
+    r'84431347fc98f6160337829148b0cd306f84ed26';
+
+/// 오늘 분석 횟수 Provider (State로 관리하도록)
+/// KeepAlive로 날짜 변경 시에도 깜빡임 방지 시도
+
+final class TodayAnalysisCountFamily extends $Family
+    with
+        $ClassFamilyOverride<
+          TodayAnalysisCount,
+          AsyncValue<int>,
+          int,
+          FutureOr<int>,
+          String
+        > {
+  const TodayAnalysisCountFamily._()
+    : super(
+        retry: null,
+        name: r'todayAnalysisCountProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: false,
+      );
+
+  /// 오늘 분석 횟수 Provider (State로 관리하도록)
+  /// KeepAlive로 날짜 변경 시에도 깜빡임 방지 시도
+
+  TodayAnalysisCountProvider call(String userId) =>
+      TodayAnalysisCountProvider._(argument: userId, from: this);
+
+  @override
+  String toString() => r'todayAnalysisCountProvider';
+}
+
+/// 오늘 분석 횟수 Provider (State로 관리하도록)
+/// KeepAlive로 날짜 변경 시에도 깜빡임 방지 시도
+
+abstract class _$TodayAnalysisCount extends $AsyncNotifier<int> {
+  late final _$args = ref.$arg as String;
+  String get userId => _$args;
+
+  FutureOr<int> build(String userId);
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build(_$args);
+    final ref = this.ref as $Ref<AsyncValue<int>, int>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<int>, int>,
+              AsyncValue<int>,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
