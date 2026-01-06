@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:vitameal/core/di/provider.dart';
-import 'package:vitameal/presentation/notification/view_model/notifications_entity.dart';
+import 'package:vitameal/domain/entity/notifications_entity.dart';
 import 'package:vitameal/presentation/ui_provider/profiles_provider.dart';
 
 part 'notifications_view_model.g.dart';

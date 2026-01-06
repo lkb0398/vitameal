@@ -18,18 +18,22 @@ class IntroPage extends HookConsumerWidget {
     final introItems = [
       IntroContent(
         title: "오늘의 식단을\n손쉽게 기록해 보세요",
+        highlight: "기록",
         image: "assets/images/intro_1.png",
       ),
       IntroContent(
         title: "식사 알림으로\n내 건강정보를 한눈에",
+        highlight: "건강정보",
         image: "assets/images/intro_2.png",
       ),
       IntroContent(
         title: "나만의 건강 레시피를\n사람들과 공유해요",
+        highlight: "건강 레시피",
         image: "assets/images/intro_3.png",
       ),
       IntroContent(
         title: "위젯으로 식단 관리를\n더욱 더 간편하게",
+        highlight: "위젯",
         image: "assets/images/intro_4.png",
       ),
     ];
@@ -37,7 +41,7 @@ class IntroPage extends HookConsumerWidget {
     void navigateToOnboarding() => context.go(AppRoutePath.onboardingProfile);
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
         child: Column(
           children: [

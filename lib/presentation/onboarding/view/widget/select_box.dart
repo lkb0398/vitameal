@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:vitameal/core/theme/app_theme.dart';
 
 class SelectBox extends StatelessWidget {
   const SelectBox({
     super.key,
     required this.onTap,
-    required this.changeThisColor,
+    required this.isSelected,
     required this.text,
     this.height,
   });
 
   final void Function() onTap;
-  final bool changeThisColor;
+  final bool isSelected;
   final String text;
   final double? height;
 
@@ -20,12 +21,23 @@ class SelectBox extends StatelessWidget {
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
-          border: Border.all(color: Colors.black),
-          color: changeThisColor ? Colors.grey : Colors.transparent,
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(
+            width: 1.5,
+            color: isSelected ? fxc(context).primary500! : vrc(context).border!,
+          ),
+          color: isSelected ? fxc(context).primary100 : Colors.transparent,
         ),
         height: height,
         alignment: Alignment.center,
-        child: Text(text),
+        child: Text(
+          text,
+          style: TextStyle(
+            fontSize: 13,
+            fontWeight: FontWeight.bold,
+            color: isSelected ? fxc(context).primary500 : vrc(context).text,
+          ),
+        ),
       ),
     );
   }

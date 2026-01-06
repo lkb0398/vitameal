@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$GoalDatasDto {
 
-@JsonKey(name: 'goal_id') String? get goalId;@JsonKey(name: 'data_id') String? get dataId;@JsonKey(name: 'data_date') DateTime get dataDate;@JsonKey(name: 'data_value') double get dataValue;
+@JsonKey(name: 'goal_id') String? get goalId;@JsonKey(name: 'data_id') String? get dataId;@JsonKey(name: 'data_date') String get dataDate;@JsonKey(name: 'data_value') double get dataValue;
 /// Create a copy of GoalDatasDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $GoalDatasDtoCopyWith<$Res>  {
   factory $GoalDatasDtoCopyWith(GoalDatasDto value, $Res Function(GoalDatasDto) _then) = _$GoalDatasDtoCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'goal_id') String? goalId,@JsonKey(name: 'data_id') String? dataId,@JsonKey(name: 'data_date') DateTime dataDate,@JsonKey(name: 'data_value') double dataValue
+@JsonKey(name: 'goal_id') String? goalId,@JsonKey(name: 'data_id') String? dataId,@JsonKey(name: 'data_date') String dataDate,@JsonKey(name: 'data_value') double dataValue
 });
 
 
@@ -70,7 +70,7 @@ class _$GoalDatasDtoCopyWithImpl<$Res>
 goalId: freezed == goalId ? _self.goalId : goalId // ignore: cast_nullable_to_non_nullable
 as String?,dataId: freezed == dataId ? _self.dataId : dataId // ignore: cast_nullable_to_non_nullable
 as String?,dataDate: null == dataDate ? _self.dataDate : dataDate // ignore: cast_nullable_to_non_nullable
-as DateTime,dataValue: null == dataValue ? _self.dataValue : dataValue // ignore: cast_nullable_to_non_nullable
+as String,dataValue: null == dataValue ? _self.dataValue : dataValue // ignore: cast_nullable_to_non_nullable
 as double,
   ));
 }
@@ -156,7 +156,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'goal_id')  String? goalId, @JsonKey(name: 'data_id')  String? dataId, @JsonKey(name: 'data_date')  DateTime dataDate, @JsonKey(name: 'data_value')  double dataValue)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'goal_id')  String? goalId, @JsonKey(name: 'data_id')  String? dataId, @JsonKey(name: 'data_date')  String dataDate, @JsonKey(name: 'data_value')  double dataValue)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _GoalDatasDto() when $default != null:
 return $default(_that.goalId,_that.dataId,_that.dataDate,_that.dataValue);case _:
@@ -177,7 +177,7 @@ return $default(_that.goalId,_that.dataId,_that.dataDate,_that.dataValue);case _
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'goal_id')  String? goalId, @JsonKey(name: 'data_id')  String? dataId, @JsonKey(name: 'data_date')  DateTime dataDate, @JsonKey(name: 'data_value')  double dataValue)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'goal_id')  String? goalId, @JsonKey(name: 'data_id')  String? dataId, @JsonKey(name: 'data_date')  String dataDate, @JsonKey(name: 'data_value')  double dataValue)  $default,) {final _that = this;
 switch (_that) {
 case _GoalDatasDto():
 return $default(_that.goalId,_that.dataId,_that.dataDate,_that.dataValue);case _:
@@ -197,7 +197,7 @@ return $default(_that.goalId,_that.dataId,_that.dataDate,_that.dataValue);case _
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'goal_id')  String? goalId, @JsonKey(name: 'data_id')  String? dataId, @JsonKey(name: 'data_date')  DateTime dataDate, @JsonKey(name: 'data_value')  double dataValue)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'goal_id')  String? goalId, @JsonKey(name: 'data_id')  String? dataId, @JsonKey(name: 'data_date')  String dataDate, @JsonKey(name: 'data_value')  double dataValue)?  $default,) {final _that = this;
 switch (_that) {
 case _GoalDatasDto() when $default != null:
 return $default(_that.goalId,_that.dataId,_that.dataDate,_that.dataValue);case _:
@@ -217,7 +217,7 @@ class _GoalDatasDto implements GoalDatasDto {
 
 @override@JsonKey(name: 'goal_id') final  String? goalId;
 @override@JsonKey(name: 'data_id') final  String? dataId;
-@override@JsonKey(name: 'data_date') final  DateTime dataDate;
+@override@JsonKey(name: 'data_date') final  String dataDate;
 @override@JsonKey(name: 'data_value') final  double dataValue;
 
 /// Create a copy of GoalDatasDto
@@ -253,7 +253,7 @@ abstract mixin class _$GoalDatasDtoCopyWith<$Res> implements $GoalDatasDtoCopyWi
   factory _$GoalDatasDtoCopyWith(_GoalDatasDto value, $Res Function(_GoalDatasDto) _then) = __$GoalDatasDtoCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'goal_id') String? goalId,@JsonKey(name: 'data_id') String? dataId,@JsonKey(name: 'data_date') DateTime dataDate,@JsonKey(name: 'data_value') double dataValue
+@JsonKey(name: 'goal_id') String? goalId,@JsonKey(name: 'data_id') String? dataId,@JsonKey(name: 'data_date') String dataDate,@JsonKey(name: 'data_value') double dataValue
 });
 
 
@@ -275,7 +275,7 @@ class __$GoalDatasDtoCopyWithImpl<$Res>
 goalId: freezed == goalId ? _self.goalId : goalId // ignore: cast_nullable_to_non_nullable
 as String?,dataId: freezed == dataId ? _self.dataId : dataId // ignore: cast_nullable_to_non_nullable
 as String?,dataDate: null == dataDate ? _self.dataDate : dataDate // ignore: cast_nullable_to_non_nullable
-as DateTime,dataValue: null == dataValue ? _self.dataValue : dataValue // ignore: cast_nullable_to_non_nullable
+as String,dataValue: null == dataValue ? _self.dataValue : dataValue // ignore: cast_nullable_to_non_nullable
 as double,
   ));
 }
