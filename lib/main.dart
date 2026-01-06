@@ -1,7 +1,5 @@
-import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter_app_badger/flutter_app_badger.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:vitameal/core/config/firebase_options.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +11,7 @@ import 'package:vitameal/core/service/firebase_service.dart';
 import 'package:vitameal/core/service/notification_service.dart';
 import 'package:vitameal/presentation/ui_provider/profiles_provider.dart';
 import 'core/config/routes.dart';
-import 'package:timezone/data/latest.dart' as tz;
+// import 'package:timezone/data/latest.dart' as tz;
 
 // 🔔 Background 알림 (main 최상단!)
 @pragma('vm:entry-point')
@@ -30,12 +28,6 @@ void main() async {
     anonKey:
         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlrcWRjZ3JpbWRzdnVpbmN2bXR1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU5MzM0OTcsImV4cCI6MjA4MTUwOTQ5N30.QJnEx7gDulSj8-8PayKYxyu5Aze8IBk7jJU-N-VRHCw',
   );
-
-  Future<void> initTimezone() async {
-    tz.initializeTimeZones();
-  }
-
-  await initTimezone();
 
   // 온보딩 완료여부 동기화
   final container = ProviderContainer();
@@ -59,10 +51,6 @@ void main() async {
   await FirebaseService.initialize();
   // 알림 리스너 설정
   await NotificationService.initialize();
-  // 앱 실행 시 배지 초기화 (iOS), Android 는 푸시 알림 삭제 시 배지 삭제됨
-  if (Platform.isIOS) {
-    FlutterAppBadger.removeBadge();
-  }
 
   runApp(
     UncontrolledProviderScope(container: container, child: const VitamealApp()),
