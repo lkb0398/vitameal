@@ -22,9 +22,9 @@ class CustomBottomNavi extends StatelessWidget {
           borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
           boxShadow: [
             BoxShadow(
-              color: fxc(context).textcolor300!,
-              blurRadius: 2,
-              offset: const Offset(0, 0),
+              color: fxc(context).textcolor200!,
+              blurRadius: 5,
+              offset: const Offset(0, -4),
             ),
           ],
         ),

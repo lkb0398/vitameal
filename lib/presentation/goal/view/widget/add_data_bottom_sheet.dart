@@ -53,7 +53,7 @@ class AddDataBottomSheet extends HookConsumerWidget {
         bottom: MediaQuery.of(context).viewInsets.bottom,
       ),
       child: SizedBox(
-        height: 300,
+        height: 350,
         child: Column(
           children: [
             SizedBox(height: 10),

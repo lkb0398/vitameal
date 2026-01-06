@@ -6,7 +6,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tap_debouncer/tap_debouncer.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
 import 'package:vitameal/domain/enum/gender_type_enum.dart';
-import 'package:vitameal/presentation/goal/view/function/show_gray_snackbar.dart';
 import 'package:vitameal/presentation/onboarding/view/widget/select_box.dart';
 import 'package:vitameal/presentation/widget/button/done_button.dart';
 import 'package:vitameal/presentation/widget/validate_textformfield.dart';
