@@ -6,6 +6,8 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:vitameal/core/config/routes.dart';
 import 'package:vitameal/presentation/ui_provider/profiles_provider.dart';
 // import 'package:shared_preferences/shared_preferences.dart';
+import 'package:vitameal/core/theme/app_theme.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class SplashPage extends HookConsumerWidget {
   const SplashPage({super.key});
