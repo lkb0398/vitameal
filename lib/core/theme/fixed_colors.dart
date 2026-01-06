@@ -9,7 +9,9 @@ class FixedColors extends ThemeExtension<FixedColors> {
     required this.primary400,
     required this.primary500,
     required this.primary600,
+    required this.secondary50,
     required this.secondary100,
+    required this.secondary200,
     required this.secondary400,
     required this.textcolor0,
     required this.textcolor50,
@@ -33,7 +35,9 @@ class FixedColors extends ThemeExtension<FixedColors> {
   final Color? primary400;
   final Color? primary500;
   final Color? primary600;
+  final Color? secondary50;
   final Color? secondary100;
+  final Color? secondary200;
   final Color? secondary400;
   final Color? textcolor0;
   final Color? textcolor50;
@@ -60,7 +64,9 @@ class FixedColors extends ThemeExtension<FixedColors> {
     primary500: Color(0xFF679900),
     primary600: Color(0xFF456600),
     // 빨간색
+    secondary50: Color(0xFFFFF5F6),
     secondary100: Color(0xFFFFEBEE),
+    secondary200: Color(0xFFFFB8C2),
     secondary400: Color(0xFFFF516A),
     // 검정/회색
     textcolor0: Color(0xFFFFFFFF),
@@ -91,7 +97,9 @@ class FixedColors extends ThemeExtension<FixedColors> {
     Color? primary400,
     Color? primary500,
     Color? primary600,
+    Color? secondary50,
     Color? secondary100,
+    Color? secondary200,
     Color? secondary400,
     Color? textcolor0,
     Color? textcolor50,
@@ -115,7 +123,9 @@ class FixedColors extends ThemeExtension<FixedColors> {
     primary400: primary400 ?? this.primary400,
     primary500: primary500 ?? this.primary500,
     primary600: primary600 ?? this.primary600,
+    secondary50: secondary50 ?? this.secondary50,
     secondary100: secondary100 ?? this.secondary100,
+    secondary200: secondary200 ?? this.secondary200,
     secondary400: secondary400 ?? this.secondary400,
     textcolor0: textcolor0 ?? this.textcolor0,
     textcolor50: textcolor50 ?? this.textcolor50,
@@ -144,7 +154,9 @@ class FixedColors extends ThemeExtension<FixedColors> {
       primary400: Color.lerp(primary400, other.primary400, t),
       primary500: Color.lerp(primary500, other.primary500, t),
       primary600: Color.lerp(primary600, other.primary600, t),
+      secondary50: Color.lerp(secondary50, other.secondary50, t),
       secondary100: Color.lerp(secondary100, other.secondary100, t),
+      secondary200: Color.lerp(secondary200, other.secondary200, t),
       secondary400: Color.lerp(secondary400, other.secondary400, t),
       textcolor0: Color.lerp(textcolor0, other.textcolor0, t),
       textcolor50: Color.lerp(textcolor50, other.textcolor50, t),

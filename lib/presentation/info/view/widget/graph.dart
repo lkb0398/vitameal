@@ -36,7 +36,7 @@ class Graph extends StatelessWidget {
           gridData: FlGridData(
             show: true,
             drawHorizontalLine: true,
-            horizontalInterval: interval.toDouble(),
+            horizontalInterval: interval == 0 ? 1 : interval.toDouble(),
             getDrawingHorizontalLine: (value) =>
                 FlLine(color: Colors.grey[200], strokeWidth: 1),
             drawVerticalLine: true,
@@ -51,7 +51,7 @@ class Graph extends StatelessWidget {
             leftTitles: AxisTitles(
               sideTitles: SideTitles(
                 showTitles: true,
-                interval: interval.toDouble(),
+                interval: interval == 0 ? 1 : interval.toDouble(),
                 reservedSize: 30,
                 getTitlesWidget: (value, _) {
                   return Text(

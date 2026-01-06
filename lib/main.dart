@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_app_badger/flutter_app_badger.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:vitameal/core/config/firebase_options.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -80,6 +81,13 @@ class VitamealApp extends HookConsumerWidget {
     final router = ref.watch(routerProvider);
 
     return MaterialApp.router(
+      locale: const Locale('ko', 'KR'),
+      supportedLocales: const [Locale('ko', 'KR'), Locale('en', 'US')],
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate, // Cupertino 스타일 > 한국어 패치
+        GlobalWidgetsLocalizations.delegate,
+      ],
       title: 'Vitameal',
       debugShowCheckedModeBanner: false,
       routerConfig: router,
