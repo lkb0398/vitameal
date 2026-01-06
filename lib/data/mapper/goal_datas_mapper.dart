@@ -1,6 +1,5 @@
 import 'package:vitameal/data/dto/goal_datas_dto.dart';
 import 'package:vitameal/domain/entity/goal_datas_entity.dart';
-import 'package:vitameal/data/dto/goal_datas_save_dto.dart';
 
 class GoalDatasMapper {
   // Entity > Dto
@@ -8,7 +7,7 @@ class GoalDatasMapper {
     return GoalDatasDto(
       goalId: entity.goalId,
       dataId: entity.dataId,
-      dataDate: entity.dataDate,
+      dataDate: entity.dataDate.toIso8601String(),
       dataValue: entity.dataValue,
     );
   }
@@ -18,17 +17,8 @@ class GoalDatasMapper {
     return GoalDatasEntity(
       goalId: dto.goalId,
       dataId: dto.dataId,
-      dataDate: dto.dataDate,
+      dataDate: DateTime.parse(dto.dataDate),
       dataValue: dto.dataValue,
-    );
-  }
-
-  // insert 용
-  static GoalDatasSaveDto toSaveDto(GoalDatasEntity entity) {
-    return GoalDatasSaveDto(
-      goalId: entity.goalId,
-      dataDate: entity.dataDate,
-      dataValue: entity.dataValue,
     );
   }
 }

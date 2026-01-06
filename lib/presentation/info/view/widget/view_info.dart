@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:vitameal/presentation/info/view/widget/tag_chip.dart';
 import 'package:vitameal/presentation/ui_provider/profiles_provider.dart';
-import 'package:vitameal/presentation/widget/bordered_container.dart';
+import 'package:vitameal/presentation/info/view/widget/bordered_container.dart';
 
 class ViewInfo extends HookConsumerWidget {
   const ViewInfo({super.key});
@@ -14,163 +15,139 @@ class ViewInfo extends HookConsumerWidget {
     final diseasesAsync = ref.watch(userSelectedDiseasesProvider);
     final allergiesAsync = ref.watch(userSelectedAllergiesProvider);
 
+    String formatNumber(double value) {
+      if (value % 1 == 0) {
+        return value.toInt().toString(); // 소수점 없음
+      }
+      return value.toString(); // 소수점 있음
+    }
+
     return Column(
       spacing: 20,
       children: [
         /// 프로필 이미지 + 닉네임
-        InkWell(
-          onTap: () {
-            context.push('/edit/profile');
-          },
-          child: Row(
-            spacing: 5,
-            children: [
-              profileAsync.when(
-                data: (profile) {
-                  return profile!.photoUrl == null
-                      ? Container(
-                          decoration: BoxDecoration(
-                            color: Colors.grey,
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: InkWell(
+            onTap: () {
+              context.push('/edit/profile');
+            },
+            child: Row(
+              spacing: 10,
+              children: [
+                profileAsync.when(
+                  data: (profile) {
+                    return profile!.photoUrl == null
+                        ? Image.asset(
+                            'assets/images/profile_image_small.webp',
+                            height: 48,
+                            width: 48,
+                          )
+                        : ClipRRect(
                             borderRadius: BorderRadius.circular(100),
-                          ),
-                          height: 50,
-                          width: 50,
-                        )
-                      : ClipRRect(
-                          borderRadius: BorderRadius.circular(100),
-                          child: Image.network(
-                            profile.photoUrl!,
-                            height: 50,
-                            width: 50,
-                            fit: BoxFit.cover,
-                          ),
-                        );
-                },
-                loading: () {
-                  return Container(
-                    decoration: BoxDecoration(
-                      color: Colors.grey,
-                      borderRadius: BorderRadius.circular(100),
-                    ),
-                    height: 50,
-                    width: 50,
-                  );
-                },
-                error: (_, __) {
-                  return Container(
-                    decoration: BoxDecoration(
-                      color: Colors.grey,
-                      borderRadius: BorderRadius.circular(100),
-                    ),
-                    height: 50,
-                    width: 50,
-                  );
-                },
-              ),
+                            child: Image.network(
+                              profile.photoUrl!,
+                              height: 48,
+                              width: 48,
+                            ),
+                          );
+                  },
+                  loading: () {
+                    return Image.asset(
+                      'assets/images/profile_image_small.webp',
+                      height: 48,
+                      width: 48,
+                    );
+                  },
+                  error: (_, __) {
+                    return Image.asset(
+                      'assets/images/profile_image_small.webp',
+                      height: 48,
+                      width: 48,
+                    );
+                  },
+                ),
 
-              profileAsync.when(
-                data: (profile) => Text("${profile?.nickname}"),
-                loading: () => const Text("정보를 불러오는 중.."),
-                error: (_, __) => const Text("정보를 불러오는 데 실패했습니다"),
-              ),
-            ],
+                profileAsync.when(
+                  data: (profile) => Text(
+                    "${profile?.nickname}",
+                    style: TextStyle(fontSize: 20),
+                  ),
+                  loading: () => const Text("정보를 불러오는 중.."),
+                  error: (_, __) => const Text("정보를 불러오는 데 실패했습니다"),
+                ),
+              ],
+            ),
           ),
         ),
 
-        /// 내 정보
         BorderedContainer(
           title: "내 정보",
-          action: IconButton(
-            onPressed: () => context.push('/edit/physical'),
-            icon: Icon(Icons.arrow_forward_ios),
-          ),
+          onTap: () => context.push('/edit/physical'),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
             spacing: 10,
             children: [
-              profileAsync.when(
-                data: (profile) => Text.rich(
-                  TextSpan(
-                    children: [
-                      TextSpan(
-                        text: "${profile?.gender ?? ""} ",
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      TextSpan(
-                        text: "${profile?.age ?? ""}",
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      TextSpan(text: "세 "),
-                      TextSpan(
-                        text: "${profile?.heightCm ?? ""}",
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      TextSpan(text: "cm "),
-                      TextSpan(
-                        text: "${profile?.weightKg ?? ""}",
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      TextSpan(text: "kg "),
-                    ],
+              /// 기본 정보
+              Align(
+                alignment: AlignmentGeometry.centerLeft,
+                child: profileAsync.when(
+                  data: (profile) => Text.rich(
+                    TextSpan(
+                      children: [
+                        TextSpan(text: "${profile!.gender}  "),
+                        TextSpan(
+                          text: "${profile.age}",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        TextSpan(text: " 세  "),
+                        TextSpan(
+                          text: formatNumber(profile.heightCm!),
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        TextSpan(text: " cm  "),
+                        TextSpan(
+                          text: formatNumber(profile.weightKg!),
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        TextSpan(text: " kg"),
+                      ],
+                    ),
                   ),
+
+                  loading: () => const Text("정보를 불러오는 중.."),
+                  error: (_, __) => const Text("정보를 불러오는 데 실패했습니다"),
                 ),
-
-                loading: () => const Text("정보를 불러오는 중.."),
-                error: (_, __) => const Text("정보를 불러오는 데 실패했습니다"),
               ),
 
-              /// 질환
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                spacing: 5,
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(7),
-                      border: Border.all(color: Colors.red),
-                    ),
-                    padding: EdgeInsets.symmetric(vertical: 1, horizontal: 7),
-                    child: Text("질환", style: TextStyle(color: Colors.red)),
-                  ),
-                  Expanded(
-                    child: diseasesAsync.when(
-                      data: (diseases) {
-                        return Text(
-                          diseases.isEmpty ? "없음" : diseases.join(', '),
-                        );
-                      },
-                      loading: () => const Text("정보를 불러오는 중.."),
-                      error: (_, __) => const Text("정보를 불러오는 데 실패했습니다"),
-                    ),
-                  ),
-                ],
-              ),
-
-              /// 알레르기
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                spacing: 5,
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(7),
-                      border: Border.all(color: Colors.red),
-                    ),
-                    padding: EdgeInsets.symmetric(vertical: 1, horizontal: 7),
-                    child: Text("알레르기", style: TextStyle(color: Colors.red)),
-                  ),
-                  Expanded(
-                    child: allergiesAsync.when(
+              /// 질환 + 알레르기
+              Align(
+                alignment: AlignmentGeometry.centerLeft,
+                child: diseasesAsync.when(
+                  data: (diseases) {
+                    return allergiesAsync.when(
                       data: (allergies) {
-                        return Text(
-                          allergies.isEmpty ? "없음" : allergies.join(', '),
+                        final tags = [
+                          ...diseases.map(
+                            (e) => UserTag(label: e, type: TagType.disease),
+                          ),
+                          ...allergies.map(
+                            (e) => UserTag(label: e, type: TagType.allergy),
+                          ),
+                        ];
+
+                        return Wrap(
+                          spacing: 8,
+                          runSpacing: 8,
+                          children: tags.map((e) => TagChip(e)).toList(),
                         );
                       },
-                      loading: () => const Text("정보를 불러오는 중.."),
-                      error: (_, __) => const Text("정보를 불러오는 데 실패했습니다"),
-                    ),
-                  ),
-                ],
+                      loading: () => const CircularProgressIndicator(),
+                      error: (_, __) => const Text('알레르기 로딩 실패'),
+                    );
+                  },
+                  loading: () => const CircularProgressIndicator(),
+                  error: (_, __) => const Text('질병 로딩 실패'),
+                ),
               ),
             ],
           ),

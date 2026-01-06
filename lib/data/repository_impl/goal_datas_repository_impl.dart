@@ -17,7 +17,7 @@ class GoalDatasRepositoryImpl implements GoalDatasRepository {
 
   @override
   Future<void> saveData(GoalDatasEntity entity) async {
-    final dto = GoalDatasMapper.toSaveDto(entity);
+    final dto = GoalDatasMapper.toDto(entity);
     await dataSource.saveData(dto);
   }
 

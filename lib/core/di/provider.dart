@@ -18,7 +18,7 @@ import 'package:vitameal/data/repository_impl/storage_repository_impl.dart';
 import 'package:vitameal/data/service/sync_service.dart';
 import 'package:vitameal/domain/repository/goal_datas_repository.dart';
 import 'package:vitameal/data/repository_impl/goal_datas_repository_impl.dart';
-import 'package:vitameal/data/data_source/user_goals_data_source.dart';
+import 'package:vitameal/data/data_source/goals_data_source.dart';
 import 'package:vitameal/data/repository_impl/allergies_repository_impl.dart';
 import 'package:vitameal/data/repository_impl/diseases_repository_impl.dart';
 import 'package:vitameal/data/repository_impl/profiles_repository_impl.dart';
@@ -32,18 +32,16 @@ import 'package:vitameal/domain/repository/profiles_repository.dart';
 import 'package:vitameal/domain/repository/storage_repository.dart';
 import 'package:vitameal/domain/repository/user_allergies_repository.dart';
 import 'package:vitameal/domain/repository/user_diseases_repository.dart';
-import 'package:vitameal/domain/repository/user_goals_repository.dart';
-import 'package:vitameal/data/repository_impl/user_goals_repository_impl.dart';
+import 'package:vitameal/domain/repository/goals_repository.dart';
+import 'package:vitameal/data/repository_impl/goals_repository_impl.dart';
 import 'package:vitameal/data/data_source/auth_data_source.dart';
 import 'package:vitameal/data/repository_impl/auth_repository_impl.dart';
 import 'package:vitameal/domain/repository/auth_repository.dart';
 import 'package:vitameal/domain/usecase/login_usecase.dart';
 import 'package:vitameal/domain/usecase/logout_usecase.dart';
-import 'package:vitameal/domain/repository/user_repository.dart';
-import 'package:vitameal/data/repository_impl/user_repository_impl.dart';
-import 'package:vitameal/presentation/notification/view_model/notifications_data_source.dart';
-import 'package:vitameal/presentation/notification/view_model/notifications_repository.dart';
-import 'package:vitameal/presentation/notification/view_model/notifications_repository_impl.dart';
+import 'package:vitameal/data/data_source/notifications_data_source.dart';
+import 'package:vitameal/domain/repository/notifications_repository.dart';
+import 'package:vitameal/data/repository_impl/notifications_repository_impl.dart';
 
 part 'provider.g.dart';
 
@@ -95,9 +93,9 @@ AllergiesDataSource allergiesDataSource(Ref ref) {
 }
 
 @riverpod
-UserGoalsDataSource userGoalsDataSource(Ref ref) {
+GoalsDataSource goalsDataSource(Ref ref) {
   final client = ref.read(supabaseClientProvider);
-  return UserGoalsDataSourceImpl(client);
+  return GoalsDataSourceImpl(client);
 }
 
 @riverpod
@@ -176,9 +174,9 @@ AllergiesRepository allergiesRepository(Ref ref) {
 }
 
 @riverpod
-UserGoalsRepository userGoalsRepository(Ref ref) {
-  final dataSource = ref.read(userGoalsDataSourceProvider);
-  return UserGoalsRepositoryImpl(dataSource);
+GoalsRepository goalsRepository(Ref ref) {
+  final dataSource = ref.read(goalsDataSourceProvider);
+  return GoalsRepositoryImpl(dataSource);
 }
 
 @riverpod
@@ -191,12 +189,6 @@ GoalDatasRepository goalDatasRepository(Ref ref) {
 AuthRepository authRepository(Ref ref) {
   final dataSource = ref.watch(authDataSourceProvider);
   return AuthRepositoryImpl(dataSource);
-}
-
-@riverpod
-UserRepository userRepository(Ref ref) {
-  final client = ref.watch(supabaseClientProvider);
-  return UserRepositoryImpl(client);
 }
 
 @riverpod

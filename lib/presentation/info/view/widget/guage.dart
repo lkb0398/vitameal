@@ -1,5 +1,4 @@
 import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
 import 'package:vitameal/domain/entity/goal_datas_entity.dart';
 
@@ -24,10 +23,24 @@ class Guage extends StatelessWidget {
     final startValue = startData!.dataValue;
     final currentValue = currentData!.dataValue;
 
-    double percent =
-        (currentValue - startValue).abs() / (targetValue - startValue).abs();
-    if (percent > 1) percent = 1;
-    if (percent < 0) percent = 0;
+    // 퍼센티지 계산
+    double computePercent({
+      required double start,
+      required double current,
+      required double target,
+    }) {
+      final total = (target - start);
+      if (total == 0) return 1.0;
+      final progress = (current - start);
+      final raw = progress / total;
+      return raw.clamp(0.0, 1.0);
+    }
+
+    final percent = computePercent(
+      start: startValue,
+      current: currentValue,
+      target: targetValue,
+    );
 
     return Column(
       spacing: 20,
