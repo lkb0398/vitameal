@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:vitameal/core/theme/app_theme.dart';
 
 class SocialLoginButton extends StatelessWidget {
   final String label;
   final Color backgroundColor;
   final Color textColor;
   final VoidCallback onPressed;
-  final Widget? icon; // 소셜 로고 추가 예정
+  final String? iconPath;
+  final double? iconWidth;
+  final double? iconHeight;
+  final double? height;
+  final String? fontFamily;
+  final FontWeight? fontWeight;
 
   const SocialLoginButton({
     super.key,
@@ -13,14 +20,19 @@ class SocialLoginButton extends StatelessWidget {
     required this.backgroundColor,
     required this.textColor,
     required this.onPressed,
-    this.icon, // 소셜 로고 대체 예정
+    this.iconPath,
+    this.iconWidth,
+    this.iconHeight,
+    this.height,
+    this.fontFamily,
+    this.fontWeight,
   });
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      height: 56,
+      height: 52,
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
@@ -28,19 +40,28 @@ class SocialLoginButton extends StatelessWidget {
           foregroundColor: textColor,
           elevation: 0,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(12),
           ),
           side: backgroundColor == Colors.white
-              ? const BorderSide(color: Color(0xffe0e0e0))
-              : null,
+              ? BorderSide(color: vrc(context).border ?? Colors.grey)
+              : BorderSide.none,
+          padding: const EdgeInsets.symmetric(horizontal: 20),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            if (icon != null) ...[icon!, const SizedBox(width: 10)],
+            if (iconPath != null) ...[
+              SvgPicture.asset(iconPath!, width: iconWidth, height: iconHeight),
+              const SizedBox(width: 10),
+            ],
             Text(
               label,
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+              style: TextStyle(
+                fontFamily: fontFamily ?? 'pretendard',
+                fontSize: 15,
+                fontWeight: fontWeight ?? FontWeight.w600,
+                height: height ?? 1.60,
+              ),
             ),
           ],
         ),
