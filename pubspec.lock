@@ -721,7 +721,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.3"
-<<<<<<< HEAD
   flutter_slidable:
     dependency: "direct main"
     description:
@@ -732,9 +731,12 @@ packages:
     version: "4.0.3"
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> 395ab76 (feat: UI 변경 및 이미지 추가)
+=======
+>>>>>>> dfb358a (feat: UI수정)
   flutter_svg:
     dependency: "direct main"
     description:
@@ -744,11 +746,14 @@ packages:
     source: hosted
     version: "2.2.3"
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> abcc0ce (feat: 로그인 리팩토링 & 주석 추가 및 수정)
 =======
 >>>>>>> de13ee8 (feat: UI 변경 및 이미지 추가)
 >>>>>>> 395ab76 (feat: UI 변경 및 이미지 추가)
+=======
+>>>>>>> dfb358a (feat: UI수정)
   flutter_test:
     dependency: "direct dev"
     description: flutter
