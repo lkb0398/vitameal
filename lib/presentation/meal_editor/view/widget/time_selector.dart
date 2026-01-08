@@ -16,6 +16,7 @@ class TimeSelector extends StatelessWidget {
 
     await showModalBottomSheet(
       context: context,
+      showDragHandle: true, 
       backgroundColor: Colors.white,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
