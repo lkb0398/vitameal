@@ -14,7 +14,6 @@ class GoalDatasViewModel extends _$GoalDatasViewModel {
     required DateTime dataDate,
     required double dataValue,
   }) async {
-    // final userId = ref.read(userIdProvider);
     await ref
         .read(goalDatasRepositoryProvider)
         .saveData(

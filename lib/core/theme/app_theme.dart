@@ -13,6 +13,8 @@ class AppTheme {
       scrolledUnderElevation: 0,
     ),
     scaffoldBackgroundColor: Color(0xFFFFFFFF),
+    bottomSheetTheme: BottomSheetThemeData(backgroundColor: Color(0xFFFFFFFF)),
+    dialogTheme: DialogThemeData(backgroundColor: Color(0xFFFFFFFF)),
     extensions: const [VariableColors.light, FixedColors.constant],
   );
 
@@ -26,6 +28,8 @@ class AppTheme {
       scrolledUnderElevation: 0,
     ),
     scaffoldBackgroundColor: Color(0xFF333333),
+    bottomSheetTheme: BottomSheetThemeData(backgroundColor: Color(0xFF333333)),
+    dialogTheme: DialogThemeData(backgroundColor: Color(0xFF333333)),
     extensions: const [VariableColors.dark, FixedColors.constant],
   );
 }

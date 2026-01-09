@@ -19,15 +19,18 @@ class CustomDialog extends StatelessWidget {
       backgroundColor: Colors.transparent,
       insetPadding: const EdgeInsets.symmetric(horizontal: 24),
       child: Container(
-        height: 180,
-        padding: const EdgeInsets.fromLTRB(24, 28, 24, 20),
+        width: 300,
+        height: 172,
+        padding: const EdgeInsets.all(24),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: vrc(context).background,
           borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: vrc(context).emptyText!),
         ),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
+          spacing: 25,
           children: [
             /// 타이틀
             Text(
@@ -45,10 +48,11 @@ class CustomDialog extends StatelessWidget {
                     onPressed: () => Navigator.pop(context, false),
                     style: OutlinedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 14),
-                      side: BorderSide(color: Colors.grey.shade300),
+                      side: BorderSide(color: fxc(context).textcolor200!),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
+                      backgroundColor: Colors.white,
                     ),
                     child: Text(
                       '취소',
@@ -77,7 +81,7 @@ class CustomDialog extends StatelessWidget {
                       yesText,
                       style: TextStyle(
                         fontSize: 16,
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.bold,
                         color: Colors.white,
                       ),
                     ),

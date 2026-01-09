@@ -50,7 +50,7 @@ class SettingPage extends HookConsumerWidget {
                 // TODO : 페이지 연결
                 // context.go('/language');
               },
-              title: "언어 설정",
+              title: "언어 설정 (준비중)",
               showArrow: true,
             ),
             const SizedBox(height: 3),

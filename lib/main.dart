@@ -11,7 +11,6 @@ import 'package:vitameal/core/service/firebase_service.dart';
 import 'package:vitameal/core/service/notification_service.dart';
 import 'package:vitameal/presentation/ui_provider/profiles_provider.dart';
 import 'core/config/routes.dart';
-// import 'package:timezone/data/latest.dart' as tz;
 
 // 🔔 Background 알림 (main 최상단!)
 @pragma('vm:entry-point')
@@ -76,7 +75,7 @@ class VitamealApp extends HookConsumerWidget {
         GlobalCupertinoLocalizations.delegate, // Cupertino 스타일 > 한국어 패치
         GlobalWidgetsLocalizations.delegate,
       ],
-      title: 'Vitameal',
+      title: 'VitaMeal',
       debugShowCheckedModeBanner: false,
       routerConfig: router,
       themeMode: ThemeMode.system,
