@@ -56,5 +56,9 @@ class MealCalendarViewModel extends _$MealCalendarViewModel {
         return mealDay;
       }).toList();
     });
+
+    // 위젯 갱신
+    final widgetService = ref.read(widgetServiceProvider); // TODO : 리팩토링
+    widgetService.updateWidgetData(userId);
   }
 }

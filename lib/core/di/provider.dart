@@ -1,6 +1,7 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:vitameal/core/platform/widget_bridge.dart';
 import 'package:vitameal/data/data_source/allergies_data_source.dart';
 import 'package:vitameal/data/data_source/diseases_data_source.dart';
 import 'package:vitameal/data/data_source/meal_analysis_data_source.dart';
@@ -16,6 +17,7 @@ import 'package:vitameal/data/repository_impl/meal_analysis_repository_impl.dart
 import 'package:vitameal/data/repository_impl/meal_repository_impl.dart';
 import 'package:vitameal/data/repository_impl/storage_repository_impl.dart';
 import 'package:vitameal/data/service/sync_service.dart';
+import 'package:vitameal/data/service/widget_service.dart';
 import 'package:vitameal/domain/repository/goal_datas_repository.dart';
 import 'package:vitameal/data/repository_impl/goal_datas_repository_impl.dart';
 import 'package:vitameal/data/data_source/goals_data_source.dart';
@@ -195,7 +197,7 @@ AuthRepository authRepository(Ref ref) {
 MealRepository mealRepository(Ref ref) {
   final localDataSource = ref.watch(mealLocalDataSourceProvider);
   final database = ref.watch(appDatabaseProvider);
-  final syncService = ref.watch(syncServiceProvider);
+  final syncService = ref.read(syncServiceProvider); // 순환참조 끊기 (read)
 
   return MealRepositoryImpl(localDataSource, database, syncService);
 }
@@ -241,6 +243,14 @@ SyncService syncService(Ref ref) {
     remoteDataSource: remoteDataSource,
     supabase: supabase,
     connectivity: Connectivity(),
+    onSyncCompleted: () {
+      // 동기화 완료시 위젯 데이터 갱신
+      // 순환 참조 방지를 위해 SyncService가 WidgetService를 주입받지 않게 함 (read)
+      final userId = supabase.auth.currentUser?.id; // TODO : 리팩토링
+      if (userId != null) {
+        ref.read(widgetServiceProvider).updateWidgetData(userId);
+      }
+    },
   );
 
   // 서비스 시작
@@ -251,4 +261,17 @@ SyncService syncService(Ref ref) {
     service.stop();
   });
   return service;
+}
+
+// 🤍 Widget Service
+@Riverpod(keepAlive: true)
+WidgetBridge widgetBridge(Ref ref) {
+  return WidgetBridge.instance;
+}
+
+@Riverpod(keepAlive: true)
+WidgetService widgetService(Ref ref) {
+  final mealRepository = ref.watch(mealRepositoryProvider);
+  final widgetBridge = ref.watch(widgetBridgeProvider);
+  return WidgetService(mealRepository: mealRepository, widgetBridge: widgetBridge);
 }

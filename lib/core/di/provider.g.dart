@@ -1116,7 +1116,7 @@ final class MealRepositoryProvider
   }
 }
 
-String _$mealRepositoryHash() => r'ef94b99643776ad238458b9d12e19b09258ec0d9';
+String _$mealRepositoryHash() => r'd30f20a4b110d22568f690ae9872f6f930470009';
 
 @ProviderFor(storageRepository)
 const storageRepositoryProvider = StorageRepositoryProvider._();
@@ -1382,4 +1382,86 @@ final class SyncServiceProvider
   }
 }
 
-String _$syncServiceHash() => r'a83bb640ca676ea37986ffbc494b2154740efdd7';
+String _$syncServiceHash() => r'ac978bcea8ad57739c880317036f70e0982b107e';
+
+@ProviderFor(widgetBridge)
+const widgetBridgeProvider = WidgetBridgeProvider._();
+
+final class WidgetBridgeProvider
+    extends $FunctionalProvider<WidgetBridge, WidgetBridge, WidgetBridge>
+    with $Provider<WidgetBridge> {
+  const WidgetBridgeProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'widgetBridgeProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$widgetBridgeHash();
+
+  @$internal
+  @override
+  $ProviderElement<WidgetBridge> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  WidgetBridge create(Ref ref) {
+    return widgetBridge(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(WidgetBridge value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<WidgetBridge>(value),
+    );
+  }
+}
+
+String _$widgetBridgeHash() => r'ff5b632b38248764f2a5e529dad08bd46fe57904';
+
+@ProviderFor(widgetService)
+const widgetServiceProvider = WidgetServiceProvider._();
+
+final class WidgetServiceProvider
+    extends $FunctionalProvider<WidgetService, WidgetService, WidgetService>
+    with $Provider<WidgetService> {
+  const WidgetServiceProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'widgetServiceProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$widgetServiceHash();
+
+  @$internal
+  @override
+  $ProviderElement<WidgetService> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  WidgetService create(Ref ref) {
+    return widgetService(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(WidgetService value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<WidgetService>(value),
+    );
+  }
+}
+
+String _$widgetServiceHash() => r'863a3a0305fa1aa63fe3447724780597d87e0599';

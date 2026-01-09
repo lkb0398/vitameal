@@ -14,6 +14,23 @@ enum AchievementLevel: Int {
     case low = 1 // 빨강 (미흡)
     case mid = 2 // 노랑 (보통)
     case high = 3 // 초록 (우수)
+    
+    /// enum의 성취도 문자열을 AchievementLevel로 변환
+    static func from(adherenceString: String?) -> AchievementLevel {
+        guard let str = adherenceString else {
+            return .none // null → 미평가
+        }
+        switch str {
+        case "not_followed":
+            return .low // 빨강
+        case "partial":
+            return .mid // 노랑
+        case "followed":
+            return .high // 초록
+        default:
+            return .none
+        }
+    }
 }
 
 struct SmallCalendarWidgetView: View {

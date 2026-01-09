@@ -45,7 +45,7 @@ final class MealEditorViewModelProvider
 }
 
 String _$mealEditorViewModelHash() =>
-    r'31e14d6600ec969d30acb3ae3fa1f1f1a5fd28f7';
+    r'9ec67c3867d6f12c763fceba019674612ea95a94';
 
 /// 식단 에디터 폼의 생성/수정을 다룸, 상태-hook
 
