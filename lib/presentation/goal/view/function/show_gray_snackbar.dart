@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
 
 void showGraySnackBar(BuildContext context, String message) {
+  ScaffoldMessenger.of(context).clearSnackBars();
   ScaffoldMessenger.of(context)
     ..hideCurrentSnackBar()
     ..showSnackBar(
       SnackBar(
+        padding: EdgeInsets.symmetric(vertical: 0),
         behavior: SnackBarBehavior.floating,
         backgroundColor: Colors.transparent,
         elevation: 0,

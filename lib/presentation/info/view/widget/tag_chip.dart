@@ -25,7 +25,11 @@ class TagChip extends StatelessWidget {
       ),
       child: Text(
         tag.label,
-        style: TextStyle(color: _textColor(context, tag.type), fontSize: 12),
+        style: TextStyle(
+          color: _textColor(context, tag.type),
+          fontSize: 12,
+          fontWeight: FontWeight.bold,
+        ),
       ),
     );
   }
@@ -35,7 +39,7 @@ class TagChip extends StatelessWidget {
       case TagType.disease:
         return fxc(context).secondary100!;
       case TagType.allergy:
-        return fxc(context).primary100!;
+        return fxc(context).yellowTag!;
     }
   }
 
@@ -44,7 +48,7 @@ class TagChip extends StatelessWidget {
       case TagType.disease:
         return fxc(context).secondary400!;
       case TagType.allergy:
-        return fxc(context).primary400!;
+        return fxc(context).yellowText!;
     }
   }
 }

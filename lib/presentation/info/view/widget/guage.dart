@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
+import 'package:vitameal/core/theme/app_theme.dart';
 import 'package:vitameal/domain/entity/goal_datas_entity.dart';
 
 class Guage extends StatelessWidget {
@@ -16,8 +17,14 @@ class Guage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // 데이터 없을 때 화면
     if (startData == null || currentData == null) {
-      return Center(child: Text("데이터를 입력해주세요"));
+      return Center(
+        child: Text(
+          "데이터를 추가해 주세요.",
+          style: TextStyle(fontSize: 16, color: fxc(context).textcolor100),
+        ),
+      );
     }
 
     final startValue = startData!.dataValue;
@@ -42,6 +49,11 @@ class Guage extends StatelessWidget {
       target: targetValue,
     );
 
+    // 소수점 0 일 때 제거
+    String formatNumber(double value) {
+      return value % 1 == 0 ? value.toInt().toString() : value.toString();
+    }
+
     return Column(
       spacing: 20,
       children: [
@@ -51,8 +63,8 @@ class Guage extends StatelessWidget {
             alignment: Alignment.center,
             children: [
               CustomPaint(
-                size: Size(230, 120), // width (반원 크기 조절), height
-                painter: GaugePainter(percent),
+                size: Size(220, 110), // width (반원 크기 조절), height
+                painter: GaugePainter(context, percent),
               ),
               Positioned(
                 top: 60,
@@ -71,9 +83,18 @@ class Guage extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('초기 : $startValue'),
-              Text('현재 : $currentValue'),
-              Text('목표 : $targetValue'),
+              Text(
+                '초기: ${formatNumber(startValue)}',
+                style: TextStyle(color: fxc(context).textcolor300),
+              ),
+              Text(
+                '현재: ${formatNumber(currentValue)}',
+                style: TextStyle(color: fxc(context).textcolor300),
+              ),
+              Text(
+                '목표: ${formatNumber(targetValue)}',
+                style: TextStyle(color: fxc(context).textcolor300),
+              ),
             ],
           ),
         ),
@@ -83,8 +104,9 @@ class Guage extends StatelessWidget {
 }
 
 class GaugePainter extends CustomPainter {
-  GaugePainter(this.percent);
+  GaugePainter(this.context, this.percent);
 
+  final BuildContext context;
   final double percent;
 
   @override
@@ -99,8 +121,8 @@ class GaugePainter extends CustomPainter {
       math.pi,
       false,
       Paint()
-        ..color = Colors.red[100]!
-        ..strokeWidth = 18
+        ..color = fxc(context).secondary100!
+        ..strokeWidth = 22
         ..style = PaintingStyle.stroke
         ..strokeCap = StrokeCap.round,
     );
@@ -112,8 +134,8 @@ class GaugePainter extends CustomPainter {
       math.pi * percent,
       false,
       Paint()
-        ..color = Colors.redAccent
-        ..strokeWidth = 18
+        ..color = fxc(context).secondary400!
+        ..strokeWidth = 22
         ..style = PaintingStyle.stroke
         ..strokeCap = StrokeCap.round,
     );

@@ -6,6 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tap_debouncer/tap_debouncer.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
 import 'package:vitameal/domain/enum/gender_type_enum.dart';
+import 'package:vitameal/presentation/onboarding/view/widget/progress_text.dart';
 import 'package:vitameal/presentation/onboarding/view/widget/select_box.dart';
 import 'package:vitameal/presentation/widget/button/done_button.dart';
 import 'package:vitameal/presentation/widget/validate_textformfield.dart';
@@ -128,178 +129,158 @@ class OnboardingPhysicalPage extends HookConsumerWidget {
     }, [isEditing, profileAsync]);
 
     return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 40),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              spacing: 10,
-              children: [
-                /// 단계 표시
-                Align(
-                  alignment: AlignmentGeometry.centerRight,
-                  child: Text.rich(
-                    TextSpan(
-                      style: TextStyle(fontSize: 16, color: vrc(context).text),
-                      children: [
-                        TextSpan(
-                          text: '2',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: fxc(context).primary400,
-                          ),
-                        ),
-                        TextSpan(text: ' / 4'),
-                      ],
-                    ),
-                  ),
-                ),
-
-                /// 설명
-                isEditing
-                    ? Text(
-                        "내 정보 수정",
+      appBar: AppBar(
+        /// 단계 표시
+        actions: [isEditing ? SizedBox.shrink() : ProgressText(page: "2")],
+        actionsPadding: EdgeInsets.only(right: 26),
+      ),
+      body: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 20),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 10,
+            children: [
+              /// 설명
+              isEditing
+                  ? Text(
+                      "내 정보 수정",
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        color: vrc(context).text,
+                      ),
+                    )
+                  : Text.rich(
+                      TextSpan(
                         style: TextStyle(
                           fontSize: 22,
-                          fontWeight: FontWeight.bold,
                           color: vrc(context).text,
                         ),
-                      )
-                    : Text.rich(
-                        TextSpan(
-                          style: TextStyle(
-                            fontSize: 22,
-                            color: vrc(context).text,
+                        children: [
+                          TextSpan(text: '반갑습니다, '),
+                          TextSpan(
+                            text: profileAsync.when(
+                              data: (profile) => "${profile?.nickname}",
+                              loading: () => "회원",
+                              error: (_, __) => "회원",
+                            ),
+                            style: TextStyle(fontWeight: FontWeight.bold),
                           ),
-                          children: [
-                            TextSpan(text: '반갑습니다, '),
-                            TextSpan(
-                              text: profileAsync.when(
-                                data: (profile) => "${profile?.nickname}",
-                                loading: () => "회원",
-                                error: (_, __) => "회원",
+                          TextSpan(text: '님!\n기본 정보를 입력해주세요.'),
+                        ],
+                      ),
+                    ),
+              SizedBox(height: 20),
+
+              /// 성별 선택
+              Text("성별", style: TextStyle(fontSize: 16)),
+              Row(
+                spacing: 10,
+                children: [
+                  Expanded(
+                    flex: 1,
+                    child: SelectBox(
+                      onTap: () async => selectedGender.value = GenderType.male,
+                      isSelected: selectedGender.value == GenderType.male,
+                      text: "남성",
+                      height: 50,
+                    ),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: SelectBox(
+                      onTap: () async =>
+                          selectedGender.value = GenderType.female,
+                      isSelected: selectedGender.value == GenderType.female,
+                      text: "여성",
+                      height: 50,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 20),
+
+              /// 출생년도 입력창
+              Text("출생 연도", style: TextStyle(fontSize: 16)),
+              ValidateTextformfield(
+                readOnly: false,
+                hintText: "1988",
+                validator: validateBirthYear,
+                controller: birthyearController,
+                keyboardType: TextInputType.number,
+                inputFormatters: [
+                  FilteringTextInputFormatter.digitsOnly, // 숫자만
+                  LengthLimitingTextInputFormatter(4), // 정수 4자리만
+                ],
+              ),
+              SizedBox(height: 20),
+              Row(
+                children: [
+                  /// 키 입력창
+                  Expanded(
+                    flex: 1,
+                    child: SizedBox(
+                      height: 120,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        spacing: 10,
+                        children: [
+                          Text("키", style: TextStyle(fontSize: 16)),
+                          ValidateTextformfield(
+                            readOnly: false,
+                            hintText: "180.0",
+                            validator: validateHeight,
+                            controller: heightController,
+                            keyboardType: const TextInputType.numberWithOptions(
+                              decimal: true,
+                            ),
+                            inputFormatters: [
+                              FilteringTextInputFormatter.allow(
+                                // 정수 3자리 + 소수점 1자리 까지
+                                RegExp(r'^\d{0,3}\.?\d{0,1}$'),
                               ),
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            TextSpan(text: '님!\n기본 정보를 입력해주세요.'),
-                          ],
-                        ),
+                            ],
+                            unit: "cm",
+                          ),
+                        ],
                       ),
-                SizedBox(height: 20),
+                    ),
+                  ),
 
-                /// 성별 선택
-                Text("성별", style: TextStyle(fontSize: 16)),
-                Row(
-                  spacing: 10,
-                  children: [
-                    Expanded(
-                      flex: 1,
-                      child: SelectBox(
-                        onTap: () async =>
-                            selectedGender.value = GenderType.male,
-                        isSelected: selectedGender.value == GenderType.male,
-                        text: "남성",
-                        height: 50,
-                      ),
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: SelectBox(
-                        onTap: () async =>
-                            selectedGender.value = GenderType.female,
-                        isSelected: selectedGender.value == GenderType.female,
-                        text: "여성",
-                        height: 50,
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 20),
-
-                /// 출생년도 입력창
-                Text("출생 연도", style: TextStyle(fontSize: 16)),
-                ValidateTextformfield(
-                  readOnly: false,
-                  hintText: "1988",
-                  validator: validateBirthYear,
-                  controller: birthyearController,
-                  keyboardType: TextInputType.number,
-                  inputFormatters: [
-                    FilteringTextInputFormatter.digitsOnly, // 숫자만
-                    LengthLimitingTextInputFormatter(4), // 정수 4자리만
-                  ],
-                ),
-                SizedBox(height: 20),
-                Row(
-                  children: [
-                    /// 키 입력창
-                    Expanded(
-                      flex: 1,
-                      child: SizedBox(
-                        height: 120,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          spacing: 10,
-                          children: [
-                            Text("키", style: TextStyle(fontSize: 16)),
-                            ValidateTextformfield(
-                              readOnly: false,
-                              hintText: "180.0",
-                              validator: validateHeight,
-                              controller: heightController,
-                              keyboardType:
-                                  const TextInputType.numberWithOptions(
-                                    decimal: true,
-                                  ),
-                              inputFormatters: [
-                                FilteringTextInputFormatter.allow(
-                                  // 정수 3자리 + 소수점 1자리 까지
-                                  RegExp(r'^\d{0,3}\.?\d{0,1}$'),
-                                ),
-                              ],
-                              unit: "cm",
+                  /// 몸무게 입력창
+                  Expanded(
+                    flex: 1,
+                    child: SizedBox(
+                      height: 120,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        spacing: 10,
+                        children: [
+                          Text("몸무게", style: TextStyle(fontSize: 16)),
+                          ValidateTextformfield(
+                            readOnly: false,
+                            hintText: "80.0",
+                            validator: validateWeight,
+                            controller: weightController,
+                            keyboardType: const TextInputType.numberWithOptions(
+                              decimal: true,
                             ),
-                          ],
-                        ),
+                            inputFormatters: [
+                              FilteringTextInputFormatter.allow(
+                                // 정수 3자리 + 소수점 1자리
+                                RegExp(r'^\d{0,3}\.?\d{0,1}$'),
+                              ),
+                            ],
+                            unit: "kg",
+                          ),
+                        ],
                       ),
                     ),
-
-                    /// 몸무게 입력창
-                    Expanded(
-                      flex: 1,
-                      child: SizedBox(
-                        height: 120,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          spacing: 10,
-                          children: [
-                            Text("몸무게", style: TextStyle(fontSize: 16)),
-                            ValidateTextformfield(
-                              readOnly: false,
-                              hintText: "80.0",
-                              validator: validateWeight,
-                              controller: weightController,
-                              keyboardType:
-                                  const TextInputType.numberWithOptions(
-                                    decimal: true,
-                                  ),
-                              inputFormatters: [
-                                FilteringTextInputFormatter.allow(
-                                  // 정수 3자리 + 소수점 1자리
-                                  RegExp(r'^\d{0,3}\.?\d{0,1}$'),
-                                ),
-                              ],
-                              unit: "kg",
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
       ),
@@ -329,13 +310,16 @@ class OnboardingPhysicalPage extends HookConsumerWidget {
               }
             : null,
         builder: (BuildContext context, TapDebouncerFunc? onTap) {
-          return DoneButton(
-            onTap: onTap,
-            backgroundColor: isButtonEnabled.value
-                ? fxc(context).primary400!
-                : fxc(context).textcolor300!,
-            text: "다음",
-            textColor: Colors.white,
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 10),
+            child: DoneButton(
+              onTap: onTap,
+              backgroundColor: isButtonEnabled.value
+                  ? fxc(context).primary400!
+                  : fxc(context).textcolor300!,
+              text: "다음",
+              textColor: Colors.white,
+            ),
           );
         },
       ),

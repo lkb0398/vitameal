@@ -9,7 +9,7 @@ Future<DateTime?> pickDate(BuildContext context) async {
     builder: (context) {
       return Container(
         height: 300,
-        color: CupertinoColors.systemBackground.resolveFrom(context),
+        color: vrc(context).background,
         child: Column(
           children: [
             // 상단 액션 바

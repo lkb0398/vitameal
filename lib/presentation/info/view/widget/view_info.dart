@@ -15,11 +15,9 @@ class ViewInfo extends HookConsumerWidget {
     final diseasesAsync = ref.watch(userSelectedDiseasesProvider);
     final allergiesAsync = ref.watch(userSelectedAllergiesProvider);
 
+    // 소수점 0 일 때 제거
     String formatNumber(double value) {
-      if (value % 1 == 0) {
-        return value.toInt().toString(); // 소수점 없음
-      }
-      return value.toString(); // 소수점 있음
+      return value % 1 == 0 ? value.toInt().toString() : value.toString();
     }
 
     return Column(
@@ -33,35 +31,38 @@ class ViewInfo extends HookConsumerWidget {
               context.push('/edit/profile');
             },
             child: Row(
-              spacing: 10,
+              spacing: 14,
               children: [
                 profileAsync.when(
                   data: (profile) {
                     return profile!.photoUrl == null
                         ? Image.asset(
-                            'assets/images/profile_image_small.webp',
+                            'assets/images/profile_image_s.webp',
                             height: 48,
                             width: 48,
                           )
                         : ClipRRect(
                             borderRadius: BorderRadius.circular(100),
-                            child: Image.network(
-                              profile.photoUrl!,
+                            child: SizedBox(
                               height: 48,
                               width: 48,
+                              child: Image.network(
+                                profile.photoUrl!,
+                                fit: BoxFit.cover,
+                              ),
                             ),
                           );
                   },
                   loading: () {
                     return Image.asset(
-                      'assets/images/profile_image_small.webp',
+                      'assets/images/profile_image_s.webp',
                       height: 48,
                       width: 48,
                     );
                   },
                   error: (_, __) {
                     return Image.asset(
-                      'assets/images/profile_image_small.webp',
+                      'assets/images/profile_image_s.webp',
                       height: 48,
                       width: 48,
                     );
@@ -71,10 +72,10 @@ class ViewInfo extends HookConsumerWidget {
                 profileAsync.when(
                   data: (profile) => Text(
                     "${profile?.nickname}",
-                    style: TextStyle(fontSize: 20),
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
-                  loading: () => const Text("정보를 불러오는 중.."),
-                  error: (_, __) => const Text("정보를 불러오는 데 실패했습니다"),
+                  loading: () => const Text(""),
+                  error: (_, _) => Center(child: Text('정보를 불러오지 못했습니다')),
                 ),
               ],
             ),
@@ -114,8 +115,8 @@ class ViewInfo extends HookConsumerWidget {
                     ),
                   ),
 
-                  loading: () => const Text("정보를 불러오는 중.."),
-                  error: (_, __) => const Text("정보를 불러오는 데 실패했습니다"),
+                  loading: () => const Text(""),
+                  error: (_, _) => Center(child: Text('정보를 불러오지 못했습니다')),
                 ),
               ),
 
@@ -141,12 +142,12 @@ class ViewInfo extends HookConsumerWidget {
                           children: tags.map((e) => TagChip(e)).toList(),
                         );
                       },
-                      loading: () => const CircularProgressIndicator(),
-                      error: (_, __) => const Text('알레르기 로딩 실패'),
+                      loading: () => SizedBox.shrink(),
+                      error: (_, _) => Center(child: Text('정보를 불러오지 못했습니다')),
                     );
                   },
-                  loading: () => const CircularProgressIndicator(),
-                  error: (_, __) => const Text('질병 로딩 실패'),
+                  loading: () => SizedBox.shrink(),
+                  error: (_, _) => Center(child: Text('정보를 불러오지 못했습니다')),
                 ),
               ),
             ],

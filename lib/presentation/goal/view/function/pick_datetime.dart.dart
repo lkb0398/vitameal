@@ -21,7 +21,7 @@ Future<DateTime?> _pickCupertinoDate(BuildContext context) async {
     builder: (_) {
       return Container(
         height: 300,
-        color: CupertinoColors.systemBackground.resolveFrom(context),
+        color: vrc(context).background,
         child: Column(
           children: [
             _CupertinoActionBar(
@@ -65,7 +65,7 @@ Future<TimeOfDay?> _pickCupertinoTime(BuildContext context) async {
     builder: (_) {
       return Container(
         height: 300,
-        color: CupertinoColors.systemBackground.resolveFrom(context),
+        color: vrc(context).background,
         child: Column(
           children: [
             _CupertinoActionBar(
