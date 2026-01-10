@@ -17,7 +17,7 @@ class AdherenceColorUtils {
       case AdherenceLevel.partial:
         return Colors.orangeAccent;
       case AdherenceLevel.followed:
-        return Colors.green;
+        return Color(0xFF89CC00);
     }
   }
 
@@ -27,7 +27,7 @@ class AdherenceColorUtils {
       return AdherenceLevel.notFollowed;
     } else if (color == Colors.orangeAccent) {
       return AdherenceLevel.partial;
-    } else if (color == Colors.green) {
+    } else if (color == Color(0xFF89CC00)) {
       return AdherenceLevel.followed;
     }
     return AdherenceLevel.notFollowed;
