@@ -17,7 +17,7 @@ class AdherencePicker extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text("오늘 식단을 평가해주세요", style: TextStyle(fontSize: 14, color: Colors.black54)),
+          Text("오늘 식단을 평가해주세요", style: TextStyle(fontSize: 14, color: vrc(context).text)),
           const SizedBox(height: 10),
           Row(
             children: [

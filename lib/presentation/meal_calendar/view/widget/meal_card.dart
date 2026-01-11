@@ -97,28 +97,28 @@ class MealCard extends StatelessWidget {
                                 style: TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.w500,
-                                  color: vrc(context).border,
+                                  color: vrc(context).hint,
                                 ),
                               ),
                             ],
                             const Spacer(),
                             // 식단 자세히보기 이동 아이콘
-                            const Icon(Icons.chevron_right, color: Colors.black26, size: 24),
+                            Icon(Icons.chevron_right, color: vrc(context).hint, size: 24),
                           ],
                         ),
-                        const SizedBox(height: 12),
+                        const SizedBox(height: 8),
                         // 기록한 식단 내용 (미리보기 3줄)
                         if (_hasContent)
                           Text(
                             content!.trim(),
                             maxLines: 3,
                             overflow: TextOverflow.ellipsis,
-                            style: TextStyle(fontSize: 14, color: vrc(context).subText, fontWeight: FontWeight.w500),
+                            style: TextStyle(fontSize: 14, color: vrc(context).content, fontWeight: FontWeight.w500),
                           )
                         else
                           Text(
                             '내용이 없습니다',
-                            style: TextStyle(fontSize: 14, color: vrc(context).subText, fontWeight: FontWeight.w500)
+                            style: TextStyle(fontSize: 14, color: vrc(context).content, fontWeight: FontWeight.w500)
                           ),
                       ],
                     ),
@@ -127,7 +127,7 @@ class MealCard extends StatelessWidget {
               ),
             ),
             // 하단 구분선
-            const Divider(height: 1, thickness: 1, color: Color(0xFFE6E6E6)),
+            Divider(height: 1, thickness: 1, color: vrc(context).border),
           ],
         ),
       ),

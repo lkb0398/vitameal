@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:vitameal/core/theme/app_theme.dart';
 import 'package:vitameal/domain/enum/meal_category_enum.dart';
 import 'package:vitameal/presentation/auth/view_model/auth_view_model.dart';
 import 'package:vitameal/presentation/meal_calendar/view_model/meal_calendar_viewmodel.dart';
@@ -186,22 +187,19 @@ class MealEditorPage extends HookConsumerWidget {
     }
 
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.white,
         elevation: 0,
-        surfaceTintColor: Colors.white,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new, color: Colors.black87),
+          icon: Icon(Icons.arrow_back_ios_new, color: vrc(context).text),
           onPressed: () => context.pop(),
         ),
         actions: [
           if (isEditMode)
             TextButton(
               onPressed: deleteMeal,
-              child: const Text(
+              child: Text(
                 "삭제",
-                style: TextStyle(color: Colors.black54, fontSize: 16, fontWeight: FontWeight.w500),
+                style: TextStyle(color: vrc(context).content, fontSize: 16, fontWeight: FontWeight.w500),
               ),
             ),
           const SizedBox(width: 6),
@@ -216,7 +214,7 @@ class MealEditorPage extends HookConsumerWidget {
             children: [
               Text(
                 "${date.year}년 ${date.month}월 ${date.day}일 식단",
-                style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w800, color: Colors.black87),
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700, color: vrc(context).text),
               ),
               const SizedBox(height: 16),
 
@@ -252,6 +250,8 @@ class MealEditorPage extends HookConsumerWidget {
                 date: date,
                 onTimeChanged: (time) => selectedTime.value = time,
               ),
+
+              const SizedBox(height: 22),
             ],
           ),
         ),
@@ -263,13 +263,13 @@ class MealEditorPage extends HookConsumerWidget {
         child: Padding(
           padding: const EdgeInsets.fromLTRB(18, 0, 18, 14),
           child: SizedBox(
-            height: 54,
+            height: 56,
             width: double.infinity,
             child: ElevatedButton(
               onPressed: isLoading.value ? null : done,
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFB7E600),
-                foregroundColor: Colors.black87,
+                backgroundColor: fxc(context).primary400,
+                foregroundColor: Colors.white,
                 elevation: 0,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
               ),
@@ -277,9 +277,9 @@ class MealEditorPage extends HookConsumerWidget {
                   ? const SizedBox(
                       height: 20,
                       width: 20,
-                      child: CircularProgressIndicator(strokeWidth: 2, color: Colors.black87),
+                      child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
                     )
-                  : const Text("완료", style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800)),
+                  : const Text("완료", style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700)),
             ),
           ),
         ),

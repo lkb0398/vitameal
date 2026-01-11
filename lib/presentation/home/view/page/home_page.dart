@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:vitameal/presentation/home/view/widget/custom_bottomnavi.dart';
+import 'package:vitameal/presentation/home/view/widget/custom_bottom_nav.dart';
 import 'package:vitameal/presentation/info/view/page/info_page.dart';
 import 'package:vitameal/presentation/meal_calendar/view/meal_calendar_page.dart';
 import 'package:vitameal/presentation/ui_provider/home_tab_provider.dart';
@@ -20,7 +20,7 @@ class HomePage extends HookConsumerWidget {
 
     return Scaffold(
       body: pages[index],
-      bottomNavigationBar: CustomBottomNavi(
+      bottomNavigationBar: CustomBottomNav(
         currentIndex: index,
         onTap: (i) {
           ref.read(homeTabProvider.notifier).change(i);

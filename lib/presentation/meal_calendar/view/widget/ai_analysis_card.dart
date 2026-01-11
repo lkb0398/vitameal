@@ -108,7 +108,6 @@ class AiAnalysisCard extends HookConsumerWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white,
         borderRadius: BorderRadius.circular(8),
         border: Border.all(color: fxc(context).primary400!),
       ),
@@ -165,7 +164,7 @@ class AiAnalysisCard extends HookConsumerWidget {
             ),
           if (showAnalyzeButton) ...[
             const SizedBox(height: 6),
-            Text(' 분석은 매일 12시 갱신되며, 하루 3회까지 가능합니다', style: TextStyle(fontSize: 12, color: vrc(context).border)),
+            Text(' 분석은 매일 12시 갱신되며, 하루 3회까지 가능합니다', style: TextStyle(fontSize: 12, color: vrc(context).hint)),
           ],
         ],
       ),
@@ -251,7 +250,7 @@ class _AnalyzeButton extends StatelessWidget {
               ),
             )
           : DecoratedBox(
-              decoration: BoxDecoration(color: vrc(context).imagePlusIcon, borderRadius: BorderRadius.circular(8)),
+              decoration: BoxDecoration(color: vrc(context).hint, borderRadius: BorderRadius.circular(8)),
               child: Center(
                 child: Text(
                   label,
@@ -278,7 +277,7 @@ class _ResultTextWithDetail extends StatelessWidget {
           text,
           maxLines: 6,
           overflow: TextOverflow.ellipsis,
-          style: TextStyle(fontSize: 12, height: 1.35, color: vrc(context).text),
+          style: TextStyle(fontSize: 12, height: 1.35, color: vrc(context).content),
         ),
         const SizedBox(height: 8),
         GestureDetector(

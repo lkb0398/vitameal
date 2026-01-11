@@ -1,8 +1,8 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
-import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:vitameal/core/theme/app_theme.dart';
 import 'package:vitameal/core/util/date_time_utils.dart';
 import 'package:vitameal/presentation/meal_calendar/view/util/adherence_color_utils.dart';
 
@@ -129,19 +129,19 @@ class DayCell extends StatelessWidget {
               width: 34,
               height: 34,
               decoration: BoxDecoration(
-                color: isSelected ? Colors.black12 : Colors.transparent,
+                color: isSelected ? vrc(context).calendarCell : Colors.transparent,
                 shape: BoxShape.circle,
                 border: isToday && !isSelected
-                    ? Border.all(color: Colors.black12, width: 1)
+                    ? Border.all(color: vrc(context).calendarCell!, width: 1)
                     : null,
               ),
               alignment: Alignment.center,
               child: Text(
                 dayNum,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.w600,
-                  color: Colors.black87,
+                  color: vrc(context).text,
                 ),
               ),
             ),
