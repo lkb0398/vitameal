@@ -58,7 +58,10 @@ class MealCalendarPage extends HookConsumerWidget {
     final showFabBubble = useState(false); // 말풍선 표시 상태
 
     // 애니메이션 컨트롤러
-    final collapseCtrl = useAnimationController(duration: const Duration(milliseconds: 360));
+    final collapseCtrl = useAnimationController(
+      duration: const Duration(milliseconds: 360),
+      initialValue: 1.0 // 처음부터 아래 화면에서 시작
+    );
 
     // 월의 시작/끝 날짜 계산 (focusedDay 기준)
     final startOfMonth = DateTime(focusedDay.value.year, focusedDay.value.month, 1);
