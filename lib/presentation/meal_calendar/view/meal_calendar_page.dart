@@ -29,7 +29,7 @@ class MealCalendarPage extends HookConsumerWidget {
   const MealCalendarPage({super.key});
 
   // 년.월 라벨 + 요일 고정 영역 (40 + 40)
-  static const double _headerHeight = 80;
+  static const double _headerHeight = 90;
   // Week 모드 높이 (화면 내렸을 때 표시되는 주 캘린더)
   static const double _weekCalendarHeight = 44;
   // Month 모드 행 개수 = 6주
@@ -69,7 +69,7 @@ class MealCalendarPage extends HookConsumerWidget {
 
     // 캘린더 색상 맵 생성
     final colorOfDay = calendarViewModel.maybeWhen(
-      data: (mealDays) => AdherenceColorUtils.buildColorMap(mealDays),
+      data: (mealDays) => AdherenceUtils.buildColorMap(mealDays),
       orElse: () => <DateTime, Color>{},
     );
 
@@ -140,7 +140,7 @@ class MealCalendarPage extends HookConsumerWidget {
 
     // 성취도 평가 업데이트
     Future<void> setColorBar(Color color) async {
-      final adherence = AdherenceColorUtils.colorToAdherence(color);
+      final adherence = AdherenceUtils.colorToAdherence(color);
 
       try {
         String mealDayId;

@@ -1,8 +1,10 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:vitameal/core/util/date_time_utils.dart';
+import 'package:vitameal/presentation/meal_calendar/view/util/adherence_color_utils.dart';
 
 class MonthCalendar extends StatelessWidget {
   /// TableCalendar 기반 월/주 캘린더 위젯
@@ -110,6 +112,7 @@ class DayCell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final dayNum = day.day.toString();
+    final iconSize = math.min(24.0, barAreaHeight);
 
     return Center(
       child: SizedBox(
@@ -142,7 +145,7 @@ class DayCell extends StatelessWidget {
                 ),
               ),
             ),
-
+            
             // 여백 영역
             // Month 모드에서는 여백 존재, Week 모드에서는 barAreaHeight = 0이 들어옴
             Container(
@@ -151,15 +154,17 @@ class DayCell extends StatelessWidget {
               child: barColor == null
                   ? const SizedBox.shrink()
                   : Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Container(
-                        height: math.min(4, barAreaHeight),
-                        width: 18,
-                        decoration: ShapeDecoration(
-                          color: barColor,
-                          shape: const StadiumBorder(),
-                        ),
-                      ),
+                      // 색상 바 출력 위치
+                      alignment: Alignment.topCenter,
+                      child: Icon(AdherenceUtils.colorToIcon(barColor!), size: iconSize, color: barColor),
+                      // child: Container(
+                      //   height: math.min(4, barAreaHeight),
+                      //   width: 24,
+                      //   decoration: ShapeDecoration(
+                      //     color: barColor,
+                      //     shape: const StadiumBorder(),
+                      //   ),
+                      // ),
                     ),
             ),
           ],

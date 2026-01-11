@@ -10,6 +10,7 @@ class CalendarHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
+        SizedBox(height: 10),
         // 년.월
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -18,11 +19,11 @@ class CalendarHeader extends StatelessWidget {
             alignment: Alignment.centerLeft,
             child: Text(
               '${focused.year}.${focused.month.toString().padLeft(2, '0')}',
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
             ),
           ),
         ),
-
+      
         // 요일 (TableCalendar와 동일한 간격으로 7등분)
         SizedBox(
           height: 40,
