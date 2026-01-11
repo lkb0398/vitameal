@@ -340,33 +340,13 @@ class MealCalendarPage extends HookConsumerWidget {
                     builder: (context) {
                       // MealDay가 없을 경우
                       if (mealEntriesAsync == null) {
-                        return Center(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(PhosphorIcons.bowlFood(), size: 100, color: vrc(context).emptyText),
-                              SizedBox(height: 10),
-                              Text('기록한 식단이 없어요 :(', style: TextStyle(color: vrc(context).emptyText, fontSize: 18)),
-                            ],
-                          ),
-                        );
+                        return _EmptyMealView(scrollController: contentScrollController);
                       }
-
                       return mealEntriesAsync.when(
                         data: (entries) {
                           if (entries.isEmpty) {
-                            return Center(
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Icon(PhosphorIcons.bowlFood(), size: 100, color: vrc(context).emptyText),
-                                  SizedBox(height: 10),
-                                  Text('기록한 식단이 없어요 :(', style: TextStyle(color: vrc(context).emptyText, fontSize: 18)),
-                                ],
-                              ),
-                            );
+                            return _EmptyMealView(scrollController: contentScrollController);
                           }
-
                           final sortedEntries = entries.toList()
                             ..sort((a, b) {
                               final aTime = a.eatenAt ?? DateTime(2000);
@@ -382,6 +362,7 @@ class MealCalendarPage extends HookConsumerWidget {
                                 adherence: colorOfDay[selectedDay.value],
                                 onPick: setColorBar,
                               ),
+                              SizedBox(height: 4),
                               if (selectedMealDay != null)
                                 AiAnalysisCard(
                                   mealDayId: selectedMealDay.id,
@@ -393,6 +374,7 @@ class MealCalendarPage extends HookConsumerWidget {
                                   onAnalyze: handleAnalyze,
                                   onOpenDetail: handleOpenDetail,
                                 ),
+                              SizedBox(height: 4),
                               ...sortedEntries.map(
                                 (entry) => MealCard(
                                   entryId: entry.id,
@@ -479,6 +461,39 @@ class MealCalendarPage extends HookConsumerWidget {
     );
   }
 }
+
+class _EmptyMealView extends StatelessWidget {
+  const _EmptyMealView({super.key, required this.scrollController});
+
+  final ScrollController scrollController;
+
+  @override
+  Widget build(BuildContext context) {
+    // Expanded 영역의 높이를 받아서 가운데 정렬
+    // 스크롤로 overflow 방지
+    return LayoutBuilder(
+      builder: (context, c) {
+        return SingleChildScrollView(
+          controller: scrollController,
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minHeight: c.maxHeight),
+            child: Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(PhosphorIcons.bowlFood(), size: 100, color: vrc(context).emptyText),
+                  const SizedBox(height: 10),
+                  Text('기록한 식단이 없어요 :(', style: TextStyle(color: vrc(context).border, fontSize: 18)),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
 
 class _FabBubble extends StatelessWidget {
   const _FabBubble({required this.text, this.onTap});
