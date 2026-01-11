@@ -20,6 +20,9 @@ class VariableColors extends ThemeExtension<VariableColors> {
     required this.imagePlusIcon,
     required this.selectedItem,
     required this.calendarCell,
+    // =====
+    required this.dlgSurface,
+    required this.dlgBorder,
   });
 
   // (light mode > dark mode)
@@ -39,6 +42,9 @@ class VariableColors extends ThemeExtension<VariableColors> {
   final Color? imagePlusIcon; // 이미지 추가 영역 아이콘 (textcolor 300 > 700)
   final Color? selectedItem; // 바텀 네비게이션 활성화 색상 (textcolor 700 > primary 400)
   final Color? calendarCell; // 캘린더 셀 선택 (black 12 > #404040)
+  // =====
+  final Color? dlgSurface; // 식단 피드백 (#FAFAFA > #3A3A3A)
+  final Color? dlgBorder; // 식단 피드백 (#EEEEEE > #4A4A4A)
 
   /// 라이트 모드
   static const VariableColors light = VariableColors(
@@ -58,6 +64,9 @@ class VariableColors extends ThemeExtension<VariableColors> {
     imagePlusIcon: Color(0xFFBDBDBD),
     selectedItem: Color(0xFF333333),
     calendarCell: Color(0x1F000000),
+    // =====
+    dlgSurface: Color(0xFFFAFAFA),
+    dlgBorder: Color(0xFFEEEEEE),
   );
 
   /// 다크모드
@@ -78,6 +87,9 @@ class VariableColors extends ThemeExtension<VariableColors> {
     imagePlusIcon: Color(0xFF333333),
     selectedItem: Color(0xFF89CC00),
     calendarCell: Color(0xFF404040),
+    // =====
+    dlgSurface: Color(0xFF4A4A4A),
+    dlgBorder: Color(0xFF3A3A3A),
   );
 
   @override
@@ -98,6 +110,9 @@ class VariableColors extends ThemeExtension<VariableColors> {
     Color? imagePlusIcon,
     Color? selectedItem,
     Color? calendarCell,
+    // =====
+    Color? dlgSurface,
+    Color? dlgBorder,
   }) => VariableColors(
     background: background ?? this.background,
     border: border ?? this.border,
@@ -115,6 +130,9 @@ class VariableColors extends ThemeExtension<VariableColors> {
     imagePlusIcon: imagePlusIcon ?? this.imagePlusIcon,
     selectedItem: selectedItem ?? this.selectedItem,
     calendarCell: calendarCell ?? this.calendarCell,
+    // =====
+    dlgSurface: dlgSurface ?? this.dlgSurface,
+    dlgBorder: dlgBorder ?? this.dlgBorder,
   );
 
   @override
@@ -137,6 +155,9 @@ class VariableColors extends ThemeExtension<VariableColors> {
       imagePlusIcon: Color.lerp(imagePlusIcon, other.imagePlusIcon, t),
       selectedItem: Color.lerp(selectedItem, other.selectedItem, t),
       calendarCell: Color.lerp(calendarCell, other.calendarCell, t),
+      // =====
+      dlgSurface: Color.lerp(dlgSurface, other.dlgSurface, t),
+      dlgBorder: Color.lerp(dlgBorder, other.dlgBorder, t),
     );
   }
 }
