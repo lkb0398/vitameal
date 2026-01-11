@@ -2,6 +2,12 @@ import SwiftUI
 import WidgetKit
 
 struct LargeCalendarWidgetView: View {
+    @Environment(\.widgetRenderingMode) private var widgetRenderingMode // 렌더링 모드
+    @Environment(\.colorScheme) private var colorScheme // 라이트,다크 판별
+    
+    // 틴트모드 색상은 고정 RGB대신 .primary/.secondary 사용
+    // 틴트모드에서는 우리 브랜드의 색깔을 유지하려고 하지말고, 시스템의 UI 처럼 보이게 만들어야한다.
+    
     let date: Date // 달력의 기준이 될 날짜
     let achievementsByDay: [Int: AchievementLevel] // 일일 성취도
 
@@ -28,14 +34,20 @@ struct LargeCalendarWidgetView: View {
         let gridBottomPadding: CGFloat = (rows == 6) ? 14 : 34 // 그리드 하단 여백: 위젯의 하단 패딩
         
         ZStack {
-            RoundedRectangle(cornerRadius: 22, style: .continuous)
-                .fill(Color.widgetBg)
-                .ignoresSafeArea()
+            if widgetRenderingMode == .fullColor {
+                RoundedRectangle(cornerRadius: 22, style: .continuous) // 모서리 22
+                    .fill(Color.widgetBg)
+                    .ignoresSafeArea()
+            } else {
+                // 틴트/투명에서는 배경 제거
+                RoundedRectangle(cornerRadius: 22, style: .continuous)
+                    .fill(.clear)
+            }
 
             VStack(spacing: 16) {
                 Text(monthTitle)
                     .font(.system(size: 20, weight: .semibold))
-                    .foregroundStyle(Color.widgetText)
+                    .foregroundStyle(widgetRenderingMode == .fullColor ? Color.widgetText : .primary)
                     .frame(height: titleHeight)
                     .padding(.top, vPadding)
 
@@ -72,7 +84,7 @@ struct LargeCalendarWidgetView: View {
             ForEach(labels, id: \.self) { t in
                 Text(t)
                     .font(.system(size: 10, weight: .medium))
-                    .foregroundStyle(Color.widgetTextSub)
+                    .foregroundStyle(widgetRenderingMode == .fullColor ? Color.widgetTextSub : .secondary)
                     .frame(maxWidth: .infinity)
             }
         }
@@ -80,6 +92,8 @@ struct LargeCalendarWidgetView: View {
 }
 
 private struct LargeDayCell: View {
+    @Environment(\.widgetRenderingMode) private var widgetRenderingMode // 렌더링 모드
+    
     let day: Int?
     let level: AchievementLevel
 
@@ -88,6 +102,7 @@ private struct LargeDayCell: View {
     let bgMid: Color
     let bgHigh: Color
 
+    // fullcolor 모드
     private var fillColor: Color {
         switch level {
         case .none: return .clear
@@ -96,16 +111,29 @@ private struct LargeDayCell: View {
         case .high: return bgHigh
         }
     }
+    
+    // 틴트 모드일 때 셀 투명도
+    private var tintOpacity: Double {
+        switch level {
+        case .none: return 0.0
+        case .low:  return 0.10
+        case .mid:  return 0.35
+        case .high: return 0.60
+        }
+    }
 
     var body: some View {
         ZStack {
             if let day {
+                let isTint = (widgetRenderingMode != .fullColor)
                 RoundedRectangle(cornerRadius: 8, style: .continuous) // 셀 모서리
-                    .fill(fillColor)
+                    .fill(isTint ? AnyShapeStyle(.tint) : AnyShapeStyle(fillColor))
+                    .opacity(isTint ? tintOpacity : 1.0)
+                    .widgetAccentable() // 틴트 색
 
                 Text("\(day)")
                     .font(.system(size: 16, weight: .medium)) // 셀 폰트
-                    .foregroundStyle(textColor)
+                    .foregroundStyle(widgetRenderingMode == .fullColor ? textColor : .primary)
             } else {
                 Color.clear
             }

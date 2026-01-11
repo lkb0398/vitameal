@@ -115,9 +115,6 @@ struct VitamealWidgetEntryView : View {
                     LargeCalendarWidgetView(date: displayDate, achievementsByDay: achievementsByDay)
                 }
             }
-            .containerBackground(for: .widget) {
-                GlassBackground(cornerRadius: 22)
-            }
         } else {
             // 데이터 없을 경우 플레이스홀더
             VStack {

@@ -34,6 +34,13 @@ enum AchievementLevel: Int {
 }
 
 struct SmallCalendarWidgetView: View {
+    @Environment(\.widgetRenderingMode) private var widgetRenderingMode // 렌더링 모드
+    @Environment(\.colorScheme) private var colorScheme // 라이트,다크 판별
+    
+    // 틴트모드(.accented) 색상은 고정 RGB대신 .primary/.secondary 사용
+    // 틴트모드 모드에서는 시스템 기본색이 아닌 임의의 RGB 색은 넣어도 무시됨
+    // 틴트모드에서는 우리 브랜드의 색깔을 유지하려고 하지말고, 시스템의 UI 처럼 보이게 만들어야한다라는 정책
+    
     let date: Date // 달력의 기준이 될 날짜
     let achievementsByDay: [Int: AchievementLevel] // 일일 성취도
 
@@ -82,14 +89,21 @@ struct SmallCalendarWidgetView: View {
             let cellSize = max(10, min(maxCellByHeight, maxCellByWidth))
 
             ZStack {
-                RoundedRectangle(cornerRadius: 22, style: .continuous) // 모서리 22
-                    .fill(Color.widgetBg)
+                if widgetRenderingMode == .fullColor {
+                    RoundedRectangle(cornerRadius: 22, style: .continuous) // 모서리 22
+                        .fill(Color.widgetBg)
+                } else {
+                    // 틴트/투명에서는 배경 제거
+                    RoundedRectangle(cornerRadius: 22, style: .continuous)
+                        .fill(.clear)
+                }
 
                 VStack(spacing: 0) {
                     // 타이틀 label, 한 줄 고정 + 축소 허용
                     Text(monthTitle)
                         .font(.system(size: 12, weight: .semibold))
-                        .foregroundStyle(Color.widgetText)
+                        // 틴트 모드에서는 시스템 색 사용
+                        .foregroundStyle(widgetRenderingMode == .fullColor ? Color.widgetText : .primary)
                         .lineLimit(1)
                         .minimumScaleFactor(0.8)
                         .frame(height: titleHeight)
@@ -122,6 +136,8 @@ struct SmallCalendarWidgetView: View {
 }
 
 private struct SmallDayCell: View {
+    @Environment(\.widgetRenderingMode) private var widgetRenderingMode // 렌더링 모드
+    
     let day: Int?
     let level: AchievementLevel
     let size: CGFloat
@@ -131,6 +147,7 @@ private struct SmallDayCell: View {
     let bgMid: Color
     let bgHigh: Color
 
+    // fullcolor 모드
     private var fillColor: Color {
         switch level {
         case .none: return .clear
@@ -139,16 +156,29 @@ private struct SmallDayCell: View {
         case .high: return bgHigh
         }
     }
+    
+    // 틴트 모드일 때 셀 투명도
+    private var tintOpacity: Double {
+        switch level {
+        case .none: return 0.0
+        case .low:  return 0.10
+        case .mid:  return 0.35
+        case .high: return 0.60
+        }
+    }
 
     var body: some View {
         ZStack {
             if let day {
+                let isTint = (widgetRenderingMode != .fullColor)
                 RoundedRectangle(cornerRadius: 6, style: .continuous) // 셀 모서리
-                    .fill(fillColor)
+                    .fill(isTint ? AnyShapeStyle(.tint) : AnyShapeStyle(fillColor))
+                    .opacity(isTint ? tintOpacity : 1.0)
+                    .widgetAccentable() // 틴트 색
 
                 Text("\(day)")
                     .font(.system(size: 10, weight: .medium)) // 셀 폰트
-                    .foregroundStyle(textColor)
+                    .foregroundStyle(widgetRenderingMode == .fullColor ? textColor : .primary)
                     .minimumScaleFactor(0.7)
             } else {
                 Color.clear
