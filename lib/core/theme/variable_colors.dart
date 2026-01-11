@@ -6,6 +6,7 @@ class VariableColors extends ThemeExtension<VariableColors> {
   const VariableColors({
     required this.background,
     required this.text,
+    required this.subText,
     required this.border,
     required this.selectedItem,
     required this.emptyText,
@@ -17,6 +18,7 @@ class VariableColors extends ThemeExtension<VariableColors> {
   });
   final Color? background; // 배경색 (white > textcolor 700)
   final Color? text; // 검정 텍스트 (textcolor 700 > 0,50,100)
+  final Color? subText; // 내용 텍스트 (textcolor 600 > 100)
   final Color? border; // 테두리 (textcolor 200,300 > 500)
   final Color? selectedItem; // 바텀 네비게이션 활성화 색상 (textcolor 700 >  primary 400)
   final Color? emptyText; // 리스트 비어있을 때 아이콘,텍스트 (textcolor 100 > 600)
@@ -30,6 +32,7 @@ class VariableColors extends ThemeExtension<VariableColors> {
   static const VariableColors light = VariableColors(
     background: Color(0xFFFFFFFF),
     text: Color(0xFF333333),
+    subText: Color(0xFF595959),
     border: Color(0xFFD9D9D9),
     selectedItem: Color(0xFF333333),
     emptyText: Color(0xFFE6E6E6),
@@ -44,6 +47,7 @@ class VariableColors extends ThemeExtension<VariableColors> {
   static const VariableColors dark = VariableColors(
     background: Color(0xFF333333),
     text: Color(0xFFFFFFFF),
+    subText: Color(0xFFE6E6E6),
     border: Color(0xFF737373),
     selectedItem: Color(0xFF89CC00),
     emptyText: Color(0xFF595959),
@@ -58,6 +62,7 @@ class VariableColors extends ThemeExtension<VariableColors> {
   VariableColors copyWith({
     Color? background,
     Color? text,
+    Color? subText,
     Color? border,
     Color? hintText,
     Color? selectedItem,
@@ -70,6 +75,7 @@ class VariableColors extends ThemeExtension<VariableColors> {
   }) => VariableColors(
     background: background ?? this.background,
     text: text ?? this.text,
+    subText: subText ?? this.subText,
     border: border ?? this.border,
     selectedItem: selectedItem ?? this.selectedItem,
     emptyText: emptyText ?? this.emptyText,
@@ -86,6 +92,7 @@ class VariableColors extends ThemeExtension<VariableColors> {
     return VariableColors(
       background: Color.lerp(background, other.background, t),
       text: Color.lerp(text, other.text, t),
+      subText: Color.lerp(subText, other.subText, t),
       border: Color.lerp(border, other.border, t),
       selectedItem: Color.lerp(selectedItem, other.selectedItem, t),
       emptyText: Color.lerp(emptyText, other.emptyText, t),

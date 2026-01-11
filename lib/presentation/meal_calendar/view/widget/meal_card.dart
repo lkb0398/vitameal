@@ -87,7 +87,7 @@ class MealCard extends StatelessWidget {
                               _categoryLabel,
                               style: TextStyle(
                                 color: vrc(context).text,
-                                fontSize: 18, fontWeight: FontWeight.w500),
+                                fontSize: 16, fontWeight: FontWeight.w600),
                             ),
                             // 기록한 시간 있으면 출력
                             if (_timeLabel.isNotEmpty) ...[
@@ -113,12 +113,12 @@ class MealCard extends StatelessWidget {
                             content!.trim(),
                             maxLines: 3,
                             overflow: TextOverflow.ellipsis,
-                            style: TextStyle(fontSize: 14, color: vrc(context).text, fontWeight: FontWeight.w500),
+                            style: TextStyle(fontSize: 14, color: vrc(context).subText, fontWeight: FontWeight.w500),
                           )
                         else
                           Text(
                             '내용이 없습니다',
-                            style: TextStyle(fontSize: 14, color: vrc(context).text, fontWeight: FontWeight.w500)
+                            style: TextStyle(fontSize: 14, color: vrc(context).subText, fontWeight: FontWeight.w500)
                           ),
                       ],
                     ),
