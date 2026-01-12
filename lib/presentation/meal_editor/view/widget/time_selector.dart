@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:vitameal/core/theme/app_theme.dart';
 
 class TimeSelector extends StatelessWidget {
   /// 시간 선택
@@ -16,38 +17,21 @@ class TimeSelector extends StatelessWidget {
 
     await showModalBottomSheet(
       context: context,
-      backgroundColor: Colors.white,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (context) => Container(
         height: 300,
-        padding: const EdgeInsets.symmetric(vertical: 16),
+        padding: const EdgeInsets.only(top: 10),
         child: Column(
           children: [
-            // 라벨
+            // 드래그 핸들 커스텀
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    '시간 선택',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.black87,
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () => Navigator.pop(context),
-                    child: const Icon(Icons.close, color: Colors.black54),
-                  ),
-                ],
-              ),
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(color: fxc(context).textcolor200, borderRadius: BorderRadius.circular(2)),
             ),
-            const Divider(height: 24, thickness: 1),
-
+            SizedBox(height: 30),
             // Cupertino TimePicker (IOS)
             Expanded(
               child: CupertinoDatePicker(
@@ -62,10 +46,10 @@ class TimeSelector extends StatelessWidget {
 
             // 완료 버튼
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+              padding: EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 20),
               child: SizedBox(
                 width: double.infinity,
-                height: 50,
+                height: 56,
                 child: ElevatedButton(
                   onPressed: () {
                     onTimeChanged(DateTime(
@@ -78,19 +62,14 @@ class TimeSelector extends StatelessWidget {
                     Navigator.pop(context);
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFB7E600),
-                    foregroundColor: Colors.black87,
+                    backgroundColor: fxc(context).primary100,
+                    foregroundColor: Colors.white,
                     elevation: 0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   ),
-                  child: const Text(
+                  child: Text(
                     '완료',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700,
-                    ),
+                    style: TextStyle(color: fxc(context).primary600, fontSize: 16, fontWeight: FontWeight.w700),
                   ),
                 ),
               ),
@@ -106,9 +85,9 @@ class TimeSelector extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           "시간",
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: Colors.black87),
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: vrc(context).text),
         ),
         const SizedBox(height: 10),
         GestureDetector(
@@ -117,7 +96,7 @@ class TimeSelector extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: const Color(0xFFDDDDDD)),
+              border: Border.all(color: vrc(context).border!),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
@@ -128,7 +107,7 @@ class TimeSelector extends StatelessWidget {
                       : "${selectedTime!.hour.toString().padLeft(2, '0')} : ${selectedTime!.minute.toString().padLeft(2, '0')}",
                   style: TextStyle(
                     fontSize: 16,
-                    color: selectedTime == null ? Colors.black26 : Colors.black87,
+                    color: selectedTime == null ? vrc(context).hint : vrc(context).subTitle,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -136,7 +115,7 @@ class TimeSelector extends StatelessWidget {
                 Icon(
                   Icons.access_time,
                   size: 18,
-                  color: selectedTime == null ? Colors.black26 : Colors.black87,
+                  color: selectedTime == null ? vrc(context).hint : vrc(context).subTitle,
                 ),
               ],
             ),

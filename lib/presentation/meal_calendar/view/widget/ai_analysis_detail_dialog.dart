@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
+import 'package:vitameal/core/theme/app_theme.dart';
 import 'package:vitameal/domain/entity/meal_analysis_entity.dart';
 
 class AiAnalysisDetailDialog extends HookWidget {
@@ -30,26 +32,29 @@ class AiAnalysisDetailDialog extends HookWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       child: Container(
         constraints: const BoxConstraints(maxHeight: 600),
-        padding: const EdgeInsets.all(20),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             // 헤더
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  '기저질환별 피드백',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
+            Padding(
+              padding: const EdgeInsets.only(top: 20, left: 20, right: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    '기저질환별 피드백',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: vrc(context).text
+                    ),
                   ),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.close),
-                  onPressed: () => Navigator.of(context).pop(),
-                ),
-              ],
+                  IconButton(
+                    icon: Icon(PhosphorIcons.x()),
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                ],
+              ),
             ),
             const SizedBox(height: 16),
 
@@ -61,13 +66,19 @@ class AiAnalysisDetailDialog extends HookWidget {
                       itemCount: pageCount,
                       itemBuilder: (context, index) {
                         final feedback = conditionFeedbacks[index];
-                        return _ConditionFeedbackPage(feedback: feedback);
+                        return Padding(
+                          padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
+                          child: _ConditionFeedbackPage(feedback: feedback),
+                        );
                       },
                     )
                   : const Center(
-                      child: Text(
-                        '기저질환 피드백이 없습니다',
-                        style: TextStyle(color: Colors.grey),
+                      child: Padding(
+                        padding: EdgeInsets.only(left: 20, right: 20, bottom: 20),
+                        child: Text(
+                          '기저질환 피드백이 없습니다',
+                          style: TextStyle(color: Colors.grey),
+                        ),
                       ),
                     ),
             ),
@@ -75,9 +86,12 @@ class AiAnalysisDetailDialog extends HookWidget {
             // 페이지 인디케이터
             if (pageCount > 1) ...[
               const SizedBox(height: 16),
-              _PageIndicator(
-                pageCount: pageCount,
-                currentPage: currentPage.value,
+              Padding(
+                padding: const EdgeInsets.only(bottom: 20),
+                child: _PageIndicator(
+                  pageCount: pageCount,
+                  currentPage: currentPage.value,
+                ),
               ),
             ],
           ],
@@ -120,22 +134,22 @@ class _ConditionFeedbackPage extends StatelessWidget {
           // 요약
           Text(
             feedback.summary,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 14,
               height: 1.5,
-              color: Colors.black87,
+              color: vrc(context).content,
             ),
           ),
           const SizedBox(height: 20),
 
           // 주요 포인트
           if (feedback.points.isNotEmpty) ...[
-            const Text(
+            Text(
               '주요 포인트',
               style: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.bold,
-                color: Colors.black87,
+                color: vrc(context).text,
               ),
             ),
             const SizedBox(height: 8),
@@ -144,11 +158,11 @@ class _ConditionFeedbackPage extends StatelessWidget {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text('• ', style: TextStyle(fontSize: 14, color: Colors.black54)),
+                      Text('• ', style: TextStyle(fontSize: 14, color: vrc(context).content)),
                       Expanded(
                         child: Text(
                           point,
-                          style: const TextStyle(fontSize: 13, height: 1.4, color: Colors.black87),
+                          style: TextStyle(fontSize: 13, height: 1.4, color: vrc(context).content),
                         ),
                       ),
                     ],
@@ -159,12 +173,12 @@ class _ConditionFeedbackPage extends StatelessWidget {
 
           // 개선 제안
           if (feedback.suggestions.isNotEmpty) ...[
-            const Text(
+            Text(
               '개선 제안',
               style: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.bold,
-                color: Colors.black87,
+                color: vrc(context).text,
               ),
             ),
             const SizedBox(height: 8),
@@ -172,28 +186,28 @@ class _ConditionFeedbackPage extends StatelessWidget {
                   margin: const EdgeInsets.only(bottom: 12),
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: Colors.grey[50],
+                    color: vrc(context).dlgSurface,
                     borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: Colors.grey[200]!),
+                    border: Border.all(color: vrc(context).dlgBorder!),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         suggestion.title,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
-                          color: Colors.black87,
+                          color: vrc(context).text,
                         ),
                       ),
                       const SizedBox(height: 4),
                       Text(
                         suggestion.detail,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 12,
                           height: 1.4,
-                          color: Colors.black54,
+                          color: vrc(context).content,
                         ),
                       ),
                     ],

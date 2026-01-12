@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
 
-class CustomBottomNavi extends StatelessWidget {
+class CustomBottomNav extends StatelessWidget {
   final int currentIndex;
   final ValueChanged<int> onTap;
 
-  const CustomBottomNavi({
+  const CustomBottomNav({
     super.key,
     required this.currentIndex,
     required this.onTap,
@@ -23,7 +23,7 @@ class CustomBottomNavi extends StatelessWidget {
           borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
           boxShadow: [
             BoxShadow(
-              color: vrc(context).emptyText!,
+              color: vrc(context).bottomNavShadow!,
               blurRadius: 5,
               offset: const Offset(0, -4),
             ),

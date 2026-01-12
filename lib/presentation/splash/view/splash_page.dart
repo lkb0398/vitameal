@@ -1,3 +1,4 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
@@ -5,7 +6,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:vitameal/core/config/routes.dart';
 import 'package:vitameal/presentation/ui_provider/profiles_provider.dart';
-// import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -24,31 +24,31 @@ class SplashPage extends HookConsumerWidget {
         // 이미 네비게이션 수행되었으면 중복 실행 방지
         if (hasNavigated.value) return;
         try {
-          // 최소 2초간 스플래시 유지
-          await Future.delayed(const Duration(seconds: 2));
+          // 최소 1초간 스플래시 유지
+          await Future.delayed(const Duration(seconds: 1));
 
           // 로그인 여부 확인
           final session = Supabase.instance.client.auth.currentSession;
-
           if (!context.mounted) return;
 
-          // 로그인 X > 로그인 페이지 이동
+          // 미로그인은 무조건 로그인 페이지 이동 (오프라인이어도)
           if (session == null) {
             hasNavigated.value = true;
             context.go(AppRoutePath.login);
             return;
           }
 
-          // 앱 최초 실행 여부
-          // final prefs = await SharedPreferences.getInstance();
-          // final isFirstRun = prefs.getBool('is_first_run') ?? true;
+          // 여기부터는 이미 로그인된 사용자
+          final connectivity = await Connectivity().checkConnectivity();
+          final isOffline = connectivity.contains(ConnectivityResult.none);
 
-          // if (isFirstRun) {
-          //   await prefs.setBool('is_first_run', false); // 다음 실행부터는 false
-          //   hasNavigated.value = true;
-          //   if (context.mounted) context.go(AppRoutePath.intro);
-          //   return;
-          // }
+          // 로그인 세션이 있는 사용자만 오프라인 홈 허용
+          if (!context.mounted) return;
+          if (isOffline) {
+            hasNavigated.value = true;
+            context.go(AppRoutePath.home);
+            return;
+          }
 
           // 온보딩 X > 온보딩 페이지 이동
           final isOnboarded = await ref.read(
@@ -65,11 +65,13 @@ class SplashPage extends HookConsumerWidget {
             context.go(AppRoutePath.home);
           }
         } catch (e) {
-          // 에러 발생 > 로그인 페이지 이동
           debugPrint("SplashPage 초기화 중 에러: $e");
+          final session = Supabase.instance.client.auth.currentSession;
           if (context.mounted) {
             hasNavigated.value = true;
-            context.go(AppRoutePath.login);
+            // 미로그인: 로그인 페이지
+            // 로그인: 홈(오프라인 모드)
+            context.go(session == null ? AppRoutePath.login : AppRoutePath.home);
           }
         }
       });
