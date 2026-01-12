@@ -131,4 +131,4 @@ final class MyPostsProvider
   }
 }
 
-String _$myPostsHash() => r'b93670dd24e93202da1328c14844d8f5f2343288';
+String _$myPostsHash() => r'462bc757805157776a3c4e4887567ba93b059dce';

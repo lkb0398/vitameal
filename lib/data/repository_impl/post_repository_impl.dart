@@ -73,12 +73,14 @@ class PostRepositoryImpl implements PostRepository {
     required String userId,
     String? query,
     List<int>? tagIds,
+    String? authorId, // 🔔 파라미터 추가
   }) async {
     final dtos = await _dataSource.fetchPosts(
       from: from,
       to: to,
       query: query,
       tagIds: tagIds,
+      authorId: authorId, // 🔔 DataSource에 authorId 전달
     );
 
     return dtos.map((dto) {
