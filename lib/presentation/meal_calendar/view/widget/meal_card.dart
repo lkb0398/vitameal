@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
 import 'package:vitameal/domain/enum/meal_category_enum.dart';
@@ -64,10 +65,12 @@ class MealCard extends StatelessWidget {
                       height: 96,
                       color: photoUrl == null ? Colors.black12 : null,
                       child: photoUrl != null
-                          ? Image.network(
-                              photoUrl!,
+                          ? CachedNetworkImage(
+                              imageUrl: photoUrl!,
                               fit: BoxFit.cover,
-                              errorBuilder: (_, __, ___) =>
+                              fadeInDuration: const Duration(milliseconds: 200),
+                              fadeOutDuration: const Duration(milliseconds: 100),
+                              errorWidget: (_, __, ___) =>
                                   const Center(child: Icon(Icons.image_not_supported_outlined, color: Colors.black26)),
                             )
                           : const Center(child: Icon(Icons.restaurant, size: 28, color: Colors.black26)),
