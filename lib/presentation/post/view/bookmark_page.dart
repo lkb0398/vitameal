@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
@@ -133,28 +134,26 @@ class BookmarkPage extends HookConsumerWidget {
 
   Widget buildRecipeCard(BuildContext context, PostEntity post, WidgetRef ref) {
     return GestureDetector(
+      key: ValueKey(post.id), // 캐시 이미지 꼬임 방지
       onTap: () => context.push('/post/${post.id}'),
       child: Stack(
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(20),
-            child: post.imageUrl != null && post.imageUrl!.isNotEmpty
-                ? Image.network(
-                    post.imageUrl!,
-                    width: double.infinity,
-                    height: double.infinity,
-                    fit: BoxFit.cover,
-                    errorBuilder: (c, e, s) => Image.asset(
-                      "assets/images/profile_image.webp",
+            child: Container(
+              width: double.infinity,
+              height: double.infinity,
+              color: Colors.black12, // 배경색
+              child: post.imageUrl != null && post.imageUrl!.isNotEmpty
+                  ? CachedNetworkImage( // url 이미지 캐싱
+                      imageUrl: post.imageUrl!,
                       fit: BoxFit.cover,
-                    ),
-                  )
-                : Image.asset(
-                    "assets/images/profile_image.webp",
-                    width: double.infinity,
-                    height: double.infinity,
-                    fit: BoxFit.cover,
-                  ),
+                      fadeInDuration: const Duration(milliseconds: 200), // 자연스럽게
+                      fadeOutDuration: const Duration(milliseconds: 100),
+                      errorWidget: (c, e, s) => Icon(Icons.image_not_supported_outlined, color: Colors.black26),
+                    )
+                  : Icon(Icons.restaurant, color: Colors.black26),
+            ),
           ),
           Positioned(
             bottom: 12,
