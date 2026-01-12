@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:vitameal/domain/entity/post_entity.dart';
 import 'package:vitameal/presentation/goal/view/page/add_goal_page.dart';
 import 'package:vitameal/presentation/goal/view/page/data_page.dart';
 import 'package:vitameal/presentation/goal/view/page/goal_page.dart';
@@ -13,6 +14,10 @@ import 'package:vitameal/presentation/onboarding/view/page/onboarding_disease_pa
 import 'package:vitameal/presentation/onboarding/view/page/onboarding_done_page.dart';
 import 'package:vitameal/presentation/onboarding/view/page/onboarding_physical_page.dart';
 import 'package:vitameal/presentation/onboarding/view/page/onboarding_profile_page.dart';
+import 'package:vitameal/presentation/post/view/bookmark_page.dart';
+import 'package:vitameal/presentation/post/view/edit_post.dart';
+import 'package:vitameal/presentation/post/view/post_detail_page.dart';
+import 'package:vitameal/presentation/post/view/post_page.dart';
 import 'package:vitameal/presentation/setting/view/setting_page.dart';
 import 'package:vitameal/presentation/splash/view/splash_page.dart';
 import 'package:vitameal/presentation/auth/view/login_page.dart';
@@ -45,6 +50,11 @@ class AppRoutePath {
   static const data = '/data';
   // 식단 작성 및 편집 페이지
   static const mealEditor = '/meal-editor';
+
+  // 뭔지 알지?
+  static const post = '/post';
+  static const editPost = '/edit/post';
+  static const bookmark = '/bookmark';
 }
 
 final routerProvider = Provider<GoRouter>((ref) {
@@ -164,6 +174,36 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: AppRoutePath.noti,
         builder: (context, state) => const NotificationPage(),
+      ),
+
+      // 포스트
+      GoRoute(
+        path: AppRoutePath.editPost,
+        builder: (context, state) {
+          final post = state.extra as PostEntity?;
+          return EditPost(initialPost: post);
+        },
+      ),
+      GoRoute(
+        path: AppRoutePath.bookmark,
+        builder: (context, state) => const BookmarkPage(),
+      ),
+
+      GoRoute(
+        path: AppRoutePath.post,
+        builder: (context, state) => PostPage(),
+        routes: [
+          GoRoute(
+            path: ":id",
+            builder: (context, state) {
+              final String? pId = state.pathParameters['id'];
+              if (pId == null) {
+                return PostPage();
+              }
+              return PostDetailPage(pId: pId);
+            },
+          ),
+        ],
       ),
     ],
   );

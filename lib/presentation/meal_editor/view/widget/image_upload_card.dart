@@ -39,18 +39,22 @@ class ImageUploadCard extends StatelessWidget {
                       fit: BoxFit.cover,
                     )
                   : photoUrl != null
-                      ? DecorationImage(
-                          image: NetworkImage(photoUrl!),
-                          fit: BoxFit.cover,
-                        )
-                      : null,
+                  ? DecorationImage(
+                      image: NetworkImage(photoUrl!),
+                      fit: BoxFit.cover,
+                    )
+                  : null,
             ),
             child: !hasImage
                 ? const Center(
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.add_photo_alternate, size: 44, color: Colors.black26),
+                        Icon(
+                          Icons.add_photo_alternate,
+                          size: 44,
+                          color: Colors.black26,
+                        ),
                         SizedBox(height: 8),
                         Text(
                           '이미지 추가',

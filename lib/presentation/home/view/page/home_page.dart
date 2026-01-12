@@ -3,6 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:vitameal/presentation/home/view/widget/custom_bottomnavi.dart';
 import 'package:vitameal/presentation/info/view/page/info_page.dart';
 import 'package:vitameal/presentation/meal_calendar/view/meal_calendar_page.dart';
+import 'package:vitameal/presentation/post/view/post_page.dart';
 import 'package:vitameal/presentation/ui_provider/home_tab_provider.dart';
 
 class HomePage extends HookConsumerWidget {
@@ -14,7 +15,7 @@ class HomePage extends HookConsumerWidget {
 
     final pages = [
       const MealCalendarPage(),
-      const InfoPage(), // TODO : 레시피 페이지로 바꾸기
+      const PostPage(), // TODO : 레시피 페이지로 바꾸기 - 감사합니다
       const InfoPage(),
     ];
 
