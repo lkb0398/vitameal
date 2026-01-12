@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:vitameal/core/config/firebase_options.dart';
@@ -16,14 +18,20 @@ import 'core/config/routes.dart';
 @pragma('vm:entry-point')
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   try {
-    await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
   } catch (_) {
     // 초기화 실패시 앱 터지는거 방지
   }
 }
 
 /// fcm, supabase등 실패시 앱 터지는거 방지
-Future<T?> _safe<T>(Future<T> Function() task, {String? label, T? fallback}) async {
+Future<T?> _safe<T>(
+  Future<T> Function() task, {
+  String? label,
+  T? fallback,
+}) async {
   try {
     return await task();
   } catch (e, st) {
@@ -33,40 +41,70 @@ Future<T?> _safe<T>(Future<T> Function() task, {String? label, T? fallback}) asy
   }
 }
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+Future<void> main() async {
+  // 📝 Zone 에러(비동기)
+  runZonedGuarded(
+    () async {
+      WidgetsFlutterBinding.ensureInitialized();
 
-  await _safe(
-    () => Supabase.initialize(
-      url: 'https://ykqdcgrimdsvuincvmtu.supabase.co',
-      anonKey:
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlrcWRjZ3JpbWRzdnVpbmN2bXR1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU5MzM0OTcsImV4cCI6MjA4MTUwOTQ5N30.QJnEx7gDulSj8-8PayKYxyu5Aze8IBk7jJU-N-VRHCw',
-    ),
-    label: 'Supabase.initialize',
+      await _safe(
+        () => Supabase.initialize(
+          url: 'https://ykqdcgrimdsvuincvmtu.supabase.co',
+          anonKey:
+              'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlrcWRjZ3JpbWRzdnVpbmN2bXR1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU5MzM0OTcsImV4cCI6MjA4MTUwOTQ5N30.QJnEx7gDulSj8-8PayKYxyu5Aze8IBk7jJU-N-VRHCw',
+        ),
+        label: 'Supabase.initialize',
+      );
+
+      // 온보딩 완료여부 동기화
+      final container = ProviderContainer();
+      try {
+        final currentUser = Supabase.instance.client.auth.currentUser;
+        if (currentUser != null) {
+          final completed = await container.read(
+            onboardingCompletedProvider.future,
+          );
+          container.read(onboardingStateProvider.notifier).set(completed);
+        }
+      } catch (e) {
+        debugPrint('초기 데이터 로딩 중 오류 발생: $e');
+      }
+
+      // 🔔 Firebase 초기화
+      await _safe(
+        () => Firebase.initializeApp(
+          options: DefaultFirebaseOptions.currentPlatform,
+        ),
+        label: 'Firebase.initializeApp',
+      );
+      // FCM Background 핸들러 등록 (main 에서)
+      await _safe(() async {
+        FirebaseMessaging.onBackgroundMessage(
+          firebaseMessagingBackgroundHandler,
+        );
+      }, label: 'FCM background handler');
+      // Firebase 관련 설정 (토큰, 권한)
+      await _safe(
+        () => FirebaseService.initialize(),
+        label: 'FirebaseService.initialize',
+      );
+      // 알림 리스너 설정
+      await _safe(
+        () => NotificationService.initialize(),
+        label: 'NotificationService.initialize',
+      );
+
+      runApp(
+        UncontrolledProviderScope(
+          container: container,
+          child: const VitamealApp(),
+        ),
+      );
+    },
+    (error, stack) {
+      FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+    },
   );
-
-  // 온보딩 완료여부 동기화
-  final container = ProviderContainer();
-  try {
-    final currentUser = Supabase.instance.client.auth.currentUser;
-    if (currentUser != null) {
-      final completed = await container.read(onboardingCompletedProvider.future);
-      container.read(onboardingStateProvider.notifier).set(completed);
-    }
-  } catch (e) {
-    debugPrint('초기 데이터 로딩 중 오류 발생: $e');
-  }
-
-  // 🔔 Firebase 초기화
-  await _safe(() => Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform), label: 'Firebase.initializeApp');
-  // FCM Background 핸들러 등록 (main 에서)
-  await _safe(() async { FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler); }, label: 'FCM background handler');
-  // Firebase 관련 설정 (토큰, 권한)
-  await _safe(() => FirebaseService.initialize(), label: 'FirebaseService.initialize');
-  // 알림 리스너 설정
-  await _safe(() => NotificationService.initialize(), label: 'NotificationService.initialize');
-
-  runApp(UncontrolledProviderScope(container: container, child: const VitamealApp()));
 }
 
 class VitamealApp extends HookConsumerWidget {
