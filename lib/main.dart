@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:vitameal/core/di/provider.dart';
+import 'package:vitameal/core/service/analytics_service.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
 import 'package:vitameal/core/service/firebase_service.dart';
 import 'package:vitameal/core/service/notification_service.dart';
@@ -94,12 +95,19 @@ Future<void> main() async {
         label: 'NotificationService.initialize',
       );
 
+      // 📝 Flutter 프레임워크 에러
+      FlutterError.onError = (details) {
+        FirebaseCrashlytics.instance.recordFlutterFatalError(details);
+      };
+
       runApp(
         UncontrolledProviderScope(
           container: container,
           child: const VitamealApp(),
         ),
       );
+
+      AnalyticsService.appOpen(); // 📝
     },
     (error, stack) {
       FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);

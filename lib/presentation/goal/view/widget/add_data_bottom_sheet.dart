@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tap_debouncer/tap_debouncer.dart';
+import 'package:vitameal/core/service/analytics_service.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
 import 'package:vitameal/presentation/goal/view_model/goal_datas_view_model.dart';
 import 'package:vitameal/presentation/ui_provider/goals_provider.dart';
@@ -137,6 +138,11 @@ class AddDataBottomSheet extends HookConsumerWidget {
                         // UI 반영
                         ref.invalidate(getGoalDatasProvider);
                         ref.invalidate(getAllGoalsProvider);
+                        // 📝
+                        AnalyticsService.event(
+                          'goal_actoin',
+                          p: {'action': 'add_data'},
+                        );
                       }
                     : null,
                 builder: (BuildContext context, TapDebouncerFunc? onTap) {

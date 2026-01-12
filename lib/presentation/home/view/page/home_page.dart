@@ -9,11 +9,7 @@ import 'package:vitameal/presentation/ui_provider/home_tab_provider.dart';
 class HomePage extends HookConsumerWidget {
   const HomePage({super.key});
 
-  static const _pages = [
-    MealCalendarPage(),
-    PostPage(),
-    InfoPage(),
-  ];
+  static const _pages = [MealCalendarPage(), PostPage(), InfoPage()];
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:vitameal/core/config/routes.dart';
+import 'package:vitameal/core/service/analytics_service.dart';
 import 'package:vitameal/presentation/ui_provider/profiles_provider.dart';
 import 'package:vitameal/presentation/auth/view_model/auth_view_model.dart';
 import 'package:vitameal/presentation/auth/view/widgets/social_login_button.dart';
@@ -92,7 +93,12 @@ class LoginPage extends HookConsumerWidget {
           iconWidth: 14,
           iconHeight: 17,
           // 로딩 중이면 버튼 클릭 무시
-          onPressed: vm.isLoading ? () {} : () => vm.login(OAuthProvider.apple),
+          onPressed: vm.isLoading
+              ? () {}
+              : () {
+                  vm.login(OAuthProvider.apple);
+                  AnalyticsService.event('login', p: {'type': 'apple'}); // 📝
+                },
         ),
         const SizedBox(height: 12),
 
@@ -106,7 +112,12 @@ class LoginPage extends HookConsumerWidget {
           iconPath: 'assets/images/kakao_icon.svg',
           iconWidth: 18,
           iconHeight: 16.8,
-          onPressed: vm.isLoading ? () {} : () => vm.login(OAuthProvider.kakao),
+          onPressed: vm.isLoading
+              ? () {}
+              : () {
+                  vm.login(OAuthProvider.kakao);
+                  AnalyticsService.event('login', p: {'type': 'kakao'}); // 📝
+                },
         ),
         const SizedBox(height: 12),
 
@@ -122,7 +133,10 @@ class LoginPage extends HookConsumerWidget {
           iconHeight: 20,
           onPressed: vm.isLoading
               ? () {}
-              : () => vm.login(OAuthProvider.google),
+              : () {
+                  vm.login(OAuthProvider.google);
+                  AnalyticsService.event('login', p: {'type': 'google'}); // 📝
+                },
         ),
 
         const Spacer(flex: 2),

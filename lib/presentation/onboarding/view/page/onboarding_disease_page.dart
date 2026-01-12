@@ -3,6 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tap_debouncer/tap_debouncer.dart';
+import 'package:vitameal/core/service/analytics_service.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
 import 'package:vitameal/presentation/onboarding/view/widget/progress_text.dart';
 import 'package:vitameal/presentation/onboarding/view/widget/select_box.dart';
@@ -119,16 +120,21 @@ class OnboardingDiseasePage extends HookConsumerWidget {
       /// 하단 버튼
       bottomNavigationBar: TapDebouncer(
         onTap: () async {
+          final disease = selectedDiseases.value;
           // 질병 정보 업데이트
           await ref
               .read(onboardingViewModelProvider.notifier)
-              .saveDiseases(selectedDiseases.value);
+              .saveDiseases(disease);
           // mounted 체크
           if (!context.mounted) return;
           // 페이지 이동
           isEditing
               ? context.push('/edit/allergy')
               : context.push('/onboarding/allergy');
+          // 📝
+          for (final d in disease) {
+            AnalyticsService.event('profile_saved', p: {'disease': d});
+          }
         },
         builder: (BuildContext context, TapDebouncerFunc? onTap) {
           return Padding(

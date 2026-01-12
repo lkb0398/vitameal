@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:vitameal/core/config/routes.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
+import 'package:vitameal/core/service/analytics_service.dart';
 import 'package:vitameal/presentation/post/view_model/post_view_model.dart';
 import 'package:vitameal/presentation/post/view_model/tag_view_model.dart';
 
@@ -56,10 +57,18 @@ class PostPage extends HookConsumerWidget {
                 child: TextField(
                   controller: searchController,
                   onChanged: (value) {
-                    ref.read(postViewModelProvider.notifier).filterPosts(
+                    ref
+                        .read(postViewModelProvider.notifier)
+                        .filterPosts(
                           query: value,
                           tagIds: selectedTagIds.value,
                         );
+
+                    // 📝
+                    AnalyticsService.event(
+                      'recipe_action',
+                      p: {'action': 'search'},
+                    );
                   },
                   style: TextStyle(color: vrc(context).text),
                   decoration: InputDecoration(
@@ -114,7 +123,9 @@ class PostPage extends HookConsumerWidget {
                             }
                             selectedTagIds.value = newList;
 
-                            ref.read(postViewModelProvider.notifier).filterPosts(
+                            ref
+                                .read(postViewModelProvider.notifier)
+                                .filterPosts(
                                   query: searchController.text,
                                   tagIds: newList,
                                 );
@@ -187,18 +198,33 @@ class PostPage extends HookConsumerWidget {
                                       width: 96,
                                       height: 96,
                                       color: Colors.black12, // 배경색
-                                      child: post.imageUrl != null && post.imageUrl!.isNotEmpty
-                                          ? CachedNetworkImage( // url 이미지 캐싱
+                                      child:
+                                          post.imageUrl != null &&
+                                              post.imageUrl!.isNotEmpty
+                                          ? CachedNetworkImage(
+                                              // url 이미지 캐싱
                                               imageUrl: post.imageUrl!,
-                                              fadeInDuration: const Duration(milliseconds: 200), // 자연스럽게
-                                              fadeOutDuration: const Duration(milliseconds: 100),
-                                              fit: BoxFit.cover,
-                                              errorWidget: (c, e, s) => const Center(
-                                                child: Icon(Icons.image_not_supported_outlined, color: Colors.black26),
+                                              fadeInDuration: const Duration(
+                                                milliseconds: 200,
+                                              ), // 자연스럽게
+                                              fadeOutDuration: const Duration(
+                                                milliseconds: 100,
                                               ),
+                                              fit: BoxFit.cover,
+                                              errorWidget: (c, e, s) =>
+                                                  const Center(
+                                                    child: Icon(
+                                                      Icons
+                                                          .image_not_supported_outlined,
+                                                      color: Colors.black26,
+                                                    ),
+                                                  ),
                                             )
                                           : const Center(
-                                              child: Icon(Icons.restaurant, color: Colors.black26),
+                                              child: Icon(
+                                                Icons.restaurant,
+                                                color: Colors.black26,
+                                              ),
                                             ),
                                     ),
                                   ),
@@ -229,9 +255,20 @@ class PostPage extends HookConsumerWidget {
                                               ),
                                             ),
                                             IconButton(
-                                              onPressed: () => ref
-                                                  .read(postViewModelProvider.notifier)
-                                                  .toggleBookmark(post.id!),
+                                              onPressed: () {
+                                                ref
+                                                    .read(
+                                                      postViewModelProvider
+                                                          .notifier,
+                                                    )
+                                                    .toggleBookmark(post.id!);
+
+                                                // 📝
+                                                AnalyticsService.event(
+                                                  'recipe_action',
+                                                  p: {'action': 'bookmark'},
+                                                );
+                                              },
                                               icon: Icon(
                                                 post.isBookmarked
                                                     ? Icons.bookmark

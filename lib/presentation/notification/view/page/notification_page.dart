@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
+import 'package:vitameal/core/service/analytics_service.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
 import 'package:vitameal/presentation/notification/view/widget/add_noti_bottom_sheet.dart';
 import 'package:vitameal/presentation/ui_provider/notifications_provider.dart';
@@ -109,6 +110,11 @@ class NotificationPage extends HookConsumerWidget {
                           if (!context.mounted) return;
                           // UI 반영
                           ref.invalidate(getAllNotisProvider);
+                          // 📝
+                          AnalyticsService.event(
+                            'noti_action',
+                            p: {'action': 'delete'},
+                          );
                         },
                         backgroundColor: fxc(context).secondary400!,
                         child: Icon(

@@ -10,6 +10,7 @@ import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:vitameal/core/config/routes.dart';
 import 'package:vitameal/core/di/provider.dart';
+import 'package:vitameal/core/service/analytics_service.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
 import 'package:vitameal/presentation/auth/view_model/auth_view_model.dart';
 import 'package:vitameal/presentation/meal_calendar/view/widget/ai_analysis_card.dart';
@@ -60,15 +61,25 @@ class MealCalendarPage extends HookConsumerWidget {
     // 애니메이션 컨트롤러
     final collapseCtrl = useAnimationController(
       duration: const Duration(milliseconds: 360),
-      initialValue: 1.0 // 처음부터 아래 화면에서 시작
+      initialValue: 1.0, // 처음부터 아래 화면에서 시작
     );
 
     // 월의 시작/끝 날짜 계산 (focusedDay 기준)
-    final startOfMonth = DateTime(focusedDay.value.year, focusedDay.value.month, 1);
-    final endOfMonth = DateTime(focusedDay.value.year, focusedDay.value.month + 1, 0);
+    final startOfMonth = DateTime(
+      focusedDay.value.year,
+      focusedDay.value.month,
+      1,
+    );
+    final endOfMonth = DateTime(
+      focusedDay.value.year,
+      focusedDay.value.month + 1,
+      0,
+    );
 
     // MealCalendarViewModel - 캘린더 색상 바용
-    final calendarViewModel = ref.watch(mealCalendarViewModelProvider(userId, startOfMonth, endOfMonth));
+    final calendarViewModel = ref.watch(
+      mealCalendarViewModelProvider(userId, startOfMonth, endOfMonth),
+    );
 
     // 캘린더 색상 맵 생성
     final colorOfDay = calendarViewModel.maybeWhen(
@@ -78,20 +89,32 @@ class MealCalendarPage extends HookConsumerWidget {
 
     // 선택된 날짜의 MealDay 찾기
     final selectedMealDay = calendarViewModel.maybeWhen(
-      data: (mealDays) => mealDays.firstWhereOrNull((day) => CalendarUtils.isSameDay(day.mealDate, selectedDay.value)),
+      data: (mealDays) => mealDays.firstWhereOrNull(
+        (day) => CalendarUtils.isSameDay(day.mealDate, selectedDay.value),
+      ),
       orElse: () => null,
     );
 
     // 선택된 날짜의 식단 항목 조회
-    final mealEntriesAsync = selectedMealDay != null ? ref.watch(mealEntriesProvider(selectedMealDay.id)) : null;
+    final mealEntriesAsync = selectedMealDay != null
+        ? ref.watch(mealEntriesProvider(selectedMealDay.id))
+        : null;
 
     // 오늘 사용한 분석 횟수 조회
     final todayCountAsync = ref.watch(todayAnalysisCountProvider(userId));
 
     // AI 분석 카드에 전달할 값들, 설명은 ai_analysis_card 변수에,,
-    final todayCount = todayCountAsync.maybeWhen(data: (count) => count, orElse: () => 0);
+    final todayCount = todayCountAsync.maybeWhen(
+      data: (count) => count,
+      orElse: () => 0,
+    );
     final isCountLoading = todayCountAsync.isLoading;
-    final hasEntries = mealEntriesAsync?.maybeWhen(data: (entries) => entries.isNotEmpty, orElse: () => false) ?? false;
+    final hasEntries =
+        mealEntriesAsync?.maybeWhen(
+          data: (entries) => entries.isNotEmpty,
+          orElse: () => false,
+        ) ??
+        false;
 
     final isEntriesEmpty = mealEntriesAsync == null
         ? true // MealDay 자체가 없으면, 식단도 없음
@@ -160,8 +183,17 @@ class MealCalendarPage extends HookConsumerWidget {
 
         // Adherence 업데이트 (UI 즉시 반영)
         await ref
-            .read(mealCalendarViewModelProvider(userId, startOfMonth, endOfMonth).notifier)
+            .read(
+              mealCalendarViewModelProvider(
+                userId,
+                startOfMonth,
+                endOfMonth,
+              ).notifier,
+            )
             .updateAdherence(mealDayId: mealDayId, adherence: adherence);
+
+        // 📝
+        AnalyticsService.event('meal_action', p: {'action': 'adherence'});
       } catch (e) {
         // 에러 처리 (필요 시 SnackBar 등으로 사용자에게 알림)
         debugPrint('성취도 업데이트 실패: $e');
@@ -174,7 +206,9 @@ class MealCalendarPage extends HookConsumerWidget {
 
       // 분석 수행 후 결과 받기
       final viewModel = ref.read(mealAnalysisViewModelProvider.notifier);
-      final analysisResult = await viewModel.requestAnalysis(selectedMealDay.id);
+      final analysisResult = await viewModel.requestAnalysis(
+        selectedMealDay.id,
+      );
 
       // 로컬 DB 업데이트 (summary + needs_ai_refresh=false)
       // TODO : data_source로 옮기기
@@ -186,7 +220,12 @@ class MealCalendarPage extends HookConsumerWidget {
 
       // Provider 갱신
       ref.invalidate(mealCalendarViewModelProvider); // 버튼 활성화 여부
-      ref.read(todayAnalysisCountProvider(userId).notifier).refresh(); // 사용한 분석 횟수
+      ref
+          .read(todayAnalysisCountProvider(userId).notifier)
+          .refresh(); // 사용한 분석 횟수
+
+      // 📝
+      AnalyticsService.event('meal_action', p: {'action': 'ai_analyze'});
     }
 
     // 자세히 보기: 기저질환에 관한 피드백이 들어있는 대화상자 출력
@@ -239,7 +278,8 @@ class MealCalendarPage extends HookConsumerWidget {
             final availableHeight = constraints.maxHeight;
 
             // 월 캘린더 높이 (헤더 제외 영역)
-            final monthCalendarHeight = (availableHeight - _headerHeight) * _monthCalendarRatio;
+            final monthCalendarHeight =
+                (availableHeight - _headerHeight) * _monthCalendarRatio;
             // 행 높이 계산
             final rowHeightMonth = monthCalendarHeight / _rowCount;
 
@@ -250,7 +290,11 @@ class MealCalendarPage extends HookConsumerWidget {
               rowCount: _rowCount,
             );
             // 행 높이를 애니메이션 진행에 따라 보간 (Month 모드 - Week 모드)
-            final rowHeight = lerpDouble(rowHeightMonth, _weekCalendarHeight, t)!;
+            final rowHeight = lerpDouble(
+              rowHeightMonth,
+              _weekCalendarHeight,
+              t,
+            )!;
             // 애니메이션 진행에 따라 선택된 날짜가 속한 주를 맨 위로 올리기 위한 이동량
             final translateY = isWeekMode ? 0.0 : -weekIndex * rowHeight * t;
 
@@ -260,7 +304,11 @@ class MealCalendarPage extends HookConsumerWidget {
             final barArea = lerpDouble(barAreaHeightMonth, 0.0, t)!;
 
             // 애니메이션에 따른 TableCalendar 높이 계산
-            final calendarHeight = lerpDouble(monthCalendarHeight, _weekCalendarHeight, t)!;
+            final calendarHeight = lerpDouble(
+              monthCalendarHeight,
+              _weekCalendarHeight,
+              t,
+            )!;
 
             return Column(
               children: [
@@ -280,8 +328,10 @@ class MealCalendarPage extends HookConsumerWidget {
                         Transform.translate(
                           offset: Offset(0, translateY),
                           child: OverflowBox(
-                            minHeight: monthCalendarHeight, // 오버플로우 방지, 항상 월 캘린더 높이로
-                            maxHeight: monthCalendarHeight, // 오버플로우 방지, 항상 월 캘린더 높이로
+                            minHeight:
+                                monthCalendarHeight, // 오버플로우 방지, 항상 월 캘린더 높이로
+                            maxHeight:
+                                monthCalendarHeight, // 오버플로우 방지, 항상 월 캘린더 높이로
                             alignment: Alignment.topCenter,
                             child: MonthCalendar(
                               focusedDay: focusedDay.value,
@@ -290,7 +340,9 @@ class MealCalendarPage extends HookConsumerWidget {
                               barAreaHeight: barArea,
                               barColorByDay: colorOfDay,
                               onDayTap: onDayTapped,
-                              calendarFormat: isWeekMode ? CalendarFormat.week : CalendarFormat.month,
+                              calendarFormat: isWeekMode
+                                  ? CalendarFormat.week
+                                  : CalendarFormat.month,
                               onPageChanged: onPageChanged,
                             ),
                           ),
@@ -310,9 +362,12 @@ class MealCalendarPage extends HookConsumerWidget {
                               dragEndY.value = details.globalPosition.dy;
                             },
                             onVerticalDragEnd: (details) {
-                              if (dragStartY.value == null || dragEndY.value == null) return;
+                              if (dragStartY.value == null ||
+                                  dragEndY.value == null)
+                                return;
                               // 드래그 방향 체크
-                              final dragDistance = dragEndY.value! - dragStartY.value!;
+                              final dragDistance =
+                                  dragEndY.value! - dragStartY.value!;
                               dragStartY.value = null;
                               dragEndY.value = null;
                               // 최소 50px 드래그
@@ -320,13 +375,19 @@ class MealCalendarPage extends HookConsumerWidget {
                               // 위로 드래그 (Month -> Week)
                               if (dragDistance < 0) {
                                 if (!isWeekMode) {
-                                  collapseCtrl.animateTo(1.0, curve: Curves.easeOutCubic);
+                                  collapseCtrl.animateTo(
+                                    1.0,
+                                    curve: Curves.easeOutCubic,
+                                  );
                                 }
                               }
                               // 아래로 드래그 (Week -> Month)
                               else {
                                 if (isWeekMode) {
-                                  collapseCtrl.animateTo(0.0, curve: Curves.easeOutCubic);
+                                  collapseCtrl.animateTo(
+                                    0.0,
+                                    curve: Curves.easeOutCubic,
+                                  );
                                 }
                               }
                             },
@@ -343,12 +404,16 @@ class MealCalendarPage extends HookConsumerWidget {
                     builder: (context) {
                       // MealDay가 없을 경우
                       if (mealEntriesAsync == null) {
-                        return _EmptyMealView(scrollController: contentScrollController);
+                        return _EmptyMealView(
+                          scrollController: contentScrollController,
+                        );
                       }
                       return mealEntriesAsync.when(
                         data: (entries) {
                           if (entries.isEmpty) {
-                            return _EmptyMealView(scrollController: contentScrollController);
+                            return _EmptyMealView(
+                              scrollController: contentScrollController,
+                            );
                           }
                           final sortedEntries = entries.toList()
                             ..sort((a, b) {
@@ -369,8 +434,10 @@ class MealCalendarPage extends HookConsumerWidget {
                               if (selectedMealDay != null)
                                 AiAnalysisCard(
                                   mealDayId: selectedMealDay.id,
-                                  needsAiRefresh: selectedMealDay.needsAiRefresh,
-                                  latestAiSummary: selectedMealDay.latestAiSummary,
+                                  needsAiRefresh:
+                                      selectedMealDay.needsAiRefresh,
+                                  latestAiSummary:
+                                      selectedMealDay.latestAiSummary,
                                   todayCount: todayCount,
                                   isCountLoading: isCountLoading,
                                   hasEntries: hasEntries,
@@ -394,7 +461,9 @@ class MealCalendarPage extends HookConsumerWidget {
                                         'date': selectedDay.value,
                                       },
                                     );
-                                    ref.invalidate(mealEntriesProvider(selectedMealDay.id));
+                                    ref.invalidate(
+                                      mealEntriesProvider(selectedMealDay.id),
+                                    );
                                   },
                                 ),
                               ),
@@ -402,9 +471,13 @@ class MealCalendarPage extends HookConsumerWidget {
                             ],
                           );
                         },
-                        loading: () => const Center(child: CircularProgressIndicator()),
+                        loading: () =>
+                            const Center(child: CircularProgressIndicator()),
                         error: (e, _) => Center(
-                          child: Text('에러 발생: $e', style: const TextStyle(color: Colors.red)),
+                          child: Text(
+                            '에러 발생: $e',
+                            style: const TextStyle(color: Colors.red),
+                          ),
                         ),
                       );
                     },
@@ -447,7 +520,10 @@ class MealCalendarPage extends HookConsumerWidget {
             onPressed: () async {
               await context.push(
                 AppRoutePath.mealEditor,
-                extra: {'mealDayId': selectedMealDay?.id, 'date': selectedDay.value},
+                extra: {
+                  'mealDayId': selectedMealDay?.id,
+                  'date': selectedDay.value,
+                },
               );
               // Provider로 따로 뺀거라 돌아온 후 갱신 해줘야함
               // TODO: vm에서 state 클래스로 같이 관리하도록 리팩토링 하기
@@ -458,7 +534,11 @@ class MealCalendarPage extends HookConsumerWidget {
             elevation: 0,
             shape: const CircleBorder(),
             backgroundColor: fxc(context).primary400,
-            child: Icon(PhosphorIcons.pencilSimple(), size: 32, color: Colors.white),
+            child: Icon(
+              PhosphorIcons.pencilSimple(),
+              size: 32,
+              color: Colors.white,
+            ),
           ),
         ],
       ),
@@ -485,9 +565,16 @@ class _EmptyMealView extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(PhosphorIcons.bowlFood(), size: 100, color: vrc(context).emptyText),
+                  Icon(
+                    PhosphorIcons.bowlFood(),
+                    size: 100,
+                    color: vrc(context).emptyText,
+                  ),
                   const SizedBox(height: 10),
-                  Text('기록한 식단이 없어요 :(', style: TextStyle(color: vrc(context).border, fontSize: 18)),
+                  Text(
+                    '기록한 식단이 없어요 :(',
+                    style: TextStyle(color: vrc(context).border, fontSize: 18),
+                  ),
                 ],
               ),
             ),
@@ -497,7 +584,6 @@ class _EmptyMealView extends StatelessWidget {
     );
   }
 }
-
 
 class _FabBubble extends StatelessWidget {
   const _FabBubble({required this.text, this.onTap});

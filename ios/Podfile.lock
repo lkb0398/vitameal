@@ -297,6 +297,7 @@ SPEC CHECKSUMS:
   connectivity_plus: cb623214f4e1f6ef8fe7403d580fdad517d2f7dd
   Firebase: a451a7b61536298fd5cbfe3a746fd40443a50679
 <<<<<<< HEAD
+<<<<<<< HEAD
   firebase_core: ba00a168e719694f38960502ceb560285603d073
   firebase_messaging: bf0e29321927edc02a563c984dbfa5b063864b15
 =======
@@ -304,13 +305,18 @@ SPEC CHECKSUMS:
   firebase_core: 7ca5e04fc97329a2245376eba53c5bed113ca21e
   firebase_messaging: d9fd1aeeabefbbee02336521ccd19fc6e93c4625
 =======
+=======
+>>>>>>> 16983e6 (feat: analytics 이벤트 코드 적용)
   firebase_analytics: 4f9cca09e65f6c2944a862c6dc86f6bed9fb769c
   firebase_core: ba00a168e719694f38960502ceb560285603d073
   firebase_crashlytics: 13f4b77e9ce2a84b1f8ea07f293db5b6213ce1cf
   firebase_messaging: bf0e29321927edc02a563c984dbfa5b063864b15
   FirebaseAnalytics: d0a97a0db6425e5a5d966340b87f92ca7b13a557
+<<<<<<< HEAD
 >>>>>>> e70a82f (feat: crashlytics, analytics 관련 설정 적용)
 >>>>>>> c8ea37b (feat: crashlytics, analytics 관련 설정 적용)
+=======
+>>>>>>> 16983e6 (feat: analytics 이벤트 코드 적용)
   FirebaseCore: 0e38ad5d62d980a47a64b8e9301ffa311457be04
   FirebaseCoreExtension: 032fd6f8509e591fda8cb76f6651f20d926b121f
   FirebaseCoreInternal: 69bf1306a05b8ac43004f6cc1f804bb7b05b229e
@@ -339,7 +345,10 @@ SPEC CHECKSUMS:
   SDWebImage: e9c98383c7572d713c1a0d7dd2783b10599b9838
   SDWebImageWebPCoder: 0e06e365080397465cc73a7a9b472d8a3bd0f377
   shared_preferences_foundation: 7036424c3d8ec98dfe75ff1667cb0cd531ec82bb
+<<<<<<< HEAD
   sqflite_darwin: 20b2a3a3b70e43edae938624ce550a3cbf66a3d0
+=======
+>>>>>>> 16983e6 (feat: analytics 이벤트 코드 적용)
   sqlite3: 8d708bc63e9f4ce48f0ad9d6269e478c5ced1d9b
   sqlite3_flutter_libs: d13b8b3003f18f596e542bcb9482d105577eff41
   url_launcher_ios: 7a95fa5b60cc718a708b8f2966718e93db0cef1b

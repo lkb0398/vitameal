@@ -3,6 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tap_debouncer/tap_debouncer.dart';
+import 'package:vitameal/core/service/analytics_service.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
 import 'package:vitameal/domain/entity/goals_entity.dart';
 import 'package:vitameal/presentation/goal/view/function/show_gray_snackbar.dart';
@@ -124,6 +125,11 @@ class AddGoalPage extends HookConsumerWidget {
                             context.pop();
                             // UI 반영
                             ref.invalidate(getAllGoalsProvider);
+                            // 📝
+                            AnalyticsService.event(
+                              'goal_action',
+                              p: {'action': 'delete'},
+                            );
                           },
                         );
                       },
@@ -252,6 +258,11 @@ class AddGoalPage extends HookConsumerWidget {
                   context.pop();
                   // UI 반영
                   ref.invalidate(getAllGoalsProvider);
+                  // 📝
+                  AnalyticsService.event(
+                    'goal_action',
+                    p: {'action': 'create'},
+                  );
                 }
               }
             : null,
