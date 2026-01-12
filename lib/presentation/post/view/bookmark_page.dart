@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:vitameal/core/theme/app_theme.dart';
 import 'package:vitameal/domain/entity/post_entity.dart';
 import 'package:vitameal/presentation/post/view_model/post_view_model.dart';
 
@@ -10,38 +11,46 @@ class BookmarkPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // --- 초기 상태 및 데이터 로드 섹션 ---
     final selectedTabIndex = useState(0);
-
     final postsAsync = selectedTabIndex.value == 0
         ? ref.watch(bookmarkedPostsProvider)
         : ref.watch(myPostsProvider);
 
     return Scaffold(
+      backgroundColor: vrc(context).background,
       appBar: AppBar(
+        backgroundColor: vrc(context).background,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios),
+          icon: Icon(Icons.arrow_back_ios, color: vrc(context).text),
           onPressed: () => context.pop(),
         ),
-        title: const Text(
+        title: Text(
           "저장된 레시피",
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: vrc(context).text,
+          ),
         ),
         centerTitle: true,
         elevation: 0,
       ),
       body: Column(
         children: [
+          // --- 탭 전환 버튼 섹션 ---
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             child: Row(
               children: [
                 buildTabButton(
+                  context,
                   "즐겨찾기",
                   selectedTabIndex.value == 0,
                   () => selectedTabIndex.value = 0,
                 ),
                 const SizedBox(width: 10),
                 buildTabButton(
+                  context,
                   "나의 레시피",
                   selectedTabIndex.value == 1,
                   () => selectedTabIndex.value = 1,
@@ -50,11 +59,17 @@ class BookmarkPage extends HookConsumerWidget {
             ),
           ),
 
+          // --- 레시피 그리드 리스트 섹션 ---
           Expanded(
             child: postsAsync.when(
               data: (posts) {
                 if (posts.isEmpty) {
-                  return const Center(child: Text("목록이 비어있습니다."));
+                  return Center(
+                    child: Text(
+                      "목록이 비어있습니다.",
+                      style: TextStyle(color: vrc(context).content),
+                    ),
+                  );
                 }
                 return GridView.builder(
                   padding: const EdgeInsets.all(20),
@@ -70,8 +85,17 @@ class BookmarkPage extends HookConsumerWidget {
                   },
                 );
               },
-              loading: () => const Center(child: CircularProgressIndicator()),
-              error: (err, _) => Center(child: Text("오류가 발생했습니다: $err")),
+              loading: () => Center(
+                child: CircularProgressIndicator(
+                  color: fxc(context).primary400,
+                ),
+              ),
+              error: (err, _) => Center(
+                child: Text(
+                  "오류가 발생했습니다: $err",
+                  style: TextStyle(color: vrc(context).text),
+                ),
+              ),
             ),
           ),
         ],
@@ -79,19 +103,27 @@ class BookmarkPage extends HookConsumerWidget {
     );
   }
 
-  Widget buildTabButton(String label, bool isSelected, VoidCallback onTap) {
+  // --- 위젯 빌더 섹션 ---
+  Widget buildTabButton(
+    BuildContext context,
+    String label,
+    bool isSelected,
+    VoidCallback onTap,
+  ) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFF89CC00) : const Color(0xFFF2F2F2),
+          color: isSelected
+              ? fxc(context).primary400
+              : vrc(context).greyBackground,
           borderRadius: BorderRadius.circular(10),
         ),
         child: Text(
           label,
           style: TextStyle(
-            color: isSelected ? Colors.white : const Color(0xFFBCBCBC),
+            color: isSelected ? Colors.white : vrc(context).hint,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -134,7 +166,7 @@ class BookmarkPage extends HookConsumerWidget {
               child: Icon(
                 post.isBookmarked ? Icons.bookmark : Icons.bookmark_outline,
                 color: post.isBookmarked
-                    ? const Color(0xFF89CC00)
+                    ? fxc(context).primary400
                     : Colors.white,
                 size: 24,
               ),

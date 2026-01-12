@@ -9,6 +9,7 @@ abstract class PostRepository {
     required String userId,
     String? query,
     List<int>? tagIds,
+    String? authorId,
   });
 
   Future<List<TagEntity>> fetchAllTags();
@@ -18,15 +19,11 @@ abstract class PostRepository {
     required String userId,
   });
 
-
   Future<bool> toggleBookmark({required String userId, required String postId});
-
 
   Future<List<PostEntity>> fetchBookmarkedPosts(String userId);
 
-
   Future<String?> uploadImage(File imageFile, String bucket, String userId);
-
 
   Future<void> createPost({
     required String title,

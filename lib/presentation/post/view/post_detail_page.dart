@@ -4,8 +4,10 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:vitameal/core/config/routes.dart';
+import 'package:vitameal/core/theme/app_theme.dart';
 import 'package:vitameal/presentation/post/view_model/post_view_model.dart';
 import 'package:vitameal/presentation/post/view_model/tag_view_model.dart';
+import 'package:vitameal/presentation/ui_provider/profiles_provider.dart';
 
 class PostDetailPage extends HookConsumerWidget {
   const PostDetailPage({super.key, required this.pId});
@@ -13,6 +15,8 @@ class PostDetailPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // --- 초기 데이터 및 상태 설정 ---
+    final currentUserId = ref.watch(userIdProvider);
     final postsAsync = ref.watch(postViewModelProvider);
 
     final postFuture = useMemoized(
@@ -22,16 +26,26 @@ class PostDetailPage extends HookConsumerWidget {
     final postAsync = useFuture(postFuture);
     final allTagsAsync = ref.watch(allTagsProvider);
 
+    // --- 로딩 및 에러 처리 ---
     if (postAsync.connectionState == ConnectionState.waiting &&
         !postAsync.hasData) {
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+      return Scaffold(
+        backgroundColor: vrc(context).background,
+        body: const Center(child: CircularProgressIndicator()),
+      );
     }
 
     if (postAsync.hasError ||
         (!postAsync.hasData && postsAsync.value == null)) {
       return Scaffold(
-        appBar: AppBar(),
-        body: const Center(child: Text("게시글을 불러올 수 없습니다.")),
+        backgroundColor: vrc(context).background,
+        appBar: AppBar(backgroundColor: vrc(context).background),
+        body: Center(
+          child: Text(
+            "게시글을 불러올 수 없습니다.",
+            style: TextStyle(color: vrc(context).text),
+          ),
+        ),
       );
     }
 
@@ -39,81 +53,164 @@ class PostDetailPage extends HookConsumerWidget {
         ?.where((p) => p.id == pId)
         .firstOrNull;
     final post = postFromList ?? postAsync.data!;
+    final bool isMyPost = post.userId == currentUserId;
 
     return Scaffold(
+      backgroundColor: vrc(context).background,
       appBar: AppBar(
+        backgroundColor: vrc(context).background,
+        iconTheme: IconThemeData(color: vrc(context).text),
         actions: [
-          PopupMenuButton<String>(
-            color: Colors.white,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
-            ),
-            onSelected: (value) async {
-              if (value == 'delete') {
-                final confirm = await showDialog<bool>(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                    title: const Text(
-                      '삭제하시겠습니까?',
-                      style: TextStyle(fontSize: 16),
+          // --- 수정/삭제 관리 섹션 (작성자 전용) ---
+          if (isMyPost)
+            PopupMenuButton<String>(
+              color: vrc(context).background,
+              surfaceTintColor: Colors.transparent,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              onSelected: (value) async {
+                if (value == 'delete') {
+                  final confirm = await showDialog<bool>(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      backgroundColor: vrc(context).background,
+                      surfaceTintColor: Colors.transparent,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      contentPadding: EdgeInsets.zero,
+                      content: SizedBox(
+                        width: 300,
+                        height: 172,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Spacer(),
+                            Text(
+                              '정말 삭제할까요?',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: vrc(context).text,
+                              ),
+                            ),
+                            const Spacer(),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(16, 0, 16, 20),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: SizedBox(
+                                      height: 56,
+                                      child: TextButton(
+                                        onPressed: () =>
+                                            Navigator.pop(context, false),
+                                        style: TextButton.styleFrom(
+                                          backgroundColor: vrc(
+                                            context,
+                                          ).background,
+                                          side: BorderSide(
+                                            color: vrc(context).border!,
+                                          ),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(
+                                              8,
+                                            ),
+                                          ),
+                                        ),
+                                        child: Text(
+                                          '취소',
+                                          style: TextStyle(
+                                            color: vrc(context).content,
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 14,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Expanded(
+                                    child: SizedBox(
+                                      height: 56,
+                                      child: TextButton(
+                                        onPressed: () =>
+                                            Navigator.pop(context, true),
+                                        style: TextButton.styleFrom(
+                                          backgroundColor: fxc(
+                                            context,
+                                          ).secondary400,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(
+                                              8,
+                                            ),
+                                          ),
+                                        ),
+                                        child: const Text(
+                                          '삭제',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 14,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
-                    content: const Text('삭제된 레시피는 복구할 수 없습니다.'),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.pop(context, false),
-                        child: const Text(
-                          '취소',
-                          style: TextStyle(color: Colors.grey),
-                        ),
-                      ),
-                      TextButton(
-                        onPressed: () => Navigator.pop(context, true),
-                        child: const Text(
-                          '삭제',
-                          style: TextStyle(color: Color(0xFFFF506A)),
-                        ),
-                      ),
-                    ],
-                  ),
-                );
+                  );
 
-                if (confirm == true) {
-                  try {
-                    await ref
-                        .read(postViewModelProvider.notifier)
-                        .deletePost(post.id!);
-                    if (context.mounted) {
-                      context.pop();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('게시글이 삭제되었습니다.')),
-                      );
-                    }
-                  } catch (e) {
-                    if (context.mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('삭제에 실패했습니다.')),
-                      );
+                  if (confirm == true) {
+                    try {
+                      await ref
+                          .read(postViewModelProvider.notifier)
+                          .deletePost(post.id!);
+                      if (context.mounted) {
+                        context.pop();
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('게시글이 삭제되었습니다.')),
+                        );
+                      }
+                    } catch (e) {
+                      if (context.mounted)
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('삭제에 실패했습니다.')),
+                        );
                     }
                   }
+                } else if (value == 'modify') {
+                  context.push(AppRoutePath.editPost, extra: post);
                 }
-              } else if (value == 'modify') {
-                context.push(AppRoutePath.editPost, extra: post);
-              }
-            },
-            itemBuilder: (context) => [
-              const PopupMenuItem(
-                value: 'modify',
-                child: Text('수정하기', style: TextStyle(fontSize: 12)),
-              ),
-              const PopupMenuItem(
-                value: 'delete',
-                child: Text(
-                  '삭제하기',
-                  style: TextStyle(color: Color(0xFFFF506A), fontSize: 12),
+              },
+              itemBuilder: (context) => [
+                PopupMenuItem(
+                  value: 'modify',
+                  child: Text(
+                    '수정하기',
+                    style: TextStyle(fontSize: 12, color: vrc(context).text),
+                  ),
                 ),
-              ),
-            ],
-          ),
+                PopupMenuItem(
+                  value: 'delete',
+                  child: Text(
+                    '삭제하기',
+                    style: TextStyle(
+                      color: fxc(context).secondary400,
+                      fontSize: 12,
+                    ),
+                  ),
+                ),
+              ],
+            )
+          else
+            const SizedBox.shrink(),
           const SizedBox(width: 20),
         ],
       ),
@@ -121,6 +218,7 @@ class PostDetailPage extends HookConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // --- 대표 이미지 및 즐겨찾기 섹션 ---
             Stack(
               children: [
                 post.imageUrl != null
@@ -131,40 +229,53 @@ class PostDetailPage extends HookConsumerWidget {
                         fit: BoxFit.cover,
                       )
                     : Image.asset(
-                        "assets/images/profile_image.webp",
+                        "assets/images/profile2.png",
                         height: 248,
                         width: double.infinity,
                         fit: BoxFit.cover,
                       ),
-                Positioned(
-                  bottom: 10,
-                  right: 10,
-                  child: GestureDetector(
-                    onTap: () => ref
-                        .read(postViewModelProvider.notifier)
-                        .toggleBookmark(post.id!),
-                    child: Icon(
-                      post.isBookmarked
-                          ? Icons.bookmark
-                          : Icons.bookmark_outline,
-                      color: post.isBookmarked
-                          ? const Color(0xFF89CC00)
-                          : Colors.white,
-                      size: 27,
+                if (!isMyPost)
+                  Positioned(
+                    bottom: 10,
+                    right: 10,
+                    child: GestureDetector(
+                      onTap: () {
+                        if (isMyPost) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text("자신의 글은 즐겨찾기 할 수 없습니다."),
+                            ),
+                          );
+                          return;
+                        }
+                        ref
+                            .read(postViewModelProvider.notifier)
+                            .toggleBookmark(post.id!);
+                      },
+                      child: Icon(
+                        post.isBookmarked
+                            ? Icons.bookmark
+                            : Icons.bookmark_outline,
+                        color: post.isBookmarked
+                            ? fxc(context).primary400
+                            : Colors.white,
+                        size: 27,
+                      ),
                     ),
                   ),
-                ),
               ],
             ),
+
             Padding(
               padding: const EdgeInsets.all(20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // --- 게시글 기본 정보 섹션 ---
                   Text(
                     post.title,
-                    style: const TextStyle(
-                      color: Color(0xFF333333),
+                    style: TextStyle(
+                      color: vrc(context).text,
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
                     ),
@@ -172,22 +283,18 @@ class PostDetailPage extends HookConsumerWidget {
                   const SizedBox(height: 20),
                   Text(
                     post.ingredient,
-                    style: const TextStyle(
-                      color: Color(0xFF333333),
-                      fontSize: 16,
-                    ),
+                    style: TextStyle(color: vrc(context).text, fontSize: 16),
                   ),
                   const SizedBox(height: 12),
                   Text(
                     post.createdAt != null
                         ? DateFormat('yyyy.MM.dd').format(post.createdAt!)
                         : "날짜 정보 없음",
-                    style: const TextStyle(
-                      color: Color(0xFFBCBCBC),
-                      fontSize: 12,
-                    ),
+                    style: TextStyle(color: vrc(context).hint, fontSize: 12),
                   ),
                   const SizedBox(height: 20),
+
+                  // --- 태그 리스트 섹션 ---
                   allTagsAsync.when(
                     data: (tags) {
                       final displayTags =
@@ -214,17 +321,17 @@ class PostDetailPage extends HookConsumerWidget {
                                   vertical: 6,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: const Color(0xFFE9F9C7),
+                                  color: fxc(context).primary100,
                                   borderRadius: BorderRadius.circular(8),
                                   border: Border.all(
-                                    color: const Color(0xFF89CC00),
+                                    color: fxc(context).primary400!,
                                     width: 1,
                                   ),
                                 ),
                                 child: Text(
                                   "#$tagName",
-                                  style: const TextStyle(
-                                    color: Color(0xFF89CC00),
+                                  style: TextStyle(
+                                    color: fxc(context).primary400,
                                     fontSize: 13,
                                     fontWeight: FontWeight.w500,
                                   ),
@@ -243,7 +350,9 @@ class PostDetailPage extends HookConsumerWidget {
                     error: (err, _) => const SizedBox.shrink(),
                   ),
                   const SizedBox(height: 20),
-                  const Divider(),
+                  Divider(color: vrc(context).border),
+
+                  // --- 작성자 정보 섹션 ---
                   SizedBox(
                     width: double.infinity,
                     height: 64,
@@ -251,29 +360,27 @@ class PostDetailPage extends HookConsumerWidget {
                       children: [
                         CircleAvatar(
                           radius: 20,
-                          backgroundColor: const Color(0xFFF2F2F2),
-                          // 📸 프로필 이미지가 있을 때만 NetworkImage를 사용
+                          backgroundColor: vrc(context).greyBackground,
                           backgroundImage:
                               (post.authorProfileImage != null &&
                                   post.authorProfileImage!.isNotEmpty)
                               ? NetworkImage(post.authorProfileImage!)
                               : null,
-                          // 👤 이미지가 없거나 로드 실패 시 보일 아이콘
                           child:
                               (post.authorProfileImage == null ||
                                   post.authorProfileImage!.isEmpty)
-                              ? const Icon(
+                              ? Icon(
                                   Icons.person,
-                                  color: Colors.grey,
+                                  color: vrc(context).imagePlusIcon,
                                   size: 24,
                                 )
                               : null,
                         ),
                         const SizedBox(width: 12),
                         Text(
-                          post.authorName ?? "익명 요리사", // 👤 실제 닉네임 표시
-                          style: const TextStyle(
-                            color: Color(0xFF333333),
+                          post.authorName ?? "익명 요리사",
+                          style: TextStyle(
+                            color: vrc(context).text,
                             fontWeight: FontWeight.bold,
                             fontSize: 15,
                           ),
@@ -281,16 +388,17 @@ class PostDetailPage extends HookConsumerWidget {
                       ],
                     ),
                   ),
-                  const Divider(),
+                  Divider(color: vrc(context).border),
 
+                  // --- 레시피 순서 리스트 섹션 ---
                   const SizedBox(height: 20),
-                  const Padding(
-                    padding: EdgeInsets.only(left: 8),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8),
                     child: Text(
                       "레시피 순서",
                       style: TextStyle(
                         fontSize: 18,
-                        color: Color(0xFF333333),
+                        color: vrc(context).text,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -307,9 +415,9 @@ class PostDetailPage extends HookConsumerWidget {
                         children: [
                           Text(
                             "Step ${step.stepOrder}",
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 16,
-                              color: Color(0xFF89CC00),
+                              color: fxc(context).primary400,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
@@ -337,15 +445,16 @@ class PostDetailPage extends HookConsumerWidget {
                             padding: const EdgeInsets.all(16),
                             width: double.infinity,
                             decoration: BoxDecoration(
-                              border: Border.all(
-                                color: const Color(0xFFBCBCBC),
-                              ),
+                              border: Border.all(color: vrc(context).border!),
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Text(
                               step.description,
                               softWrap: true,
-                              style: const TextStyle(height: 1.5),
+                              style: TextStyle(
+                                height: 1.5,
+                                color: vrc(context).text,
+                              ),
                             ),
                           ),
                           const SizedBox(height: 40),

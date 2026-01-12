@@ -9,6 +9,7 @@ abstract class PostRemoteDataSource {
     required int to,
     String? query,
     List<int>? tagIds,
+    String? authorId,
   });
 
   Future<Map<String, dynamic>?> getBookmark({
@@ -40,6 +41,7 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
     required int to,
     String? query,
     List<int>? tagIds,
+    String? authorId, // 🔔 구현부에도 파라미터 추가
   }) async {
     final isTagFiltering = tagIds != null && tagIds.isNotEmpty;
 
@@ -48,8 +50,13 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
   recipe_steps(*),
   post_bookmarks(user_id),
   post_tags${isTagFiltering ? '!inner' : ''}(tag_id),
-  profiles:user_id(nickname, photo_url) -- 🔔 명칭을 profiles:user_id로 변경
+  profiles:user_id(nickname, photo_url)
 ''');
+
+    // 🔔 작성자 필터링: authorId가 전달되면 해당 유저의 글만 가져옴
+    if (authorId != null && authorId.isNotEmpty) {
+      request = request.eq('user_id', authorId);
+    }
 
     if (query != null && query.isNotEmpty) {
       request = request.ilike('title', '%$query%');
@@ -101,7 +108,7 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
     recipe_steps(*),
     post_bookmarks(user_id),
     post_tags(tag_id),
-    profiles:user_id(nickname, photo_url) -- 🔔 여기도 똑같이 profiles:user_id로 변경
+    profiles:user_id(nickname, photo_url)
   ''')
         .eq('id', postId)
         .single();

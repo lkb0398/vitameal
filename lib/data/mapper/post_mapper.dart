@@ -25,6 +25,7 @@ extension PostDtoMapper on PostDto {
       ingredient: ingredient,
       userId: userId,
       imageUrl: imageUrl,
+      createdAt: createdAt,
       authorName: name,
       authorProfileImage: profileImg,
       selectedTagIds: postTags.map((e) => e['tag_id'] as int).toList(),

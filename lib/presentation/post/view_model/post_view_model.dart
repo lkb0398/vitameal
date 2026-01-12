@@ -248,5 +248,10 @@ Future<List<PostEntity>> bookmarkedPosts(Ref ref) async {
 Future<List<PostEntity>> myPosts(Ref ref) async {
   final userId = ref.watch(userIdProvider);
   final repository = ref.watch(postRepositoryProvider);
-  return await repository.fetchPosts(from: 0, to: 100, userId: userId);
+  return await repository.fetchPosts(
+    from: 0,
+    to: 100,
+    userId: userId,
+    authorId: userId,
+  );
 }
