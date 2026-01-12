@@ -443,6 +443,7 @@ class MealCalendarPage extends HookConsumerWidget {
           ),
           const SizedBox(height: 8),
           FloatingActionButton(
+            heroTag: null,
             onPressed: () async {
               await context.push(
                 AppRoutePath.mealEditor,
