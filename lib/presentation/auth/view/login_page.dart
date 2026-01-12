@@ -9,6 +9,7 @@ import 'package:vitameal/core/service/analytics_service.dart';
 import 'package:vitameal/presentation/ui_provider/profiles_provider.dart';
 import 'package:vitameal/presentation/auth/view_model/auth_view_model.dart';
 import 'package:vitameal/presentation/auth/view/widgets/social_login_button.dart';
+import 'package:vitameal/presentation/auth/view/widgets/terms_agreement_text.dart';
 
 class LoginPage extends HookConsumerWidget {
   const LoginPage({super.key});
@@ -138,6 +139,10 @@ class LoginPage extends HookConsumerWidget {
                   AnalyticsService.event('login', p: {'type': 'google'}); // 📝
                 },
         ),
+
+        const SizedBox(height: 24),
+
+        const TermsAgreementText(),
 
         const Spacer(flex: 2),
       ],
