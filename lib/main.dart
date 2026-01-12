@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:vitameal/core/config/firebase_options.dart';
 import 'package:flutter/material.dart';
@@ -47,6 +48,9 @@ Future<void> main() async {
   runZonedGuarded(
     () async {
       WidgetsFlutterBinding.ensureInitialized();
+
+      // 화면 세로모드 고정 (필요시 나중에 페이지 부분적용으로 변경)
+      await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
       await _safe(
         () => Supabase.initialize(
