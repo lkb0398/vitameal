@@ -181,26 +181,22 @@ class PostPage extends HookConsumerWidget {
                                 children: [
                                   ClipRRect(
                                     borderRadius: BorderRadius.circular(8),
-                                    child: post.imageUrl != null &&
-                                            post.imageUrl!.isNotEmpty
-                                        ? Image.network(
-                                            post.imageUrl!,
-                                            width: 96,
-                                            height: 96,
-                                            fit: BoxFit.cover,
-                                            errorBuilder: (c, e, s) =>
-                                                Image.asset(
-                                                  "assets/images/profile2.png",
-                                                  width: 96,
-                                                  height: 96,
-                                                ),
-                                          )
-                                        : Image.asset(
-                                            "assets/images/profile2.png",
-                                            width: 96,
-                                            height: 96,
-                                            fit: BoxFit.cover,
-                                          ),
+                                    child: Container(
+                                      width: 96,
+                                      height: 96,
+                                      color: Colors.black12, // 배경색
+                                      child: post.imageUrl != null && post.imageUrl!.isNotEmpty
+                                          ? Image.network(
+                                              post.imageUrl!,
+                                              fit: BoxFit.cover,
+                                              errorBuilder: (c, e, s) => const Center(
+                                                child: Icon(Icons.image_not_supported_outlined, color: Colors.black26),
+                                              ),
+                                            )
+                                          : const Center(
+                                              child: Icon(Icons.restaurant, color: Colors.black26),
+                                            ),
+                                    ),
                                   ),
                                   const SizedBox(width: 12),
                                   Expanded(
