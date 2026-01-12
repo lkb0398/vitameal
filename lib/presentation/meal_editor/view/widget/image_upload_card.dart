@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
+import 'package:vitameal/core/theme/app_theme.dart';
 
 class ImageUploadCard extends StatelessWidget {
   /// 이미지 카드
@@ -27,43 +29,42 @@ class ImageUploadCard extends StatelessWidget {
       onTap: hasImage ? null : onPickImage,
       child: Stack(
         children: [
-          Container(
-            height: 210,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: hasImage ? null : const Color(0xFFEDEDED),
-              borderRadius: BorderRadius.circular(14),
-              image: imageFile != null
-                  ? DecorationImage(
-                      image: FileImage(imageFile!),
-                      fit: BoxFit.cover,
-                    )
-                  : photoUrl != null
-                  ? DecorationImage(
-                      image: NetworkImage(photoUrl!),
-                      fit: BoxFit.cover,
+          AspectRatio(
+            aspectRatio: 120 / 112,
+            child: Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: hasImage ? null : vrc(context).greyBackground,
+                borderRadius: BorderRadius.circular(14),
+                image: imageFile != null
+                    ? DecorationImage(
+                        image: FileImage(imageFile!),
+                        fit: BoxFit.cover,
+                      )
+                    : photoUrl != null
+                        ? DecorationImage(
+                            image: NetworkImage(photoUrl!),
+                            fit: BoxFit.cover,
+                          )
+                        : null,
+              ),
+              child: !hasImage
+                  ? Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(PhosphorIcons.plus(), size: 44, color: vrc(context).border),
+                          // Icon(Icons.add_photo_alternate, size: 44, color: Colors.black26),
+                          SizedBox(height: 8),
+                          Text(
+                            '이미지 추가',
+                            style: TextStyle(color: vrc(context).hint, fontSize: 13),
+                          ),
+                        ],
+                      ),
                     )
                   : null,
             ),
-            child: !hasImage
-                ? const Center(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          Icons.add_photo_alternate,
-                          size: 44,
-                          color: Colors.black26,
-                        ),
-                        SizedBox(height: 8),
-                        Text(
-                          '이미지 추가',
-                          style: TextStyle(color: Colors.black38, fontSize: 13),
-                        ),
-                      ],
-                    ),
-                  )
-                : null,
           ),
 
           // 이미지 변경/제거 버튼

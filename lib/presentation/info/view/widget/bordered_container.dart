@@ -17,18 +17,17 @@ class BorderedContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 20),
         padding: EdgeInsets.all(20),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
           color: vrc(context).infoContainer,
           boxShadow: [
             BoxShadow(
-              color: fxc(context).textcolor200!,
-              blurRadius: 5,
+              color: vrc(context).infoShadow!,
+              blurRadius: 10,
               offset: Offset(0, 0),
             ),
           ],
@@ -36,26 +35,29 @@ class BorderedContainer extends StatelessWidget {
         child: Column(
           spacing: 20,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  spacing: 10,
-                  children: [
-                    Text(title, style: TextStyle(fontSize: 16)),
-                    subtitle == null
-                        ? SizedBox.shrink()
-                        : Text(
-                            subtitle!,
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: fxc(context).textcolor300,
+            InkWell(
+              onTap: onTap,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    spacing: 10,
+                    children: [
+                      Text(title, style: TextStyle(fontSize: 16)),
+                      subtitle == null
+                          ? SizedBox.shrink()
+                          : Text(
+                              subtitle!,
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: fxc(context).textcolor300,
+                              ),
                             ),
-                          ),
-                  ],
-                ),
-                Icon(Icons.arrow_forward_ios, size: 12),
-              ],
+                    ],
+                  ),
+                  Icon(Icons.arrow_forward_ios, size: 12),
+                ],
+              ),
             ),
             child,
           ],

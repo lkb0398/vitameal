@@ -27,7 +27,9 @@ class FixedColors extends ThemeExtension<FixedColors> {
     required this.feelnormal,
     required this.feelbad,
     required this.accentsgreen,
-    required this.yellow,
+    required this.yellowTag,
+    required this.yellowText,
+    required this.yellowSlider,
   });
   final Color? primary100;
   final Color? primary200;
@@ -53,7 +55,9 @@ class FixedColors extends ThemeExtension<FixedColors> {
   final Color? feelnormal;
   final Color? feelbad;
   final Color? accentsgreen;
-  final Color? yellow;
+  final Color? yellowTag;
+  final Color? yellowText;
+  final Color? yellowSlider;
 
   static const FixedColors constant = FixedColors(
     // 초록색
@@ -83,10 +87,12 @@ class FixedColors extends ThemeExtension<FixedColors> {
     feelgood: Color(0xFF5CE64A),
     feelnormal: Color(0xFFFEBE10),
     feelbad: Color(0xFFFF729A),
-    // 알람 토글 색상
+    // 알림 토글 색상
     accentsgreen: Color(0xFF34C759),
-    // 온보딩 화살표 색상
-    yellow: Color(0xFFFFE032),
+    // 노란색
+    yellowTag: Color(0xFFFFF9E5), // 알레르기 태그 배경색
+    yellowText: Color(0xFFFFC812), // 알레르기 태그 글자색
+    yellowSlider: Color(0xFFFFC812), // 수정 슬라이더 색상
   );
 
   @override
@@ -115,7 +121,9 @@ class FixedColors extends ThemeExtension<FixedColors> {
     Color? feelnormal,
     Color? feelbad,
     Color? accentsgreen,
-    Color? yellow,
+    Color? yellowTag,
+    Color? yellowText,
+    Color? yellowSlider,
   }) => FixedColors(
     primary100: primary100 ?? this.primary100,
     primary200: primary200 ?? this.primary200,
@@ -141,7 +149,9 @@ class FixedColors extends ThemeExtension<FixedColors> {
     feelnormal: feelnormal ?? this.feelnormal,
     feelbad: feelbad ?? this.feelbad,
     accentsgreen: accentsgreen ?? this.accentsgreen,
-    yellow: yellow ?? this.yellow,
+    yellowTag: yellowTag ?? this.yellowTag,
+    yellowText: yellowText ?? this.yellowText,
+    yellowSlider: yellowSlider ?? this.yellowSlider,
   );
 
   @override
@@ -172,7 +182,9 @@ class FixedColors extends ThemeExtension<FixedColors> {
       feelnormal: Color.lerp(feelnormal, other.feelnormal, t),
       feelbad: Color.lerp(feelbad, other.feelbad, t),
       accentsgreen: Color.lerp(accentsgreen, other.accentsgreen, t),
-      yellow: Color.lerp(yellow, other.yellow, t),
+      yellowTag: Color.lerp(yellowTag, other.yellowTag, t),
+      yellowText: Color.lerp(yellowText, other.yellowText, t),
+      yellowSlider: Color.lerp(yellowSlider, other.yellowSlider, t),
     );
   }
 }

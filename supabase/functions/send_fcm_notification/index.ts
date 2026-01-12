@@ -1,20 +1,16 @@
-// 🤍 변경 후 적용 명령어 : supabase functions deploy send_fcm_notification --no-verify-jwt 
+// 🤍 변경 후 적용 명령어 : supabase functions deploy send_fcm_notification --no-verify-jwt
 
 import { serve } from "https://deno.land/std@0.224.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { SignJWT, importPKCS8 } from "https://esm.sh/jose@5.2.4";
 
-/* --------------------------------------------------
- * Supabase Client (Service Role)
- * -------------------------------------------------- */
+// ========== Supabase Client (Service Role) ==========
 const supabase = createClient(
   Deno.env.get("SUPABASE_URL")!,
   Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
 );
 
-/* --------------------------------------------------
- * FCM OAuth Access Token
- * -------------------------------------------------- */
+// ========== FCM OAuth Access Token ==========
 async function getAccessToken(): Promise<string> {
   const clientEmail = Deno.env.get("FCM_CLIENT_EMAIL")!;
   const privateKeyRaw = Deno.env.get("FCM_PRIVATE_KEY")!;
@@ -22,7 +18,7 @@ async function getAccessToken(): Promise<string> {
 
   const now = Math.floor(Date.now() / 1000);
 
-  // 🔑 PKCS8 키 파싱 (여기서 jose가 다 처리)
+  // PKCS8 키 파싱 (여기서 jose가 다 처리)
   const key = await importPKCS8(privateKey, "RS256");
   console.log("🔐 private key header:", privateKey.split("\n")[0]);
   console.log("🔐 private key footer:", privateKey.split("\n").at(-2));
@@ -57,9 +53,7 @@ async function getAccessToken(): Promise<string> {
   return data.access_token;
 }
 
-/* --------------------------------------------------
- * Next Fire Time (DST-safe)
- * -------------------------------------------------- */
+// ========== Next Fire Time (DST-safe) ==========
 function calculateNextDailyFireAt(timezone: string, time: string): string {
   const [hour, minute] = time.split(":").map(Number);
 
@@ -77,9 +71,7 @@ function calculateNextDailyFireAt(timezone: string, time: string): string {
   return next.toISOString(); // UTC
 }
 
-/* --------------------------------------------------
- * Main Handler (Cron Entry)
- * -------------------------------------------------- */
+// ========== Main Handler (Cron Entry) ==========
 serve(async () => {
   try {
     console.log("🚀 function start");
@@ -94,7 +86,7 @@ serve(async () => {
 
     const now = new Date().toISOString();
 
-    // 1️⃣ 발송 대상 조회
+    // 1. 발송 대상 조회
     const { data: notis, error } = await supabase
       .from("notifications")
       .select("*")
@@ -117,9 +109,9 @@ serve(async () => {
     console.log("access token ok");
     const projectId = Deno.env.get("FCM_PROJECT_ID")!;
 
-    // 2️⃣ 알림 처리
+    // 2. 알림 처리
     for (const noti of notis) {
-      // 🔒 중복 발송 방지: 먼저 next_fire_at 갱신
+      // 중복 발송 방지: 먼저 next_fire_at 갱신
       const nextFireAt = calculateNextDailyFireAt(
         noti.timezone,
         noti.time,
@@ -153,8 +145,8 @@ serve(async () => {
                 token: t.fcm_token,
                   // 🤍 시스템 알림 커스텀
                   notification: {
-                    title: `vitameal`,
-                    body: `${noti.time.slice(0,5)} ${noti.label} 알람입니다`,
+                    title: `VitaMeal`,
+                    body: noti.label,
                   },
                 
                   // 앱 로직용 데이터 > 로컬 알림 표시에서 커스텀 예정

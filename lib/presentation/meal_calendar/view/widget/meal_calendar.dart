@@ -2,7 +2,9 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:vitameal/core/theme/app_theme.dart';
 import 'package:vitameal/core/util/date_time_utils.dart';
+import 'package:vitameal/presentation/meal_calendar/view/util/adherence_color_utils.dart';
 
 class MonthCalendar extends StatelessWidget {
   /// TableCalendar 기반 월/주 캘린더 위젯
@@ -110,6 +112,7 @@ class DayCell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final dayNum = day.day.toString();
+    final iconSize = math.min(24.0, barAreaHeight);
 
     return Center(
       child: SizedBox(
@@ -126,23 +129,23 @@ class DayCell extends StatelessWidget {
               width: 34,
               height: 34,
               decoration: BoxDecoration(
-                color: isSelected ? Colors.black12 : Colors.transparent,
+                color: isSelected ? vrc(context).calendarCell : Colors.transparent,
                 shape: BoxShape.circle,
                 border: isToday && !isSelected
-                    ? Border.all(color: Colors.black12, width: 1)
+                    ? Border.all(color: vrc(context).calendarCell!, width: 1)
                     : null,
               ),
               alignment: Alignment.center,
               child: Text(
                 dayNum,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.w600,
-                  color: Colors.black87,
+                  color: vrc(context).text,
                 ),
               ),
             ),
-
+            
             // 여백 영역
             // Month 모드에서는 여백 존재, Week 모드에서는 barAreaHeight = 0이 들어옴
             Container(
@@ -151,15 +154,17 @@ class DayCell extends StatelessWidget {
               child: barColor == null
                   ? const SizedBox.shrink()
                   : Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Container(
-                        height: math.min(4, barAreaHeight),
-                        width: 18,
-                        decoration: ShapeDecoration(
-                          color: barColor,
-                          shape: const StadiumBorder(),
-                        ),
-                      ),
+                      // 색상 바 출력 위치
+                      alignment: Alignment.topCenter,
+                      child: Icon(AdherenceUtils.colorToIcon(barColor!), size: iconSize, color: barColor),
+                      // child: Container(
+                      //   height: math.min(4, barAreaHeight),
+                      //   width: 24,
+                      //   decoration: ShapeDecoration(
+                      //     color: barColor,
+                      //     shape: const StadiumBorder(),
+                      //   ),
+                      // ),
                     ),
             ),
           ],

@@ -40,11 +40,11 @@ class NotificationService {
     final data = message.data;
     final label = (data['label'] ?? message.notification?.title ?? '알람')
         .toString();
-    final time = (data['time'] ?? '').toString();
+    // final time = (data['time'] ?? '').toString();
 
     // 🤍 로컬 알림 커스텀
-    final title = 'Vitameal';
-    final body = '$time $label 알람입니다';
+    final title = 'VitaMeal';
+    final body = label;
 
     // Android
     final androidDetails = AndroidNotificationDetails(
