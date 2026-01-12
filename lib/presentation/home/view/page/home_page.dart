@@ -11,7 +11,7 @@ class HomePage extends HookConsumerWidget {
 
   static const _pages = [
     MealCalendarPage(),
-    PostPage()
+    PostPage(),
     InfoPage(),
   ];
 

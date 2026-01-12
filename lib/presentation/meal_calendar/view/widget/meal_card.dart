@@ -60,8 +60,8 @@ class MealCard extends StatelessWidget {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8),
                     child: Container(
-                      width: 120,
-                      height: 112,
+                      width: 96,
+                      height: 96,
                       color: photoUrl == null ? Colors.black12 : null,
                       child: photoUrl != null
                           ? Image.network(
@@ -127,7 +127,7 @@ class MealCard extends StatelessWidget {
               ),
             ),
             // 하단 구분선
-            Divider(height: 1, thickness: 1, color: vrc(context).border),
+            const Divider(),
           ],
         ),
       ),
