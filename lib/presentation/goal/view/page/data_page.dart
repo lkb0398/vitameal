@@ -2,6 +2,7 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
 import 'package:vitameal/presentation/goal/view/function/show_gray_snackbar.dart';
 import 'package:vitameal/presentation/goal/view/widget/add_data_bottom_sheet.dart';
@@ -234,9 +235,9 @@ class DataPage extends HookConsumerWidget {
 
         fillColor: fxc(context).secondary400,
         shape: const CircleBorder(),
-        constraints: const BoxConstraints(minWidth: 72, minHeight: 72),
-        elevation: 8,
-        child: Icon(Icons.add, size: 40, color: Colors.white),
+        constraints: const BoxConstraints(minWidth: 60, minHeight: 60),
+        elevation: 0,
+        child: Icon(PhosphorIcons.plus(), size: 32, color: Colors.white),
       ),
     );
   }

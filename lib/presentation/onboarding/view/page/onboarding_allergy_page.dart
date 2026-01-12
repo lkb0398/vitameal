@@ -3,6 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tap_debouncer/tap_debouncer.dart';
+import 'package:vitameal/core/service/analytics_service.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
 import 'package:vitameal/presentation/onboarding/view/widget/progress_text.dart';
 import 'package:vitameal/presentation/onboarding/view/widget/select_box.dart';
@@ -121,14 +122,19 @@ class OnboardingAllergyPage extends HookConsumerWidget {
       /// 하단 버튼
       bottomNavigationBar: TapDebouncer(
         onTap: () async {
+          final allergy = selectedAllergies.value;
           // 알레르기 정보 업데이트
           await ref
               .read(onboardingViewModelProvider.notifier)
-              .saveAllergies(selectedAllergies.value);
+              .saveAllergies(allergy);
           // mounted 체크
           if (!context.mounted) return;
           // 페이지 이동
           isEditing ? context.go('/') : context.push('/onboarding/done');
+          // 📝
+          for (final a in allergy) {
+            AnalyticsService.event('profile_saved', p: {'allergy': a});
+          }
         },
         builder: (BuildContext context, TapDebouncerFunc? onTap) {
           return Padding(
@@ -136,7 +142,7 @@ class OnboardingAllergyPage extends HookConsumerWidget {
             child: DoneButton(
               onTap: onTap,
               backgroundColor: fxc(context).primary400!,
-              text: isEditing ? "완료" : "다음",
+              text: isEditing ? "수정 완료" : "다음",
               textColor: Colors.white,
             ),
           );

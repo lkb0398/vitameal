@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tap_debouncer/tap_debouncer.dart';
+import 'package:vitameal/core/service/analytics_service.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
 import 'package:vitameal/domain/entity/notifications_entity.dart';
 import 'package:vitameal/presentation/notification/view_model/notifications_view_model.dart';
@@ -179,6 +180,11 @@ class AddNotiBottomSheet extends HookConsumerWidget {
                   // UI 반영
                   ref.invalidate(getAllNotisProvider);
                   Navigator.pop(context);
+                  // 📝
+                  AnalyticsService.event(
+                    'noti_action',
+                    p: {'action': 'create'},
+                  );
                 },
                 builder: (BuildContext context, TapDebouncerFunc? onTap) {
                   return DoneButton(

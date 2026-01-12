@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:vitameal/core/service/analytics_service.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
 import 'package:vitameal/presentation/onboarding/viewmodel/onboarding_view_model.dart';
 import 'package:vitameal/presentation/ui_provider/profiles_provider.dart';
@@ -72,6 +73,8 @@ class OnboardingDonePage extends HookConsumerWidget {
             if (!context.mounted) return;
             // 페이지 이동
             context.go('/');
+            // 📝
+            AnalyticsService.event('obd_completed');
           },
           backgroundColor: fxc(context).primary400!,
           text: "시작하기",

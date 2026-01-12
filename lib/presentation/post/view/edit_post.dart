@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
+import 'package:vitameal/core/service/analytics_service.dart';
 import 'package:vitameal/domain/entity/post_entity.dart';
 import 'package:vitameal/presentation/post/view_model/post_view_model.dart';
 import 'package:vitameal/presentation/post/view_model/recipe_step_ui_model.dart';
@@ -113,6 +114,31 @@ class EditPost extends HookConsumerWidget {
                                 selectedTagIds: selectedTagIds.value,
                                 uiSteps: recipeSteps.value,
                               );
+
+                          // 📝
+                          AnalyticsService.event(
+                            'recipe_action',
+                            p: {'action': 'create'},
+                          );
+                          allTagsAsync.when(
+                            loading: () {},
+                            error: (_, __) {},
+                            data: (tags) {
+                              final tagMap = {
+                                for (final tag in tags) tag.id: tag.name,
+                              };
+
+                              for (final tagId in selectedTagIds.value) {
+                                final tagName = tagMap[tagId];
+                                if (tagName != null) {
+                                  AnalyticsService.event(
+                                    'recipe_saved',
+                                    p: {'tag': tagName},
+                                  );
+                                }
+                              }
+                            },
+                          );
                         }
                         if (context.mounted) context.pop();
                       } catch (e) {

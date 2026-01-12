@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:vitameal/core/config/routes.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
+import 'package:vitameal/core/service/analytics_service.dart';
 import 'package:vitameal/presentation/post/view_model/post_view_model.dart';
 import 'package:vitameal/presentation/post/view_model/tag_view_model.dart';
 import 'package:vitameal/presentation/ui_provider/profiles_provider.dart';
@@ -179,10 +180,16 @@ class PostDetailPage extends HookConsumerWidget {
                         );
                       }
                     } catch (e) {
-                      if (context.mounted)
+                      if (context.mounted) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text('삭제에 실패했습니다.')),
                         );
+                      }
+                      // 📝
+                      AnalyticsService.event(
+                        'recipe_action',
+                        p: {'action': 'delete'},
+                      );
                     }
                   }
                 } else if (value == 'modify') {
@@ -229,7 +236,7 @@ class PostDetailPage extends HookConsumerWidget {
                         fit: BoxFit.cover,
                       )
                     : Image.asset(
-                        "assets/images/profile2.png",
+                        "assets/images/profile_image_l.webp",
                         height: 248,
                         width: double.infinity,
                         fit: BoxFit.cover,

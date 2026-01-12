@@ -4,6 +4,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tap_debouncer/tap_debouncer.dart';
+import 'package:vitameal/core/service/analytics_service.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
 import 'package:vitameal/domain/enum/gender_type_enum.dart';
 import 'package:vitameal/presentation/onboarding/view/widget/progress_text.dart';
@@ -289,17 +290,18 @@ class OnboardingPhysicalPage extends HookConsumerWidget {
       bottomNavigationBar: TapDebouncer(
         onTap: isButtonEnabled.value
             ? () async {
-                final birthYear = birthyearController.text.trim();
-                final heightCm = heightController.text.trim();
-                final weightKg = weightController.text.trim();
+                final gender = selectedGender.value;
+                final birthYear = int.parse(birthyearController.text.trim());
+                final heightCm = double.parse(heightController.text.trim());
+                final weightKg = double.parse(weightController.text.trim());
                 // 프로필 업데이트
                 await ref
                     .read(onboardingViewModelProvider.notifier)
                     .updateProfile(
-                      gender: selectedGender.value,
-                      birthYear: int.tryParse(birthYear),
-                      heightCm: double.tryParse(heightCm),
-                      weightKg: double.tryParse(weightKg),
+                      gender: gender,
+                      birthYear: birthYear,
+                      heightCm: heightCm,
+                      weightKg: weightKg,
                     );
                 // mounted 체크
                 if (!context.mounted) return;
@@ -307,6 +309,11 @@ class OnboardingPhysicalPage extends HookConsumerWidget {
                 isEditing
                     ? context.push('/edit/disease')
                     : context.push('/onboarding/disease');
+                // 📝
+                AnalyticsService.event(
+                  'profile_saved',
+                  p: {'gender': gender.name, 'birth_year': birthYear},
+                );
               }
             : null,
         builder: (BuildContext context, TapDebouncerFunc? onTap) {

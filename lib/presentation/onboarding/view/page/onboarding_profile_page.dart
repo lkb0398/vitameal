@@ -224,7 +224,7 @@ class OnboardingProfilePage extends HookConsumerWidget {
               backgroundColor: isButtonEnabled.value
                   ? fxc(context).primary400!
                   : fxc(context).textcolor300!,
-              text: isEditing ? "완료" : "다음",
+              text: isEditing ? "수정 완료" : "다음",
               textColor: Colors.white,
             ),
           );
