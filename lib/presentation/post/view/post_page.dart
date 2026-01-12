@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -173,6 +174,7 @@ class PostPage extends HookConsumerWidget {
                         itemBuilder: (context, index) {
                           final post = posts[index];
                           return GestureDetector(
+                            key: ValueKey(post.id), // 캐시 이미지 꼬임 방지
                             behavior: HitTestBehavior.opaque,
                             onTap: () => context.push('/post/${post.id}'),
                             child: Padding(
@@ -181,26 +183,24 @@ class PostPage extends HookConsumerWidget {
                                 children: [
                                   ClipRRect(
                                     borderRadius: BorderRadius.circular(8),
-                                    child: post.imageUrl != null &&
-                                            post.imageUrl!.isNotEmpty
-                                        ? Image.network(
-                                            post.imageUrl!,
-                                            width: 96,
-                                            height: 96,
-                                            fit: BoxFit.cover,
-                                            errorBuilder: (c, e, s) =>
-                                                Image.asset(
-                                                  "assets/images/profile2.png",
-                                                  width: 96,
-                                                  height: 96,
-                                                ),
-                                          )
-                                        : Image.asset(
-                                            "assets/images/profile2.png",
-                                            width: 96,
-                                            height: 96,
-                                            fit: BoxFit.cover,
-                                          ),
+                                    child: Container(
+                                      width: 96,
+                                      height: 96,
+                                      color: Colors.black12, // 배경색
+                                      child: post.imageUrl != null && post.imageUrl!.isNotEmpty
+                                          ? CachedNetworkImage( // url 이미지 캐싱
+                                              imageUrl: post.imageUrl!,
+                                              fadeInDuration: const Duration(milliseconds: 200), // 자연스럽게
+                                              fadeOutDuration: const Duration(milliseconds: 100),
+                                              fit: BoxFit.cover,
+                                              errorWidget: (c, e, s) => const Center(
+                                                child: Icon(Icons.image_not_supported_outlined, color: Colors.black26),
+                                              ),
+                                            )
+                                          : const Center(
+                                              child: Icon(Icons.restaurant, color: Colors.black26),
+                                            ),
+                                    ),
                                   ),
                                   const SizedBox(width: 12),
                                   Expanded(
