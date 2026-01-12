@@ -14,12 +14,8 @@ import 'package:vitameal/core/service/firebase_service.dart';
 import 'package:vitameal/core/service/notification_service.dart';
 import 'package:vitameal/presentation/ui_provider/profiles_provider.dart';
 import 'core/config/routes.dart';
-<<<<<<< HEAD
-=======
-import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-// import 'package:timezone/data/latest.dart' as tz;
->>>>>>> 97ae2f9 (feat: env관리, UI개선, 약관동의 및 개인정보처리방침 링크 추가, 로그인 관련 배포용으로 수정)
+import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 
 // 🔔 Background 알림 (main 최상단!)
 @pragma('vm:entry-point')
@@ -54,7 +50,6 @@ Future<void> main() async {
     () async {
       WidgetsFlutterBinding.ensureInitialized();
 
-<<<<<<< HEAD
       await _safe(
         () => Supabase.initialize(
           url: 'https://ykqdcgrimdsvuincvmtu.supabase.co',
@@ -119,26 +114,6 @@ Future<void> main() async {
     (error, stack) {
       FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
     },
-=======
-<<<<<<< HEAD
-  await _safe(
-    () => Supabase.initialize(
-      url: 'https://ykqdcgrimdsvuincvmtu.supabase.co',
-      anonKey:
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlrcWRjZ3JpbWRzdnVpbmN2bXR1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU5MzM0OTcsImV4cCI6MjA4MTUwOTQ5N30.QJnEx7gDulSj8-8PayKYxyu5Aze8IBk7jJU-N-VRHCw',
-    ),
-    label: 'Supabase.initialize',
-=======
-  await dotenv.load(fileName: ".env");
-
-  KakaoSdk.init(nativeAppKey: dotenv.get('KAKAO_NATIVE_APP_KEY'));
-  debugPrint("현재 환경 키 해시: ${await KakaoSdk.origin}");
-
-  await Supabase.initialize(
-    url: dotenv.get('SUPABASE_URL'),
-    anonKey: dotenv.get('SUPABASE_ANON_KEY'),
->>>>>>> 97ae2f9 (feat: env관리, UI개선, 약관동의 및 개인정보처리방침 링크 추가, 로그인 관련 배포용으로 수정)
->>>>>>> c9a10e6 (feat: env관리, UI개선, 약관동의 및 개인정보처리방침 링크 추가, 로그인 관련 배포용으로 수정)
   );
 }
 

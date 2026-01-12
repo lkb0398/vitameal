@@ -6,10 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:vitameal/core/config/routes.dart';
 import 'package:vitameal/presentation/ui_provider/profiles_provider.dart';
-<<<<<<< HEAD
-=======
 // import 'package:shared_preferences/shared_preferences.dart';
->>>>>>> dfb358a (feat: UI수정)
 import 'package:vitameal/core/theme/app_theme.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -75,7 +72,9 @@ class SplashPage extends HookConsumerWidget {
             hasNavigated.value = true;
             // 미로그인: 로그인 페이지
             // 로그인: 홈(오프라인 모드)
-            context.go(session == null ? AppRoutePath.login : AppRoutePath.home);
+            context.go(
+              session == null ? AppRoutePath.login : AppRoutePath.home,
+            );
           }
         }
       });
