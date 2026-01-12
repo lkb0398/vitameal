@@ -18,7 +18,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.vitameal"
+    namespace = "com.alldayproject.vitameal"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 

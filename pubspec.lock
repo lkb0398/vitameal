@@ -445,10 +445,10 @@ packages:
     dependency: transitive
     description:
       name: ffi
-      sha256: "289279317b4b16eb2bb7e271abccd4bf84ec9bdcbe999e278a94b804f5630418"
+      sha256: d07d37192dbf97461359c1518788f203b0c9102cfd2c35a716b823741219542c
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.4"
+    version: "2.1.5"
   file:
     dependency: transitive
     description:
@@ -600,6 +600,7 @@ packages:
     version: "0.0.0"
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   flutter_cache_manager:
     dependency: transitive
     description:
@@ -623,6 +624,8 @@ packages:
 >>>>>>> 2f603f5 (feat: 로그인 리팩토링 & 주석 추가 및 수정)
 =======
 =======
+=======
+>>>>>>> 806d210 (feat:로그인 관련 배포용으로 업데이트, UI 개선, env관리, 약관동의 및 개인정보 처리방침 링크 추가 / fix:앱 설치 후 죽어버리는 현상 수정)
   flutter_dotenv:
     dependency: "direct main"
     description:
@@ -631,8 +634,11 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.0.0"
+<<<<<<< HEAD
 >>>>>>> 97ae2f9 (feat: env관리, UI개선, 약관동의 및 개인정보처리방침 링크 추가, 로그인 관련 배포용으로 수정)
 >>>>>>> c9a10e6 (feat: env관리, UI개선, 약관동의 및 개인정보처리방침 링크 추가, 로그인 관련 배포용으로 수정)
+=======
+>>>>>>> 806d210 (feat:로그인 관련 배포용으로 업데이트, UI 개선, env관리, 약관동의 및 개인정보 처리방침 링크 추가 / fix:앱 설치 후 죽어버리는 현상 수정)
   flutter_hooks:
     dependency: "direct main"
     description:
@@ -737,22 +743,11 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.3"
-<<<<<<< HEAD
   flutter_localizations:
     dependency: "direct main"
     description: flutter
     source: sdk
     version: "0.0.0"
-=======
-  flutter_native_timezone:
-    dependency: "direct main"
-    description:
-      name: flutter_native_timezone
-      sha256: ed7bfb982f036243de1c068e269182a877100c994f05143c8b26a325e28c1b02
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.0"
->>>>>>> abcc0ce (feat: 로그인 리팩토링 & 주석 추가 및 수정)
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:
@@ -777,14 +772,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.3"
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 395ab76 (feat: UI 변경 및 이미지 추가)
-=======
->>>>>>> dfb358a (feat: UI수정)
   flutter_svg:
     dependency: "direct main"
     description:
@@ -793,15 +780,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.2.3"
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> abcc0ce (feat: 로그인 리팩토링 & 주석 추가 및 수정)
-=======
->>>>>>> de13ee8 (feat: UI 변경 및 이미지 추가)
->>>>>>> 395ab76 (feat: UI 변경 및 이미지 추가)
-=======
->>>>>>> dfb358a (feat: UI수정)
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -1706,11 +1684,7 @@ packages:
     source: hosted
     version: "0.6.11"
   timezone:
-<<<<<<< HEAD
     dependency: transitive
-=======
-    dependency: "direct main"
->>>>>>> abcc0ce (feat: 로그인 리팩토링 & 주석 추가 및 수정)
     description:
       name: timezone
       sha256: dd14a3b83cfd7cb19e7888f1cbc20f258b8d71b54c06f79ac585f14093a287d1
@@ -1849,10 +1823,10 @@ packages:
     dependency: transitive
     description:
       name: watcher
-      sha256: f52385d4f73589977c80797e60fe51014f7f2b957b5e9a62c3f6ada439889249
+      sha256: "1398c9f081a753f9226febe8900fce8f7d0a67163334e1c94a2438339d79d635"
       url: "https://pub.dev"
     source: hosted
-    version: "1.2.0"
+    version: "1.2.1"
   web:
     dependency: transitive
     description:
