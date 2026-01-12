@@ -11,6 +11,7 @@ import SwiftUI
 @main
 struct VitamealWidgetBundle: WidgetBundle {
     var body: some Widget {
-        VitamealWidget()
+        VitamealWidgetSimple()
+        VitamealWidgetWithAdherence()
     }
 }

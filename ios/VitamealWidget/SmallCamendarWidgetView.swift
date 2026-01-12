@@ -43,22 +43,23 @@ struct SmallCalendarWidgetView: View {
     
     let date: Date // 달력의 기준이 될 날짜
     let achievementsByDay: [Int: AchievementLevel] // 일일 성취도
-
+    let showAdherence: Bool // 위젯 모드 (달성도표시, 미표시)
+    
     private var monthTitle: String {
         let f = DateFormatter()
         f.locale = Locale.current
-        f.dateFormat = "MMMM yyyy"
+        f.dateFormat = showAdherence ? "yyyy.MM" : "MMMM yyyy"
         return f.string(from: date)
     }
-
+    
     private var gridDays: [DayCell] {
         makeMonthGrid(date: date, achievementsByDay: achievementsByDay)
     }
-
+    
     private var columns: [GridItem] {
         Array(repeating: GridItem(.flexible(), spacing: 2), count: 7) // 열간격 2
     }
-
+    
     var body: some View {
         // 위젯이 작아서 셀 잘림 현상생김 셀크기 맞춤 계산
         GeometryReader { geo in
@@ -66,7 +67,7 @@ struct SmallCalendarWidgetView: View {
             let h = geo.size.height
             
             let rows = monthRowCount(for: date) // 5주 6주
-
+            
             // Small에서 안전하게 들어가도록 밀도를 올림
             // 6주면 더 타이트하게
             let titleHeight: CGFloat = (rows == 6) ? 16 : 18 // label 타이틀 영역
@@ -80,14 +81,20 @@ struct SmallCalendarWidgetView: View {
             // 행 수 기준으로 셀 크기 상한 계산
             // row행 spacing 2 → 총 spacing (row-1)*2 = 10 (=> 3으로 계산해서 좀 간격있게 바꿈)
             let maxCellByHeight = floor((gridHeight - (3 * CGFloat(rows - 1))) / CGFloat(rows))
-
+            
             // 7열 기준 셀 크기 상한 계산
             // 7열 spacing 2 → 총 spacing 6*2 = 12 (=> 3으로 계산해서 좀 간격있게 바꿈)
             // 좌우 패딩 12 고려
             let maxCellByWidth = floor((w - (3 * 6) - 12) / 7)
-
+            
             let cellSize = max(10, min(maxCellByHeight, maxCellByWidth))
-
+            
+            // 목표 달성도 (%)
+            let percent = WidgetDataManager.adherencePercentRecordedOnly(
+                achievementsByDay: achievementsByDay,
+                date: date
+            )
+            
             ZStack {
                 if widgetRenderingMode == .fullColor {
                     RoundedRectangle(cornerRadius: 22, style: .continuous) // 모서리 22
@@ -97,20 +104,62 @@ struct SmallCalendarWidgetView: View {
                     RoundedRectangle(cornerRadius: 22, style: .continuous)
                         .fill(.clear)
                 }
-
+                
                 VStack(spacing: 0) {
-                    // 타이틀 label, 한 줄 고정 + 축소 허용
-                    Text(monthTitle)
-                        .font(.system(size: 12, weight: .semibold))
-                        // 틴트 모드에서는 시스템 색 사용
-                        .foregroundStyle(widgetRenderingMode == .fullColor ? Color.widgetText : .primary)
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.8)
+                    // 달성도 표시 버전
+                    if showAdherence {
+                        HStack(alignment: .center, spacing: 8) {
+                            // 왼쪽엔 년,월 라벨
+                            Text("\(monthTitle)")
+                                .font(.system(size: 12, weight: .semibold))
+                                .foregroundStyle(widgetRenderingMode == .fullColor ? Color.widgetText : .primary)
+                                .lineLimit(1)
+                                .minimumScaleFactor(0.8)
+                            
+                            Spacer(minLength: 6)
+                            
+                            // 오른쪽엔 달성도 표시
+                            HStack(spacing: 4) {
+                                if (colorScheme == .dark){
+                                    // 다크모드
+                                    Image("AdherenceIconDark")
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(width: 12, height: 12)
+                                        .foregroundStyle(widgetRenderingMode == .fullColor ? Color.widgetTextSub : .secondary)
+                                } else {
+                                    Image("AdherenceIcon")
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(width: 12, height: 12)
+                                        .foregroundStyle(widgetRenderingMode == .fullColor ? Color.widgetText : .secondary)
+                                }
+                                
+                                Text("\(percent)%")
+                                    .font(.system(size: 11, weight: .semibold))
+                                    .foregroundStyle(widgetRenderingMode == .fullColor ? Color.widgetText : .primary)
+                                    .lineLimit(1)
+                                    .minimumScaleFactor(0.8)
+                            }
+                        }
                         .frame(height: titleHeight)
                         .padding(.top, vPadding)
-
+                        .padding(.horizontal, 16)
+                    // 달성도 미표시 버전
+                    } else {
+                        // 타이틀 label, 한 줄 고정 + 축소 허용
+                        Text(monthTitle)
+                            .font(.system(size: 12, weight: .semibold))
+                            // 틴트 모드에서는 시스템 색 사용
+                            .foregroundStyle(widgetRenderingMode == .fullColor ? Color.widgetText : .primary)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.8)
+                            .frame(height: titleHeight)
+                            .padding(.top, vPadding)
+                    }
+                    
                     Spacer().frame(height: gridTopGap)
-
+                    
                     LazyVGrid(columns: columns, spacing: (rows == 6) ? 2 : 3) { // 행간격
                         ForEach(gridDays) { item in
                             SmallDayCell(
@@ -126,7 +175,7 @@ struct SmallCalendarWidgetView: View {
                     }
                     .padding(.horizontal, 14) // 좌우 패딩
                     .padding(.bottom, gridBottomPadding)
-
+                    
                     Spacer(minLength: 0)
                 }
             }
@@ -141,12 +190,12 @@ private struct SmallDayCell: View {
     let day: Int?
     let level: AchievementLevel
     let size: CGFloat
-
+    
     let textColor: Color
     let bgLow: Color
     let bgMid: Color
     let bgHigh: Color
-
+    
     // fullcolor 모드
     private var fillColor: Color {
         switch level {
@@ -163,10 +212,10 @@ private struct SmallDayCell: View {
         case .none: return 0.0
         case .low:  return 0.10
         case .mid:  return 0.35
-        case .high: return 0.60
+        case .high: return 0.70
         }
     }
-
+    
     var body: some View {
         ZStack {
             if let day {
@@ -175,7 +224,7 @@ private struct SmallDayCell: View {
                     .fill(isTint ? AnyShapeStyle(.tint) : AnyShapeStyle(fillColor))
                     .opacity(isTint ? tintOpacity : 1.0)
                     .widgetAccentable() // 틴트 색
-
+                
                 Text("\(day)")
                     .font(.system(size: 10, weight: .medium)) // 셀 폰트
                     .foregroundStyle(widgetRenderingMode == .fullColor ? textColor : .primary)
@@ -197,44 +246,44 @@ private func makeMonthGrid(
     // 시작 요일 맞추기
     // calendar.firstWeekday = 1 // 일요일
     // calendar.firstWeekday = 2 // 월요일
-
+    
     guard
         let monthStart = calendar.date(from: calendar.dateComponents([.year, .month], from: date)),
         let range = calendar.range(of: .day, in: .month, for: monthStart)
     else { return [] }
-
+    
     let daysInMonth = range.count
     let weekday = calendar.component(.weekday, from: monthStart)
     let leadingEmpty = (weekday - calendar.firstWeekday + 7) % 7
-
+    
     var result: [DayCell] = []
     result.reserveCapacity(leadingEmpty + daysInMonth)
-
+    
     for _ in 0..<leadingEmpty {
         result.append(DayCell(day: nil, level: .none))
     }
-
+    
     for day in 1...daysInMonth {
         let level = achievementsByDay[day] ?? .none
         result.append(DayCell(day: day, level: level))
     }
-
+    
     return result
 }
 
 // 몇 주인지 계산
 private func monthRowCount(for date: Date, calendar: Calendar = .current) -> Int {
     var cal = calendar
-
+    
     guard
         let monthStart = cal.date(from: cal.dateComponents([.year, .month], from: date)),
         let range = cal.range(of: .day, in: .month, for: monthStart)
     else { return 6 }
-
+    
     let daysInMonth = range.count
     let weekday = cal.component(.weekday, from: monthStart)
     let leadingEmpty = (weekday - cal.firstWeekday + 7) % 7
-
+    
     let totalCells = leadingEmpty + daysInMonth
     let rows = Int(ceil(Double(totalCells) / 7.0))
     return max(5, min(rows, 6)) // 5주 또는 6주

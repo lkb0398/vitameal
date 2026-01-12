@@ -39,7 +39,7 @@ struct CalendarProvider: TimelineProvider {
     func getTimeline(in context: Context, completion: @escaping (Timeline<CalendarEntry>) -> Void) {
         // Entry 생성, 이 엔트리가 홈에서 유지되는거
         let entry = createEntry()
-
+        
         // 월이 바뀌면 위젯 자동 갱신 트리거
         let calendar = Calendar.current
         let now = Date()
@@ -57,17 +57,17 @@ struct CalendarProvider: TimelineProvider {
         
         // 해당 시간에 Timeline 생성 = 다음 달 1일에 자동 갱신됨
         let timeline = Timeline(entries: [entry], policy: .after(nextMonthDate))
-
+        
         print("🍎 Widget Timeline 생성 완료 [다음 갱신 \(nextMonthDate)]")
         completion(timeline)
     }
-
+    
     /// Entry 생성 (App Group에서 데이터 읽기)
     private func createEntry() -> CalendarEntry {
         let now = Date()
         // App Group의 UserDefaults에서 데이터 로드
         let data = WidgetDataManager.shared.loadData()
-
+        
         // 데이터있으면 그대로 사용
         let finalData: WidgetCalendarData
         if let loadedData = data {
@@ -78,15 +78,16 @@ struct CalendarProvider: TimelineProvider {
             let month = calendar.component(.month, from: now)
             finalData = WidgetCalendarData(year: year, month: month, achievements: [:])
         }
-
+        
         return CalendarEntry(date: now, data: finalData)
     }
 }
 
 struct VitamealWidgetEntryView : View {
     var entry: CalendarProvider.Entry // TimelineProvider가 전달해주는 위젯에 그려질 데이터
+    let showAdherence: Bool
     @Environment(\.widgetFamily) var family // 현재 위젯의 크기
-
+    
     var body: some View {
         if let data = entry.data {
             // WidgetCalendarData를 Int: AchievementLevel로 변환
@@ -108,11 +109,11 @@ struct VitamealWidgetEntryView : View {
             Group {
                 switch family {
                 case .systemLarge:
-                    LargeCalendarWidgetView(date: displayDate, achievementsByDay: achievementsByDay)
+                    LargeCalendarWidgetView(date: displayDate, achievementsByDay: achievementsByDay, showAdherence: showAdherence)
                 case .systemSmall:
-                    SmallCalendarWidgetView(date: displayDate, achievementsByDay: achievementsByDay)
+                    SmallCalendarWidgetView(date: displayDate, achievementsByDay: achievementsByDay, showAdherence: showAdherence)
                 default:
-                    LargeCalendarWidgetView(date: displayDate, achievementsByDay: achievementsByDay)
+                    SmallCalendarWidgetView(date: displayDate, achievementsByDay: achievementsByDay, showAdherence: showAdherence)
                 }
             }
         } else {
@@ -131,36 +132,65 @@ struct VitamealWidgetEntryView : View {
     /// WidgetCalendarData를 Int: AchievementLevel로 변환
     private func convertToAchievementLevels(data: WidgetCalendarData) -> [Int: AchievementLevel] {
         var result: [Int: AchievementLevel] = [:]
-
+        
         for (dayString, adherenceString) in data.achievements {
             guard let day = Int(dayString) else { continue }
             let level = AchievementLevel.from(adherenceString: adherenceString)
-
+            
             // .none이 아닌 경우만 추가 (위젯 그릴때 nil은 자동으로 .none 처리함)
             if level != .none {
                 result[day] = level
             }
         }
-
+        
         return result
     }
 }
 
 struct VitamealWidget: Widget {
     let kind: String = "VitamealWidget"
-
+    
     var body: some WidgetConfiguration {
         StaticConfiguration(kind: kind, provider: CalendarProvider()) { entry in
-            VitamealWidgetEntryView(entry: entry)
+            VitamealWidgetEntryView(entry: entry, showAdherence: false)
         }
-        .configurationDisplayName("식단 성취도")
-        .description("이번 달 식단 성취도를 확인하세요")
+        .configurationDisplayName("식단")
+        .description("이번 달 식단 성취를 확인하세요.")
         .contentMarginsDisabled().supportedFamilies([
             .systemSmall,
             .systemLarge
         ])
     }
 }
+
+struct VitamealWidgetSimple: Widget {
+    let kind = "VitamealWidgetSimple"
+
+    var body: some WidgetConfiguration {
+        StaticConfiguration(kind: kind, provider: CalendarProvider()) { entry in
+            VitamealWidgetEntryView(entry: entry, showAdherence: false)
+        }
+        .configurationDisplayName("식단")
+        .description("이번 달 식단 성취를 확인하세요.")
+        .contentMarginsDisabled()
+        .supportedFamilies([.systemSmall, .systemLarge])
+    }
+}
+
+struct VitamealWidgetWithAdherence: Widget {
+    let kind = "VitamealWidgetWithAdherence"
+
+    var body: some WidgetConfiguration {
+        StaticConfiguration(kind: kind, provider: CalendarProvider()) { entry in
+            VitamealWidgetEntryView(entry: entry, showAdherence: true)
+        }
+        .configurationDisplayName("식단")
+        .description("달성도를 함께 표시합니다.")
+        .contentMarginsDisabled()
+        .supportedFamilies([.systemSmall, .systemLarge])
+    }
+}
+
 
 /// xcode 프리뷰
 #Preview(as: .systemMedium) {
