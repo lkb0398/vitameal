@@ -614,9 +614,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
   flutter_cache_manager:
     dependency: transitive
     description:
@@ -625,23 +622,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.4.1"
-=======
-=======
->>>>>>> c9a10e6 (feat: env관리, UI개선, 약관동의 및 개인정보처리방침 링크 추가, 로그인 관련 배포용으로 수정)
-  flutter_app_badger:
-    dependency: "direct main"
-    description:
-      name: flutter_app_badger
-      sha256: "64d4a279bab862ed28850431b9b446b9820aaae0bf363322d51077419f930fa8"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.5.0"
-<<<<<<< HEAD
->>>>>>> 2f603f5 (feat: 로그인 리팩토링 & 주석 추가 및 수정)
-=======
-=======
-=======
->>>>>>> 806d210 (feat:로그인 관련 배포용으로 업데이트, UI 개선, env관리, 약관동의 및 개인정보 처리방침 링크 추가 / fix:앱 설치 후 죽어버리는 현상 수정)
   flutter_dotenv:
     dependency: "direct main"
     description:
@@ -650,11 +630,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.0.0"
-<<<<<<< HEAD
->>>>>>> 97ae2f9 (feat: env관리, UI개선, 약관동의 및 개인정보처리방침 링크 추가, 로그인 관련 배포용으로 수정)
->>>>>>> c9a10e6 (feat: env관리, UI개선, 약관동의 및 개인정보처리방침 링크 추가, 로그인 관련 배포용으로 수정)
-=======
->>>>>>> 806d210 (feat:로그인 관련 배포용으로 업데이트, UI 개선, env관리, 약관동의 및 개인정보 처리방침 링크 추가 / fix:앱 설치 후 죽어버리는 현상 수정)
   flutter_hooks:
     dependency: "direct main"
     description:
