@@ -14,14 +14,10 @@ import 'package:vitameal/presentation/meal_editor/view/widget/description_input.
 import 'package:vitameal/presentation/meal_editor/view/widget/image_upload_card.dart';
 import 'package:vitameal/presentation/meal_editor/view/widget/time_selector.dart';
 import 'package:vitameal/presentation/meal_editor/view_model/meal_editor_viewmodel.dart';
+import 'package:vitameal/presentation/util/show_gray_snackbar.dart';
 
 class MealEditorPage extends HookConsumerWidget {
-  const MealEditorPage({
-    super.key,
-    this.mealEntryId,
-    this.mealDayId,
-    required this.date,
-  });
+  const MealEditorPage({super.key, this.mealEntryId, this.mealDayId, required this.date});
 
   final String? mealEntryId; // null이면 생성 모드
   final String? mealDayId;
@@ -59,9 +55,7 @@ class MealEditorPage extends HookConsumerWidget {
             })
             .catchError((e) {
               if (context.mounted) {
-                ScaffoldMessenger.of(
-                  context,
-                ).showSnackBar(SnackBar(content: Text('데이터 로드 실패 $e')));
+                showGraySnackBar(context, '데이터 로드 실패');
               }
             });
       }
@@ -77,9 +71,7 @@ class MealEditorPage extends HookConsumerWidget {
         }
       } catch (e) {
         if (context.mounted) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text('이미지 선택 실패: $e')));
+          showGraySnackBar(context, '이미지 선택 실패');
         }
       }
     }
@@ -98,9 +90,7 @@ class MealEditorPage extends HookConsumerWidget {
       final session = ref.read(authViewModelProvider);
       final userId = session?.user.id;
       if (userId == null) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text('로그인이 필요합니다')));
+        showGraySnackBar(context, '로그인이 필요합니다');
         return;
       }
 
@@ -136,9 +126,7 @@ class MealEditorPage extends HookConsumerWidget {
         AnalyticsService.event('meal_action', p: {'action': 'create'});
       } catch (e) {
         if (context.mounted) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text('$e')));
+          showGraySnackBar(context, '이미지나 식단 내용을 입력해주세요');
         }
       } finally {
         if (shouldUpload) isImageUploading.value = false;
@@ -156,10 +144,7 @@ class MealEditorPage extends HookConsumerWidget {
           title: const Text('삭제 확인'),
           content: const Text('이 식단 기록을 삭제하시겠습니까?'),
           actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(false),
-              child: const Text('취소'),
-            ),
+            TextButton(onPressed: () => Navigator.of(context).pop(false), child: const Text('취소')),
             TextButton(
               onPressed: () => Navigator.of(context).pop(true),
               child: const Text('삭제', style: TextStyle(color: Colors.red)),
@@ -186,9 +171,7 @@ class MealEditorPage extends HookConsumerWidget {
           AnalyticsService.event('meal_action', p: {'action': 'delete'});
         } catch (e) {
           if (context.mounted) {
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(SnackBar(content: Text('삭제 실패 $e')));
+            showGraySnackBar(context, '삭제 실패');
           }
         } finally {
           isLoading.value = false;
@@ -196,118 +179,104 @@ class MealEditorPage extends HookConsumerWidget {
       }
     }
 
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios_new, color: vrc(context).text),
-          onPressed: () => context.pop(),
+    return GestureDetector(
+      behavior: HitTestBehavior.translucent,
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      child: Scaffold(
+        extendBody: true, // bottomNavigationBar 영역까지 body 깔아주기
+        appBar: AppBar(
+          elevation: 0,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back_ios_new, color: vrc(context).text),
+            onPressed: () => context.pop(),
+          ),
+          actions: [
+            if (isEditMode)
+              TextButton(
+                onPressed: deleteMeal,
+                child: Text(
+                  "삭제",
+                  style: TextStyle(color: vrc(context).content, fontSize: 16, fontWeight: FontWeight.w500),
+                ),
+              ),
+            const SizedBox(width: 6),
+          ],
         ),
-        actions: [
-          if (isEditMode)
-            TextButton(
-              onPressed: deleteMeal,
-              child: Text(
-                "삭제",
-                style: TextStyle(
-                  color: vrc(context).content,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
+        body: SafeArea(
+          top: false,
+          child: SingleChildScrollView(
+            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+            padding: const EdgeInsets.fromLTRB(18, 8, 18, 24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "${date.year}년 ${date.month}월 ${date.day}일 식단",
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700, color: vrc(context).text),
                 ),
-              ),
+                const SizedBox(height: 16),
+
+                // 이미지 업로드 카드
+                ImageUploadCard(
+                  imageFile: imageFile.value,
+                  photoUrl: photoUrl.value,
+                  isUploading: isImageUploading.value,
+                  onPickImage: pickImage,
+                  onRemoveImage: removeImage,
+                ),
+
+                const SizedBox(height: 22),
+
+                // 카테고리 선택
+                CategorySelector(
+                  selectedCategory: selectedCategory.value,
+                  onCategoryChanged: (category) => selectedCategory.value = category,
+                ),
+
+                const SizedBox(height: 22),
+
+                // 설명 입력
+                DescriptionInput(controller: contentController),
+
+                const SizedBox(height: 22),
+
+                // 시간 선택
+                TimeSelector(
+                  selectedTime: selectedTime.value,
+                  date: date,
+                  onTimeChanged: (time) => selectedTime.value = time,
+                ),
+
+                const SizedBox(height: 22),
+              ],
             ),
-          const SizedBox(width: 6),
-        ],
-      ),
-      body: SafeArea(
-        top: false,
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(18, 8, 18, 24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "${date.year}년 ${date.month}월 ${date.day}일 식단",
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.w700,
-                  color: vrc(context).text,
-                ),
-              ),
-              const SizedBox(height: 16),
-
-              // 이미지 업로드 카드
-              ImageUploadCard(
-                imageFile: imageFile.value,
-                photoUrl: photoUrl.value,
-                isUploading: isImageUploading.value,
-                onPickImage: pickImage,
-                onRemoveImage: removeImage,
-              ),
-
-              const SizedBox(height: 22),
-
-              // 카테고리 선택
-              CategorySelector(
-                selectedCategory: selectedCategory.value,
-                onCategoryChanged: (category) =>
-                    selectedCategory.value = category,
-              ),
-
-              const SizedBox(height: 22),
-
-              // 설명 입력
-              DescriptionInput(controller: contentController),
-
-              const SizedBox(height: 22),
-
-              // 시간 선택
-              TimeSelector(
-                selectedTime: selectedTime.value,
-                date: date,
-                onTimeChanged: (time) => selectedTime.value = time,
-              ),
-
-              const SizedBox(height: 22),
-            ],
           ),
         ),
-      ),
 
-      // 하단 완료 버튼
-      bottomNavigationBar: SafeArea(
-        top: false,
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(18, 0, 18, 14),
-          child: SizedBox(
-            height: 56,
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: isLoading.value ? null : done,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: fxc(context).primary400,
-                foregroundColor: Colors.white,
-                elevation: 0,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(14),
+        // 하단 완료 버튼
+        bottomNavigationBar: SafeArea(
+          top: false,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 14),
+            child: SizedBox(
+              height: 56,
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: isLoading.value ? null : done,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: fxc(context).primary400,
+                  foregroundColor: Colors.white,
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                 ),
+                child: isLoading.value
+                    ? const SizedBox(
+                        height: 20,
+                        width: 20,
+                        child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                      )
+                    : const Text("완료", style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700)),
               ),
-              child: isLoading.value
-                  ? const SizedBox(
-                      height: 20,
-                      width: 20,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        color: Colors.white,
-                      ),
-                    )
-                  : const Text(
-                      "완료",
-                      style: TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
             ),
           ),
         ),

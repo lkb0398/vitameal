@@ -26,7 +26,6 @@ class IntroItem extends StatelessWidget {
               item.image,
               fit: BoxFit.contain,
               width: double.infinity,
-              filterQuality: FilterQuality.high,
             ),
           ),
         ),

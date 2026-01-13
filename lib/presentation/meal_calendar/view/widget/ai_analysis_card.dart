@@ -7,6 +7,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
 import 'package:vitameal/domain/constants/analysis_policy.dart';
+import 'package:vitameal/presentation/util/show_gray_snackbar.dart';
 
 class AiAnalysisCard extends HookConsumerWidget {
   // AI 식단분석 결과 카드 위젯
@@ -36,25 +37,40 @@ class AiAnalysisCard extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isAnalyzing = useState(false); // 분석 트랜잭션 플래그
+    final isOnline = useState(true); // 네트워크 연결 상태
+
+    // 네트워크 상태 실시간 감지
+    useEffect(() {
+      // 초기 상태 확인
+      Connectivity().checkConnectivity().then((result) {
+        isOnline.value = result.isNotEmpty && !result.contains(ConnectivityResult.none);
+      });
+
+      // Connectivity stream 구독해서 네트워크 상태 변화 감지
+      final subscription = Connectivity().onConnectivityChanged.listen((results) {
+        isOnline.value = results.isNotEmpty && !results.contains(ConnectivityResult.none);
+      });
+
+      return subscription.cancel;
+    }, []);
 
     /// 네트워크 체크
-    Future<bool> isOnline() async {
+    Future<bool> checkOnline() async {
       final connectivityResult = await Connectivity().checkConnectivity();
-      return connectivityResult != ConnectivityResult.none;
+      return connectivityResult.isNotEmpty && !connectivityResult.contains(ConnectivityResult.none);
     }
 
     /// AI 분석 요청
     Future<void> handleAnalyze() async {
+      // TODO : 옆에 탭 갔다왔을때 hook 초기화되서 반영안됨
+      // 이미 분석 중일 경우 리턴
       if (isAnalyzing.value) return;
 
       // 오프라인 체크
-      final online = await isOnline();
+      final online = await checkOnline();
       if (!online) {
         if (context.mounted) {
-          // TODO : 지금 동작안하고 그냥 에러 메세지 출력됨
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(const SnackBar(content: Text('네트워크 연결을 확인해주세요'), duration: Duration(seconds: 2)));
+          showGraySnackBar(context, '네트워크 연결을 확인해주세요');
         }
         return;
       }
@@ -66,7 +82,7 @@ class AiAnalysisCard extends HookConsumerWidget {
         await onAnalyze();
       } catch (e) {
         if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('분석 실패: $e')));
+          showGraySnackBar(context, '분석 실패');
         }
       } finally {
         isAnalyzing.value = false;
@@ -76,10 +92,9 @@ class AiAnalysisCard extends HookConsumerWidget {
     /// 자세히 보기
     Future<void> handleOpenDetail() async {
       // 오프라인 환경에서 명시적 예외처리
-      final online = await isOnline();
+      final online = await checkOnline();
       if (!online) {
         if (context.mounted) {
-          // TODO : 현재 동작 안함, 에러 메세지 그냥 출력됨
           showDialog(
             context: context,
             builder: (context) => AlertDialog(
@@ -92,6 +107,7 @@ class AiAnalysisCard extends HookConsumerWidget {
         return;
       }
 
+      // 온라인일 경우만 자세히 보기 실행
       if (!context.mounted) return;
       await onOpenDetail();
     }
@@ -133,12 +149,14 @@ class AiAnalysisCard extends HookConsumerWidget {
                     ? _AnalyzeButton(
                         key: const ValueKey('analyze_button'),
                         // TODO : vm 쪽에서 label 결정하도록 리팩토링 하기
-                        label: isAnalyzing.value || isCountLoading
+                        label: !isOnline.value
+                            ? '네트워크 연결 필요'
+                            : isAnalyzing.value || isCountLoading
                             ? '분석 중...'
                             : canAnalyze
                             ? '다시 분석하기 ($todayCount/${AnalysisPolicy.maxDailyAnalysisCount})'
                             : '오늘 분석 횟수를 모두 사용했어요 ($todayCount/${AnalysisPolicy.maxDailyAnalysisCount})',
-                        enabled: !isAnalyzing.value && canAnalyze,
+                        enabled: isOnline.value && !isAnalyzing.value && canAnalyze,
                         onTap: handleAnalyze,
                       )
                     : const SizedBox.shrink(key: ValueKey('empty')),
@@ -153,12 +171,14 @@ class AiAnalysisCard extends HookConsumerWidget {
               },
               child: _AnalyzeButton(
                 key: const ValueKey('analyze_button'),
-                label: isAnalyzing.value || isCountLoading
+                label: !isOnline.value
+                    ? '네트워크 연결 필요'
+                    : isAnalyzing.value || isCountLoading
                     ? '분석 중...'
                     : canAnalyze
                     ? '분석하기 $todayCount/${AnalysisPolicy.maxDailyAnalysisCount}'
                     : '오늘 분석 횟수를 모두 사용했어요 $todayCount/${AnalysisPolicy.maxDailyAnalysisCount}',
-                enabled: !isAnalyzing.value && canAnalyze,
+                enabled: isOnline.value && !isAnalyzing.value && canAnalyze,
                 onTap: handleAnalyze,
               ),
             ),

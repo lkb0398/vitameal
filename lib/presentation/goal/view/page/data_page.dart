@@ -4,7 +4,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
-import 'package:vitameal/presentation/goal/view/function/show_gray_snackbar.dart';
+import 'package:vitameal/presentation/util/show_gray_snackbar.dart';
 import 'package:vitameal/presentation/goal/view/widget/add_data_bottom_sheet.dart';
 import 'package:vitameal/presentation/goal/view/widget/view_data.dart';
 import 'package:vitameal/presentation/ui_provider/goals_provider.dart';
