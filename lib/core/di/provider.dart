@@ -7,6 +7,7 @@ import 'package:vitameal/data/data_source/diseases_data_source.dart';
 import 'package:vitameal/data/data_source/meal_analysis_data_source.dart';
 import 'package:vitameal/data/data_source/meal_local_data_source.dart';
 import 'package:vitameal/data/data_source/meal_remote_data_source.dart';
+import 'package:vitameal/data/data_source/post_remote_data_source.dart';
 import 'package:vitameal/data/data_source/profiles_data_source.dart';
 import 'package:vitameal/data/data_source/storage_data_source.dart';
 import 'package:vitameal/data/data_source/user_allergies_data_source.dart';
@@ -15,6 +16,7 @@ import 'package:vitameal/data/data_source/goal_datas_data_source.dart';
 import 'package:vitameal/data/database/database.dart';
 import 'package:vitameal/data/repository_impl/meal_analysis_repository_impl.dart';
 import 'package:vitameal/data/repository_impl/meal_repository_impl.dart';
+import 'package:vitameal/data/repository_impl/post_repository_impl.dart';
 import 'package:vitameal/data/repository_impl/storage_repository_impl.dart';
 import 'package:vitameal/data/service/sync_service.dart';
 import 'package:vitameal/data/service/widget_service.dart';
@@ -30,6 +32,7 @@ import 'package:vitameal/domain/repository/allergies_repository.dart';
 import 'package:vitameal/domain/repository/diseases_repository.dart';
 import 'package:vitameal/domain/repository/meal_analysis_repository.dart';
 import 'package:vitameal/domain/repository/meal_repository.dart';
+import 'package:vitameal/domain/repository/post_repository.dart';
 import 'package:vitameal/domain/repository/profiles_repository.dart';
 import 'package:vitameal/domain/repository/storage_repository.dart';
 import 'package:vitameal/domain/repository/user_allergies_repository.dart';
@@ -218,6 +221,20 @@ MealAnalysisRepository mealAnalysisRepository(Ref ref) {
 NotificationsRepository notificationsRepository(Ref ref) {
   final dataSource = ref.read(notificationsDataSourceProvider);
   return NotificationsRepositoryImpl(dataSource);
+}
+
+// 포스트
+@riverpod
+PostRemoteDataSource postRemoteDataSource(Ref ref) {
+  final client = ref.watch(supabaseClientProvider);
+  // Impl 클래스를 생성해서 인터페이스 타입으로 반환합니다.
+  return PostRemoteDataSourceImpl(client);
+}
+
+@riverpod
+PostRepository postRepository(Ref ref) {
+  final dataSource = ref.watch(postRemoteDataSourceProvider);
+  return PostRepositoryImpl(dataSource);
 }
 
 // 🤍 UseCase

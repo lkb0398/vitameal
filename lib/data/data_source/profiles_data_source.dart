@@ -5,7 +5,6 @@ import 'package:vitameal/data/dto/profiles_dto.dart';
 import 'package:vitameal/data/mapper/profiles_mapper.dart';
 import 'package:vitameal/domain/entity/profiles_entity.dart';
 
-// profiles 테이블 CRUD
 abstract interface class ProfilesDataSource {
   Future<ProfilesDto?> getMyProfile(String userId);
   Future<void> updateProfile(ProfilesEntity entity);

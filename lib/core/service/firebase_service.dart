@@ -6,6 +6,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 /// 🔔 Firebase + FCM 기본 세팅
 class FirebaseService {
   static final _messaging = FirebaseMessaging.instance;
+  static final _client = Supabase.instance.client;
 
   static Future<void> initialize() async {
     await requestPermission();
@@ -20,7 +21,7 @@ class FirebaseService {
 
   // FCM 토큰 발급 + Supabase 저장
   static Future<void> saveFcmToken() async {
-    final userId = Supabase.instance.client.auth.currentUser?.id;
+    final userId = _client.auth.currentUser?.id;
     if (userId == null) return;
 
     // 애뮬레이터에서 실행 하기 위해...
@@ -30,26 +31,33 @@ class FirebaseService {
     }
     final token = await _messaging.getToken();
     if (token == null) return;
-    // final token = await _messaging.getToken();
-    
+
     print('my fcm token : 🩷 $token');
-    await Supabase.instance.client.from('fcm_tokens').upsert({
+
+    await _client.from('fcm_tokens').upsert({
       'user_id': userId,
       'fcm_token': token,
       'platform': Platform.isIOS ? 'ios' : 'android',
-    }, onConflict: 'fcm_token');
+    }, onConflict: 'user_id');
   }
 
   // 토큰 갱신 감지
   static void listenTokenRefresh() {
-    FirebaseMessaging.instance.onTokenRefresh.listen((token) async {
-      final userId = Supabase.instance.client.auth.currentUser?.id;
-      if (userId == null) return;
-      await Supabase.instance.client.from('fcm_tokens').upsert({
+    _messaging.onTokenRefresh.listen((token) async {
+      final userId = _client.auth.currentUser!.id;
+      await _client.from('fcm_tokens').upsert({
         'user_id': userId,
         'fcm_token': token,
         'platform': Platform.isIOS ? 'ios' : 'android',
-      });
+      }, onConflict: 'user_id');
     });
+  }
+
+  static Future<void> deleteToken() async {
+    final userId = _client.auth.currentUser!.id;
+    await Supabase.instance.client
+        .from('fcm_tokens')
+        .delete()
+        .eq('user_id', userId);
   }
 }

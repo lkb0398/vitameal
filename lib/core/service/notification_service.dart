@@ -32,7 +32,7 @@ class NotificationService {
 
   // 알람용 고정 채널 (Android)
   static const String _channelId = 'vitameal_alarm'; // id (고정)
-  static const String _channelName = 'VitaMeal Alarm'; // 채널명 (설정 화면에 노출됨)
+  static const String _channelName = 'vitameal Alarm'; // 채널명 (설정 화면에 노출됨)
   static const String _channelDesc = 'Scheduled alarm notifications'; // 채널설명
 
   // 로컬 알림 표시 (Android Foreground 용)
@@ -40,11 +40,11 @@ class NotificationService {
     final data = message.data;
     final label = (data['label'] ?? message.notification?.title ?? '알람')
         .toString();
-    final time = (data['time'] ?? '').toString();
+    // final time = (data['time'] ?? '').toString();
 
     // 🤍 로컬 알림 커스텀
-    final title = 'Vitameal';
-    final body = '$time $label 알람입니다';
+    final title = 'vitameal';
+    final body = label;
 
     // Android
     final androidDetails = AndroidNotificationDetails(

@@ -1261,6 +1261,95 @@ final class NotificationsRepositoryProvider
 String _$notificationsRepositoryHash() =>
     r'abcdb3c01c132670aca5801f847fc2b6fc9667cf';
 
+@ProviderFor(postRemoteDataSource)
+const postRemoteDataSourceProvider = PostRemoteDataSourceProvider._();
+
+final class PostRemoteDataSourceProvider
+    extends
+        $FunctionalProvider<
+          PostRemoteDataSource,
+          PostRemoteDataSource,
+          PostRemoteDataSource
+        >
+    with $Provider<PostRemoteDataSource> {
+  const PostRemoteDataSourceProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'postRemoteDataSourceProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$postRemoteDataSourceHash();
+
+  @$internal
+  @override
+  $ProviderElement<PostRemoteDataSource> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  PostRemoteDataSource create(Ref ref) {
+    return postRemoteDataSource(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(PostRemoteDataSource value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<PostRemoteDataSource>(value),
+    );
+  }
+}
+
+String _$postRemoteDataSourceHash() =>
+    r'0c22e23c0f5cb7107b0a02e5cfebeae89d54ea0c';
+
+@ProviderFor(postRepository)
+const postRepositoryProvider = PostRepositoryProvider._();
+
+final class PostRepositoryProvider
+    extends $FunctionalProvider<PostRepository, PostRepository, PostRepository>
+    with $Provider<PostRepository> {
+  const PostRepositoryProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'postRepositoryProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$postRepositoryHash();
+
+  @$internal
+  @override
+  $ProviderElement<PostRepository> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  PostRepository create(Ref ref) {
+    return postRepository(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(PostRepository value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<PostRepository>(value),
+    );
+  }
+}
+
+String _$postRepositoryHash() => r'2c071dae34d9ae62e23736aaf769a7dbd164ae98';
+
 @ProviderFor(loginUseCase)
 const loginUseCaseProvider = LoginUseCaseProvider._();
 

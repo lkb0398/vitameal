@@ -1,0 +1,178 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:go_router/go_router.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:vitameal/core/theme/app_theme.dart';
+import 'package:vitameal/domain/entity/post_entity.dart';
+import 'package:vitameal/presentation/post/view_model/post_view_model.dart';
+
+class BookmarkPage extends HookConsumerWidget {
+  const BookmarkPage({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    // --- 초기 상태 및 데이터 로드 섹션 ---
+    final selectedTabIndex = useState(0);
+    final postsAsync = selectedTabIndex.value == 0
+        ? ref.watch(bookmarkedPostsProvider)
+        : ref.watch(myPostsProvider);
+
+    return Scaffold(
+      backgroundColor: vrc(context).background,
+      appBar: AppBar(
+        backgroundColor: vrc(context).background,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios, color: vrc(context).text),
+          onPressed: () => context.pop(),
+        ),
+        title: Text(
+          "저장된 레시피",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: vrc(context).text,
+          ),
+        ),
+        centerTitle: true,
+        elevation: 0,
+      ),
+      body: Column(
+        children: [
+          // --- 탭 전환 버튼 섹션 ---
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            child: Row(
+              children: [
+                buildTabButton(
+                  context,
+                  "즐겨찾기",
+                  selectedTabIndex.value == 0,
+                  () => selectedTabIndex.value = 0,
+                ),
+                const SizedBox(width: 10),
+                buildTabButton(
+                  context,
+                  "나의 레시피",
+                  selectedTabIndex.value == 1,
+                  () => selectedTabIndex.value = 1,
+                ),
+              ],
+            ),
+          ),
+
+          // --- 레시피 그리드 리스트 섹션 ---
+          Expanded(
+            child: postsAsync.when(
+              data: (posts) {
+                if (posts.isEmpty) {
+                  return Center(
+                    child: Text(
+                      "목록이 비어있습니다.",
+                      style: TextStyle(color: vrc(context).content),
+                    ),
+                  );
+                }
+                return GridView.builder(
+                  padding: const EdgeInsets.all(20),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    mainAxisSpacing: 15,
+                    crossAxisSpacing: 15,
+                    childAspectRatio: 1 / 1.1,
+                  ),
+                  itemCount: posts.length,
+                  itemBuilder: (context, index) {
+                    return buildRecipeCard(context, posts[index], ref);
+                  },
+                );
+              },
+              loading: () => Center(
+                child: CircularProgressIndicator(
+                  color: fxc(context).primary400,
+                ),
+              ),
+              error: (err, _) => Center(
+                child: Text(
+                  "오류가 발생했습니다: $err",
+                  style: TextStyle(color: vrc(context).text),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // --- 위젯 빌더 섹션 ---
+  Widget buildTabButton(
+    BuildContext context,
+    String label,
+    bool isSelected,
+    VoidCallback onTap,
+  ) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        decoration: BoxDecoration(
+          color: isSelected
+              ? fxc(context).primary400
+              : vrc(context).greyBackground,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Text(
+          label,
+          style: TextStyle(
+            color: isSelected ? Colors.white : vrc(context).hint,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildRecipeCard(BuildContext context, PostEntity post, WidgetRef ref) {
+    return GestureDetector(
+      key: ValueKey(post.id), // 캐시 이미지 꼬임 방지
+      onTap: () => context.push('/post/${post.id}'),
+      child: Stack(
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(20),
+            child: Container(
+              width: double.infinity,
+              height: double.infinity,
+              color: Colors.black12, // 배경색
+              child: post.imageUrl != null && post.imageUrl!.isNotEmpty
+                  ? CachedNetworkImage( // url 이미지 캐싱
+                      imageUrl: post.imageUrl!,
+                      fit: BoxFit.cover,
+                      fadeInDuration: const Duration(milliseconds: 200), // 자연스럽게
+                      fadeOutDuration: const Duration(milliseconds: 100),
+                      errorWidget: (c, e, s) => Icon(Icons.image_not_supported_outlined, color: Colors.black26),
+                    )
+                  : Icon(Icons.restaurant, color: Colors.black26),
+            ),
+          ),
+          Positioned(
+            bottom: 12,
+            right: 12,
+            child: GestureDetector(
+              onTap: () => ref
+                  .read(postViewModelProvider.notifier)
+                  .toggleBookmark(post.id!),
+              child: Icon(
+                post.isBookmarked ? Icons.bookmark : Icons.bookmark_outline,
+                color: post.isBookmarked
+                    ? fxc(context).primary400
+                    : Colors.white,
+                size: 24,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

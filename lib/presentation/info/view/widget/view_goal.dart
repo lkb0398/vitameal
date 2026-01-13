@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:vitameal/core/theme/app_theme.dart';
 import 'package:vitameal/presentation/info/view/widget/graph.dart';
 import 'package:vitameal/presentation/info/view/widget/guage.dart';
 import 'package:vitameal/presentation/ui_provider/goals_provider.dart';
@@ -35,7 +36,10 @@ class ViewGoal extends HookConsumerWidget {
               : Center(
                   child: Text(
                     "대표 설정한 목표가 없어요 :(",
-                    style: TextStyle(fontSize: 16),
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: fxc(context).textcolor100,
+                    ),
                   ),
                 ),
         ),
@@ -54,7 +58,13 @@ class ViewGoal extends HookConsumerWidget {
           child: mainGoal != null
               ? Graph(datas: current5Datas ?? [])
               : Center(
-                  child: Text("데이터를 추가해 주세요.", style: TextStyle(fontSize: 16)),
+                  child: Text(
+                    "데이터를 추가해 주세요.",
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: fxc(context).textcolor100,
+                    ),
+                  ),
                 ),
         ),
       ],

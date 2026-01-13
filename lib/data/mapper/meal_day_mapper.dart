@@ -10,19 +10,19 @@ extension MealDayDtoMapper on MealDayDto {
     return MealDayEntity(
       id: id,
       userId: userId,
-      mealDate: DateTime.parse(mealDate),
+      mealDate: DateTime.parse(mealDate).toLocal(),
       adherence: adherence != null
           ? AdherenceLevel.fromString(adherence!)
           : null,
-      createdAt: DateTime.parse(createdAt),
-      updatedAt: DateTime.parse(updatedAt),
+      createdAt: DateTime.parse(createdAt).toLocal(),
+      updatedAt: DateTime.parse(updatedAt).toLocal(),
       dataVersion: dataVersion,
       lastEntryUpdatedAt: lastEntryUpdatedAt != null
-          ? DateTime.parse(lastEntryUpdatedAt!)
+          ? DateTime.parse(lastEntryUpdatedAt!).toLocal()
           : null,
       needsAiRefresh: needsAiRefresh,
       latestAiSummary: latestAiSummary,
-      deletedAt: deletedAt != null ? DateTime.parse(deletedAt!) : null,
+      deletedAt: deletedAt != null ? DateTime.parse(deletedAt!).toLocal() : null,
     );
   }
 }
@@ -33,15 +33,15 @@ extension MealDayEntityToDto on MealDayEntity {
     return MealDayDto(
       id: id,
       userId: userId,
-      mealDate: mealDate.toIso8601String(),
+      mealDate: mealDate.toUtc().toIso8601String(),
       adherence: adherence?.value,
-      createdAt: createdAt.toIso8601String(),
-      updatedAt: updatedAt.toIso8601String(),
+      createdAt: createdAt.toUtc().toIso8601String(),
+      updatedAt: updatedAt.toUtc().toIso8601String(),
       dataVersion: dataVersion,
-      lastEntryUpdatedAt: lastEntryUpdatedAt?.toIso8601String(),
+      lastEntryUpdatedAt: lastEntryUpdatedAt?.toUtc().toIso8601String(),
       needsAiRefresh: needsAiRefresh,
       latestAiSummary: latestAiSummary,
-      deletedAt: deletedAt?.toIso8601String(),
+      deletedAt: deletedAt?.toUtc().toIso8601String(),
     );
   }
 }

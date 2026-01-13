@@ -8,6 +8,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:tap_debouncer/tap_debouncer.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
 import 'package:vitameal/data/data_source/profiles_data_source.dart';
+import 'package:vitameal/presentation/onboarding/view/widget/progress_text.dart';
 import 'package:vitameal/presentation/widget/button/done_button.dart';
 import 'package:vitameal/presentation/widget/validate_textformfield.dart';
 import 'package:vitameal/presentation/ui_provider/profiles_provider.dart';
@@ -43,6 +44,7 @@ class OnboardingProfilePage extends HookConsumerWidget {
 
     // 닉네임 : 사용자 입력값 받기 + 검증 메시지
     final nicknameController = useTextEditingController();
+    final nicknameError = useState<String?>(null); // 서버 중복 체크 용
     String? validateNickname(String? value) {
       if (value == null || value.trim().isEmpty) {
         return '닉네임을 입력해주세요.'; // 입력값 없을 때
@@ -51,19 +53,27 @@ class OnboardingProfilePage extends HookConsumerWidget {
       if (nickname.length > 10) {
         return '닉네임은 10글자 이하로 입력해주세요.'; // 길이 제한 (1~10)
       }
+      if (nicknameError.value != null) {
+        return nicknameError.value; // 서버 닉네임 중복 에러
+      }
+
       return null; // 통과
     }
 
-    final nicknameError = useState<String?>(null); // 서버 중복 체크 용
     useEffect(() {
       void listener() {
+        // 입력값 바뀌면 서버 에러 제거
+        if (nicknameError.value != null) {
+          nicknameError.value = null;
+        }
+
         final nickname = nicknameController.text.trim();
-        final isValid = validateNickname(nickname) == null;
+        final isValid =
+            validateNickname(nickname) == null && nicknameError.value == null;
         isButtonEnabled.value = isValid;
       }
 
       nicknameController.addListener(listener);
-
       return () => nicknameController.removeListener(listener);
     }, []);
 
@@ -91,104 +101,90 @@ class OnboardingProfilePage extends HookConsumerWidget {
     }, [isEditing, profileAsync]);
 
     return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 40),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              spacing: 10,
-              children: [
-                /// 단계 표시
-                Align(
-                  alignment: AlignmentGeometry.centerRight,
-                  child: Text.rich(
-                    TextSpan(
-                      style: TextStyle(fontSize: 16, color: vrc(context).text),
-                      children: [
-                        TextSpan(
-                          text: '1',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: fxc(context).primary400,
-                          ),
-                        ),
-                        TextSpan(text: ' / 4'),
-                      ],
-                    ),
-                  ),
-                ),
-
-                /// 설명
-                isEditing
-                    ? Text(
-                        "프로필 수정",
+      resizeToAvoidBottomInset: true,
+      appBar: AppBar(
+        /// 단계 표시
+        actions: [isEditing ? SizedBox.shrink() : ProgressText(page: "1")],
+        actionsPadding: EdgeInsets.only(right: 26),
+      ),
+      body: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 20),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 10,
+            children: [
+              /// 설명
+              isEditing
+                  ? Text(
+                      "프로필 수정",
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        color: vrc(context).text,
+                      ),
+                    )
+                  : Text.rich(
+                      TextSpan(
                         style: TextStyle(
                           fontSize: 22,
-                          fontWeight: FontWeight.bold,
                           color: vrc(context).text,
                         ),
-                      )
-                    : Text.rich(
-                        TextSpan(
-                          style: TextStyle(
-                            fontSize: 22,
-                            color: vrc(context).text,
+                        children: [
+                          TextSpan(
+                            text: 'VitaMeal',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: fxc(context).primary400,
+                            ),
                           ),
-                          children: [
-                            TextSpan(
-                              text: 'VitaMeal',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: fxc(context).primary400,
-                              ),
-                            ),
-                            TextSpan(text: '에서 사용할\n'),
-                            TextSpan(
-                              text: '프로필',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            TextSpan(text: '을 설정해주세요.'),
-                          ],
-                        ),
+                          TextSpan(text: '에서 사용할\n'),
+                          TextSpan(
+                            text: '프로필',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          TextSpan(text: '을 설정해주세요.'),
+                        ],
                       ),
-                SizedBox(height: 40),
+                    ),
+              SizedBox(height: 30),
 
-                /// 프로필 이미지
-                Center(
-                  child: InkWell(
-                    onTap: () => pickFromGallery(),
-                    child: imageUrl.value == null
-                        ? Image.asset(
-                            'assets/images/profile_image.webp',
+              /// 프로필 이미지
+              Center(
+                child: InkWell(
+                  onTap: () => pickFromGallery(),
+                  child: imageUrl.value == null
+                      ? Image.asset(
+                          'assets/images/profile_image_l.webp',
+                          height: 148,
+                          width: 148,
+                          fit: BoxFit.cover,
+                        )
+                      : ClipRRect(
+                          borderRadius: BorderRadius.circular(300),
+                          child: SizedBox(
                             height: 148,
                             width: 148,
-                            fit: BoxFit.cover,
-                          )
-                        : ClipRRect(
-                            borderRadius: BorderRadius.circular(300),
                             child: Image.network(
                               imageUrl.value!,
-                              height: 148,
-                              width: 148,
                               fit: BoxFit.cover,
                             ),
                           ),
-                  ),
+                        ),
                 ),
+              ),
 
-                /// 닉네임 입력창
-                Text("닉네임"),
-                ValidateTextformfield(
-                  readOnly: false,
-                  hintText: "김비타밀",
-                  validator: validateNickname,
-                  controller: nicknameController,
-                  errorText: nicknameError.value,
-                  helperText: '닉네임은 10글자 이하로 입력해주세요.',
-                ),
-              ],
-            ),
+              /// 닉네임 입력창
+              Text("닉네임"),
+              ValidateTextformfield(
+                readOnly: false,
+                hintText: "김비타밀",
+                validator: validateNickname,
+                controller: nicknameController,
+                helperText: '닉네임은 10글자 이하로 입력해주세요.',
+                errorText: nicknameError.value,
+              ),
+            ],
           ),
         ),
       ),
@@ -216,17 +212,21 @@ class OnboardingProfilePage extends HookConsumerWidget {
                   // 닉네임 중복 시
                 } on DuplicateNicknameException {
                   nicknameError.value = '이미 사용 중인 닉네임입니다.';
+                  nicknameController.value = nicknameController.value;
                 }
               }
             : null,
         builder: (BuildContext context, TapDebouncerFunc? onTap) {
-          return DoneButton(
-            onTap: onTap,
-            backgroundColor: isButtonEnabled.value
-                ? fxc(context).primary400!
-                : fxc(context).textcolor300!,
-            text: isEditing ? "완료" : "다음",
-            textColor: Colors.white,
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 10),
+            child: DoneButton(
+              onTap: onTap,
+              backgroundColor: isButtonEnabled.value
+                  ? fxc(context).primary400!
+                  : fxc(context).textcolor300!,
+              text: isEditing ? "수정 완료" : "다음",
+              textColor: Colors.white,
+            ),
           );
         },
       ),

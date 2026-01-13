@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vitameal/core/theme/app_theme.dart';
 
 class CalendarHeader extends StatelessWidget {
   /// 캘린더 헤더
@@ -10,6 +11,7 @@ class CalendarHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
+        SizedBox(height: 10),
         // 년.월
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -18,11 +20,11 @@ class CalendarHeader extends StatelessWidget {
             alignment: Alignment.centerLeft,
             child: Text(
               '${focused.year}.${focused.month.toString().padLeft(2, '0')}',
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: vrc(context).text),
             ),
           ),
         ),
-
+      
         // 요일 (TableCalendar와 동일한 간격으로 7등분)
         SizedBox(
           height: 40,
@@ -33,7 +35,7 @@ class CalendarHeader extends StatelessWidget {
                     child: Center(
                       child: Text(
                         day,
-                        style: TextStyle(fontSize: 13, color: Color(0xFF757575), fontWeight: FontWeight.w500),
+                        style: TextStyle(fontSize: 13, color: vrc(context).content, fontWeight: FontWeight.w500),
                       ),
                     ),
                   ),

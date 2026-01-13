@@ -6,9 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:vitameal/core/config/routes.dart';
 import 'package:vitameal/core/di/provider.dart';
+import 'package:vitameal/core/service/analytics_service.dart';
+import 'package:vitameal/core/theme/app_theme.dart';
 import 'package:vitameal/presentation/auth/view_model/auth_view_model.dart';
 import 'package:vitameal/presentation/meal_calendar/view/widget/ai_analysis_card.dart';
 import 'package:vitameal/presentation/meal_calendar/view/widget/ai_analysis_detail_dialog.dart';
@@ -27,7 +30,7 @@ class MealCalendarPage extends HookConsumerWidget {
   const MealCalendarPage({super.key});
 
   // 년.월 라벨 + 요일 고정 영역 (40 + 40)
-  static const double _headerHeight = 80;
+  static const double _headerHeight = 90;
   // Week 모드 높이 (화면 내렸을 때 표시되는 주 캘린더)
   static const double _weekCalendarHeight = 44;
   // Month 모드 행 개수 = 6주
@@ -43,9 +46,7 @@ class MealCalendarPage extends HookConsumerWidget {
 
     // userId가 없으면 로딩 표시
     if (userId == null) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
     // UI 상태 값들
@@ -55,13 +56,25 @@ class MealCalendarPage extends HookConsumerWidget {
     final lastTappedDay = useState<DateTime?>(null); // 마지막으로 선택된 날짜
     final dragStartY = useState<double?>(null); // 세로 드래그
     final dragEndY = useState<double?>(null); // 세로 드래그
+    final showFabBubble = useState(false); // 말풍선 표시 상태
 
     // 애니메이션 컨트롤러
-    final collapseCtrl = useAnimationController(duration: const Duration(milliseconds: 360));
+    final collapseCtrl = useAnimationController(
+      duration: const Duration(milliseconds: 360),
+      initialValue: 1.0, // 처음부터 아래 화면에서 시작
+    );
 
     // 월의 시작/끝 날짜 계산 (focusedDay 기준)
-    final startOfMonth = DateTime(focusedDay.value.year, focusedDay.value.month, 1);
-    final endOfMonth = DateTime(focusedDay.value.year, focusedDay.value.month + 1, 0);
+    final startOfMonth = DateTime(
+      focusedDay.value.year,
+      focusedDay.value.month,
+      1,
+    );
+    final endOfMonth = DateTime(
+      focusedDay.value.year,
+      focusedDay.value.month + 1,
+      0,
+    );
 
     // MealCalendarViewModel - 캘린더 색상 바용
     final calendarViewModel = ref.watch(
@@ -70,7 +83,7 @@ class MealCalendarPage extends HookConsumerWidget {
 
     // 캘린더 색상 맵 생성
     final colorOfDay = calendarViewModel.maybeWhen(
-      data: (mealDays) => AdherenceColorUtils.buildColorMap(mealDays),
+      data: (mealDays) => AdherenceUtils.buildColorMap(mealDays),
       orElse: () => <DateTime, Color>{},
     );
 
@@ -91,9 +104,24 @@ class MealCalendarPage extends HookConsumerWidget {
     final todayCountAsync = ref.watch(todayAnalysisCountProvider(userId));
 
     // AI 분석 카드에 전달할 값들, 설명은 ai_analysis_card 변수에,,
-    final todayCount = todayCountAsync.maybeWhen(data: (count) => count, orElse: () => 0);
+    final todayCount = todayCountAsync.maybeWhen(
+      data: (count) => count,
+      orElse: () => 0,
+    );
     final isCountLoading = todayCountAsync.isLoading;
-    final hasEntries = mealEntriesAsync?.maybeWhen(data: (entries) => entries.isNotEmpty, orElse: () => false) ?? false;
+    final hasEntries =
+        mealEntriesAsync?.maybeWhen(
+          data: (entries) => entries.isNotEmpty,
+          orElse: () => false,
+        ) ??
+        false;
+
+    final isEntriesEmpty = mealEntriesAsync == null
+        ? true // MealDay 자체가 없으면, 식단도 없음
+        : mealEntriesAsync.maybeWhen(
+            data: (entries) => entries.isEmpty,
+            orElse: () => false, // 로딩에러 중엔 false
+          );
 
     /// 날짜 탭 인터렉션
     void onDayTapped(DateTime day) {
@@ -138,30 +166,35 @@ class MealCalendarPage extends HookConsumerWidget {
 
     // 성취도 평가 업데이트
     Future<void> setColorBar(Color color) async {
-      final adherence = AdherenceColorUtils.colorToAdherence(color);
+      final adherence = AdherenceUtils.colorToAdherence(color);
 
       try {
         String mealDayId;
 
         // MealDay가 없으면 먼저 생성 (식단 추가와 동일한 로직)
         if (selectedMealDay == null) {
-          final mealDay = await ref.read(mealRepositoryProvider).getOrCreateMealDay(
-            userId: userId,
-            date: selectedDay.value,
-          );
+          final mealDay = await ref
+              .read(mealRepositoryProvider)
+              .getOrCreateMealDay(userId: userId, date: selectedDay.value);
           mealDayId = mealDay.id;
         } else {
           mealDayId = selectedMealDay.id;
         }
 
         // Adherence 업데이트 (UI 즉시 반영)
-        await ref.read(mealCalendarViewModelProvider(userId, startOfMonth, endOfMonth).notifier)
-          .updateAdherence(
-            mealDayId: mealDayId,
-            adherence: adherence,
-          );
+        await ref
+            .read(
+              mealCalendarViewModelProvider(
+                userId,
+                startOfMonth,
+                endOfMonth,
+              ).notifier,
+            )
+            .updateAdherence(mealDayId: mealDayId, adherence: adherence);
+
+        // 📝
+        AnalyticsService.event('meal_action', p: {'action': 'adherence'});
       } catch (e) {
-        // 에러 처리 (필요 시 SnackBar 등으로 사용자에게 알림)
         debugPrint('성취도 업데이트 실패: $e');
       }
     }
@@ -172,7 +205,9 @@ class MealCalendarPage extends HookConsumerWidget {
 
       // 분석 수행 후 결과 받기
       final viewModel = ref.read(mealAnalysisViewModelProvider.notifier);
-      final analysisResult = await viewModel.requestAnalysis(selectedMealDay.id);
+      final analysisResult = await viewModel.requestAnalysis(
+        selectedMealDay.id,
+      );
 
       // 로컬 DB 업데이트 (summary + needs_ai_refresh=false)
       // TODO : data_source로 옮기기
@@ -184,7 +219,12 @@ class MealCalendarPage extends HookConsumerWidget {
 
       // Provider 갱신
       ref.invalidate(mealCalendarViewModelProvider); // 버튼 활성화 여부
-      ref.read(todayAnalysisCountProvider(userId).notifier).refresh(); // 사용한 분석 횟수
+      ref
+          .read(todayAnalysisCountProvider(userId).notifier)
+          .refresh(); // 사용한 분석 횟수
+
+      // 📝
+      AnalyticsService.event('meal_action', p: {'action': 'ai_analyze'});
     }
 
     // 자세히 보기: 기저질환에 관한 피드백이 들어있는 대화상자 출력
@@ -213,6 +253,21 @@ class MealCalendarPage extends HookConsumerWidget {
     // Week 모드 여부
     final isWeekMode = t >= 0.9;
 
+    useEffect(
+      () {
+        showFabBubble.value = false; // 기본적으로 숨김
+        if (!isEntriesEmpty) return null; // 조건이 안 맞으면 아무것도 안 함
+        if (!isWeekMode) return null; // Month 모드 일때는 안뜸
+        showFabBubble.value = true;
+        return null;
+      },
+      [
+        isEntriesEmpty, // 해당 날짜에 식단 없어지면 다시 판단
+        isWeekMode, // Month - Week 모드 바뀌면 다시 판단
+        selectedDay.value, // 날짜 바뀌면 다시 판단
+      ],
+    );
+
     return Scaffold(
       body: SafeArea(
         top: true,
@@ -222,7 +277,8 @@ class MealCalendarPage extends HookConsumerWidget {
             final availableHeight = constraints.maxHeight;
 
             // 월 캘린더 높이 (헤더 제외 영역)
-            final monthCalendarHeight = (availableHeight - _headerHeight) * _monthCalendarRatio;
+            final monthCalendarHeight =
+                (availableHeight - _headerHeight) * _monthCalendarRatio;
             // 행 높이 계산
             final rowHeightMonth = monthCalendarHeight / _rowCount;
 
@@ -233,7 +289,11 @@ class MealCalendarPage extends HookConsumerWidget {
               rowCount: _rowCount,
             );
             // 행 높이를 애니메이션 진행에 따라 보간 (Month 모드 - Week 모드)
-            final rowHeight = lerpDouble(rowHeightMonth, _weekCalendarHeight, t)!;
+            final rowHeight = lerpDouble(
+              rowHeightMonth,
+              _weekCalendarHeight,
+              t,
+            )!;
             // 애니메이션 진행에 따라 선택된 날짜가 속한 주를 맨 위로 올리기 위한 이동량
             final translateY = isWeekMode ? 0.0 : -weekIndex * rowHeight * t;
 
@@ -243,7 +303,11 @@ class MealCalendarPage extends HookConsumerWidget {
             final barArea = lerpDouble(barAreaHeightMonth, 0.0, t)!;
 
             // 애니메이션에 따른 TableCalendar 높이 계산
-            final calendarHeight = lerpDouble(monthCalendarHeight, _weekCalendarHeight, t)!;
+            final calendarHeight = lerpDouble(
+              monthCalendarHeight,
+              _weekCalendarHeight,
+              t,
+            )!;
 
             return Column(
               children: [
@@ -263,8 +327,10 @@ class MealCalendarPage extends HookConsumerWidget {
                         Transform.translate(
                           offset: Offset(0, translateY),
                           child: OverflowBox(
-                            minHeight: monthCalendarHeight, // 오버플로우 방지, 항상 월 캘린더 높이로
-                            maxHeight: monthCalendarHeight, // 오버플로우 방지, 항상 월 캘린더 높이로
+                            minHeight:
+                                monthCalendarHeight, // 오버플로우 방지, 항상 월 캘린더 높이로
+                            maxHeight:
+                                monthCalendarHeight, // 오버플로우 방지, 항상 월 캘린더 높이로
                             alignment: Alignment.topCenter,
                             child: MonthCalendar(
                               focusedDay: focusedDay.value,
@@ -273,7 +339,9 @@ class MealCalendarPage extends HookConsumerWidget {
                               barAreaHeight: barArea,
                               barColorByDay: colorOfDay,
                               onDayTap: onDayTapped,
-                              calendarFormat: isWeekMode ? CalendarFormat.week : CalendarFormat.month,
+                              calendarFormat: isWeekMode
+                                  ? CalendarFormat.week
+                                  : CalendarFormat.month,
                               onPageChanged: onPageChanged,
                             ),
                           ),
@@ -293,9 +361,12 @@ class MealCalendarPage extends HookConsumerWidget {
                               dragEndY.value = details.globalPosition.dy;
                             },
                             onVerticalDragEnd: (details) {
-                              if (dragStartY.value == null || dragEndY.value == null) return;
+                              if (dragStartY.value == null ||
+                                  dragEndY.value == null)
+                                return;
                               // 드래그 방향 체크
-                              final dragDistance = dragEndY.value! - dragStartY.value!;
+                              final dragDistance =
+                                  dragEndY.value! - dragStartY.value!;
                               dragStartY.value = null;
                               dragEndY.value = null;
                               // 최소 50px 드래그
@@ -303,13 +374,19 @@ class MealCalendarPage extends HookConsumerWidget {
                               // 위로 드래그 (Month -> Week)
                               if (dragDistance < 0) {
                                 if (!isWeekMode) {
-                                  collapseCtrl.animateTo(1.0, curve: Curves.easeOutCubic);
+                                  collapseCtrl.animateTo(
+                                    1.0,
+                                    curve: Curves.easeOutCubic,
+                                  );
                                 }
                               }
                               // 아래로 드래그 (Week -> Month)
                               else {
                                 if (isWeekMode) {
-                                  collapseCtrl.animateTo(0.0, curve: Curves.easeOutCubic);
+                                  collapseCtrl.animateTo(
+                                    0.0,
+                                    curve: Curves.easeOutCubic,
+                                  );
                                 }
                               }
                             },
@@ -322,113 +399,87 @@ class MealCalendarPage extends HookConsumerWidget {
 
                 // 식단 내용 영역
                 Expanded(
-                  child: SingleChildScrollView(
-                    controller: contentScrollController,
-                    child: Column(
-                      children: [
-                        // 성취도 평가 위젯
-                        AdherencePicker(
-                          selectedDay: selectedDay.value,
-                          adherence: colorOfDay[selectedDay.value],
-                          onPick: setColorBar,
+                  child: Builder(
+                    builder: (context) {
+                      // MealDay가 없을 경우
+                      if (mealEntriesAsync == null) {
+                        return _EmptyMealView(
+                          scrollController: contentScrollController,
+                        );
+                      }
+                      return mealEntriesAsync.when(
+                        data: (entries) {
+                          if (entries.isEmpty) {
+                            return _EmptyMealView(
+                              scrollController: contentScrollController,
+                            );
+                          }
+                          final sortedEntries = entries.toList()
+                            ..sort((a, b) {
+                              final aTime = a.eatenAt ?? DateTime(2000);
+                              final bTime = b.eatenAt ?? DateTime(2000);
+                              return aTime.compareTo(bTime);
+                            });
+
+                          return ListView(
+                            controller: contentScrollController,
+                            children: [
+                              AdherencePicker(
+                                selectedDay: selectedDay.value,
+                                adherence: colorOfDay[selectedDay.value],
+                                onPick: setColorBar,
+                              ),
+                              SizedBox(height: 4),
+                              if (selectedMealDay != null)
+                                AiAnalysisCard(
+                                  mealDayId: selectedMealDay.id,
+                                  needsAiRefresh:
+                                      selectedMealDay.needsAiRefresh,
+                                  latestAiSummary:
+                                      selectedMealDay.latestAiSummary,
+                                  todayCount: todayCount,
+                                  isCountLoading: isCountLoading,
+                                  hasEntries: hasEntries,
+                                  onAnalyze: handleAnalyze,
+                                  onOpenDetail: handleOpenDetail,
+                                ),
+                              SizedBox(height: 4),
+                              ...sortedEntries.map(
+                                (entry) => MealCard(
+                                  entryId: entry.id,
+                                  category: entry.category,
+                                  content: entry.content,
+                                  photoUrl: entry.photoUrl,
+                                  eatenAt: entry.eatenAt,
+                                  onTap: () async {
+                                    await context.push(
+                                      AppRoutePath.mealEditor,
+                                      extra: {
+                                        'mealEntryId': entry.id,
+                                        'mealDayId': selectedMealDay!.id,
+                                        'date': selectedDay.value,
+                                      },
+                                    );
+                                    ref.invalidate(
+                                      mealEntriesProvider(selectedMealDay.id),
+                                    );
+                                  },
+                                ),
+                              ),
+                              const SizedBox(height: 24),
+                            ],
+                          );
+                        },
+                        loading: () =>
+                            const Center(child: CircularProgressIndicator()),
+                        error: (e, _) => Center(
+                          child: Text(
+                            '에러 발생: $e',
+                            style: const TextStyle(color: Colors.red),
+                          ),
                         ),
-                        // 분석 카드
-                        if (selectedMealDay != null)
-                          AiAnalysisCard(
-                            mealDayId: selectedMealDay.id,
-                            needsAiRefresh: selectedMealDay.needsAiRefresh,
-                            latestAiSummary: selectedMealDay.latestAiSummary,
-                            todayCount: todayCount,
-                            isCountLoading: isCountLoading,
-                            hasEntries: hasEntries,
-                            onAnalyze: handleAnalyze,
-                            onOpenDetail: handleOpenDetail,
-                          ),
-                        // 식단 카드 리스트
-                        if (mealEntriesAsync != null)
-                          mealEntriesAsync.when(
-                            data: (entries) {
-                              if (entries.isEmpty) {
-                                return const Padding(
-                                  padding: EdgeInsets.all(32.0),
-                                  child: Center(
-                                    child: Text(
-                                      '식단 기록이 없습니다',
-                                      style: TextStyle(
-                                        color: Colors.black38,
-                                        fontSize: 14,
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              }
-
-                              // 시간순 정렬
-                              final sortedEntries = entries.toList()
-                                ..sort((a, b) {
-                                  final aTime = a.eatenAt ?? DateTime(2000);
-                                  final bTime = b.eatenAt ?? DateTime(2000);
-                                  return aTime.compareTo(bTime);
-                                });
-
-                              return Column(
-                                children: sortedEntries
-                                    .map(
-                                      (entry) => MealCard(
-                                        entryId: entry.id,
-                                        category: entry.category,
-                                        content: entry.content,
-                                        photoUrl: entry.photoUrl,
-                                        eatenAt: entry.eatenAt,
-                                        onTap: () async {
-                                          // MealEditor로 이동 (수정 모드)
-                                          await context.push(
-                                            AppRoutePath.mealEditor,
-                                            extra: {
-                                              'mealEntryId': entry.id,
-                                              'mealDayId': selectedMealDay!.id,
-                                              'date': selectedDay.value,
-                                            },
-                                          );
-                                          // Provider로 따로 뺀거라 돌아온 후 갱신 해줘야함
-                                          // TODO: vm에서 state 클래스로 같이 관리하도록 리팩토링 하기
-                                          ref.invalidate(mealEntriesProvider(selectedMealDay.id));
-                                        },
-                                      ),
-                                    )
-                                    .toList(),
-                              );
-                            },
-                            loading: () => const Padding(
-                              padding: EdgeInsets.all(32.0),
-                              child: Center(child: CircularProgressIndicator()),
-                            ),
-                            error: (error, stack) => Padding(
-                              padding: const EdgeInsets.all(32.0),
-                              child: Center(
-                                child: Text(
-                                  '에러 발생: $error',
-                                  style: const TextStyle(color: Colors.red),
-                                ),
-                              ),
-                            ),
-                          )
-                        else
-                          const Padding(
-                            padding: EdgeInsets.all(32.0),
-                            child: Center(
-                              child: Text(
-                                '날짜를 선택해주세요',
-                                style: TextStyle(
-                                  color: Colors.black38,
-                                  fontSize: 14,
-                                ),
-                              ),
-                            ),
-                          ),
-                        const SizedBox(height: 24),
-                      ],
-                    ),
+                      );
+                    },
                   ),
                 ),
               ],
@@ -436,24 +487,139 @@ class MealCalendarPage extends HookConsumerWidget {
           },
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          await context.push(
-            AppRoutePath.mealEditor,
-            extra: {
-              'mealDayId': selectedMealDay?.id,
-              'date': selectedDay.value,
+      floatingActionButton: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          TweenAnimationBuilder<double>(
+            tween: Tween(begin: 0.0, end: showFabBubble.value ? 1.0 : 0.0),
+            duration: const Duration(milliseconds: 260),
+            curve: Curves.easeOutCubic,
+            builder: (context, v, child) {
+              return Opacity(
+                opacity: v,
+                child: Transform.translate(
+                  offset: Offset(0, (1 - v) * 10), // 아래에서 위로 10px
+                  child: Transform.scale(
+                    scale: 0.96 + (v * 0.04), // 0.96 -> 1.0
+                    alignment: Alignment.bottomRight,
+                    child: child,
+                  ),
+                ),
+              );
             },
-          );
-          // Provider로 따로 뺀거라 돌아온 후 갱신 해줘야함
-          // TODO: vm에서 state 클래스로 같이 관리하도록 리팩토링 하기
-          if (selectedMealDay != null) {
-            ref.invalidate(mealEntriesProvider(selectedMealDay.id));
-          }
-        },
-        elevation: 0,
-        shape: const CircleBorder(),
-        child: const Icon(Icons.add, size: 32),
+            child: IgnorePointer(
+              ignoring: !showFabBubble.value,
+              child: _FabBubble(text: '오늘의 식단을 기록해보세요', onTap: () async {}),
+            ),
+          ),
+          const SizedBox(height: 8),
+          FloatingActionButton(
+            heroTag: null,
+            onPressed: () async {
+              await context.push(
+                AppRoutePath.mealEditor,
+                extra: {
+                  'mealDayId': selectedMealDay?.id,
+                  'date': selectedDay.value,
+                },
+              );
+              // Provider로 따로 뺀거라 돌아온 후 갱신 해줘야함
+              // TODO: vm에서 state 클래스로 같이 관리하도록 리팩토링 하기
+              if (selectedMealDay != null) {
+                ref.invalidate(mealEntriesProvider(selectedMealDay.id));
+              }
+            },
+            elevation: 0,
+            shape: const CircleBorder(),
+            backgroundColor: fxc(context).primary400,
+            child: Icon(
+              PhosphorIcons.pencilSimple(),
+              size: 32,
+              color: Colors.white,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _EmptyMealView extends StatelessWidget {
+  const _EmptyMealView({super.key, required this.scrollController});
+
+  final ScrollController scrollController;
+
+  @override
+  Widget build(BuildContext context) {
+    // Expanded 영역의 높이를 받아서 가운데 정렬
+    // 스크롤로 overflow 방지
+    return LayoutBuilder(
+      builder: (context, c) {
+        return SingleChildScrollView(
+          controller: scrollController,
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minHeight: c.maxHeight),
+            child: Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    PhosphorIcons.bowlFood(),
+                    size: 100,
+                    color: vrc(context).emptyText,
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    '기록한 식단이 없어요 :(',
+                    style: TextStyle(color: vrc(context).border, fontSize: 18),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _FabBubble extends StatelessWidget {
+  const _FabBubble({required this.text, this.onTap});
+
+  final String text;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(12),
+        onTap: onTap,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // 말풍선
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              decoration: BoxDecoration(
+                border: Border.all(color: fxc(context).primary400!),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Text(
+                text,
+                style: TextStyle(
+                  color: fxc(context).primary400,
+                  fontSize: 12,
+                  height: 1.2,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -17,7 +17,7 @@ class ValidateTextformfield extends HookConsumerWidget {
     this.inputFormatters,
     this.errorText,
     this.helperText,
-    this.fixHeight,
+    // this.fixHeight,
     this.unit,
   });
   final bool readOnly;
@@ -30,7 +30,7 @@ class ValidateTextformfield extends HookConsumerWidget {
   final List<TextInputFormatter>? inputFormatters;
   final String? errorText;
   final String? helperText;
-  final bool? fixHeight;
+  // final bool? fixHeight;
 
   final String? unit;
 
@@ -45,7 +45,7 @@ class ValidateTextformfield extends HookConsumerWidget {
 
       controller.addListener(listener);
       return () => controller.removeListener(listener);
-    }, [controller]);
+    }, [controller, errorText]);
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -60,6 +60,9 @@ class ValidateTextformfield extends HookConsumerWidget {
         Expanded(
           child: TextFormField(
             style: TextStyle(fontSize: 14),
+            scrollPadding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom + 100,
+            ),
             decoration: InputDecoration(
               contentPadding: const EdgeInsets.all(16),
               hintText: hintText,
@@ -87,13 +90,13 @@ class ValidateTextformfield extends HookConsumerWidget {
               ),
               suffixIcon: isValid.value == null
                   ? null
-                  : isValid.value!
-                  ? Icon(Icons.check, size: 16, color: fxc(context).primary400)
-                  : Icon(
+                  : (errorText != null || isValid.value == false)
+                  ? Icon(
                       Icons.clear,
                       size: 16,
                       color: fxc(context).secondary400,
-                    ),
+                    )
+                  : Icon(Icons.check, size: 16, color: fxc(context).primary400),
             ),
             readOnly: readOnly,
             onTap: onTap,

@@ -19,8 +19,12 @@ class AuthViewModel extends _$AuthViewModel {
     final repository = ref.watch(authRepositoryProvider);
 
     // Supabase 인증 상태 변화를 구독 & ViewModel의 state를 동기화
-    final subscription = repository.sessionStream.listen((session) {
+    final subscription = repository.sessionStream.listen((session) async {
       state = session; // 세션이 바뀌면 자동으로 state가 업데이트되고 UI가 반응
+      if (session != null) {
+        // 🔔 로그인 성공 직후 토큰 저장 (앱 삭제 후 재설치 시 토큰 갱신 위해)
+        await FirebaseService.saveFcmToken();
+      }
     });
 
     // ViewModel이 해제될 때 구독도 같이 취소 (메모리 누수 방지)
@@ -42,8 +46,6 @@ class AuthViewModel extends _$AuthViewModel {
     try {
       final loginUseCase = ref.read(loginUseCaseProvider);
       await loginUseCase.execute(provider);
-      // 로그인 성공 직후 강제 토큰 저장 (앱 삭제 후 재설치 시 토큰 갱신 위해)
-      await FirebaseService.saveFcmToken();
     } catch (e) {
       debugPrint('로그인 에러: $e');
       if (onError != null) onError();
@@ -55,8 +57,12 @@ class AuthViewModel extends _$AuthViewModel {
 
   Future<void> logout() async {
     try {
+      // 🔔 로그아웃 시 토큰 삭제
+      await FirebaseService.deleteToken();
+
       final logoutUseCase = ref.read(logoutUseCaseProvider);
       await logoutUseCase.execute();
+
       // 로그아웃 시 state는 sessionStream의 listen에 의해 자동으로 null
     } catch (e) {
       debugPrint('로그아웃 에러: $e');

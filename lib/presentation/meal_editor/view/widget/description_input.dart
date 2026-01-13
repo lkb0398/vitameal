@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vitameal/core/theme/app_theme.dart';
 
 class DescriptionInput extends StatelessWidget {
   /// 식단 내용 입력 칸
@@ -12,9 +13,9 @@ class DescriptionInput extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           "설명",
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: Colors.black87),
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: vrc(context).text),
         ),
         const SizedBox(height: 10),
         Stack(
@@ -29,11 +30,11 @@ class DescriptionInput extends StatelessWidget {
                 counterText: "", // 스택으로 위에 표시할거임
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
-                  borderSide: const BorderSide(color: Color(0xFFDDDDDD)),
+                  borderSide: BorderSide(color: vrc(context).border!),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
-                  borderSide: const BorderSide(color: Color(0xFFBBBBBB)),
+                  borderSide: BorderSide(color: vrc(context).border!),
                 ),
               ),
             ),
@@ -46,9 +47,9 @@ class DescriptionInput extends StatelessWidget {
                 builder: (context, value, _) {
                   return Text(
                     "${value.text.length}/$maxLength자",
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 12,
-                      color: Colors.black38,
+                      color: vrc(context).hint,
                       fontWeight: FontWeight.w500,
                     ),
                   );

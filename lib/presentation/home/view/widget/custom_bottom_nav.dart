@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
 
-class CustomBottomNavi extends StatelessWidget {
+class CustomBottomNav extends StatelessWidget {
   final int currentIndex;
   final ValueChanged<int> onTap;
 
-  const CustomBottomNavi({
+  const CustomBottomNav({
     super.key,
     required this.currentIndex,
     required this.onTap,
@@ -22,7 +23,7 @@ class CustomBottomNavi extends StatelessWidget {
           borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
           boxShadow: [
             BoxShadow(
-              color: fxc(context).textcolor200!,
+              color: vrc(context).bottomNavShadow!,
               blurRadius: 5,
               offset: const Offset(0, -4),
             ),
@@ -32,19 +33,19 @@ class CustomBottomNavi extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             _NavItem(
-              icon: Icons.rice_bowl_outlined,
+              icon: PhosphorIcons.bowlFood(),
               label: '나의 식단',
               isSelected: currentIndex == 0,
               onTap: () => onTap(0),
             ),
             _NavItem(
-              icon: Icons.restaurant_outlined,
+              icon: PhosphorIcons.forkKnife(),
               label: '레시피 피드',
               isSelected: currentIndex == 1,
               onTap: () => onTap(1),
             ),
             _NavItem(
-              icon: Icons.person_outline,
+              icon: PhosphorIcons.user(),
               label: '내 정보',
               isSelected: currentIndex == 2,
               onTap: () => onTap(2),

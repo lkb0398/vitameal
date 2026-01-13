@@ -7,7 +7,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Vitameal</string>
+	<string>vitameal</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -30,6 +30,9 @@
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>io.supabase.vitameal</string>
+				<string>kakao441e27e5b11930a416721d0867cc68a5</string>
+				<string>com.googleusercontent.apps.957350463105-as44sk9sg6mpv5o4qp8sbai1dus0fmto</string>
+				<string>com.googleusercontent.apps.957350463105-8qg2ekvo4soaah88rs740rh1h7iqntb8</string>
 			</array>
 		</dict>
 	</array>
@@ -72,5 +75,13 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+
+	<key>LSApplicationQueriesSchemes</key>
+    <array>
+	  <string>kakaokompassauth</string>
+      <string>kakaolink</string>
+      <string>https</string>
+      <string>http</string>
+    </array>
 </dict>
 </plist>
