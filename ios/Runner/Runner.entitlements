@@ -6,7 +6,7 @@
 	<string>development</string>
 	<key>com.apple.security.application-groups</key>
 	<array>
-		<string>group.com.alldayproject.vitameal.dev</string>
+		<string>group.com.alldayproject.vitameal.widgets</string>
 	</array>
 </dict>
 </plist>

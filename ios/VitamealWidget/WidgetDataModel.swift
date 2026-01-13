@@ -31,7 +31,7 @@ struct WidgetCalendarData: Codable {
 /// App Group에서 위젯 데이터 읽기
 class WidgetDataManager {
     static let shared = WidgetDataManager()
-    private let suiteName = "group.com.alldayproject.vitameal.dev"
+    private let suiteName = "group.com.alldayproject.vitameal.widgets"
     private let dataKey = "widgetCalendarData"
     
     /// 현재 월의 위젯 데이터 조회

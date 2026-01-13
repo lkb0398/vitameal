@@ -27,7 +27,7 @@ import WidgetKit
         }
         // MethodChannel 생성: Flutter의 WidgetBridge에서 같은 채널 명으로 호출해야 함
         let channel = FlutterMethodChannel(
-            name: "com.alldayproject.vitameal.dev/widget",
+            name: "com.alldayproject.vitameal/widget",
             binaryMessenger: controller.binaryMessenger
         )
         // 메서드 호출 핸들러 등록: Flutter → iOS 호출이 들어올 때 실행됨
@@ -54,7 +54,7 @@ import WidgetKit
         }
         
         // App Group의 UserDefaults에 저장
-        if let userDefaults = UserDefaults(suiteName: "group.com.alldayproject.vitameal.dev") {
+        if let userDefaults = UserDefaults(suiteName: "group.com.alldayproject.vitameal.widgets") {
             // JSON 문자열을 그대로 저장, 위젯에서 이 키를 읽어서 UI 구성
             userDefaults.set(jsonString, forKey: "widgetCalendarData")
             userDefaults.synchronize()
