@@ -14,6 +14,8 @@ import 'package:vitameal/core/service/firebase_service.dart';
 import 'package:vitameal/core/service/notification_service.dart';
 import 'package:vitameal/presentation/ui_provider/profiles_provider.dart';
 import 'core/config/routes.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 
 // 🔔 Background 알림 (main 최상단!)
 @pragma('vm:entry-point')
@@ -48,11 +50,14 @@ Future<void> main() async {
     () async {
       WidgetsFlutterBinding.ensureInitialized();
 
+      await dotenv.load(fileName: ".env");
+      KakaoSdk.init(nativeAppKey: dotenv.get('KAKAO_NATIVE_APP_KEY'));
+      debugPrint("현재 환경 키 해시: ${await KakaoSdk.origin}");
+
       await _safe(
         () => Supabase.initialize(
-          url: 'https://ykqdcgrimdsvuincvmtu.supabase.co',
-          anonKey:
-              'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlrcWRjZ3JpbWRzdnVpbmN2bXR1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU5MzM0OTcsImV4cCI6MjA4MTUwOTQ5N30.QJnEx7gDulSj8-8PayKYxyu5Aze8IBk7jJU-N-VRHCw',
+          url: dotenv.get('SUPABASE_URL'),
+          anonKey: dotenv.get('SUPABASE_ANON_KEY'),
         ),
         label: 'Supabase.initialize',
       );
