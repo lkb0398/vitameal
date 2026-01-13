@@ -33,7 +33,7 @@ final class PostViewModelProvider
   PostViewModel create() => PostViewModel();
 }
 
-String _$postViewModelHash() => r'e708eb5cbf3911996fea93e4ddcac01739a8768e';
+String _$postViewModelHash() => r'040d394bdad109e8714894db1ac456a4a620b505';
 
 abstract class _$PostViewModel extends $AsyncNotifier<List<PostEntity>> {
   FutureOr<List<PostEntity>> build();

@@ -13,6 +13,7 @@ class PostViewModel extends _$PostViewModel {
   bool _hasNextPage = true;
   int _currentPage = 0;
   final int _pageSize = 20;
+  bool _isFetchingMore = false;
 
   String _currentSearchQuery = "";
   List<int> _currentTagIds = [];
@@ -21,6 +22,10 @@ class PostViewModel extends _$PostViewModel {
 
   @override
   Future<List<PostEntity>> build() async {
+    _currentPage = 0;
+    _hasNextPage = true;
+    _isFetchingMore = false;
+
     ref.watch(userIdProvider);
     return await _fetchPosts(0);
   }
@@ -29,6 +34,7 @@ class PostViewModel extends _$PostViewModel {
     if (query != null) _currentSearchQuery = query;
     if (tagIds != null) _currentTagIds = tagIds;
 
+    // 🔔 상태 리셋
     _currentPage = 0;
     _hasNextPage = true;
 
@@ -62,21 +68,28 @@ class PostViewModel extends _$PostViewModel {
   }
 
   Future<void> fetchNextPage() async {
-    if (state.isLoading || !_hasNextPage) return;
+    // 🔔 로딩 중이거나, 이미 끝에 도달했으면 중단
+    if (_isFetchingMore || !_hasNextPage || state.isLoading) return;
 
-    final previousState = state.value ?? [];
+    _isFetchingMore = true; // 로딩 시작 플래그
 
     try {
-      _currentPage++;
-      final nextPosts = await _fetchPosts(_currentPage);
+      final nextPage = _currentPage + 1;
+      final nextPosts = await _fetchPosts(nextPage);
 
       if (nextPosts.length < _pageSize) {
         _hasNextPage = false;
       }
 
-      state = AsyncValue.data([...previousState, ...nextPosts]);
+      if (nextPosts.isNotEmpty) {
+        _currentPage = nextPage; // 데이터가 있을 때만 페이지 번호 증가
+        final previousState = state.value ?? [];
+        state = AsyncValue.data([...previousState, ...nextPosts]);
+      }
     } catch (e, stack) {
-      state = AsyncValue.error(e, stack);
+      debugPrint("추가 로딩 에러: $e");
+    } finally {
+      _isFetchingMore = false; // 🔔 작업 완료 후 반드시 플래그 해제
     }
   }
 
