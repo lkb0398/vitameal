@@ -6,7 +6,7 @@ import 'package:tap_debouncer/tap_debouncer.dart';
 import 'package:vitameal/core/service/analytics_service.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
 import 'package:vitameal/domain/entity/goals_entity.dart';
-import 'package:vitameal/presentation/goal/view/function/show_gray_snackbar.dart';
+import 'package:vitameal/presentation/util/show_gray_snackbar.dart';
 import 'package:vitameal/presentation/goal/view_model/goals_view_model.dart';
 import 'package:vitameal/presentation/ui_provider/goals_provider.dart';
 import 'package:vitameal/presentation/goal/view/function/pick_date.dart';

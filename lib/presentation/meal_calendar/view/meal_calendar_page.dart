@@ -195,7 +195,6 @@ class MealCalendarPage extends HookConsumerWidget {
         // 📝
         AnalyticsService.event('meal_action', p: {'action': 'adherence'});
       } catch (e) {
-        // 에러 처리 (필요 시 SnackBar 등으로 사용자에게 알림)
         debugPrint('성취도 업데이트 실패: $e');
       }
     }
