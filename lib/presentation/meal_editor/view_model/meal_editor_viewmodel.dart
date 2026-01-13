@@ -73,7 +73,7 @@ class MealEditorViewModel extends _$MealEditorViewModel {
     final hasImage = imageFile != null || existingPhotoUrl != null;
 
     if (!hasContent && !hasImage) {
-      throw Exception('식단 내용이나 이미지를 입력해주세요');
+      throw Exception('이미지나 식단 내용을 입력해주세요');
     }
 
     // MealDay 생성

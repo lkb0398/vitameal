@@ -7,6 +7,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
 import 'package:vitameal/domain/constants/analysis_policy.dart';
+import 'package:vitameal/presentation/util/show_gray_snackbar.dart';
 
 class AiAnalysisCard extends HookConsumerWidget {
   // AI 식단분석 결과 카드 위젯
@@ -52,9 +53,7 @@ class AiAnalysisCard extends HookConsumerWidget {
       if (!online) {
         if (context.mounted) {
           // TODO : 지금 동작안하고 그냥 에러 메세지 출력됨
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(const SnackBar(content: Text('네트워크 연결을 확인해주세요'), duration: Duration(seconds: 2)));
+          showGraySnackBar(context, '네트워크 연결을 확인해주세요');
         }
         return;
       }
@@ -66,7 +65,7 @@ class AiAnalysisCard extends HookConsumerWidget {
         await onAnalyze();
       } catch (e) {
         if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('분석 실패: $e')));
+          showGraySnackBar(context, '분석 실패');
         }
       } finally {
         isAnalyzing.value = false;
