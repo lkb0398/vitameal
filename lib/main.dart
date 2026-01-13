@@ -50,8 +50,11 @@ Future<void> main() async {
   runZonedGuarded(
     () async {
       WidgetsFlutterBinding.ensureInitialized();
-      await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]); // 화면 세로모드 고정
-      
+      // 가로모드 막기
+      await SystemChrome.setPreferredOrientations([
+        DeviceOrientation.portraitUp,
+      ]); // 화면 세로모드 고정
+
       await dotenv.load(fileName: ".env");
       KakaoSdk.init(nativeAppKey: dotenv.get('KAKAO_NATIVE_APP_KEY'));
       debugPrint("현재 환경 키 해시: ${await KakaoSdk.origin}");
@@ -114,7 +117,8 @@ Future<void> main() async {
         ),
       );
 
-      AnalyticsService.appOpen(); // 📝
+      // 📝
+      AnalyticsService.appOpen();
     },
     (error, stack) {
       FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);

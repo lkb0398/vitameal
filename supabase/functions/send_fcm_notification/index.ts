@@ -145,7 +145,7 @@ serve(async () => {
                 token: t.fcm_token,
                   // 🤍 시스템 알림 커스텀
                   notification: {
-                    title: `VitaMeal`,
+                    title: `vitameal`,
                     body: noti.label,
                   },
                 
