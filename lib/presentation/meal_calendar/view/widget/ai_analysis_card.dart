@@ -43,12 +43,16 @@ class AiAnalysisCard extends HookConsumerWidget {
     useEffect(() {
       // 초기 상태 확인
       Connectivity().checkConnectivity().then((result) {
-        isOnline.value = result.isNotEmpty && !result.contains(ConnectivityResult.none);
+        isOnline.value = result.any(
+          (r) => r == ConnectivityResult.mobile || r == ConnectivityResult.wifi || r == ConnectivityResult.ethernet,
+        );
       });
 
       // Connectivity stream 구독해서 네트워크 상태 변화 감지
       final subscription = Connectivity().onConnectivityChanged.listen((results) {
-        isOnline.value = results.isNotEmpty && !results.contains(ConnectivityResult.none);
+        isOnline.value = results.any(
+          (r) => r == ConnectivityResult.mobile || r == ConnectivityResult.wifi || r == ConnectivityResult.ethernet,
+        );
       });
 
       return subscription.cancel;
@@ -57,7 +61,9 @@ class AiAnalysisCard extends HookConsumerWidget {
     /// 네트워크 체크
     Future<bool> checkOnline() async {
       final connectivityResult = await Connectivity().checkConnectivity();
-      return connectivityResult.isNotEmpty && !connectivityResult.contains(ConnectivityResult.none);
+      return connectivityResult.any(
+        (r) => r == ConnectivityResult.mobile || r == ConnectivityResult.wifi || r == ConnectivityResult.ethernet,
+      );
     }
 
     /// AI 분석 요청
