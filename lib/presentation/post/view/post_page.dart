@@ -40,6 +40,7 @@ class PostPage extends HookConsumerWidget {
         backgroundColor: vrc(context).background,
         appBar: AppBar(
           backgroundColor: vrc(context).background,
+          actionsPadding: EdgeInsets.only(right: 10),
           actions: [
             IconButton(
               icon: Icon(Icons.bookmark, color: fxc(context).primary400),
@@ -48,7 +49,7 @@ class PostPage extends HookConsumerWidget {
           ],
         ),
         body: Padding(
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
             children: [
               // --- 검색 섹션 ---

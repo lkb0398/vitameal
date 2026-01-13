@@ -121,10 +121,6 @@ class SettingPage extends HookConsumerWidget {
                 },
                 title: "회원 탈퇴",
               ),
-              TextButton(
-                onPressed: () => throw Exception('Test Crash'),
-                child: const Text('Throw Test Exception'),
-              ),
             ],
           ),
         ),

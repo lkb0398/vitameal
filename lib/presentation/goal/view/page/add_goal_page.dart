@@ -271,7 +271,7 @@ class AddGoalPage extends HookConsumerWidget {
             padding: const EdgeInsets.only(bottom: 10),
             child: DoneButton(
               onTap: onTap,
-              text: goal != null ? "수정" : "추가",
+              text: "완료",
               backgroundColor: isButtonEnabled.value
                   ? fxc(context).secondary400!
                   : fxc(context).textcolor200!,

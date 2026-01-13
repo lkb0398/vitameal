@@ -9,6 +9,7 @@ import 'package:vitameal/core/service/analytics_service.dart';
 import 'package:vitameal/presentation/post/view_model/post_view_model.dart';
 import 'package:vitameal/presentation/post/view_model/tag_view_model.dart';
 import 'package:vitameal/presentation/ui_provider/profiles_provider.dart';
+import 'package:vitameal/presentation/util/show_gray_snackbar.dart';
 
 class PostDetailPage extends HookConsumerWidget {
   const PostDetailPage({super.key, required this.pId});
@@ -175,15 +176,11 @@ class PostDetailPage extends HookConsumerWidget {
                           .deletePost(post.id!);
                       if (context.mounted) {
                         context.pop();
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('게시글이 삭제되었습니다.')),
-                        );
+                        showGraySnackBar(context, '게시글이 삭제되었습니다.');
                       }
                     } catch (e) {
                       if (context.mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('삭제에 실패했습니다.')),
-                        );
+                        showGraySnackBar(context, '삭제에 실패했습니다.');
                       }
                       // 📝
                       AnalyticsService.event(
@@ -235,11 +232,17 @@ class PostDetailPage extends HookConsumerWidget {
                         width: double.infinity,
                         fit: BoxFit.cover,
                       )
-                    : Image.asset(
-                        "assets/images/profile_image_l.webp",
+                    : Container(
                         height: 248,
                         width: double.infinity,
-                        fit: BoxFit.cover,
+                        color: Colors.black12,
+                        child: Center(
+                          child: Icon(
+                            Icons.restaurant,
+                            size: 40,
+                            color: Colors.black26,
+                          ),
+                        ),
                       ),
                 if (!isMyPost)
                   Positioned(
