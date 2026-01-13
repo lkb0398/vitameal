@@ -18,15 +18,19 @@ class SyncService {
     required MealRemoteDataSource remoteDataSource,
     required SupabaseClient supabase,
     Connectivity? connectivity,
+    VoidCallback? onSyncCompleted,
   }) : _database = database,
        _remoteDataSource = remoteDataSource,
        _supabase = supabase,
-       _connectivity = connectivity ?? Connectivity();
+       _connectivity = connectivity ?? Connectivity(),
+       _onSyncCompleted = onSyncCompleted;
+
        
   final AppDatabase _database;
   final MealRemoteDataSource _remoteDataSource;
   final SupabaseClient _supabase;
   final Connectivity _connectivity;
+  final VoidCallback? _onSyncCompleted;
 
   // 동기화 상태
   bool _isSyncing = false;
@@ -72,6 +76,9 @@ class SyncService {
       await _performIncrementalSync();
 
       debugPrint('🔄 동기화 완료');
+
+      // 3. 동기화 완료 시 위젯 갱신
+      _onSyncCompleted?.call();
     } catch (e) {
       debugPrint('🔄 동기화 실패 [$e]');
     } finally {

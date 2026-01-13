@@ -51,7 +51,7 @@ final class MealCalendarViewModelProvider
 }
 
 String _$mealCalendarViewModelHash() =>
-    r'1bb72093f7d0e1d2f4a2c443cbe50faadec6f9f6';
+    r'5c88f3fcbb71bcf44bdd0ac5811a7e7ff14dfe88';
 
 final class MealCalendarViewModelFamily extends $Family
     with

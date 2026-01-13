@@ -134,6 +134,18 @@ class VitamealApp extends HookConsumerWidget {
     // SyncService 초기화 (앱 시작 시 한 번 동기화)
     ref.read(syncServiceProvider);
 
+    // 위젯 데이터 초기화 (앱 시작 시 위젯에 데이터 전달)
+    final supabase = ref.read(supabaseClientProvider);
+    final userId = supabase.auth.currentUser?.id;
+
+    if (userId != null) {
+      // 앱 시작 시 위젯 초기화
+      Future.microtask(() {
+        final widgetService = ref.read(widgetServiceProvider);
+        widgetService.updateWidgetData(userId);
+      });
+    }
+
     // routerProvider를 Stream으로 실시간 경로 변경
     final router = ref.watch(routerProvider);
 
