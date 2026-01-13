@@ -13,10 +13,10 @@ extension MealEntryDtoMapper on MealEntryDto {
       category: MealCategory.fromString(category),
       content: content,
       photoUrl: photoUrl,
-      eatenAt: eatenAt != null ? DateTime.parse(eatenAt!) : null,
-      createdAt: DateTime.parse(createdAt),
-      updatedAt: DateTime.parse(updatedAt),
-      deletedAt: deletedAt != null ? DateTime.parse(deletedAt!) : null,
+      eatenAt: eatenAt != null ? DateTime.parse(eatenAt!).toLocal() : null,
+      createdAt: DateTime.parse(createdAt).toLocal(),
+      updatedAt: DateTime.parse(updatedAt).toLocal(),
+      deletedAt: deletedAt != null ? DateTime.parse(deletedAt!).toLocal() : null,
     );
   }
 }
@@ -30,10 +30,10 @@ extension MealEntryEntityToDto on MealEntryEntity {
       category: category.value,
       content: content,
       photoUrl: photoUrl,
-      eatenAt: eatenAt?.toIso8601String(),
-      createdAt: createdAt.toIso8601String(),
-      updatedAt: updatedAt.toIso8601String(),
-      deletedAt: deletedAt?.toIso8601String(),
+      eatenAt: eatenAt?.toUtc().toIso8601String(),
+      createdAt: createdAt.toUtc().toIso8601String(),
+      updatedAt: updatedAt.toUtc().toIso8601String(),
+      deletedAt: deletedAt?.toUtc().toIso8601String(),
     );
   }
 }
