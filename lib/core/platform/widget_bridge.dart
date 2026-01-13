@@ -9,7 +9,7 @@ class WidgetBridge {
   static final WidgetBridge instance = WidgetBridge._();
 
   // Method Channel 이름, AppDelegate의 채널명과 같아야함
-  static const _channel = MethodChannel('com.alldayproject.vitameal.dev/widget');
+  static const _channel = MethodChannel('com.alldayproject.vitameal/widget');
 
   /// 위젯 데이터 업데이트 (JSON 전송, AppDelegate에서 App Group의 UserDefaults에 저장)
   Future<void> updateWidgetData(Map<String, dynamic> data) async {
