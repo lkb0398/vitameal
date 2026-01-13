@@ -232,11 +232,17 @@ class PostDetailPage extends HookConsumerWidget {
                         width: double.infinity,
                         fit: BoxFit.cover,
                       )
-                    : Image.asset(
-                        "assets/images/profile_image_l.webp",
+                    : Container(
                         height: 248,
                         width: double.infinity,
-                        fit: BoxFit.cover,
+                        color: Colors.black12,
+                        child: Center(
+                          child: Icon(
+                            Icons.restaurant,
+                            size: 40,
+                            color: Colors.black26,
+                          ),
+                        ),
                       ),
                 if (!isMyPost)
                   Positioned(
