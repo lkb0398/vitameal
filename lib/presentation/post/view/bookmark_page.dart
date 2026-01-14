@@ -82,7 +82,12 @@ class BookmarkPage extends HookConsumerWidget {
                   ),
                   itemCount: posts.length,
                   itemBuilder: (context, index) {
-                    return buildRecipeCard(context, posts[index], ref);
+                    return buildRecipeCard(
+                      context,
+                      posts[index],
+                      ref,
+                      isMyRecipeTab: selectedTabIndex.value == 1,
+                    );
                   },
                 );
               },
@@ -132,9 +137,14 @@ class BookmarkPage extends HookConsumerWidget {
     );
   }
 
-  Widget buildRecipeCard(BuildContext context, PostEntity post, WidgetRef ref) {
+  Widget buildRecipeCard(
+    BuildContext context,
+    PostEntity post,
+    WidgetRef ref, {
+    required bool isMyRecipeTab,
+  }) {
     return GestureDetector(
-      key: ValueKey(post.id), // 캐시 이미지 꼬임 방지
+      key: ValueKey(post.id),
       onTap: () => context.push('/post/${post.id}'),
       child: Stack(
         children: [
@@ -143,34 +153,38 @@ class BookmarkPage extends HookConsumerWidget {
             child: Container(
               width: double.infinity,
               height: double.infinity,
-              color: Colors.black12, // 배경색
+              color: Colors.black12,
               child: post.imageUrl != null && post.imageUrl!.isNotEmpty
-                  ? CachedNetworkImage( // url 이미지 캐싱
+                  ? CachedNetworkImage(
                       imageUrl: post.imageUrl!,
                       fit: BoxFit.cover,
-                      fadeInDuration: const Duration(milliseconds: 200), // 자연스럽게
+                      fadeInDuration: const Duration(milliseconds: 200),
                       fadeOutDuration: const Duration(milliseconds: 100),
-                      errorWidget: (c, e, s) => Icon(Icons.image_not_supported_outlined, color: Colors.black26),
+                      errorWidget: (c, e, s) => const Icon(
+                        Icons.image_not_supported_outlined,
+                        color: Colors.black26,
+                      ),
                     )
-                  : Icon(Icons.restaurant, color: Colors.black26),
+                  : const Icon(Icons.restaurant, color: Colors.black26),
             ),
           ),
-          Positioned(
-            bottom: 12,
-            right: 12,
-            child: GestureDetector(
-              onTap: () => ref
-                  .read(postViewModelProvider.notifier)
-                  .toggleBookmark(post.id!),
-              child: Icon(
-                post.isBookmarked ? Icons.bookmark : Icons.bookmark_outline,
-                color: post.isBookmarked
-                    ? fxc(context).primary400
-                    : Colors.white,
-                size: 24,
+          if (!isMyRecipeTab)
+            Positioned(
+              bottom: 12,
+              right: 12,
+              child: GestureDetector(
+                onTap: () => ref
+                    .read(postViewModelProvider.notifier)
+                    .toggleBookmark(post.id!),
+                child: Icon(
+                  post.isBookmarked ? Icons.bookmark : Icons.bookmark_outline,
+                  color: post.isBookmarked
+                      ? fxc(context).primary400
+                      : Colors.white,
+                  size: 24,
+                ),
               ),
             ),
-          ),
         ],
       ),
     );
