@@ -319,6 +319,9 @@ class PostDetailPage extends HookConsumerWidget {
                               )
                               .toList() ??
                           [];
+
+                      displayTags.sort();
+
                       if (displayTags.isEmpty) return const SizedBox.shrink();
                       return Wrap(
                         spacing: 8.0,
