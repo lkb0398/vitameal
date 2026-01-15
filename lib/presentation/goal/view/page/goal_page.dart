@@ -131,7 +131,7 @@ class GoalPage extends HookConsumerWidget {
                               context: context,
                               builder: (context) {
                                 return CustomDialog(
-                                  tapYes: () async {
+                                  onConfirm: () async {
                                     // 목표 업데이트
                                     await ref
                                         .read(goalsViewModelProvider.notifier)
@@ -151,7 +151,8 @@ class GoalPage extends HookConsumerWidget {
                                     ref.invalidate(getAllGoalsProvider);
                                   },
                                   title: "대표로 설정할까요?",
-                                  yesText: "확인",
+                                  confirmText: "확인",
+                                  cancelText: '취소',
                                 );
                               },
                             );

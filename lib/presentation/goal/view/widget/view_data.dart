@@ -7,7 +7,7 @@ import 'package:vitameal/core/theme/app_theme.dart';
 import 'package:vitameal/domain/entity/goals_entity.dart';
 import 'package:vitameal/presentation/goal/view_model/goal_datas_view_model.dart';
 import 'package:vitameal/presentation/ui_provider/goals_provider.dart';
-import 'package:vitameal/presentation/widget/dialog/delete_dialog.dart';
+import 'package:vitameal/presentation/widget/dialog/custom_dialog.dart';
 
 class ViewData extends HookConsumerWidget {
   const ViewData({super.key, required this.isDone, required this.selectedGoal});
@@ -103,8 +103,8 @@ class ViewData extends HookConsumerWidget {
                         showDialog(
                           context: context,
                           builder: (context) {
-                            return DeleteDialog(
-                              onDelete: () async {
+                            return CustomDialog(
+                              onConfirm: () async {
                                 // 데이터 삭제
                                 await ref
                                     .read(goalDatasViewModelProvider.notifier)
@@ -119,6 +119,9 @@ class ViewData extends HookConsumerWidget {
                                 // UI 반영
                                 ref.invalidate(getGoalDatasProvider);
                               },
+                              title: '정말 삭제할까요?',
+                              confirmText: '삭제',
+                              cancelText: '취소',
                             );
                           },
                         );

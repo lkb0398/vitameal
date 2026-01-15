@@ -4,6 +4,7 @@ import 'package:vitameal/core/theme/variable_colors.dart';
 
 class AppTheme {
   static ThemeData light = ThemeData(
+    //fontFamily: 'NotoSansKR',
     colorScheme: ColorScheme.fromSeed(
       brightness: Brightness.light,
       seedColor: Color(0xFF89CC00), // primary400
@@ -19,6 +20,7 @@ class AppTheme {
   );
 
   static ThemeData dark = ThemeData(
+    //fontFamily: 'NotoSansKR',
     colorScheme: ColorScheme.fromSeed(
       brightness: Brightness.dark,
       seedColor: Color(0xFF89CC00), // primary400

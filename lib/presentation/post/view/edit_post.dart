@@ -4,6 +4,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
 import 'package:vitameal/core/service/analytics_service.dart';
 import 'package:vitameal/domain/entity/post_entity.dart';
@@ -186,14 +187,16 @@ class EditPost extends HookConsumerWidget {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Icon(
-                                    Icons.add,
-                                    size: 40,
-                                    color: vrc(context).imagePlusIcon,
+                                    PhosphorIcons.plus(),
+                                    size: 44,
+                                    color: vrc(context).border,
                                   ),
+                                  SizedBox(height: 8),
                                   Text(
-                                    "대표 이미지 추가",
+                                    '대표 이미지 추가',
                                     style: TextStyle(
-                                      color: vrc(context).imagePlusIcon,
+                                      color: vrc(context).hint,
+                                      fontSize: 13,
                                     ),
                                   ),
                                 ],
