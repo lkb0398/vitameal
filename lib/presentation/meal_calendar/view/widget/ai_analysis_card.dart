@@ -44,14 +44,22 @@ class AiAnalysisCard extends HookConsumerWidget {
       // 초기 상태 확인
       Connectivity().checkConnectivity().then((result) {
         isOnline.value = result.any(
-          (r) => r == ConnectivityResult.mobile || r == ConnectivityResult.wifi || r == ConnectivityResult.ethernet,
+          (r) =>
+              r == ConnectivityResult.mobile ||
+              r == ConnectivityResult.wifi ||
+              r == ConnectivityResult.ethernet,
         );
       });
 
       // Connectivity stream 구독해서 네트워크 상태 변화 감지
-      final subscription = Connectivity().onConnectivityChanged.listen((results) {
+      final subscription = Connectivity().onConnectivityChanged.listen((
+        results,
+      ) {
         isOnline.value = results.any(
-          (r) => r == ConnectivityResult.mobile || r == ConnectivityResult.wifi || r == ConnectivityResult.ethernet,
+          (r) =>
+              r == ConnectivityResult.mobile ||
+              r == ConnectivityResult.wifi ||
+              r == ConnectivityResult.ethernet,
         );
       });
 
@@ -62,7 +70,10 @@ class AiAnalysisCard extends HookConsumerWidget {
     Future<bool> checkOnline() async {
       final connectivityResult = await Connectivity().checkConnectivity();
       return connectivityResult.any(
-        (r) => r == ConnectivityResult.mobile || r == ConnectivityResult.wifi || r == ConnectivityResult.ethernet,
+        (r) =>
+            r == ConnectivityResult.mobile ||
+            r == ConnectivityResult.wifi ||
+            r == ConnectivityResult.ethernet,
       );
     }
 
@@ -106,7 +117,12 @@ class AiAnalysisCard extends HookConsumerWidget {
             builder: (context) => AlertDialog(
               title: const Text('네트워크 연결 필요'),
               content: const Text('자세한 분석 결과를 보려면 인터넷 연결이 필요합니다.'),
-              actions: [TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('확인'))],
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text('확인'),
+                ),
+              ],
             ),
           );
         }
@@ -121,12 +137,13 @@ class AiAnalysisCard extends HookConsumerWidget {
     // 기존 요약 있는지 여부
     final hasSummary = (latestAiSummary ?? '').trim().isNotEmpty;
     // 분석 가능 여부
-    final canAnalyze = !isCountLoading && todayCount < AnalysisPolicy.maxDailyAnalysisCount;
+    final canAnalyze =
+        !isCountLoading && todayCount < AnalysisPolicy.maxDailyAnalysisCount;
     // 분석 버튼이 보일때
     final showAnalyzeButton = hasEntries && (!hasSummary || needsAiRefresh);
 
     return Container(
-      margin: const EdgeInsets.fromLTRB(16, 0, 16, 10),
+      margin: const EdgeInsets.fromLTRB(0, 0, 0, 10),
       width: double.infinity,
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -140,7 +157,10 @@ class AiAnalysisCard extends HookConsumerWidget {
           const SizedBox(height: 8),
           // 요약이 있으면 요약 보여주고 자세히 보기 제공
           if (hasSummary) ...[
-            _ResultTextWithDetail(text: latestAiSummary!, onDetailTap: () => handleOpenDetail()),
+            _ResultTextWithDetail(
+              text: latestAiSummary!,
+              onDetailTap: () => handleOpenDetail(),
+            ),
 
             // 식단 변경으로 재분석이 필요하면 분석 버튼 활성화
             if (needsAiRefresh) ...[
@@ -162,14 +182,22 @@ class AiAnalysisCard extends HookConsumerWidget {
                             : canAnalyze
                             ? '다시 분석하기 ($todayCount/${AnalysisPolicy.maxDailyAnalysisCount})'
                             : '오늘 분석 횟수를 모두 사용했어요 ($todayCount/${AnalysisPolicy.maxDailyAnalysisCount})',
-                        enabled: isOnline.value && !isAnalyzing.value && canAnalyze,
+                        enabled:
+                            isOnline.value && !isAnalyzing.value && canAnalyze,
                         onTap: handleAnalyze,
                       )
                     : const SizedBox.shrink(key: ValueKey('empty')),
               ),
             ],
+            if (hasSummary) ...[
+              const SizedBox(height: 6),
+              Text(
+                '본 분석은 AI가 제공하는 일반적인 건강 정보이며, 의료적 진단이나 치료를 대체하지 않습니다.',
+                style: TextStyle(fontSize: 11.5, color: vrc(context).hint),
+              ),
+            ],
           ] else
-            // 요약이 없을 때: 식단이 있으면 분석 버튼, 없으면 메세지 표시
+            // 요약이 없을 때
             AnimatedSwitcher(
               duration: const Duration(milliseconds: 200),
               transitionBuilder: (child, animation) {
@@ -183,14 +211,18 @@ class AiAnalysisCard extends HookConsumerWidget {
                     ? '분석 중...'
                     : canAnalyze
                     ? '분석하기 $todayCount/${AnalysisPolicy.maxDailyAnalysisCount}'
-                    : '오늘 분석 횟수를 모두 사용했어요 $todayCount/${AnalysisPolicy.maxDailyAnalysisCount}',
+                    : '오늘 분석 횟수를 모두 사용했어요 ($todayCount/${AnalysisPolicy.maxDailyAnalysisCount})',
                 enabled: isOnline.value && !isAnalyzing.value && canAnalyze,
                 onTap: handleAnalyze,
               ),
             ),
           if (showAnalyzeButton) ...[
             const SizedBox(height: 6),
-            Text(' 분석은 매일 12시 갱신되며, 하루 3회까지 가능합니다', style: TextStyle(fontSize: 12, color: vrc(context).hint)),
+            if (!hasSummary)
+              Text(
+                '분석은 하루 최대 3회까지 가능하며, 매일 자정에 갱신됩니다.',
+                style: TextStyle(fontSize: 11.5, color: vrc(context).hint),
+              ),
           ],
         ],
       ),
@@ -211,7 +243,11 @@ class _Header extends StatelessWidget {
         const SizedBox(width: 6),
         Text(
           title,
-          style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: fxc(context).primary400),
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w700,
+            color: fxc(context).primary400,
+          ),
         ),
       ],
     );
@@ -220,7 +256,12 @@ class _Header extends StatelessWidget {
 
 class _AnalyzeButton extends StatelessWidget {
   /// 분석하기 버튼
-  const _AnalyzeButton({super.key, required this.label, required this.onTap, required this.enabled});
+  const _AnalyzeButton({
+    super.key,
+    required this.label,
+    required this.onTap,
+    required this.enabled,
+  });
 
   final String label;
   final VoidCallback onTap;
@@ -252,7 +293,11 @@ class _AnalyzeButton extends StatelessWidget {
                       begin: Alignment.centerLeft,
                       end: Alignment.centerRight,
                       // 내부 채우기 그라데이션
-                      colors: [Color(0xFFCFFF6E), Color(0xFF89CC00), Color(0xFF6F9F0B)],
+                      colors: [
+                        Color(0xFFCFFF6E),
+                        Color(0xFF89CC00),
+                        Color(0xFF6F9F0B),
+                      ],
                       // 그라데이션 비율
                       stops: [0.0, 0.6, 1.0],
                     ),
@@ -267,7 +312,11 @@ class _AnalyzeButton extends StatelessWidget {
                       child: Center(
                         child: Text(
                           label,
-                          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: Colors.white),
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     ),
@@ -276,11 +325,18 @@ class _AnalyzeButton extends StatelessWidget {
               ),
             )
           : DecoratedBox(
-              decoration: BoxDecoration(color: vrc(context).hint, borderRadius: BorderRadius.circular(8)),
+              decoration: BoxDecoration(
+                color: vrc(context).hint,
+                borderRadius: BorderRadius.circular(8),
+              ),
               child: Center(
                 child: Text(
                   label,
-                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Colors.white),
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ),
@@ -303,15 +359,19 @@ class _ResultTextWithDetail extends StatelessWidget {
           text,
           maxLines: 6,
           overflow: TextOverflow.ellipsis,
-          style: TextStyle(fontSize: 12, height: 1.35, color: vrc(context).content),
+          style: TextStyle(
+            fontSize: 13,
+            height: 1.35,
+            color: vrc(context).content,
+          ),
         ),
         const SizedBox(height: 8),
         GestureDetector(
           onTap: onDetailTap,
           child: Text(
-            '자세히보기',
+            '자세히 보기',
             style: TextStyle(
-              fontSize: 12,
+              fontSize: 13,
               fontWeight: FontWeight.w600,
               color: fxc(context).primary400,
               decoration: TextDecoration.underline,

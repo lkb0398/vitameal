@@ -76,7 +76,7 @@ class LoginPage extends HookConsumerWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: SvgPicture.asset(
-            'assets/images/logo.svg',
+            'assets/images/app_logo_with_name.svg',
             width: MediaQuery.of(context).size.width * 0.45,
             fit: BoxFit.contain,
           ),
@@ -89,10 +89,10 @@ class LoginPage extends HookConsumerWidget {
           label: 'Apple 로그인',
           backgroundColor: Colors.black,
           textColor: Colors.white,
-          fontFamily: 'SF Pro',
-          iconPath: 'assets/images/apple_icon.svg',
-          iconWidth: 14,
-          iconHeight: 17,
+          //fontFamily: 'SF Pro',
+          iconPath: 'assets/images/apple_logo_20.svg',
+          iconWidth: 20,
+          iconHeight: 20,
           // 로딩 중이면 버튼 클릭 무시
           onPressed: vm.isLoading
               ? () {}
@@ -107,12 +107,12 @@ class LoginPage extends HookConsumerWidget {
         SocialLoginButton(
           label: 'Kakao 로그인',
           backgroundColor: const Color(0xfffee500),
-          textColor: Colors.black.withValues(alpha: 0.85),
-          fontFamily: 'Apple SD Gothic Neo',
+          textColor: const Color(0xff191919),
+          //fontFamily: 'Apple SD Gothic Neo',
           height: 1.50,
-          iconPath: 'assets/images/kakao_icon.svg',
+          iconPath: 'assets/images/kakao_logo_18.svg',
           iconWidth: 18,
-          iconHeight: 16.8,
+          iconHeight: 18,
           onPressed: vm.isLoading
               ? () {}
               : () {
@@ -127,11 +127,11 @@ class LoginPage extends HookConsumerWidget {
           label: 'Google 로그인',
           backgroundColor: const Color(0xfff2f2f2),
           textColor: Colors.black,
-          fontFamily: 'ROBOTO',
+          //fontFamily: 'ROBOTO',
           fontWeight: FontWeight.w500,
-          iconPath: 'assets/images/google_icon.svg',
-          iconWidth: 20,
-          iconHeight: 20,
+          iconPath: 'assets/images/google_logo_18.svg',
+          iconWidth: 18,
+          iconHeight: 18,
           onPressed: vm.isLoading
               ? () {}
               : () {

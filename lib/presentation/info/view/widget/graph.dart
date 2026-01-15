@@ -33,7 +33,7 @@ class Graph extends StatelessWidget {
 
     return Container(
       padding: EdgeInsets.all(10),
-      height: 160,
+      height: 180,
       child: LineChart(
         LineChartData(
           minY: minValue,

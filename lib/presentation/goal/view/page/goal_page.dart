@@ -3,11 +3,13 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
+import 'package:vitameal/core/service/analytics_service.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
 import 'package:vitameal/presentation/goal/view_model/goals_view_model.dart';
 import 'package:vitameal/presentation/ui_provider/goals_provider.dart';
 import 'package:vitameal/presentation/widget/button/add_button.dart';
 import 'package:vitameal/presentation/widget/dialog/custom_dialog.dart';
+import 'package:vitameal/presentation/widget/dialog/delete_dialog.dart';
 
 class GoalPage extends HookConsumerWidget {
   const GoalPage({super.key});
@@ -102,25 +104,67 @@ class GoalPage extends HookConsumerWidget {
                       }
                       final goal = list[index];
 
-                      /// 스와이프 > 수정 페이지 이동 + goalId 전달
+                      /// 스와이프
                       return Slidable(
                         key: ValueKey(goal.goalId),
                         endActionPane: ActionPane(
                           motion: DrawerMotion(),
                           extentRatio: 0.16,
                           children: [
-                            CustomSlidableAction(
-                              onPressed: (context) => context.push(
-                                '/edit/goal',
-                                extra: goal.goalId,
-                              ),
-                              backgroundColor: fxc(context).yellowSlider!,
-                              child: Icon(
-                                PhosphorIcons.pencilSimple(),
-                                size: 24,
-                                color: Colors.white,
-                              ),
-                            ),
+                            goal.isDone
+                                ?
+                                  // 달성된 목표 > 삭제
+                                  CustomSlidableAction(
+                                    onPressed: (context) async {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return DeleteDialog(
+                                            onDelete: () async {
+                                              // 목표 삭제
+                                              await ref
+                                                  .read(
+                                                    goalsViewModelProvider
+                                                        .notifier,
+                                                  )
+                                                  .deleteGoal(goal.goalId!);
+                                              // mounted 체크
+                                              if (!context.mounted) return;
+                                              Navigator.pop(context);
+                                              // UI 반영
+                                              ref.invalidate(
+                                                getAllGoalsProvider,
+                                              );
+                                              // 📝
+                                              AnalyticsService.event(
+                                                'goal_action',
+                                                p: {'action': 'delete'},
+                                              );
+                                            },
+                                          );
+                                        },
+                                      );
+                                    },
+                                    backgroundColor: fxc(context).secondary400!,
+                                    child: Icon(
+                                      PhosphorIcons.x(),
+                                      size: 30,
+                                      color: Colors.white,
+                                    ),
+                                  )
+                                // 달성 안된 목표 > 수정 페이지 이동 + goalId 전달
+                                : CustomSlidableAction(
+                                    onPressed: (context) => context.push(
+                                      '/edit/goal',
+                                      extra: goal.goalId,
+                                    ),
+                                    backgroundColor: fxc(context).yellowSlider!,
+                                    child: Icon(
+                                      PhosphorIcons.pencilSimple(),
+                                      size: 24,
+                                      color: Colors.white,
+                                    ),
+                                  ),
                           ],
                         ),
                         child: InkWell(
@@ -131,7 +175,7 @@ class GoalPage extends HookConsumerWidget {
                               context: context,
                               builder: (context) {
                                 return CustomDialog(
-                                  tapYes: () async {
+                                  onConfirm: () async {
                                     // 목표 업데이트
                                     await ref
                                         .read(goalsViewModelProvider.notifier)
@@ -151,7 +195,8 @@ class GoalPage extends HookConsumerWidget {
                                     ref.invalidate(getAllGoalsProvider);
                                   },
                                   title: "대표로 설정할까요?",
-                                  yesText: "확인",
+                                  confirmText: "확인",
+                                  cancelText: '취소',
                                 );
                               },
                             );

@@ -10,6 +10,7 @@ import 'package:vitameal/presentation/post/view_model/post_view_model.dart';
 import 'package:vitameal/presentation/post/view_model/tag_view_model.dart';
 import 'package:vitameal/presentation/ui_provider/profiles_provider.dart';
 import 'package:vitameal/presentation/util/show_gray_snackbar.dart';
+import 'package:vitameal/presentation/widget/dialog/custom_dialog.dart';
 
 class PostDetailPage extends HookConsumerWidget {
   const PostDetailPage({super.key, required this.pId});
@@ -75,97 +76,12 @@ class PostDetailPage extends HookConsumerWidget {
                 if (value == 'delete') {
                   final confirm = await showDialog<bool>(
                     context: context,
-                    builder: (context) => AlertDialog(
-                      backgroundColor: vrc(context).background,
-                      surfaceTintColor: Colors.transparent,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      contentPadding: EdgeInsets.zero,
-                      content: SizedBox(
-                        width: 300,
-                        height: 172,
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Spacer(),
-                            Text(
-                              '정말 삭제할까요?',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: vrc(context).text,
-                              ),
-                            ),
-                            const Spacer(),
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(16, 0, 16, 20),
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    child: SizedBox(
-                                      height: 56,
-                                      child: TextButton(
-                                        onPressed: () =>
-                                            Navigator.pop(context, false),
-                                        style: TextButton.styleFrom(
-                                          backgroundColor: vrc(
-                                            context,
-                                          ).background,
-                                          side: BorderSide(
-                                            color: vrc(context).border!,
-                                          ),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(
-                                              8,
-                                            ),
-                                          ),
-                                        ),
-                                        child: Text(
-                                          '취소',
-                                          style: TextStyle(
-                                            color: vrc(context).content,
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 14,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 8),
-                                  Expanded(
-                                    child: SizedBox(
-                                      height: 56,
-                                      child: TextButton(
-                                        onPressed: () =>
-                                            Navigator.pop(context, true),
-                                        style: TextButton.styleFrom(
-                                          backgroundColor: fxc(
-                                            context,
-                                          ).secondary400,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(
-                                              8,
-                                            ),
-                                          ),
-                                        ),
-                                        child: const Text(
-                                          '삭제',
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 14,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                    builder: (context) => CustomDialog(
+                      title: '정말 삭제할까요?',
+                      cancelText: '취소',
+                      confirmText: '삭제',
+                      onConfirm: () => Navigator.pop(context, true),
+                      confirmColor: fxc(context).primary400,
                     ),
                   );
 
