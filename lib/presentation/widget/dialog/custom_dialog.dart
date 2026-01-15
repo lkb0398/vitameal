@@ -4,14 +4,22 @@ import 'package:vitameal/core/theme/app_theme.dart';
 class CustomDialog extends StatelessWidget {
   const CustomDialog({
     super.key,
-    required this.tapYes,
     required this.title,
-    required this.yesText,
+    this.content,
+    required this.confirmText,
+    required this.cancelText,
+    required this.onConfirm,
+    this.confirmColor,
+    this.reverseButtons = false,
   });
 
   final String title;
-  final String yesText;
-  final void Function() tapYes;
+  final String? content;
+  final String confirmText;
+  final String cancelText;
+  final void Function() onConfirm;
+  final Color? confirmColor;
+  final bool reverseButtons;
 
   @override
   Widget build(BuildContext context) {
@@ -20,8 +28,7 @@ class CustomDialog extends StatelessWidget {
       insetPadding: const EdgeInsets.symmetric(horizontal: 24),
       child: Container(
         width: 300,
-        height: 172,
-        padding: const EdgeInsets.all(24),
+        padding: const EdgeInsets.fromLTRB(24, 34, 24, 34),
         decoration: BoxDecoration(
           color: vrc(context).background,
           borderRadius: BorderRadius.circular(16),
@@ -32,10 +39,19 @@ class CustomDialog extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           spacing: 25,
           children: [
-            /// 타이틀
-            Text(
-              title,
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            Column(
+              children: [
+                // 제목
+                Text(
+                  title,
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                // 내용
+                if (content != null) ...[
+                  const SizedBox(height: 12),
+                  Text(content!, style: TextStyle(fontSize: 13, height: 1.5)),
+                ],
+              ],
             ),
 
             /// 버튼 영역
@@ -48,41 +64,54 @@ class CustomDialog extends StatelessWidget {
                     onPressed: () => Navigator.pop(context, false),
                     style: OutlinedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 14),
-                      side: BorderSide(color: fxc(context).textcolor200!),
+                      backgroundColor: reverseButtons
+                          ? confirmColor ?? fxc(context).secondary400
+                          : Colors.transparent,
+                      side: reverseButtons
+                          ? BorderSide.none
+                          : BorderSide(color: vrc(context).border!),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      backgroundColor: Colors.white,
                     ),
                     child: Text(
-                      '취소',
+                      cancelText,
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
-                        color: fxc(context).textcolor700,
+                        color: reverseButtons
+                            ? Colors.white
+                            : vrc(context).text,
                       ),
                     ),
                   ),
                 ),
 
-                /// 삭제 버튼
+                /// 완료 버튼
                 Expanded(
                   child: ElevatedButton(
-                    onPressed: tapYes,
+                    onPressed: onConfirm,
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 14),
-                      backgroundColor: fxc(context).secondary400,
+                      backgroundColor: reverseButtons
+                          ? Colors.transparent
+                          : confirmColor ?? fxc(context).secondary400,
+                      side: reverseButtons
+                          ? BorderSide(color: vrc(context).border!)
+                          : BorderSide.none,
                       elevation: 0,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
                     child: Text(
-                      yesText,
+                      confirmText,
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                        color: reverseButtons
+                            ? vrc(context).text
+                            : Colors.white,
                       ),
                     ),
                   ),

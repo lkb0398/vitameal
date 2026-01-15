@@ -8,7 +8,7 @@ import 'package:vitameal/presentation/notification/view/widget/add_noti_bottom_s
 import 'package:vitameal/presentation/ui_provider/notifications_provider.dart';
 import 'package:vitameal/presentation/notification/view_model/notifications_view_model.dart';
 import 'package:vitameal/presentation/widget/button/add_button.dart';
-import 'package:vitameal/presentation/widget/dialog/delete_dialog.dart';
+import 'package:vitameal/presentation/widget/dialog/custom_dialog.dart';
 
 class NotificationPage extends HookConsumerWidget {
   const NotificationPage({super.key});
@@ -97,8 +97,11 @@ class NotificationPage extends HookConsumerWidget {
                         onPressed: (_) async {
                           final yes = await showDialog<bool>(
                             context: context,
-                            builder: (_) => DeleteDialog(
-                              onDelete: () => Navigator.pop(context, true),
+                            builder: (_) => CustomDialog(
+                              onConfirm: () => Navigator.pop(context, true),
+                              title: '정말 삭제할까요?',
+                              confirmText: '삭제',
+                              cancelText: '취소',
                             ),
                           );
                           if (yes != true) return;

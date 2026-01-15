@@ -30,7 +30,7 @@ class MealCalendarPage extends HookConsumerWidget {
   const MealCalendarPage({super.key});
 
   // 년.월 라벨 + 요일 고정 영역 (40 + 40)
-  static const double _headerHeight = 90;
+  static const double _headerHeight = 84;
   // Week 모드 높이 (화면 내렸을 때 표시되는 주 캘린더)
   static const double _weekCalendarHeight = 44;
   // Month 모드 행 개수 = 6주
@@ -271,7 +271,7 @@ class MealCalendarPage extends HookConsumerWidget {
     return Scaffold(
       body: SafeArea(
         top: true,
-        // LayoutBuilder로 위젯 높이 기반 행높이 계산
+        // LayoutBuilder로 위젯 높이 기반의 행높이 계산
         child: LayoutBuilder(
           builder: (context, constraints) {
             final availableHeight = constraints.maxHeight;
@@ -314,7 +314,21 @@ class MealCalendarPage extends HookConsumerWidget {
                 // 상단 고정 영역 (년.월 + 월화수목금토일)
                 SizedBox(
                   height: _headerHeight,
-                  child: CalendarHeader(focused: focusedDay.value),
+                  child: CalendarHeader(
+                    focused: focusedDay.value,
+                    onTapYearMonth: () {
+                      final target = DateTime.now().dateOnly;
+                      focusedDay.value = target;
+                      selectedDay.value = target.dateOnly;
+                      lastTappedDay.value = selectedDay.value;
+
+                      if (collapseCtrl.value >= 0.9) {
+                        collapseCtrl.animateTo(0.0, curve: Curves.easeOutCubic);
+                      } else {
+                        collapseCtrl.animateTo(1.0, curve: Curves.easeOutCubic);
+                      }
+                    },
+                  ),
                 ),
 
                 SizedBox(
@@ -332,17 +346,22 @@ class MealCalendarPage extends HookConsumerWidget {
                             maxHeight:
                                 monthCalendarHeight, // 오버플로우 방지, 항상 월 캘린더 높이로
                             alignment: Alignment.topCenter,
-                            child: MonthCalendar(
-                              focusedDay: focusedDay.value,
-                              selectedDay: selectedDay.value,
-                              rowHeight: rowHeight,
-                              barAreaHeight: barArea,
-                              barColorByDay: colorOfDay,
-                              onDayTap: onDayTapped,
-                              calendarFormat: isWeekMode
-                                  ? CalendarFormat.week
-                                  : CalendarFormat.month,
-                              onPageChanged: onPageChanged,
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 6,
+                              ),
+                              child: MonthCalendar(
+                                focusedDay: focusedDay.value,
+                                selectedDay: selectedDay.value,
+                                rowHeight: rowHeight,
+                                barAreaHeight: barArea,
+                                barColorByDay: colorOfDay,
+                                onDayTap: onDayTapped,
+                                calendarFormat: isWeekMode
+                                    ? CalendarFormat.week
+                                    : CalendarFormat.month,
+                                onPageChanged: onPageChanged,
+                              ),
                             ),
                           ),
                         ),
@@ -421,53 +440,70 @@ class MealCalendarPage extends HookConsumerWidget {
                               return aTime.compareTo(bTime);
                             });
 
-                          return ListView(
-                            controller: contentScrollController,
-                            children: [
-                              AdherencePicker(
-                                selectedDay: selectedDay.value,
-                                adherence: colorOfDay[selectedDay.value],
-                                onPick: setColorBar,
-                              ),
-                              SizedBox(height: 4),
-                              if (selectedMealDay != null)
-                                AiAnalysisCard(
-                                  mealDayId: selectedMealDay.id,
-                                  needsAiRefresh:
-                                      selectedMealDay.needsAiRefresh,
-                                  latestAiSummary:
-                                      selectedMealDay.latestAiSummary,
-                                  todayCount: todayCount,
-                                  isCountLoading: isCountLoading,
-                                  hasEntries: hasEntries,
-                                  onAnalyze: handleAnalyze,
-                                  onOpenDetail: handleOpenDetail,
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            child: CustomScrollView(
+                              controller: contentScrollController,
+                              slivers: [
+                                SliverToBoxAdapter(
+                                  child: Column(
+                                    children: [
+                                      AdherencePicker(
+                                        selectedDay: selectedDay.value,
+                                        adherence:
+                                            colorOfDay[selectedDay.value],
+                                        onPick: setColorBar,
+                                      ),
+                                      if (selectedMealDay != null)
+                                        AiAnalysisCard(
+                                          mealDayId: selectedMealDay.id,
+                                          needsAiRefresh:
+                                              selectedMealDay.needsAiRefresh,
+                                          latestAiSummary:
+                                              selectedMealDay.latestAiSummary,
+                                          todayCount: todayCount,
+                                          isCountLoading: isCountLoading,
+                                          hasEntries: hasEntries,
+                                          onAnalyze: handleAnalyze,
+                                          onOpenDetail: handleOpenDetail,
+                                        ),
+                                    ],
+                                  ),
                                 ),
-                              SizedBox(height: 4),
-                              ...sortedEntries.map(
-                                (entry) => MealCard(
-                                  entryId: entry.id,
-                                  category: entry.category,
-                                  content: entry.content,
-                                  photoUrl: entry.photoUrl,
-                                  eatenAt: entry.eatenAt,
-                                  onTap: () async {
-                                    await context.push(
-                                      AppRoutePath.mealEditor,
-                                      extra: {
-                                        'mealEntryId': entry.id,
-                                        'mealDayId': selectedMealDay!.id,
-                                        'date': selectedDay.value,
+
+                                SliverList.separated(
+                                  itemCount: sortedEntries.length,
+                                  itemBuilder: (context, index) {
+                                    final entry = sortedEntries[index];
+                                    return MealCard(
+                                      entryId: entry.id,
+                                      category: entry.category,
+                                      content: entry.content,
+                                      photoUrl: entry.photoUrl,
+                                      eatenAt: entry.eatenAt,
+                                      onTap: () async {
+                                        await context.push(
+                                          AppRoutePath.mealEditor,
+                                          extra: {
+                                            'mealEntryId': entry.id,
+                                            'mealDayId': selectedMealDay!.id,
+                                            'date': selectedDay.value,
+                                          },
+                                        );
+                                        ref.invalidate(
+                                          mealEntriesProvider(
+                                            selectedMealDay.id,
+                                          ),
+                                        );
                                       },
                                     );
-                                    ref.invalidate(
-                                      mealEntriesProvider(selectedMealDay.id),
-                                    );
                                   },
+                                  separatorBuilder: (_, __) =>
+                                      Divider(color: vrc(context).border),
                                 ),
-                              ),
-                              const SizedBox(height: 24),
-                            ],
+                                SliverToBoxAdapter(child: SizedBox(height: 9)),
+                              ],
+                            ),
                           );
                         },
                         loading: () =>
