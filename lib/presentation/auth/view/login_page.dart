@@ -76,7 +76,7 @@ class LoginPage extends HookConsumerWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: SvgPicture.asset(
-            'assets/images/logo.svg',
+            'assets/images/app_logo_with_name.svg',
             width: MediaQuery.of(context).size.width * 0.45,
             fit: BoxFit.contain,
           ),

@@ -89,7 +89,11 @@ class SplashPage extends HookConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SvgPicture.asset('assets/images/logo.svg', height: 124, width: 162),
+            SvgPicture.asset(
+              'assets/images/app_logo_with_name.svg',
+              height: 124,
+              width: 162,
+            ),
             const SizedBox(height: 40),
             // 로고 아래 연한 로딩 인디케이ㅌㅓ
             SizedBox(

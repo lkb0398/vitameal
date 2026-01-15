@@ -80,7 +80,6 @@ flutter:
   assets:
     - assets/images/
     - .env
-    - assets/fonts/
 # dependencies:
 #   flutter:
 #     sdk: flutter
