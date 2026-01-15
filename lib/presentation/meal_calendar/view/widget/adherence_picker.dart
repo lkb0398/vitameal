@@ -18,7 +18,7 @@ class AdherencePicker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(0, 16, 0, 24),
+      padding: const EdgeInsets.fromLTRB(0, 20, 0, 24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
