@@ -9,12 +9,14 @@ import 'package:vitameal/core/theme/app_theme.dart';
 import 'package:vitameal/core/service/analytics_service.dart';
 import 'package:vitameal/presentation/post/view_model/post_view_model.dart';
 import 'package:vitameal/presentation/post/view_model/tag_view_model.dart';
+import 'package:vitameal/presentation/ui_provider/profiles_provider.dart';
 
 class PostPage extends HookConsumerWidget {
   const PostPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final currentUserId = ref.watch(userIdProvider);
     final postAsync = ref.watch(postViewModelProvider);
     final allTagsAsync = ref.watch(allTagsProvider);
 
@@ -92,56 +94,65 @@ class PostPage extends HookConsumerWidget {
 
               // --- 태그 필터 섹션 ---
               allTagsAsync.when(
-                data: (tags) => SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: tags.map((tag) {
-                      final isSelected = selectedTagIds.value.contains(tag.id);
-                      return Padding(
-                        padding: const EdgeInsets.only(right: 8.0),
-                        child: ChoiceChip(
-                          showCheckmark: false,
-                          label: Text(
-                            "#${tag.name}",
-                            style: TextStyle(
-                              color: isSelected
-                                  ? fxc(context).textcolor0
-                                  : fxc(context).primary500,
-                              fontWeight: isSelected
-                                  ? FontWeight.bold
-                                  : FontWeight.normal,
+                data: (tags) {
+                  // [추가] 렌더링 직전에 태그 리스트를 이름순(가나다/ABC)으로 정렬한 복사본 생성
+                  final sortedTags = [...tags]
+                    ..sort((a, b) => a.name.compareTo(b.name));
+
+                  return SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      // [수정] tags 대신 정렬된 sortedTags를 사용하여 맵핑
+                      children: sortedTags.map((tag) {
+                        final isSelected = selectedTagIds.value.contains(
+                          tag.id,
+                        );
+                        return Padding(
+                          padding: const EdgeInsets.only(right: 8.0),
+                          child: ChoiceChip(
+                            showCheckmark: false,
+                            label: Text(
+                              "#${tag.name}",
+                              style: TextStyle(
+                                color: isSelected
+                                    ? fxc(context).textcolor0
+                                    : fxc(context).primary500,
+                                fontWeight: isSelected
+                                    ? FontWeight.bold
+                                    : FontWeight.normal,
+                              ),
+                            ),
+                            selected: isSelected,
+                            onSelected: (selected) {
+                              List<int> newList;
+                              if (selected) {
+                                newList = [...selectedTagIds.value, tag.id];
+                              } else {
+                                newList = selectedTagIds.value
+                                    .where((id) => id != tag.id)
+                                    .toList();
+                              }
+                              selectedTagIds.value = newList;
+
+                              ref
+                                  .read(postViewModelProvider.notifier)
+                                  .filterPosts(
+                                    query: searchController.text,
+                                    tagIds: newList,
+                                  );
+                            },
+                            selectedColor: fxc(context).primary400,
+                            backgroundColor: vrc(context).background,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              side: BorderSide(color: fxc(context).primary400!),
                             ),
                           ),
-                          selected: isSelected,
-                          onSelected: (selected) {
-                            List<int> newList;
-                            if (selected) {
-                              newList = [...selectedTagIds.value, tag.id];
-                            } else {
-                              newList = selectedTagIds.value
-                                  .where((id) => id != tag.id)
-                                  .toList();
-                            }
-                            selectedTagIds.value = newList;
-
-                            ref
-                                .read(postViewModelProvider.notifier)
-                                .filterPosts(
-                                  query: searchController.text,
-                                  tagIds: newList,
-                                );
-                          },
-                          selectedColor: fxc(context).primary400,
-                          backgroundColor: vrc(context).background,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            side: BorderSide(color: fxc(context).primary400!),
-                          ),
-                        ),
-                      );
-                    }).toList(),
-                  ),
-                ),
+                        );
+                      }).toList(),
+                    ),
+                  );
+                },
                 loading: () => const SizedBox(height: 42),
                 error: (err, _) => Text(
                   "태그 로드 실패",
@@ -185,6 +196,7 @@ class PostPage extends HookConsumerWidget {
                         itemCount: posts.length,
                         itemBuilder: (context, index) {
                           final post = posts[index];
+                          final bool isMyPost = post.userId == currentUserId;
                           return GestureDetector(
                             key: ValueKey(post.id), // 캐시 이미지 꼬임 방지
                             behavior: HitTestBehavior.opaque,
@@ -255,30 +267,35 @@ class PostPage extends HookConsumerWidget {
                                                 fontSize: 13,
                                               ),
                                             ),
-                                            IconButton(
-                                              onPressed: () {
-                                                ref
-                                                    .read(
-                                                      postViewModelProvider
-                                                          .notifier,
-                                                    )
-                                                    .toggleBookmark(post.id!);
+                                            if (!isMyPost) // [추가] 내 글이 아닐 때만 북마크 아이콘 노출
+                                              IconButton(
+                                                onPressed: () {
+                                                  ref
+                                                      .read(
+                                                        postViewModelProvider
+                                                            .notifier,
+                                                      )
+                                                      .toggleBookmark(post.id!);
 
-                                                // 📝
-                                                AnalyticsService.event(
-                                                  'recipe_action',
-                                                  p: {'action': 'bookmark'},
-                                                );
-                                              },
-                                              icon: Icon(
-                                                post.isBookmarked
-                                                    ? Icons.bookmark
-                                                    : Icons.bookmark_outline,
-                                                color: post.isBookmarked
-                                                    ? fxc(context).primary400
-                                                    : vrc(context).hint,
-                                              ),
-                                            ),
+                                                  AnalyticsService.event(
+                                                    'recipe_action',
+                                                    p: {'action': 'bookmark'},
+                                                  );
+                                                },
+                                                icon: Icon(
+                                                  post.isBookmarked
+                                                      ? Icons.bookmark
+                                                      : Icons.bookmark_outline,
+                                                  color: post.isBookmarked
+                                                      ? fxc(context).primary400
+                                                      : vrc(context).hint,
+                                                ),
+                                              )
+                                            else // [추가] 내 글일 경우 아이콘이 차지하던 공간을 비워둠
+                                              const SizedBox(
+                                                height: 48,
+                                                width: 48,
+                                              ), // IconButton의 기본 크기만큼 공간 유지
                                           ],
                                         ),
                                       ],
