@@ -7,7 +7,10 @@ class LoginUseCase {
 
   Future<void> execute(OAuthProvider provider) async {
     try {
-      await _repository.signInWithOAuth(provider);
+      await _repository.signInWithOAuth(
+        provider,
+        launchMode: LaunchMode.inAppBrowserView,
+      );
     } on AuthException catch (e) {
       throw e.message;
     } catch (e) {
