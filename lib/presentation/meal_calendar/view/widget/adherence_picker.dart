@@ -117,20 +117,23 @@ class _AdherenceChip extends StatelessWidget {
               side: BorderSide(color: borderColor, width: 2),
             ),
           ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                label,
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w700,
-                  color: color,
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  label,
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                    color: color,
+                  ),
                 ),
-              ),
-              const SizedBox(width: 6),
-              Icon(icon, size: 18, color: color),
-            ],
+                const SizedBox(width: 6),
+                Icon(icon, size: 18, color: color),
+              ],
+            ),
           ),
         ),
       ),
