@@ -103,6 +103,11 @@ class OnboardingProfilePage extends HookConsumerWidget {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
+        leading: IconButton(
+          onPressed: context.pop,
+          icon: Icon(Icons.arrow_back_ios, color: fxc(context).textcolor200),
+        ),
+
         /// 단계 표시
         actions: [isEditing ? SizedBox.shrink() : ProgressText(page: "1")],
         actionsPadding: EdgeInsets.only(right: 26),
@@ -115,38 +120,28 @@ class OnboardingProfilePage extends HookConsumerWidget {
             spacing: 10,
             children: [
               /// 설명
-              isEditing
-                  ? Text(
-                      "프로필 수정",
+              Text.rich(
+                TextSpan(
+                  style: TextStyle(fontSize: 22, color: vrc(context).text),
+                  children: [
+                    TextSpan(
+                      text: 'VitaMeal',
                       style: TextStyle(
-                        fontSize: 22,
                         fontWeight: FontWeight.bold,
-                        color: vrc(context).text,
-                      ),
-                    )
-                  : Text.rich(
-                      TextSpan(
-                        style: TextStyle(
-                          fontSize: 22,
-                          color: vrc(context).text,
-                        ),
-                        children: [
-                          TextSpan(
-                            text: 'VitaMeal',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: fxc(context).primary400,
-                            ),
-                          ),
-                          TextSpan(text: '에서 사용할\n'),
-                          TextSpan(
-                            text: '프로필',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          TextSpan(text: '을 설정해주세요.'),
-                        ],
+                        color: fxc(context).primary400,
                       ),
                     ),
+                    TextSpan(text: '에서 사용할\n'),
+                    TextSpan(
+                      text: '프로필',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    TextSpan(text: '을 '),
+                    TextSpan(text: isEditing ? '수정' : '설정'),
+                    TextSpan(text: '해주세요.'),
+                  ],
+                ),
+              ),
               SizedBox(height: 30),
 
               /// 프로필 이미지

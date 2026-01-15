@@ -43,6 +43,11 @@ class OnboardingAllergyPage extends HookConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          onPressed: context.pop,
+          icon: Icon(Icons.arrow_back_ios, color: fxc(context).textcolor200),
+        ),
+
         /// 단계 표시
         actions: [isEditing ? SizedBox.shrink() : ProgressText(page: "4")],
         actionsPadding: EdgeInsets.only(right: 26),
@@ -54,28 +59,22 @@ class OnboardingAllergyPage extends HookConsumerWidget {
           spacing: 10,
           children: [
             /// 설명
-            isEditing
-                ? Text(
-                    "내 정보 수정",
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                      color: vrc(context).text,
-                    ),
-                  )
-                : Text.rich(
-                    TextSpan(
-                      style: TextStyle(fontSize: 22, color: vrc(context).text),
-                      children: [
-                        TextSpan(text: "현재 겪고 있는 "),
-                        TextSpan(
-                          text: "알레르기",
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        TextSpan(text: "를\n모두 선택해주세요. (선택)"),
-                      ],
-                    ),
+            Text.rich(
+              TextSpan(
+                style: TextStyle(fontSize: 22, color: vrc(context).text),
+                children: [
+                  TextSpan(text: "현재 겪고 있는 "),
+                  TextSpan(
+                    text: "알레르기",
+                    style: TextStyle(fontWeight: FontWeight.bold),
                   ),
+                  TextSpan(text: "를\n"),
+                  TextSpan(
+                    text: isEditing ? "수정해주세요. (선택)" : "모두 선택해주세요. (선택)",
+                  ),
+                ],
+              ),
+            ),
 
             /// 알레르기 선택
             Expanded(
