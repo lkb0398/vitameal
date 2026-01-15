@@ -59,10 +59,6 @@ Future<void> main() async {
       KakaoSdk.init(nativeAppKey: dotenv.get('KAKAO_NATIVE_APP_KEY'));
       debugPrint("현재 환경 키 해시: ${await KakaoSdk.origin}");
 
-      await dotenv.load(fileName: ".env");
-      KakaoSdk.init(nativeAppKey: dotenv.get('KAKAO_NATIVE_APP_KEY'));
-      debugPrint("현재 환경 키 해시: ${await KakaoSdk.origin}");
-
       await _safe(
         () => Supabase.initialize(
           url: dotenv.get('SUPABASE_URL'),

@@ -1471,7 +1471,6 @@ final class SyncServiceProvider
   }
 }
 
-<<<<<<< HEAD
 String _$syncServiceHash() => r'ac978bcea8ad57739c880317036f70e0982b107e';
 
 @ProviderFor(widgetBridge)
@@ -1555,17 +1554,3 @@ final class WidgetServiceProvider
 }
 
 String _$widgetServiceHash() => r'863a3a0305fa1aa63fe3447724780597d87e0599';
-=======
-String _$syncServiceHash() => r'a83bb640ca676ea37986ffbc494b2154740efdd7';
-<<<<<<< HEAD
-=======
->>>>>>> 3f1cbb3 (feat: UI를 제외한 기능구현 및 리팩토링 완료)
->>>>>>> 33dc0ef (feat: UI를 제외한 기능구현 및 리팩토링 완료)
-<<<<<<< HEAD
->>>>>>> c0b7a47 (feat: UI를 제외한 기능구현 및 리팩토링 완료)
-=======
-=======
->>>>>>> 5f0aade (feat: UI를 제외한 기능구현 및 리팩토링 완료!)
->>>>>>> 99e6544 (feat: UI를 제외한 기능구현 및 리팩토링 완료!)
-=======
->>>>>>> 3247d50 (feat: UI 변경 및 이미지 추가)
