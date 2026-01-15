@@ -5,11 +5,14 @@ class AuthDataSource {
 
   AuthDataSource(this._client);
 
-  Future<void> signInWithOAuth(OAuthProvider provider) async {
+  Future<void> signInWithOAuth(
+    OAuthProvider provider, {
+    LaunchMode authScreenLaunchMode = LaunchMode.inAppBrowserView,
+  }) async {
     await _client.auth.signInWithOAuth(
       provider,
       redirectTo: 'io.supabase.vitameal://login-callback',
-      authScreenLaunchMode: LaunchMode.externalApplication,
+      authScreenLaunchMode: authScreenLaunchMode,
     );
   }
 
