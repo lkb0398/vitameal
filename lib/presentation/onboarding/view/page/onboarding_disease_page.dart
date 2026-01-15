@@ -43,6 +43,11 @@ class OnboardingDiseasePage extends HookConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          onPressed: context.pop,
+          icon: Icon(Icons.arrow_back_ios, color: fxc(context).textcolor200),
+        ),
+
         /// 단계 표시
         actions: [isEditing ? SizedBox.shrink() : ProgressText(page: "3")],
         actionsPadding: EdgeInsets.only(right: 26),
@@ -54,27 +59,21 @@ class OnboardingDiseasePage extends HookConsumerWidget {
           spacing: 10,
           children: [
             /// 설명
-            isEditing
-                ? Text(
-                    "내 정보 수정",
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                      color: vrc(context).text,
-                    ),
-                  )
-                : Text.rich(
-                    TextSpan(
-                      style: TextStyle(fontSize: 22, color: vrc(context).text),
-                      children: [
-                        TextSpan(
-                          text: "관리가 필요한 질환",
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        TextSpan(text: "을\n모두 선택해주세요. (선택)"),
-                      ],
-                    ),
+            Text.rich(
+              TextSpan(
+                style: TextStyle(fontSize: 22, color: vrc(context).text),
+                children: [
+                  TextSpan(
+                    text: "관리가 필요한 질환",
+                    style: TextStyle(fontWeight: FontWeight.bold),
                   ),
+                  TextSpan(text: "을\n"),
+                  TextSpan(
+                    text: isEditing ? "수정해주세요. (선택)" : "모두 선택해주세요. (선택)",
+                  ),
+                ],
+              ),
+            ),
 
             /// 질병 선택
             Expanded(

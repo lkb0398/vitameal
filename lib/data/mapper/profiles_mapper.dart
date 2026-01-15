@@ -32,20 +32,4 @@ class ProfilesMapper {
       onboardingCompleted: dto.onboardingCompleted,
     );
   }
-
-  // 업데이트 용
-  static Map<String, dynamic> toUpdateMap(ProfilesEntity entity) {
-    final map = <String, dynamic>{};
-    if (entity.nickname != null) map['nickname'] = entity.nickname;
-    if (entity.photoUrl != null) map['photo_url'] = entity.photoUrl;
-    if (entity.gender != null) map['gender'] = entity.genderType!.name;
-    if (entity.birthYear != null) map['birth_year'] = entity.birthYear;
-    if (entity.heightCm != null) map['height_cm'] = entity.heightCm;
-    if (entity.weightKg != null) map['weight_kg'] = entity.weightKg;
-    if (entity.onboardingCompleted != null) {
-      map['onboarding_completed'] = entity.onboardingCompleted;
-    }
-
-    return map;
-  }
 }

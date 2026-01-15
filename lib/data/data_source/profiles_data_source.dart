@@ -2,7 +2,6 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:vitameal/data/dto/profiles_dto.dart';
-import 'package:vitameal/data/mapper/profiles_mapper.dart';
 import 'package:vitameal/domain/entity/profiles_entity.dart';
 
 abstract interface class ProfilesDataSource {
@@ -42,7 +41,16 @@ class ProfilesDataSourceImpl implements ProfilesDataSource {
   @override // U
   Future<void> updateProfile(ProfilesEntity entity) async {
     try {
-      final map = ProfilesMapper.toUpdateMap(entity);
+      final map = {
+        if (entity.nickname != null) 'nickname': entity.nickname,
+        if (entity.photoUrl != null) 'photo_url': entity.photoUrl,
+        if (entity.genderType != null) 'gender': entity.genderType!.name,
+        'birth_year': entity.birthYear,
+        'height_cm': entity.heightCm,
+        'weight_kg': entity.weightKg,
+        if (entity.onboardingCompleted != null)
+          'onboarding_completed': entity.onboardingCompleted,
+      };
       await client.from('profiles').update(map).eq('user_id', entity.userId);
     } on PostgrestException catch (e, s) {
       if (e.code == '23505') {

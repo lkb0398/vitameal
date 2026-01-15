@@ -33,7 +33,7 @@ class BorderedContainer extends StatelessWidget {
           ],
         ),
         child: Column(
-          spacing: 20,
+          spacing: 10,
           children: [
             InkWell(
               onTap: onTap,
