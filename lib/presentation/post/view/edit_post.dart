@@ -10,6 +10,7 @@ import 'package:vitameal/domain/entity/post_entity.dart';
 import 'package:vitameal/presentation/post/view_model/post_view_model.dart';
 import 'package:vitameal/presentation/post/view_model/recipe_step_ui_model.dart';
 import 'package:vitameal/presentation/post/view_model/tag_view_model.dart';
+import 'package:vitameal/presentation/util/show_gray_snackbar.dart';
 
 class EditPost extends HookConsumerWidget {
   final PostEntity? initialPost;
@@ -87,18 +88,14 @@ class EditPost extends HookConsumerWidget {
                   : () async {
                       // 1. 제목 입력 검사
                       if (titleController.text.trim().isEmpty) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text("제목을 입력해주세요.")),
-                        );
+                        showGraySnackBar(context, "제목을 입력해주세요.");
                         return;
                       }
 
                       // 2. 메인 이미지 유효성 검사
                       if (selectedImage.value == null &&
                           existingImageUrl.value == null) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text("대표 이미지를 등록해주세요.")),
-                        );
+                        showGraySnackBar(context, "대표 이미지를 등록해주세요.");
                         return;
                       }
 
@@ -115,11 +112,7 @@ class EditPost extends HookConsumerWidget {
                       });
 
                       if (hasInvalidStep) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text("모든 단계의 이미지와 설명을 등록해주세요."),
-                          ),
-                        );
+                        showGraySnackBar(context, "모든 단계의 이미지와 설명을 등록해주세요.");
                         return;
                       }
 
@@ -147,7 +140,11 @@ class EditPost extends HookConsumerWidget {
                                 uiSteps: recipeSteps.value,
                               );
 
-                          // ... Analytics 로직 동일 ...
+                          // 📝
+                          AnalyticsService.event(
+                            'recipe_action',
+                            p: {'action': 'create'},
+                          );
                         }
                         if (context.mounted) context.pop();
                       } catch (e) {
