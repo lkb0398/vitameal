@@ -30,6 +30,11 @@ class ProfilesRepositoryImpl implements ProfilesRepository {
   }
 
   @override
+  Future<void> updatePhysical(ProfilesEntity profile) {
+    return dataSource.updatePhysical(profile);
+  }
+
+  @override
   Future<bool> isNicknameDuplicated(String nickname) {
     return dataSource.checkNickname(nickname);
   }
