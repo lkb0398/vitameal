@@ -19,13 +19,31 @@
     <style name="NormalTheme" parent="@android:style/Theme.Light.NoTitleBar">
         <item name="android:windowBackground">?android:colorBackground</item>
     </style>
+
+    <!-- 프리뷰 레이아웃에서 쓸 셀 스타일 -->
     <style name="WidgetPreviewDay">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">0dp</item>
         <item name="android:layout_rowWeight">1</item>
         <item name="android:layout_columnWeight">1</item>
         <item name="android:gravity">center</item>
-        <item name="android:textSize">10sp</item>
+        <item name="android:textSize">6sp</item>
+        <item name="android:layout_marginRight">0.5dp</item>
+        <item name="android:layout_marginTop">1dp</item>
+        <item name="android:layout_marginBottom">1dp</item>
+        <item name="android:layout_marginLeft">0.5dp</item>
         <item name="android:textColor">#1A1A1A</item>
+    </style>
+
+    <style name="WidgetPreviewDay.Low" parent="WidgetPreviewDay">
+        <item name="android:background">@drawable/bg_preview_day_low</item>
+    </style>
+
+    <style name="WidgetPreviewDay.Mid" parent="WidgetPreviewDay">
+        <item name="android:background">@drawable/bg_preview_day_mid</item>
+    </style>
+
+    <style name="WidgetPreviewDay.High" parent="WidgetPreviewDay">
+        <item name="android:background">@drawable/bg_preview_day_high</item>
     </style>
 </resources>

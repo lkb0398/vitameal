@@ -24,12 +24,12 @@ class AppTheme {
       seedColor: Color(0xFF89CC00), // primary400
     ),
     appBarTheme: AppBarTheme(
-      backgroundColor: Color(0xFF333333),
+      backgroundColor: Color(0xFF242424),
       scrolledUnderElevation: 0,
     ),
-    scaffoldBackgroundColor: Color(0xFF333333),
-    bottomSheetTheme: BottomSheetThemeData(backgroundColor: Color(0xFF333333)),
-    dialogTheme: DialogThemeData(backgroundColor: Color(0xFF333333)),
+    scaffoldBackgroundColor: Color(0xFF242424),
+    bottomSheetTheme: BottomSheetThemeData(backgroundColor: Color(0xFF242424)),
+    dialogTheme: DialogThemeData(backgroundColor: Color(0xFF242424)),
     extensions: const [VariableColors.dark, FixedColors.constant],
   );
 }
@@ -38,4 +38,3 @@ VariableColors vrc(BuildContext context) =>
     Theme.of(context).extension<VariableColors>()!;
 FixedColors fxc(BuildContext context) =>
     Theme.of(context).extension<FixedColors>()!;
-

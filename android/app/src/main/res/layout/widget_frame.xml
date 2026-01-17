@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root_full"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- 정사각형으로 설정할 영역, 가운데 정렬 -->
+    <FrameLayout
+        android:id="@android:id/background"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@drawable/bg_frame_border_white">
+
+        <!-- Glance 내용이 들어갈 컨테이너 -->
+        <FrameLayout
+            android:id="@+id/glance_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </FrameLayout>
+
+</FrameLayout>
+
