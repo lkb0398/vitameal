@@ -37,7 +37,7 @@
             <ImageView
                 android:layout_width="8dp"
                 android:layout_height="8dp"
-                android:src="@drawable/ic_adherence"
+                android:src="@drawable/ic_adherence_white"
                 android:contentDescription="@null" />
 
             <!-- 달성도 -->

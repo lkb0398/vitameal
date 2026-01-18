@@ -3,31 +3,34 @@ package com.alldayproject.vitameal.widget.config
 import android.appwidget.AppWidgetManager
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
-import android.widget.RadioButton
-import android.widget.Switch
+import android.os.Handler
+import android.os.Looper
+import android.widget.SeekBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.alldayproject.vitameal.R
+import com.alldayproject.vitameal.databinding.ActivitySmallWidgetConfigureBinding
 import com.alldayproject.vitameal.widget.data.WidgetPrefs
 import com.alldayproject.vitameal.widget.glance.VitamealSmallGlanceWidget
-import com.alldayproject.vitameal.widget.style.WidgetStyle
 import com.alldayproject.vitameal.widget.glance.updateByAppWidgetId
+import com.alldayproject.vitameal.widget.style.WidgetFontAndBorderStyle
+import com.alldayproject.vitameal.widget.style.WidgetPaletteStyle
+import com.alldayproject.vitameal.widget.update.WidgetUpdateRunner
 import kotlinx.coroutines.launch
 
 class SmallWidgetConfigureActivity : AppCompatActivity() {
 
     private var appWidgetId: Int = AppWidgetManager.INVALID_APPWIDGET_ID
+    private lateinit var binding: ActivitySmallWidgetConfigureBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // 기본: 취소 처리 (유저가 뒤로가면 위젯 추가 취소)
-        setResult(RESULT_CANCELED)
+        setResult(RESULT_CANCELED) // 기본 취소, 저장시에만 RESULT_OK
 
-        setContentView(R.layout.activity_small_widget_configure)
+        binding = ActivitySmallWidgetConfigureBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        // 런처가 넘겨준 appWidgetId 받기
         appWidgetId = intent?.extras?.getInt(
             AppWidgetManager.EXTRA_APPWIDGET_ID,
             AppWidgetManager.INVALID_APPWIDGET_ID
@@ -38,29 +41,56 @@ class SmallWidgetConfigureActivity : AppCompatActivity() {
             return
         }
 
-        // 현재 저장값을 UI 기본값으로 반영
+        // 위젯 스타일 불러오기
         val savedStyle = WidgetPrefs.loadStyle(this, appWidgetId)
-        val savedShow = WidgetPrefs.loadShowAdherence(this, appWidgetId)
+        val savedOpacity = WidgetPrefs.loadBorderOpacity(this, appWidgetId)
+        val savedShowAdherence = WidgetPrefs.loadShowAdherence(this, appWidgetId)
+        val savedPalette = WidgetPrefs.loadPalette(this, appWidgetId)
 
-        val rbBlack = findViewById<RadioButton>(R.id.rb_black)
-        val rbWhite = findViewById<RadioButton>(R.id.rb_white)
-        val sw = findViewById<Switch>(R.id.sw_adherence)
-        val btn = findViewById<Button>(R.id.btn_done)
+        // 다크모드 (위젯 텍스트, 테두리)
+        binding.swDark.isChecked = (savedStyle == WidgetFontAndBorderStyle.WHITE)
 
-        if (savedStyle == WidgetStyle.BLACK) rbBlack.isChecked = true else rbWhite.isChecked = true
-        sw.isChecked = savedShow
+        // 테두리 투명도
+        binding.sbOpacity.progress = savedOpacity
+        binding.tvOpacity.text = savedOpacity.toString()
 
-        btn.setOnClickListener {
-            val newStyle = if (rbBlack.isChecked) WidgetStyle.BLACK else WidgetStyle.WHITE
-            val newShow = sw.isChecked
+        // 셀 색상 파레트
+        binding.swPalette.isChecked =
+            savedPalette == WidgetPaletteStyle.GREENS
 
-            // ✅ 인스턴스별 저장
+        // 달성도 표시
+        binding.swAdherence.isChecked = savedShowAdherence
+
+        // seekbar 리스너
+        binding.sbOpacity.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                binding.tvOpacity.text = progress.toString()
+            }
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+        })
+
+        // 취소 버튼 리스너
+        binding.btnCancel.setOnClickListener {
+            finish()
+        }
+
+        // 저장 버튼 리스너
+        binding.btnSave.setOnClickListener {
+            val newStyle = if (binding.swDark.isChecked) WidgetFontAndBorderStyle.WHITE else WidgetFontAndBorderStyle.BLACK
+            val newOpacity = binding.sbOpacity.progress
+            val newPalette = if (binding.swPalette.isChecked) WidgetPaletteStyle.GREENS else WidgetPaletteStyle.RYG
+            val newShowAdherence = binding.swAdherence.isChecked
+
+            // 저장
             WidgetPrefs.saveStyle(this, appWidgetId, newStyle)
-            WidgetPrefs.saveShowAdherence(this, appWidgetId, newShow)
+            WidgetPrefs.saveBorderOpacity(this, appWidgetId, newOpacity)
+            WidgetPrefs.savePalette(this, appWidgetId, newPalette)
+            WidgetPrefs.saveShowAdherence(this, appWidgetId, newShowAdherence)
 
-            // ✅ 해당 위젯 인스턴스만 업데이트 (핵심)
+            // 갱신
             lifecycleScope.launch {
-                VitamealSmallGlanceWidget().updateByAppWidgetId(this@SmallWidgetConfigureActivity, appWidgetId)
+                WidgetUpdateRunner.forceUpdateSmall(applicationContext)
                 finishSuccess()
             }
         }

@@ -36,9 +36,11 @@ import kotlin.math.min
 import android.app.PendingIntent
 import androidx.glance.Image
 import androidx.glance.ImageProvider
+import com.alldayproject.vitameal.widget.config.SmallWidgetConfigureActivity
 import com.alldayproject.vitameal.widget.style.WidgetColors
-import com.alldayproject.vitameal.widget.style.WidgetStyle
-
+import com.alldayproject.vitameal.widget.style.WidgetFontAndBorderStyle
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 class VitamealSmallGlanceWidget : GlanceAppWidget() {
     override val sizeMode: SizeMode = SizeMode.Single // 위젯을 단일크기화 (리사이즈 불가)
@@ -65,45 +67,59 @@ class VitamealSmallGlanceWidget : GlanceAppWidget() {
             val packageName = LocalContext.current.packageName
 
             val remoteViews = RemoteViews(packageName, R.layout.widget_frame).apply {
-                // launchIntent 앱 열기 동작
-                val launchIntent = context.packageManager
-                    .getLaunchIntentForPackage(context.packageName)
-                    ?.apply {
-                        // 딥링크/URI 제거 (go_router 충돌 방지)
-                        action = Intent.ACTION_MAIN
-                        addCategory(Intent.CATEGORY_LAUNCHER)
-                        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
-                        setData(null)
-                    } ?: Intent(context, MainActivity::class.java).apply {
-                    action = Intent.ACTION_MAIN
-                    addCategory(Intent.CATEGORY_LAUNCHER)
-                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
-                    setData(null)
+//                // launchIntent 앱 열기 동작
+//                val launchIntent = context.packageManager
+//                    .getLaunchIntentForPackage(context.packageName)
+//                    ?.apply {
+//                        // 딥링크/URI 제거 (go_router 충돌 방지)
+//                        action = Intent.ACTION_MAIN
+//                        addCategory(Intent.CATEGORY_LAUNCHER)
+//                        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+//                        setData(null)
+//                    } ?: Intent(context, MainActivity::class.java).apply {
+//                    action = Intent.ACTION_MAIN
+//                    addCategory(Intent.CATEGORY_LAUNCHER)
+//                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+//                    setData(null)
+//                }
+//
+//                // requestCode를 appWidgetId로 둬서 인스턴스별 PendingIntent 충돌 방지
+//                // 위젯 설정페이지 위젯 인스턴스마다 다르게 해야함
+//                val pi = PendingIntent.getActivity(
+//                    context,
+//                    appWidgetId, // 인스턴스별 requestCode
+//                    launchIntent,
+//                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+//                )
+
+                val configIntent = Intent(context, SmallWidgetConfigureActivity::class.java).apply {
+                    putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 }
 
-                // requestCode를 appWidgetId로 둬서 인스턴스별 PendingIntent 충돌 방지
-                // 위젯 설정페이지 위젯 인스턴스마다 다르게 해야함
-                val pi = PendingIntent.getActivity(
+                val configPi = PendingIntent.getActivity(
                     context,
                     appWidgetId, // 인스턴스별 requestCode
-                    launchIntent,
+                    configIntent,
                     PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
                 )
 
-                // 루트,컨테이너 둘 다 onClick 설정
-                // 안드로이드는 런처별로 터치 인식하는 부분이 달라서 둘다 걸어줌
-                setOnClickPendingIntent(android.R.id.background, pi)
-                setOnClickPendingIntent(R.id.glance_container, pi)
+                // RemoteView 컨테이너 onClick 설정
+                setOnClickPendingIntent(android.R.id.background, configPi)
 
                 // RemoteViews 쪽에서 프레임 배경을 바꿈 (border 사용해야해서 RemoteViews와 xml 사용)
                 // RemoteViews는 시스템한테 위젯의 UI를 어떻게 그려달라고 전달하는 명령서 같은거
                 val borderDrawable =
-                    if (style == WidgetStyle.BLACK)
+                    if (style == WidgetFontAndBorderStyle.BLACK)
                         R.drawable.bg_frame_border_black
                     else
                         R.drawable.bg_frame_border_white
                 // 대상 view id , 호출할 메서드 이름 , 전달할 값
-                setInt(android.R.id.background, "setBackgroundResource", borderDrawable)
+                setInt(R.id.border_overlay, "setBackgroundResource", borderDrawable)
+                // 테두리 투명도 설정
+                val borderOpacity = WidgetPrefs.loadBorderOpacity(context, appWidgetId)
+                val alpha = (borderOpacity.coerceIn(0, 100) / 100f)
+                setFloat(R.id.border_overlay, "setAlpha", alpha)
 
                 // Android 12+에서 정사각형 강제
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && sideDp != null) {
@@ -149,9 +165,10 @@ class VitamealSmallGlanceWidget : GlanceAppWidget() {
                     EmptyState(style)
                 } else {
                     Content(
+                        appWidgetId = appWidgetId,
                         style = style,
                         showAdherence = showAdherence,
-                        data = widgetData,
+                        calendarData = widgetData,
                         sideDp = sideDp
                     )
                 }
@@ -188,36 +205,45 @@ class VitamealSmallGlanceWidget : GlanceAppWidget() {
         return min(minW, minH)
     }
 
-    /** Glance UI 영역에도 클릭을 걸어 앱을 열 수 있게 함
-    RemoteViews에서 onClick 걸어뒀지만, Glance clickable도 걸어주는게 방어패턴 */
-    @Composable
-    private fun OpenAppModifier(): GlanceModifier {
-        val context = LocalContext.current
-
-        val launchIntent = Intent(context, MainActivity::class.java).apply {
-            action = Intent.ACTION_MAIN
-            addCategory(Intent.CATEGORY_LAUNCHER)
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
-            data = null // 딥링크 데이터 제거
-        }
-
-        return GlanceModifier.clickable(actionStartActivity(launchIntent))
-    }
+//    /** Glance UI 영역에도 클릭을 걸어 앱을 열 수 있게 함 */
+//    @Composable
+//    private fun OpenAppModifier(): GlanceModifier {
+//        val context = LocalContext.current
+//
+//        val launchIntent = Intent(context, MainActivity::class.java).apply {
+//            action = Intent.ACTION_MAIN
+//            addCategory(Intent.CATEGORY_LAUNCHER)
+//            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+//            data = null // 딥링크 데이터 제거
+//        }
+//
+//        return GlanceModifier.clickable(actionStartActivity(launchIntent))
+//    }
 
     /** 위젯 화면 UI */
     @Composable
     private fun Content(
+        appWidgetId: Int,
         style: String,
         showAdherence: Boolean,
-        data: WidgetCalendarData,
+        calendarData: WidgetCalendarData,
         sideDp: Int?
     ) {
-        val achievements = WidgetDataLoader.achievementsByDay(data)
-        val rows = CalendarGrid.monthRowCount(data.year, data.month)
-        val grid = CalendarGrid.makeMonthGrid(data.year, data.month, achievements)
-        val percent = CalendarGrid.adherencePercent(achievements, data.year, data.month)
+        val achievements = WidgetDataLoader.achievementsByDay(calendarData)
+        val rows = CalendarGrid.monthRowCount(calendarData.year, calendarData.month)
+        val grid = CalendarGrid.makeMonthGrid(calendarData.year, calendarData.month, achievements)
+        val percent =
+            CalendarGrid.adherencePercent(achievements, calendarData.year, calendarData.month)
 
-        val title = String.format(Locale.getDefault(), "%04d.%02d", data.year, data.month)
+        val title =
+            String.format(Locale.getDefault(), "%04d.%02d", calendarData.year, calendarData.month)
+        val titleNoAdherence = LocalDate.of(calendarData.year, calendarData.month, 1).format(
+            DateTimeFormatter.ofPattern("MMMM yyyy", Locale.ENGLISH)
+        )
+
+        val adherenceIconRes =
+            if (style == WidgetFontAndBorderStyle.BLACK) R.drawable.ic_adherence_black
+            else R.drawable.ic_adherence_white
 
         // Android 12+에서는 정사각형으로 강제된 sideDp를 사용
         // 이하 버전은 provider 기본값 기준으로만 스케일
@@ -255,54 +281,83 @@ class VitamealSmallGlanceWidget : GlanceAppWidget() {
         val cellRadiusDp = 6f
         val dayFontSp = 10f
 
+        // 위젯설정 액티비티 인텐트
         val context = LocalContext.current
-
-        val intent = Intent(context, MainActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+        val openConfigIntent = Intent(context, SmallWidgetConfigureActivity::class.java).apply {
+            putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }
+        val openConfigAction = actionStartActivity(openConfigIntent)
 
+        // 셀 색상 팔레트
+        val palette = WidgetPrefs.loadPalette(context, appWidgetId)
 
-        Column(modifier = GlanceModifier.fillMaxSize().then(OpenAppModifier())) {
+        Column(modifier = GlanceModifier.fillMaxSize()) {
             Spacer(GlanceModifier.height(topPaddingDp.dp))
 
             // --- 타이틀/달성도 ---
-            Row(
-                modifier = GlanceModifier
-                    .fillMaxWidth()
-                    .height(titleHeightDp.dp)
-                    .padding(horizontal = titleHorizontalPadDp.dp),
-                verticalAlignment = Alignment.Vertical.CenterVertically
-            ) {
-                Text(
-                    text = title,
-                    style = TextStyle(
-                        color = WidgetColors.text(style),
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Bold
-                    ),
-                    maxLines = 1
-                )
-
-                Spacer(GlanceModifier.defaultWeight())
-
-                Image(
-                    provider = ImageProvider(R.drawable.ic_adherence),
-                    contentDescription = null,
+            if (showAdherence) {
+                // 달성도 표시함
+                Row(
                     modifier = GlanceModifier
-                        .size(14.dp)
-                        .padding(end = 4.dp)
-                )
-
-                Text(
-                    text = "${percent}%",
-                    style = TextStyle(
-                        color = WidgetColors.text(style),
-                        fontSize = 11.sp,
-                        fontWeight = FontWeight.Bold
+                        .fillMaxWidth()
+                        .height(titleHeightDp.dp)
+                        .padding(horizontal = titleHorizontalPadDp.dp),
+                    verticalAlignment = Alignment.Vertical.CenterVertically
+                ) {
+                    Text(
+                        text = title,
+                        style = TextStyle(
+                            color = WidgetColors.text(style),
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Bold
+                        ),
+                        maxLines = 1
                     )
-                )
-            }
 
+                    Spacer(GlanceModifier.defaultWeight())
+
+                    // 달성도 영역만 clickable
+                    Row(
+                        modifier = GlanceModifier.clickable(openConfigAction),
+                        verticalAlignment = Alignment.Vertical.CenterVertically
+                    ) {
+                        Image(
+                            provider = ImageProvider(adherenceIconRes),
+                            contentDescription = null,
+                            modifier = GlanceModifier.size(14.dp).padding(end = 4.dp)
+                        )
+
+                        Text(
+                            text = "${percent}%",
+                            style = TextStyle(
+                                color = WidgetColors.text(style),
+                                fontSize = 11.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                        )
+                    }
+                }
+            } else {
+                // 달성도 표시 안함
+                Box(
+                    modifier = GlanceModifier
+                        .fillMaxWidth()
+                        .height(titleHeightDp.dp)
+                        .padding(horizontal = titleHorizontalPadDp.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = titleNoAdherence, // MMMM yyyy
+                        style = TextStyle(
+                            color = WidgetColors.text(style),
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Bold
+                        ),
+                        maxLines = 1
+                    )
+                }
+            }
             Spacer(GlanceModifier.height(gridTopGapDp.dp))
 
             // --- 달력 영역 ---
@@ -320,7 +375,8 @@ class VitamealSmallGlanceWidget : GlanceAppWidget() {
                     hGap = colSpacingDp,
                     vGap = rowSpacingDp,
                     cellRadius = cellRadiusDp,
-                    dayFontSp = dayFontSp
+                    dayFontSp = dayFontSp,
+                    palette = palette
                 )
             }
 
@@ -355,13 +411,32 @@ class VitamealSmallGlanceWidget : GlanceAppWidget() {
         hGap: Float,
         vGap: Float,
         cellRadius: Float,
-        dayFontSp: Float
+        dayFontSp: Float,
+        palette: String
     ) {
         val cells = grid.toMutableList()
         // 뒷부분 셀 빈칸 영역 채우기
         while (cells.size < rows * 7) cells.add(DayCell(null, AchievementLevel.NONE))
 
-        Column(modifier = GlanceModifier.fillMaxWidth()) {
+        // 앱실행 액티비티 인텐트
+        val context = LocalContext.current
+        val launchIntent = context.packageManager
+            .getLaunchIntentForPackage(context.packageName)
+            ?.apply {
+                action = Intent.ACTION_MAIN
+                addCategory(Intent.CATEGORY_LAUNCHER)
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+                data = null
+            } ?: Intent(context, MainActivity::class.java).apply {
+            action = Intent.ACTION_MAIN
+            addCategory(Intent.CATEGORY_LAUNCHER)
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+            data = null
+        }
+        val openAppAction = actionStartActivity(launchIntent)
+
+        // 그리드 영역만 앱실행 clickable
+        Column(modifier = GlanceModifier.fillMaxWidth().clickable(openAppAction)) {
             var idx = 0
             repeat(rows) { r -> // 행 반복
                 Row(
@@ -385,7 +460,8 @@ class VitamealSmallGlanceWidget : GlanceAppWidget() {
                                 sizeDp = cellSize,
                                 radiusDp = cellRadius,
                                 fontSp = dayFontSp,
-                                modifier = GlanceModifier
+                                modifier = GlanceModifier,
+                                palette = palette
                             )
                         }
                     }
@@ -402,7 +478,8 @@ class VitamealSmallGlanceWidget : GlanceAppWidget() {
         sizeDp: Float,
         radiusDp: Float,
         fontSp: Float,
-        modifier: GlanceModifier
+        modifier: GlanceModifier,
+        palette: String
     ) {
         // 빈 날짜
         if (cell.day == null) {
@@ -413,9 +490,9 @@ class VitamealSmallGlanceWidget : GlanceAppWidget() {
         // 달성도에 따른 셀 배경
         val bg = when (cell.level) {
             AchievementLevel.NONE -> null
-            AchievementLevel.LOW -> WidgetColors.low
-            AchievementLevel.MID -> WidgetColors.mid
-            AchievementLevel.HIGH -> WidgetColors.high
+            AchievementLevel.LOW -> WidgetColors.cellLow(palette)
+            AchievementLevel.MID -> WidgetColors.cellMid(palette)
+            AchievementLevel.HIGH -> WidgetColors.cellHigh(palette)
         }
 
         Box(

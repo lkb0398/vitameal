@@ -9,15 +9,24 @@
         android:id="@android:id/background"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:background="@drawable/bg_frame_border_white">
+        android:layout_gravity="center">
 
         <!-- Glance 내용이 들어갈 컨테이너 -->
         <FrameLayout
             android:id="@+id/glance_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
-    </FrameLayout>
 
+        <!-- 테두리만 표시하는 컨테이너, 컨텐츠 영향X -->
+        <!-- 테두리 투명도 조절을 위해 background와 분리 -->
+        <!-- glance_container 위에 올라오지만 터치는 안먹게 -->
+        <FrameLayout
+            android:id="@+id/border_overlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_frame_border_white"
+            android:clickable="false"
+            android:focusable="false" />
+    </FrameLayout>
 </FrameLayout>
 

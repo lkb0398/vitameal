@@ -46,4 +46,8 @@
     <style name="WidgetPreviewDay.High" parent="WidgetPreviewDay">
         <item name="android:background">@drawable/bg_preview_day_high</item>
     </style>
+
+    <style name="Theme.Vitameal.WidgetConfig"
+        parent="Theme.AppCompat.DayNight.NoActionBar">
+    </style>
 </resources>

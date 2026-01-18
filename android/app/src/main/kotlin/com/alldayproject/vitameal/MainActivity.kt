@@ -72,12 +72,6 @@ class MainActivity : FlutterActivity() {
                         // 위젯에서는 이 데이터를 읽어서 UI를 갱신함
                         WidgetPrefs.saveCalendarJson(this, jsonString)
 
-                        // 위젯들 갱신 (updateAll()이 suspend라 코루틴써야함)
-                        // widgetUpdateScope.launch {
-                        //     VitamealSmallGlanceWidget().updateAll(applicationContext)
-                        //     VitamealLargeGlanceWidget().updateAll(applicationContext)
-                        // }
-
                         // 위젯 갱신
                         WidgetUpdateRunner.forceUpdateSmall(applicationContext)
                         result.success(true)
