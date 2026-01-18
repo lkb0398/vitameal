@@ -8,6 +8,7 @@ import 'package:vitameal/presentation/goal/view/page/add_goal_page.dart';
 import 'package:vitameal/presentation/goal/view/page/data_page.dart';
 import 'package:vitameal/presentation/goal/view/page/goal_page.dart';
 import 'package:vitameal/presentation/home/view/page/home_page.dart';
+import 'package:vitameal/presentation/language/view/language_page.dart';
 import 'package:vitameal/presentation/meal_editor/view/meal_editor_page.dart';
 import 'package:vitameal/presentation/notification/view/page/notification_page.dart';
 import 'package:vitameal/presentation/onboarding/view/page/onboarding_allergy_page.dart';
@@ -33,6 +34,7 @@ class AppRoutePath {
   static const splash = '/splash';
   static const intro = '/intro';
   static const noti = '/noti';
+  static const language = '/language';
   // 사용자 정보 입력/수정
   static const onboardingProfile = '/onboarding/profile';
   static const onboardingPhysical = '/onboarding/physical';
@@ -103,6 +105,11 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: AppRoutePath.noti,
         name: AppRoutePath.noti,
         builder: (context, state) => const NotificationPage(),
+      ),
+      GoRoute(
+        path: AppRoutePath.language,
+        name: AppRoutePath.language,
+        builder: (context, state) => const LanguagePage(),
       ),
       GoRoute(
         path: AppRoutePath.onboardingProfile,

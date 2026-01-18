@@ -48,11 +48,8 @@ class SettingPage extends HookConsumerWidget {
           child: Column(
             children: [
               MenuItem(
-                onTap: () {
-                  // TODO : 페이지 연결
-                  // context.go('/language');
-                },
-                title: "언어 설정 (준비중)",
+                onTap: () => context.push('/language'),
+                title: "언어 설정",
                 showArrow: true,
               ),
               const SizedBox(height: 3),
