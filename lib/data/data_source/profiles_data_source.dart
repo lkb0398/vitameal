@@ -43,7 +43,7 @@ class ProfilesDataSourceImpl implements ProfilesDataSource {
     try {
       final map = {
         if (entity.nickname != null) 'nickname': entity.nickname,
-        if (entity.photoUrl != null) 'photo_url': entity.photoUrl,
+        'photo_url': entity.photoUrl,
         if (entity.genderType != null) 'gender': entity.genderType!.name,
         'birth_year': entity.birthYear,
         'height_cm': entity.heightCm,
