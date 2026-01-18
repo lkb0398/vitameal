@@ -44,7 +44,7 @@ class FirebaseService {
   // 토큰 갱신 감지
   static void listenTokenRefresh() {
     _messaging.onTokenRefresh.listen((token) async {
-      final userId = _client.auth.currentUser!.id;
+      final userId = _client.auth.currentUser?.id;
       await _client.from('fcm_tokens').upsert({
         'user_id': userId,
         'fcm_token': token,
