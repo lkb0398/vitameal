@@ -8,5 +8,6 @@ abstract class ProfilesRepository {
     required File file,
   });
   Future<void> updateProfile(ProfilesEntity profile);
+  Future<void> updatePhysical(ProfilesEntity profile);
   Future<bool> isNicknameDuplicated(String nickname);
 }

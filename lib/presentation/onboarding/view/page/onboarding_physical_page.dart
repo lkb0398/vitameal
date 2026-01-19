@@ -314,7 +314,7 @@ class OnboardingPhysicalPage extends HookConsumerWidget {
           // 프로필 업데이트
           await ref
               .read(onboardingViewModelProvider.notifier)
-              .updateProfile(
+              .updatePhysical(
                 gender: gender,
                 birthYear: int.tryParse(birthYear),
                 heightCm: double.tryParse(heightCm),
