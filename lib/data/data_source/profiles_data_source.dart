@@ -7,6 +7,7 @@ import 'package:vitameal/domain/entity/profiles_entity.dart';
 abstract interface class ProfilesDataSource {
   Future<ProfilesDto?> getMyProfile(String userId);
   Future<void> updateProfile(ProfilesEntity entity);
+  Future<void> updatePhysical(ProfilesEntity entity);
   Future<String> uploadProfileImage({
     required String userId,
     required File file,
@@ -38,16 +39,12 @@ class ProfilesDataSourceImpl implements ProfilesDataSource {
     }
   }
 
-  @override // U
+  @override // U (프로필 정보)
   Future<void> updateProfile(ProfilesEntity entity) async {
     try {
       final map = {
         if (entity.nickname != null) 'nickname': entity.nickname,
         'photo_url': entity.photoUrl,
-        if (entity.genderType != null) 'gender': entity.genderType!.name,
-        'birth_year': entity.birthYear,
-        'height_cm': entity.heightCm,
-        'weight_kg': entity.weightKg,
         if (entity.onboardingCompleted != null)
           'onboarding_completed': entity.onboardingCompleted,
       };
@@ -60,6 +57,29 @@ class ProfilesDataSourceImpl implements ProfilesDataSource {
       rethrow;
     } catch (e, s) {
       log('알 수 없는 오류로 인한 updateProfile 실패 : e', error: e, stackTrace: s);
+      rethrow;
+    }
+  }
+
+  @override // U (신체 정보)
+  Future<void> updatePhysical(ProfilesEntity entity) async {
+    try {
+      final map = {
+        if (entity.genderType != null) 'gender': entity.genderType!.name,
+        'birth_year': entity.birthYear,
+        'height_cm': entity.heightCm,
+        'weight_kg': entity.weightKg,
+      };
+      await client.from('profiles').update(map).eq('user_id', entity.userId);
+    } on PostgrestException catch (e, s) {
+      log(
+        'DB 오류로 인한 updatePhysical 실패 : ${e.message}',
+        error: e,
+        stackTrace: s,
+      );
+      rethrow;
+    } catch (e, s) {
+      log('알 수 없는 오류로 인한 updatePhysical 실패 : e', error: e, stackTrace: s);
       rethrow;
     }
   }
