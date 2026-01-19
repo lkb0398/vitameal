@@ -2,12 +2,14 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="110dp"
     android:layout_height="110dp"
+    xmlns:tools="http://schemas.android.com/tools"
     android:padding="0dp">
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/bg_preview_frame_border"
+        tools:background="#1A1A1A"
         android:padding="12dp">
 
         <!-- 상단 타이틀 영역 -->
@@ -23,20 +25,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="2026.01"
-                android:textSize="8sp"
+                android:textSize="7sp"
                 android:textStyle="bold"
-                android:textColor="#1A1A1A"
+                android:textColor="@color/white"
                 android:maxLines="1" />
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
 
             <!-- 아이콘 -->
             <ImageView
-                android:layout_width="8dp"
-                android:layout_height="8dp"
+                android:layout_width="7dp"
+                android:layout_height="7dp"
+                android:layout_marginStart="32dp"
                 android:src="@drawable/ic_adherence_white"
                 android:contentDescription="@null" />
 
@@ -44,11 +42,11 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
+                android:layout_marginStart="2dp"
                 android:text="80%"
-                android:textSize="8sp"
+                android:textSize="7sp"
                 android:textStyle="bold"
-                android:textColor="#1A1A1A" />
+                android:textColor="@color/white" />
         </LinearLayout>
 
         <!-- 그리드 영역 -->
@@ -61,38 +59,42 @@
             android:useDefaultMargins="false"
             android:alignmentMode="alignMargins">
 
-            <TextView style="@style/WidgetPreviewDay" android:text="1" />
-            <TextView style="@style/WidgetPreviewDay" android:text="2" />
-            <TextView style="@style/WidgetPreviewDay" android:text="3" />
-            <TextView style="@style/WidgetPreviewDay" android:text="4" />
-            <TextView style="@style/WidgetPreviewDay" android:text="5" />
-            <TextView style="@style/WidgetPreviewDay" android:text="6" />
-            <TextView style="@style/WidgetPreviewDay" android:text="7" />
+            <TextView style="@style/WidgetPreviewDay" android:text="" />
+            <TextView style="@style/WidgetPreviewDay" android:text="" />
+            <TextView style="@style/WidgetPreviewDay" android:text="" />
+            <TextView style="@style/WidgetPreviewDay" android:text="" />
+            <TextView style="@style/WidgetPreviewDay.Low" android:text="1" />
+            <TextView style="@style/WidgetPreviewDay.Mid" android:text="2" />
+            <TextView style="@style/WidgetPreviewDay.High" android:text="3" />
 
-            <TextView style="@style/WidgetPreviewDay" android:text="8" />
-            <TextView style="@style/WidgetPreviewDay" android:text="9" />
-            <TextView style="@style/WidgetPreviewDay" android:text="10" />
-            <TextView style="@style/WidgetPreviewDay" android:text="11" />
-            <TextView style="@style/WidgetPreviewDay" android:text="12" />
+            <TextView style="@style/WidgetPreviewDay.Low" android:text="4" />
+            <TextView style="@style/WidgetPreviewDay.Mid" android:text="5" />
+            <TextView style="@style/WidgetPreviewDay.High" android:text="6" />
+            <TextView style="@style/WidgetPreviewDay.Low" android:text="7" />
+            <TextView style="@style/WidgetPreviewDay.Mid" android:text="8" />
+            <TextView style="@style/WidgetPreviewDay.High" android:text="9" />
+            <TextView style="@style/WidgetPreviewDay.Low" android:text="10" />
+
+            <TextView style="@style/WidgetPreviewDay.Mid" android:text="11" />
+            <TextView style="@style/WidgetPreviewDay.High" android:text="12" />
             <TextView style="@style/WidgetPreviewDay" android:text="13" />
             <TextView style="@style/WidgetPreviewDay" android:text="14" />
-
             <TextView style="@style/WidgetPreviewDay" android:text="15" />
             <TextView style="@style/WidgetPreviewDay" android:text="16" />
             <TextView style="@style/WidgetPreviewDay" android:text="17" />
+
             <TextView style="@style/WidgetPreviewDay" android:text="18" />
             <TextView style="@style/WidgetPreviewDay" android:text="19" />
             <TextView style="@style/WidgetPreviewDay" android:text="20" />
             <TextView style="@style/WidgetPreviewDay" android:text="21" />
-
             <TextView style="@style/WidgetPreviewDay" android:text="22" />
             <TextView style="@style/WidgetPreviewDay" android:text="23" />
             <TextView style="@style/WidgetPreviewDay" android:text="24" />
+
             <TextView style="@style/WidgetPreviewDay" android:text="25" />
             <TextView style="@style/WidgetPreviewDay" android:text="26" />
             <TextView style="@style/WidgetPreviewDay" android:text="27" />
             <TextView style="@style/WidgetPreviewDay" android:text="28" />
-
             <TextView style="@style/WidgetPreviewDay" android:text="29" />
             <TextView style="@style/WidgetPreviewDay" android:text="30" />
             <TextView style="@style/WidgetPreviewDay" android:text="31" />

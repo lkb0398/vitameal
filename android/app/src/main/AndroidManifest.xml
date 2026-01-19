@@ -13,7 +13,8 @@
         android:enableOnBackInvokedCallback="true">
         <receiver
             android:name="com.alldayproject.vitameal.widget.receiver.VitamealSmallWidgetReceiver"
-            android:exported="true">
+            android:exported="true"
+            android:label="@string/widget_small_name">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>

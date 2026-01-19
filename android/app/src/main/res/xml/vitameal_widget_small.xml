@@ -9,4 +9,7 @@
     android:targetCellWidth="2"
     android:targetCellHeight="2"
     android:widgetCategory="home_screen"
-    android:initialLayout="@layout/glance_default_loading_layout" />
+    android:initialLayout="@layout/glance_default_loading_layout"
+    android:previewLayout="@layout/preview_small_widget"
+    android:label="@string/widget_small_name"
+    android:description="@string/widget_small_desc"/>
