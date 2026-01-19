@@ -4,12 +4,14 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
 import 'package:vitameal/core/service/analytics_service.dart';
 import 'package:vitameal/domain/entity/post_entity.dart';
 import 'package:vitameal/presentation/post/view_model/post_view_model.dart';
 import 'package:vitameal/presentation/post/view_model/recipe_step_ui_model.dart';
 import 'package:vitameal/presentation/post/view_model/tag_view_model.dart';
+import 'package:vitameal/presentation/util/show_gray_snackbar.dart';
 
 class EditPost extends HookConsumerWidget {
   final PostEntity? initialPost;
@@ -85,12 +87,36 @@ class EditPost extends HookConsumerWidget {
               onPressed: isSubmitting.value
                   ? null
                   : () async {
-                      if (titleController.text.isEmpty) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text("제목을 입력해주세요.")),
-                        );
+                      // 1. 제목 입력 검사
+                      if (titleController.text.trim().isEmpty) {
+                        showGraySnackBar(context, "제목을 입력해주세요.");
                         return;
                       }
+
+                      // 2. 메인 이미지 유효성 검사
+                      if (selectedImage.value == null &&
+                          existingImageUrl.value == null) {
+                        showGraySnackBar(context, "대표 이미지를 등록해주세요.");
+                        return;
+                      }
+
+                      // 3. 레시피 각 단계(Step) 유효성 검사 [추가]
+                      // - 이미지(새 파일 혹은 기존 URL)가 없는 단계가 있는지 확인
+                      // - 설명(TextField)이 비어있는 단계가 있는지 확인
+                      bool hasInvalidStep = recipeSteps.value.any((step) {
+                        final bool hasNoImage =
+                            step.image == null && step.existingImageUrl == null;
+                        final bool hasNoDescription = step.controller.text
+                            .trim()
+                            .isEmpty;
+                        return hasNoImage || hasNoDescription;
+                      });
+
+                      if (hasInvalidStep) {
+                        showGraySnackBar(context, "모든 단계의 이미지와 설명을 등록해주세요.");
+                        return;
+                      }
+
                       isSubmitting.value = true;
                       try {
                         if (isEditMode) {
@@ -119,25 +145,6 @@ class EditPost extends HookConsumerWidget {
                           AnalyticsService.event(
                             'recipe_action',
                             p: {'action': 'create'},
-                          );
-                          allTagsAsync.when(
-                            loading: () {},
-                            error: (_, __) {},
-                            data: (tags) {
-                              final tagMap = {
-                                for (final tag in tags) tag.id: tag.name,
-                              };
-
-                              for (final tagId in selectedTagIds.value) {
-                                final tagName = tagMap[tagId];
-                                if (tagName != null) {
-                                  AnalyticsService.event(
-                                    'recipe_saved',
-                                    p: {'tag': tagName},
-                                  );
-                                }
-                              }
-                            },
                           );
                         }
                         if (context.mounted) context.pop();
@@ -186,14 +193,16 @@ class EditPost extends HookConsumerWidget {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Icon(
-                                    Icons.add,
-                                    size: 40,
-                                    color: vrc(context).imagePlusIcon,
+                                    PhosphorIcons.plus(),
+                                    size: 44,
+                                    color: vrc(context).border,
                                   ),
+                                  SizedBox(height: 8),
                                   Text(
-                                    "대표 이미지 추가",
+                                    '대표 이미지 추가',
                                     style: TextStyle(
-                                      color: vrc(context).imagePlusIcon,
+                                      color: vrc(context).hint,
+                                      fontSize: 13,
                                     ),
                                   ),
                                 ],

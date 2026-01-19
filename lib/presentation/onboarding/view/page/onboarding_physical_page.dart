@@ -19,14 +19,14 @@ class OnboardingPhysicalPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // 성별 : 사용자 선택값 (기본값 남성)
-    final selectedGender = useState<GenderType>(GenderType.male);
+    // 성별 : 사용자 선택값 (기본값 unknown)
+    final selectedGender = useState<GenderType>(GenderType.unknown);
 
     // 출생년도 : 사용자 입력값 받기 + 검증 메시지
     final birthyearController = useTextEditingController();
     String? validateBirthYear(String? value) {
       if (value == null || value.isEmpty) {
-        return '출생 연도를 입력해주세요.'; // 입력값 없을 때
+        return null; // 입력값 없을 때 (통과)
       }
       if (value.length != 4) {
         return '출생 연도는 4자리 숫자여야 해요.'; // 입력 형식 제한
@@ -45,7 +45,7 @@ class OnboardingPhysicalPage extends HookConsumerWidget {
     final heightController = useTextEditingController();
     String? validateHeight(String? value) {
       if (value == null || value.isEmpty) {
-        return '잘못된 숫자입니다.'; // 입력값 없을 때
+        return null; // 입력값 없을 때 (통과)
       }
       final height = double.tryParse(value);
       if (height == null) {
@@ -61,7 +61,7 @@ class OnboardingPhysicalPage extends HookConsumerWidget {
     final weightController = useTextEditingController();
     String? validateWeight(String? value) {
       if (value == null || value.isEmpty) {
-        return '잘못된 숫자입니다.'; // 입력값 없을 때
+        return null; // 입력값 없을 때 (통과)
       }
       final weight = double.tryParse(value);
       if (weight == null) {
@@ -73,20 +73,11 @@ class OnboardingPhysicalPage extends HookConsumerWidget {
       return null; // 통과
     }
 
-    // 버튼 활성화 여부
-    final isButtonEnabled = useState(false);
     useEffect(() {
       void listener() {
-        final birthYear = birthyearController.text.trim();
-        final height = heightController.text.trim();
-        final weight = weightController.text.trim();
-
-        final isValid =
-            validateBirthYear(birthYear) == null &&
-            validateHeight(height) == null &&
-            validateWeight(weight) == null;
-
-        isButtonEnabled.value = isValid;
+        birthyearController.text.trim();
+        heightController.text.trim();
+        weightController.text.trim();
       }
 
       birthyearController.addListener(listener);
@@ -124,13 +115,17 @@ class OnboardingPhysicalPage extends HookConsumerWidget {
         if (profile.weightKg != null) {
           weightController.text = profile.weightKg!.toString();
         }
-        isButtonEnabled.value = true;
       });
       return null;
     }, [isEditing, profileAsync]);
 
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          onPressed: context.pop,
+          icon: Icon(Icons.arrow_back_ios, color: fxc(context).textcolor200),
+        ),
+
         /// 단계 표시
         actions: [isEditing ? SizedBox.shrink() : ProgressText(page: "2")],
         actionsPadding: EdgeInsets.only(right: 26),
@@ -144,12 +139,23 @@ class OnboardingPhysicalPage extends HookConsumerWidget {
             children: [
               /// 설명
               isEditing
-                  ? Text(
-                      "내 정보 수정",
-                      style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                        color: vrc(context).text,
+                  ? Text.rich(
+                      TextSpan(
+                        style: TextStyle(
+                          fontSize: 22,
+                          color: vrc(context).text,
+                        ),
+                        children: [
+                          TextSpan(
+                            text: profileAsync.when(
+                              data: (profile) => "${profile?.nickname}",
+                              loading: () => "회원",
+                              error: (_, __) => "회원",
+                            ),
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          TextSpan(text: '님의\n기본 정보를 수정해주세요. (선택)'),
+                        ],
                       ),
                     )
                   : Text.rich(
@@ -168,7 +174,7 @@ class OnboardingPhysicalPage extends HookConsumerWidget {
                             ),
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
-                          TextSpan(text: '님!\n기본 정보를 입력해주세요.'),
+                          TextSpan(text: '님!\n기본 정보를 입력해주세요. (선택)'),
                         ],
                       ),
                     ),
@@ -182,7 +188,9 @@ class OnboardingPhysicalPage extends HookConsumerWidget {
                   Expanded(
                     flex: 1,
                     child: SelectBox(
-                      onTap: () async => selectedGender.value = GenderType.male,
+                      onTap: () async => selectedGender.value == GenderType.male
+                          ? selectedGender.value = GenderType.unknown
+                          : selectedGender.value = GenderType.male,
                       isSelected: selectedGender.value == GenderType.male,
                       text: "남성",
                       height: 50,
@@ -192,7 +200,9 @@ class OnboardingPhysicalPage extends HookConsumerWidget {
                     flex: 1,
                     child: SelectBox(
                       onTap: () async =>
-                          selectedGender.value = GenderType.female,
+                          selectedGender.value == GenderType.female
+                          ? selectedGender.value = GenderType.unknown
+                          : selectedGender.value = GenderType.female,
                       isSelected: selectedGender.value == GenderType.female,
                       text: "여성",
                       height: 50,
@@ -288,42 +298,49 @@ class OnboardingPhysicalPage extends HookConsumerWidget {
 
       /// 하단 버튼
       bottomNavigationBar: TapDebouncer(
-        onTap: isButtonEnabled.value
-            ? () async {
-                final gender = selectedGender.value;
-                final birthYear = int.parse(birthyearController.text.trim());
-                final heightCm = double.parse(heightController.text.trim());
-                final weightKg = double.parse(weightController.text.trim());
-                // 프로필 업데이트
-                await ref
-                    .read(onboardingViewModelProvider.notifier)
-                    .updateProfile(
-                      gender: gender,
-                      birthYear: birthYear,
-                      heightCm: heightCm,
-                      weightKg: weightKg,
-                    );
-                // mounted 체크
-                if (!context.mounted) return;
-                // 페이지 이동
-                isEditing
-                    ? context.push('/edit/disease')
-                    : context.push('/onboarding/disease');
-                // 📝
-                AnalyticsService.event(
-                  'profile_saved',
-                  p: {'gender': gender.name, 'birth_year': birthYear},
-                );
-              }
-            : null,
+        onTap: () async {
+          final gender = selectedGender.value;
+          final birthYear = birthyearController.text.trim();
+          final heightCm = heightController.text.trim();
+          final weightKg = weightController.text.trim();
+
+          // 입력값 잘못되었을 시 진행 막기 (입력값 없을 때는 가능)
+          if (validateBirthYear(birthYear) != null ||
+              validateHeight(heightCm) != null ||
+              validateWeight(weightKg) != null) {
+            return;
+          }
+
+          // 프로필 업데이트
+          await ref
+              .read(onboardingViewModelProvider.notifier)
+              .updatePhysical(
+                gender: gender,
+                birthYear: int.tryParse(birthYear),
+                heightCm: double.tryParse(heightCm),
+                weightKg: double.tryParse(weightKg),
+              );
+          // mounted 체크
+          if (!context.mounted) return;
+          // 페이지 이동
+          isEditing
+              ? context.push('/edit/disease')
+              : context.push('/onboarding/disease');
+          // 📝
+          AnalyticsService.event(
+            'profile_saved',
+            p: {
+              'gender': gender.name,
+              'birth_year': double.tryParse(birthYear) ?? "",
+            },
+          );
+        },
         builder: (BuildContext context, TapDebouncerFunc? onTap) {
           return Padding(
             padding: const EdgeInsets.only(bottom: 10),
             child: DoneButton(
               onTap: onTap,
-              backgroundColor: isButtonEnabled.value
-                  ? fxc(context).primary400!
-                  : fxc(context).textcolor300!,
+              backgroundColor: fxc(context).primary400!,
               text: "다음",
               textColor: Colors.white,
             ),

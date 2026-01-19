@@ -46,174 +46,114 @@ class MealCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
       onTap: onTap,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // 썸네일 영역
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                    child: Container(
-                      width: 96,
-                      height: 96,
-                      color: photoUrl == null ? Colors.black12 : null,
-                      child: photoUrl != null
-                          ? CachedNetworkImage(
-                              imageUrl: photoUrl!,
-                              fit: BoxFit.cover,
-                              fadeInDuration: const Duration(milliseconds: 200),
-                              fadeOutDuration: const Duration(milliseconds: 100),
-                              errorWidget: (_, __, ___) =>
-                                  const Center(child: Icon(Icons.image_not_supported_outlined, color: Colors.black26)),
-                            )
-                          : const Center(child: Icon(Icons.restaurant, size: 28, color: Colors.black26)),
-                    ),
-                  ),
-                  const SizedBox(width:16),
-                  // 우측 텍스트 영역
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            // 아침 점심 저녁 등 식단의 카테고리
-                            Text(
-                              _categoryLabel,
-                              style: TextStyle(
-                                color: vrc(context).text,
-                                fontSize: 16, fontWeight: FontWeight.w600),
-                            ),
-                            // 기록한 시간 있으면 출력
-                            if (_timeLabel.isNotEmpty) ...[
-                              const SizedBox(width: 8),
-                              Text(
-                                _timeLabel,
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w500,
-                                  color: vrc(context).hint,
-                                ),
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 15),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // 썸네일 영역
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: Container(
+                    width: 96,
+                    height: 96,
+                    color: photoUrl == null ? Colors.black12 : null,
+                    child: photoUrl != null
+                        ? CachedNetworkImage(
+                            imageUrl: photoUrl!,
+                            fit: BoxFit.cover,
+                            fadeInDuration: const Duration(milliseconds: 200),
+                            fadeOutDuration: const Duration(milliseconds: 100),
+                            errorWidget: (_, __, ___) => const Center(
+                              child: Icon(
+                                Icons.image_not_supported_outlined,
+                                color: Colors.black26,
                               ),
-                            ],
-                            const Spacer(),
-                            // 식단 자세히보기 이동 아이콘
-                            Icon(Icons.chevron_right, color: vrc(context).hint, size: 24),
-                          ],
-                        ),
-                        const SizedBox(height: 8),
-                        // 기록한 식단 내용 (미리보기 3줄)
-                        if (_hasContent)
-                          Text(
-                            content!.trim(),
-                            maxLines: 3,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(fontSize: 14, color: vrc(context).content, fontWeight: FontWeight.w500),
+                            ),
                           )
-                        else
-                          Text(
-                            '내용이 없습니다',
-                            style: TextStyle(fontSize: 14, color: vrc(context).content, fontWeight: FontWeight.w500)
+                        : const Center(
+                            child: Icon(
+                              Icons.restaurant,
+                              size: 28,
+                              color: Colors.black26,
+                            ),
                           ),
-                      ],
-                    ),
                   ),
-                ],
-              ),
+                ),
+                const SizedBox(width: 16),
+                // 우측 텍스트 영역
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          // 아침 점심 저녁 등 식단의 카테고리
+                          Text(
+                            _categoryLabel,
+                            style: TextStyle(
+                              color: vrc(context).text,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          // 기록한 시간 있으면 출력
+                          if (_timeLabel.isNotEmpty) ...[
+                            const SizedBox(width: 8),
+                            Text(
+                              _timeLabel,
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                                color: vrc(context).hint,
+                              ),
+                            ),
+                          ],
+                          const Spacer(),
+                          // 식단 자세히보기 이동 아이콘
+                          Icon(
+                            Icons.chevron_right,
+                            color: vrc(context).hint,
+                            size: 24,
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      // 기록한 식단 내용 (미리보기 3줄)
+                      if (_hasContent)
+                        Text(
+                          content!.trim(),
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: vrc(context).content,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        )
+                      else
+                        Text(
+                          '내용이 없습니다',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: vrc(context).content,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              ],
             ),
-            // 하단 구분선
-            const Divider(),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
-
-  // @override
-  // Widget build(BuildContext context) {
-  //   return InkWell(
-  //     onTap: onTap,
-  //     borderRadius: BorderRadius.circular(14),
-  //     child: Container(
-  //       margin: const EdgeInsets.fromLTRB(16, 0, 16, 10),
-  //       padding: const EdgeInsets.all(14),
-  //       decoration: BoxDecoration(
-  //         color: Colors.white,
-  //         border: Border.all(color: Colors.black12),
-  //         borderRadius: BorderRadius.circular(14),
-  //       ),
-  //       child: Row(
-  //         children: [
-  //           // 이미지 없으면 이미지 홀더
-  //           Container(
-  //             width: 44,
-  //             height: 44,
-  //             decoration: BoxDecoration(
-  //               color: photoUrl != null ? null : Colors.black12,
-  //               borderRadius: BorderRadius.circular(12),
-  //               image: photoUrl != null
-  //                   ? DecorationImage(
-  //                       image: NetworkImage(photoUrl!),
-  //                       fit: BoxFit.cover,
-  //                     )
-  //                   : null,
-  //             ),
-  //             child: photoUrl == null
-  //                 ? const Icon(Icons.restaurant, size: 20, color: Colors.black26)
-  //                 : null,
-  //           ),
-  //           const SizedBox(width: 12),
-  //           // 식단 카테고리, 먹은 시간 라벨
-  //           Expanded(
-  //             child: Column(
-  //               crossAxisAlignment: CrossAxisAlignment.start,
-  //               children: [
-  //                 Row(
-  //                   children: [
-  //                     Text(
-  //                       _categoryLabel,
-  //                       style: const TextStyle(
-  //                         fontWeight: FontWeight.w700,
-  //                         fontSize: 14,
-  //                       ),
-  //                     ),
-  //                     if (_timeLabel.isNotEmpty) ...[
-  //                       const SizedBox(width: 6),
-  //                       Text(
-  //                         '| $_timeLabel',
-  //                         style: const TextStyle(
-  //                           color: Colors.black45,
-  //                           fontSize: 13,
-  //                           fontWeight: FontWeight.w500,
-  //                         ),
-  //                       ),
-  //                     ],
-  //                   ],
-  //                 ),
-  //                 // 기록한 내용
-  //                 if (content != null && content!.isNotEmpty) ...[
-  //                   const SizedBox(height: 6),
-  //                   Text(
-  //                     content!,
-  //                     maxLines: 2,
-  //                     overflow: TextOverflow.ellipsis,
-  //                     style: const TextStyle(color: Colors.black54, fontSize: 13),
-  //                   ),
-  //                 ],
-  //               ],
-  //             ),
-  //           ),
-  //         ],
-  //       ),
-  //     ),
-  //   );
-  // }
 }

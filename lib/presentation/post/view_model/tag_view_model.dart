@@ -8,5 +8,9 @@ part 'tag_view_model.g.dart';
 
 @riverpod
 Future<List<TagEntity>> allTags(Ref ref) async {
-  return await ref.watch(postRepositoryProvider).fetchAllTags();
+  final repository = ref.watch(postRepositoryProvider);
+  final tags = await repository.fetchAllTags();
+
+  tags.sort((a, b) => a.name.compareTo(b.name));
+  return tags;
 }

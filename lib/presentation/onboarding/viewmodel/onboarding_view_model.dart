@@ -27,10 +27,6 @@ class OnboardingViewModel extends _$OnboardingViewModel {
   Future<void> updateProfile({
     String? nickname,
     String? photoUrl,
-    GenderType? gender,
-    int? birthYear,
-    double? heightCm,
-    double? weightKg,
     bool? onboardingCompleted,
   }) async {
     final userId = ref.read(userIdProvider);
@@ -41,11 +37,28 @@ class OnboardingViewModel extends _$OnboardingViewModel {
             userId: userId,
             nickname: nickname,
             photoUrl: photoUrl,
+            onboardingCompleted: onboardingCompleted,
+          ),
+        );
+    ref.invalidate(myProfileProvider);
+  }
+
+  Future<void> updatePhysical({
+    GenderType? gender,
+    int? birthYear,
+    double? heightCm,
+    double? weightKg,
+  }) async {
+    final userId = ref.read(userIdProvider);
+    await ref
+        .read(profilesRepositoryProvider)
+        .updatePhysical(
+          ProfilesEntity(
+            userId: userId,
             genderType: gender,
             birthYear: birthYear,
             heightCm: heightCm,
             weightKg: weightKg,
-            onboardingCompleted: onboardingCompleted,
           ),
         );
     ref.invalidate(myProfileProvider);

@@ -8,8 +8,9 @@ class AuthRepositoryImpl implements AuthRepository {
   AuthRepositoryImpl(this._dataSource);
 
   @override
-  Future<void> signInWithOAuth(OAuthProvider provider) async =>
-      await _dataSource.signInWithOAuth(provider);
+  Future<void> signInWithOAuth(OAuthProvider provider) async {
+    await _dataSource.signInWithOAuth(provider);
+  }
 
   @override
   Future<void> signOut() async => await _dataSource.signOut();

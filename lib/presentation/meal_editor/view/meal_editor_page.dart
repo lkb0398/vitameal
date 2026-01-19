@@ -15,9 +15,15 @@ import 'package:vitameal/presentation/meal_editor/view/widget/image_upload_card.
 import 'package:vitameal/presentation/meal_editor/view/widget/time_selector.dart';
 import 'package:vitameal/presentation/meal_editor/view_model/meal_editor_viewmodel.dart';
 import 'package:vitameal/presentation/util/show_gray_snackbar.dart';
+import 'package:vitameal/presentation/widget/dialog/custom_dialog.dart';
 
 class MealEditorPage extends HookConsumerWidget {
-  const MealEditorPage({super.key, this.mealEntryId, this.mealDayId, required this.date});
+  const MealEditorPage({
+    super.key,
+    this.mealEntryId,
+    this.mealDayId,
+    required this.date,
+  });
 
   final String? mealEntryId; // null이면 생성 모드
   final String? mealDayId;
@@ -140,16 +146,13 @@ class MealEditorPage extends HookConsumerWidget {
 
       final confirmed = await showDialog<bool>(
         context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('삭제 확인'),
-          content: const Text('이 식단 기록을 삭제하시겠습니까?'),
-          actions: [
-            TextButton(onPressed: () => Navigator.of(context).pop(false), child: const Text('취소')),
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(true),
-              child: const Text('삭제', style: TextStyle(color: Colors.red)),
-            ),
-          ],
+
+        builder: (context) => CustomDialog(
+          title: '이 식단 기록을 삭제할까요?',
+          cancelText: '취소',
+          confirmText: '삭제',
+          onConfirm: () => Navigator.pop(context, true),
+          confirmColor: fxc(context).primary400,
         ),
       );
 
@@ -196,7 +199,11 @@ class MealEditorPage extends HookConsumerWidget {
                 onPressed: deleteMeal,
                 child: Text(
                   "삭제",
-                  style: TextStyle(color: vrc(context).content, fontSize: 16, fontWeight: FontWeight.w500),
+                  style: TextStyle(
+                    color: vrc(context).content,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
             const SizedBox(width: 6),
@@ -212,7 +219,11 @@ class MealEditorPage extends HookConsumerWidget {
               children: [
                 Text(
                   "${date.year}년 ${date.month}월 ${date.day}일 식단",
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700, color: vrc(context).text),
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.w700,
+                    color: vrc(context).text,
+                  ),
                 ),
                 const SizedBox(height: 16),
 
@@ -230,7 +241,8 @@ class MealEditorPage extends HookConsumerWidget {
                 // 카테고리 선택
                 CategorySelector(
                   selectedCategory: selectedCategory.value,
-                  onCategoryChanged: (category) => selectedCategory.value = category,
+                  onCategoryChanged: (category) =>
+                      selectedCategory.value = category,
                 ),
 
                 const SizedBox(height: 22),
@@ -267,15 +279,26 @@ class MealEditorPage extends HookConsumerWidget {
                   backgroundColor: fxc(context).primary400,
                   foregroundColor: Colors.white,
                   elevation: 0,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
                 ),
                 child: isLoading.value
                     ? const SizedBox(
                         height: 20,
                         width: 20,
-                        child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: Colors.white,
+                        ),
                       )
-                    : const Text("완료", style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700)),
+                    : const Text(
+                        "완료",
+                        style: TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
               ),
             ),
           ),

@@ -10,7 +10,7 @@ import 'package:vitameal/presentation/util/show_gray_snackbar.dart';
 import 'package:vitameal/presentation/goal/view_model/goals_view_model.dart';
 import 'package:vitameal/presentation/ui_provider/goals_provider.dart';
 import 'package:vitameal/presentation/goal/view/function/pick_date.dart';
-import 'package:vitameal/presentation/widget/dialog/delete_dialog.dart';
+import 'package:vitameal/presentation/widget/dialog/custom_dialog.dart';
 import 'package:vitameal/presentation/widget/button/done_button.dart';
 import 'package:vitameal/presentation/widget/validate_textformfield.dart';
 
@@ -112,8 +112,8 @@ class AddGoalPage extends HookConsumerWidget {
                     showDialog(
                       context: context,
                       builder: (context) {
-                        return DeleteDialog(
-                          onDelete: () async {
+                        return CustomDialog(
+                          onConfirm: () async {
                             // 목표 삭제
                             await ref
                                 .read(goalsViewModelProvider.notifier)
@@ -131,6 +131,9 @@ class AddGoalPage extends HookConsumerWidget {
                               p: {'action': 'delete'},
                             );
                           },
+                          title: '정말 삭제할까요?',
+                          confirmText: '삭제',
+                          cancelText: '취소',
                         );
                       },
                     );

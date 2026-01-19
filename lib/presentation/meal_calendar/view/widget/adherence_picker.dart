@@ -4,7 +4,12 @@ import 'package:vitameal/core/theme/app_theme.dart';
 
 class AdherencePicker extends StatelessWidget {
   /// 성취도 자가평가 선택
-  const AdherencePicker({super.key, required this.selectedDay, required this.adherence, required this.onPick});
+  const AdherencePicker({
+    super.key,
+    required this.selectedDay,
+    required this.adherence,
+    required this.onPick,
+  });
 
   final DateTime selectedDay;
   final Color? adherence;
@@ -13,11 +18,19 @@ class AdherencePicker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 10),
+      padding: const EdgeInsets.fromLTRB(0, 20, 0, 24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("오늘 식단을 평가해주세요", style: TextStyle(fontSize: 14, color: vrc(context).text)),
+          Row(
+            children: [
+              SizedBox(width: 2),
+              Text(
+                "오늘 식단을 평가해주세요",
+                style: TextStyle(fontSize: 13.5, color: vrc(context).content),
+              ),
+            ],
+          ),
           const SizedBox(height: 10),
           Row(
             children: [
@@ -52,7 +65,6 @@ class AdherencePicker extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 10),
         ],
       ),
     );
@@ -101,18 +113,27 @@ class _AdherenceChip extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
           decoration: ShapeDecoration(
             color: bg,
-            shape: StadiumBorder(side: BorderSide(color: borderColor, width: 2)),
+            shape: StadiumBorder(
+              side: BorderSide(color: borderColor, width: 2),
+            ),
           ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                label,
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: color),
-              ),
-              const SizedBox(width: 6),
-              Icon(icon, size: 18, color: color),
-            ],
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  label,
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                    color: color,
+                  ),
+                ),
+                const SizedBox(width: 6),
+                Icon(icon, size: 18, color: color),
+              ],
+            ),
           ),
         ),
       ),

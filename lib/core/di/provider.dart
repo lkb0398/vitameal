@@ -290,5 +290,8 @@ WidgetBridge widgetBridge(Ref ref) {
 WidgetService widgetService(Ref ref) {
   final mealRepository = ref.watch(mealRepositoryProvider);
   final widgetBridge = ref.watch(widgetBridgeProvider);
-  return WidgetService(mealRepository: mealRepository, widgetBridge: widgetBridge);
+  return WidgetService(
+    mealRepository: mealRepository,
+    widgetBridge: widgetBridge,
+  );
 }

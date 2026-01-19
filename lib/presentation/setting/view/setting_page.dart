@@ -4,8 +4,8 @@ import 'package:vitameal/core/service/analytics_service.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
 import 'package:vitameal/presentation/auth/view_model/auth_view_model.dart';
 import 'package:go_router/go_router.dart';
-import 'package:vitameal/presentation/setting/view/widgets/custom_dialog.dart';
 import 'package:vitameal/presentation/setting/view/widgets/menu_item.dart';
+import 'package:vitameal/presentation/widget/dialog/custom_dialog.dart';
 
 class SettingPage extends HookConsumerWidget {
   const SettingPage({super.key});
@@ -73,7 +73,6 @@ class SettingPage extends HookConsumerWidget {
                       cancelText: "취소",
                       confirmText: "확인",
                       confirmColor: themeFxc.secondary400,
-                      onCancel: () => Navigator.pop(context),
                       onConfirm: () async {
                         Navigator.pop(context);
                         await ref.read(authViewModelProvider.notifier).logout();
@@ -93,13 +92,12 @@ class SettingPage extends HookConsumerWidget {
                     context: context,
                     builder: (context) => CustomDialog(
                       title: "정말 탈퇴하시겠습니까?",
-                      titleFontFamily: 'Inter',
                       content: "탈퇴 시 데이터가 모두 삭제되며 복구되지 않습니다.",
-                      cancelText: "탈퇴하기",
-                      confirmText: "유지하기",
+                      cancelText: "유지하기",
+                      confirmText: "탈퇴하기",
                       confirmColor: themeFxc.primary400,
                       reverseButtons: true,
-                      onCancel: () async {
+                      onConfirm: () async {
                         Navigator.pop(context);
                         await ref
                             .read(authViewModelProvider.notifier)
@@ -115,7 +113,6 @@ class SettingPage extends HookConsumerWidget {
                         // 📝
                         AnalyticsService.event('withdraw');
                       },
-                      onConfirm: () => Navigator.pop(context),
                     ),
                   );
                 },

@@ -3,6 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
 import 'package:vitameal/domain/entity/meal_analysis_entity.dart';
+import 'package:vitameal/presentation/meal_calendar/view/util/link_launcher.dart';
 
 class AiAnalysisDetailDialog extends HookWidget {
   /// AI 분석 자세히 보기 대화상자
@@ -46,7 +47,7 @@ class AiAnalysisDetailDialog extends HookWidget {
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: vrc(context).text
+                      color: vrc(context).text,
                     ),
                   ),
                   IconButton(
@@ -67,14 +68,22 @@ class AiAnalysisDetailDialog extends HookWidget {
                       itemBuilder: (context, index) {
                         final feedback = conditionFeedbacks[index];
                         return Padding(
-                          padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
+                          padding: const EdgeInsets.only(
+                            left: 20,
+                            right: 20,
+                            bottom: 20,
+                          ),
                           child: _ConditionFeedbackPage(feedback: feedback),
                         );
                       },
                     )
                   : const Center(
                       child: Padding(
-                        padding: EdgeInsets.only(left: 20, right: 20, bottom: 20),
+                        padding: EdgeInsets.only(
+                          left: 20,
+                          right: 20,
+                          bottom: 20,
+                        ),
                         child: Text(
                           '기저질환 피드백이 없습니다',
                           style: TextStyle(color: Colors.grey),
@@ -153,21 +162,33 @@ class _ConditionFeedbackPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 8),
-            ...feedback.points.map((point) => Padding(
-                  padding: const EdgeInsets.only(bottom: 6),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('• ', style: TextStyle(fontSize: 14, color: vrc(context).content)),
-                      Expanded(
-                        child: Text(
-                          point,
-                          style: TextStyle(fontSize: 13, height: 1.4, color: vrc(context).content),
+            ...feedback.points.map(
+              (point) => Padding(
+                padding: const EdgeInsets.only(bottom: 6),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '• ',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: vrc(context).content,
+                      ),
+                    ),
+                    Expanded(
+                      child: Text(
+                        point,
+                        style: TextStyle(
+                          fontSize: 13,
+                          height: 1.4,
+                          color: vrc(context).content,
                         ),
                       ),
-                    ],
-                  ),
-                )),
+                    ),
+                  ],
+                ),
+              ),
+            ),
             const SizedBox(height: 20),
           ],
 
@@ -182,48 +203,59 @@ class _ConditionFeedbackPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 8),
-            ...feedback.suggestions.map((suggestion) => Container(
-                  margin: const EdgeInsets.only(bottom: 12),
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: vrc(context).dlgSurface,
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: vrc(context).dlgBorder!),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        suggestion.title,
-                        style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                          color: vrc(context).text,
-                        ),
+            ...feedback.suggestions.map(
+              (suggestion) => Container(
+                margin: const EdgeInsets.only(bottom: 12),
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: vrc(context).dlgSurface,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: vrc(context).dlgBorder!),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      suggestion.title,
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        color: vrc(context).text,
                       ),
-                      const SizedBox(height: 4),
-                      Text(
-                        suggestion.detail,
-                        style: TextStyle(
-                          fontSize: 12,
-                          height: 1.4,
-                          color: vrc(context).content,
-                        ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      suggestion.detail,
+                      style: TextStyle(
+                        fontSize: 12,
+                        height: 1.4,
+                        color: vrc(context).content,
                       ),
-                    ],
-                  ),
-                )),
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ],
 
-          // 신뢰도
-          const SizedBox(height: 12),
+          // 출처 및 건강 정보 안내
+          const SizedBox(height: 20),
           Row(
             children: [
               const Icon(Icons.info_outline, size: 14, color: Colors.grey),
               const SizedBox(width: 4),
-              Text(
-                '신뢰도: ${(feedback.confidence * 100).toStringAsFixed(0)}%',
-                style: const TextStyle(fontSize: 11, color: Colors.grey),
+              TextButton(
+                onPressed: LinkLauncher.openNotion,
+                style: TextButton.styleFrom(
+                  padding: EdgeInsets.zero,
+                  minimumSize: Size.zero,
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                ),
+                child: Text(
+                  // '신뢰도: ${(feedback.confidence * 100).toStringAsFixed(0)}%',
+                  '출처 및 건강 정보 관련 안내 (외부 링크)',
+                  style: const TextStyle(fontSize: 11, color: Colors.grey),
+                ),
               ),
             ],
           ),
@@ -235,10 +267,7 @@ class _ConditionFeedbackPage extends StatelessWidget {
 
 /// 페이지 인디케이터
 class _PageIndicator extends StatelessWidget {
-  const _PageIndicator({
-    required this.pageCount,
-    required this.currentPage,
-  });
+  const _PageIndicator({required this.pageCount, required this.currentPage});
 
   final int pageCount;
   final int currentPage;
@@ -254,7 +283,9 @@ class _PageIndicator extends StatelessWidget {
           width: index == currentPage ? 24 : 8,
           height: 8,
           decoration: BoxDecoration(
-            color: index == currentPage ? const Color(0xFF7ED321) : Colors.grey[300],
+            color: index == currentPage
+                ? const Color(0xFF7ED321)
+                : Colors.grey[300],
             borderRadius: BorderRadius.circular(4),
           ),
         ),

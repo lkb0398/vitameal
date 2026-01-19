@@ -4,7 +4,6 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:tap_debouncer/tap_debouncer.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
 import 'package:vitameal/data/data_source/profiles_data_source.dart';
@@ -19,11 +18,12 @@ class OnboardingProfilePage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    print('my userId : 🩷 ${Supabase.instance.client.auth.currentUser!.id}');
+    print('my userId : 🩷 ${ref.read(userIdProvider)}');
 
     // 프로필 사진 : 사용자 갤러리에서 사진 가져오기
     final selectedImage = useState<File?>(null);
     final imageUrl = useState<String?>(null);
+    final isUploadingImage = useState(false);
     Future<void> pickFromGallery() async {
       final picker = ImagePicker();
       final image = await picker.pickImage(
@@ -33,10 +33,15 @@ class OnboardingProfilePage extends HookConsumerWidget {
       if (image == null) return;
       final file = File(image.path);
       selectedImage.value = file;
-      final url = await ref
-          .read(onboardingViewModelProvider.notifier)
-          .uploadProfileImage(file);
-      imageUrl.value = url;
+      isUploadingImage.value = true; // 업로드 시작
+      try {
+        final url = await ref
+            .read(onboardingViewModelProvider.notifier)
+            .uploadProfileImage(file);
+        imageUrl.value = url;
+      } finally {
+        isUploadingImage.value = false; // 업로드 종료
+      }
     }
 
     // 버튼 활성화 여부
@@ -103,6 +108,11 @@ class OnboardingProfilePage extends HookConsumerWidget {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
+        leading: IconButton(
+          onPressed: context.pop,
+          icon: Icon(Icons.arrow_back_ios, color: fxc(context).textcolor200),
+        ),
+
         /// 단계 표시
         actions: [isEditing ? SizedBox.shrink() : ProgressText(page: "1")],
         actionsPadding: EdgeInsets.only(right: 26),
@@ -115,61 +125,101 @@ class OnboardingProfilePage extends HookConsumerWidget {
             spacing: 10,
             children: [
               /// 설명
-              isEditing
-                  ? Text(
-                      "프로필 수정",
+              Text.rich(
+                TextSpan(
+                  style: TextStyle(fontSize: 22, color: vrc(context).text),
+                  children: [
+                    TextSpan(
+                      text: 'VitaMeal',
                       style: TextStyle(
-                        fontSize: 22,
                         fontWeight: FontWeight.bold,
-                        color: vrc(context).text,
-                      ),
-                    )
-                  : Text.rich(
-                      TextSpan(
-                        style: TextStyle(
-                          fontSize: 22,
-                          color: vrc(context).text,
-                        ),
-                        children: [
-                          TextSpan(
-                            text: 'VitaMeal',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: fxc(context).primary400,
-                            ),
-                          ),
-                          TextSpan(text: '에서 사용할\n'),
-                          TextSpan(
-                            text: '프로필',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          TextSpan(text: '을 설정해주세요.'),
-                        ],
+                        color: fxc(context).primary400,
                       ),
                     ),
+                    TextSpan(text: '에서 사용할\n'),
+                    TextSpan(
+                      text: '프로필',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    TextSpan(text: '을 '),
+                    TextSpan(text: isEditing ? '수정' : '설정'),
+                    TextSpan(text: '해주세요.'),
+                  ],
+                ),
+              ),
               SizedBox(height: 30),
 
               /// 프로필 이미지
               Center(
                 child: InkWell(
-                  onTap: () => pickFromGallery(),
-                  child: imageUrl.value == null
+                  onTap: isUploadingImage.value
+                      ? null
+                      : () => pickFromGallery(),
+                  child: isUploadingImage.value
+                      ? SizedBox(
+                          height: 148,
+                          width: 148,
+                          child: Center(
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: fxc(context).primary400,
+                            ),
+                          ),
+                        )
+                      : imageUrl.value == null
                       ? Image.asset(
                           'assets/images/profile_image_l.webp',
                           height: 148,
                           width: 148,
                           fit: BoxFit.cover,
                         )
-                      : ClipRRect(
-                          borderRadius: BorderRadius.circular(300),
-                          child: SizedBox(
-                            height: 148,
-                            width: 148,
-                            child: Image.network(
-                              imageUrl.value!,
-                              fit: BoxFit.cover,
+                      : Stack(
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(300),
+                              child: SizedBox(
+                                height: 148,
+                                width: 148,
+                                child: Image.network(
+                                  imageUrl.value!,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
                             ),
-                          ),
+
+                            /// 삭제 버튼
+                            Positioned(
+                              right: 0,
+                              bottom: 0,
+                              child: InkWell(
+                                onTap: () async {
+                                  await ref
+                                      .read(
+                                        onboardingViewModelProvider.notifier,
+                                      )
+                                      .updateProfile(photoUrl: null);
+                                  imageUrl.value = null;
+                                },
+                                child: Container(
+                                  height: 44,
+                                  width: 44,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(100),
+                                    border: Border.all(
+                                      color: vrc(context).border!,
+                                      width: 2,
+                                    ),
+                                    color: fxc(context).textcolor200,
+                                  ),
+                                  child: Icon(
+                                    Icons.clear,
+                                    size: 20,
+                                    color: fxc(context).textcolor400,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                 ),
               ),

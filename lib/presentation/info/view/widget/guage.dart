@@ -63,11 +63,11 @@ class Guage extends StatelessWidget {
             alignment: Alignment.center,
             children: [
               CustomPaint(
-                size: Size(220, 110), // width (반원 크기 조절), height
+                size: Size(220, 130), // width (반원 크기 조절), height
                 painter: GaugePainter(context, percent),
               ),
               Positioned(
-                top: 60,
+                top: 80,
                 child: Text(
                   '${(percent * 100).round()}%',
                   style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),

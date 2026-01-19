@@ -1,7 +1,7 @@
 name: vitameal
 description: "A new Flutter project."
-publish_to: 'none'
-version: 0.1.0
+publish_to: "none"
+version: 0.1.0+2
 
 environment:
   sdk: ^3.9.2
@@ -49,8 +49,7 @@ dependencies:
   url_launcher: ^6.3.2
   kakao_flutter_sdk_user: ^1.10.0
   flutter_dotenv: ^6.0.0
-
-
+  flutter_web_auth_2: ^5.0.0
 
 dev_dependencies:
   flutter_test:
@@ -62,14 +61,26 @@ dev_dependencies:
   change_app_package_name: ^1.5.0
   drift_dev: ^2.25.0
   flutter_launcher_icons: ^0.14.4
+  flutter_native_splash: ^2.4.7
+
+flutter_native_splash:
+  color: "#FFFFFF"
+  image: assets/images/splash_logo.png
+
+  android: true
+  ios: true
+  web: false
+
+  # Android 12+ 시스템 스플래시 대응
+  android_12:
+    color: "#FFFFFF"
+    image: assets/images/splash_logo.png
 
 flutter:
   uses-material-design: true
   assets:
     - assets/images/
     - .env
-
-
 # dependencies:
 #   flutter:
 #     sdk: flutter
