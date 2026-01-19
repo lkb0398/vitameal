@@ -134,7 +134,6 @@ class MealCard extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 14,
                             color: vrc(context).content,
-                            fontWeight: FontWeight.w500,
                           ),
                         )
                       else
@@ -143,7 +142,6 @@ class MealCard extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 14,
                             color: vrc(context).content,
-                            fontWeight: FontWeight.w500,
                           ),
                         ),
                     ],
