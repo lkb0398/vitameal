@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="widget_config_header_bg">#F8F8F8</color>
+
+    <color name="white">#FFFFFF</color>
+    <color name="grey200">#EEEEEE</color>
+    <color name="grey300">#E0E0E0</color>
+    <color name="grey400">#BDBDBD</color>
+    <color name="grey500">#9E9E9E</color>
+    <color name="primary400">#89CC00</color>
+</resources>

@@ -1,0 +1,15 @@
+<!-- 안드로이드 홈 화면 위젯의 메타데이터 -->
+<!-- resizeMode = none 이면 사용자가 크기 못 늘림 -->
+<!-- initialLayout = glance가 그려지기 전 보여질 레이아웃 -->
+<!-- minW/H = 런처가 크기 계산하는데 사용하는 힌트, 이 값을 보고 2x2, 4x4 등 사이즈가 결정됨 -->
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:minWidth="110dp"
+    android:minHeight="110dp"
+    android:resizeMode="none"
+    android:targetCellWidth="2"
+    android:targetCellHeight="2"
+    android:widgetCategory="home_screen"
+    android:initialLayout="@layout/glance_default_loading_layout"
+    android:previewLayout="@layout/preview_small_widget"
+    android:label="@string/widget_small_name"
+    android:description="@string/widget_small_desc"/>
