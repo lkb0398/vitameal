@@ -163,6 +163,29 @@ class VitamealApp extends HookConsumerWidget {
       themeMode: ThemeMode.system,
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
+      builder: (context, child) {
+        /* 안드로이드 환경 라이트 모드에서 초기에 상태바 색깔 회색으로 나오는 현상 해결 */
+
+        final bg = Theme.of(context).scaffoldBackgroundColor;
+        // 이 값은 OS 테마 변경 시 자동으로 갱신
+        final platformBrightness = MediaQuery.platformBrightnessOf(context);
+        final isLight =
+            ThemeData.estimateBrightnessForColor(bg) == Brightness.light;
+
+        SystemChrome.setSystemUIOverlayStyle(
+          SystemUiOverlayStyle(
+            statusBarColor: bg,
+            statusBarIconBrightness: isLight
+                ? Brightness.dark
+                : Brightness.light, // Android
+            statusBarBrightness: platformBrightness == Brightness.dark
+                ? Brightness.dark
+                : Brightness.light, // iOS 관례
+          ),
+        );
+
+        return child!;
+      },
     );
   }
 }

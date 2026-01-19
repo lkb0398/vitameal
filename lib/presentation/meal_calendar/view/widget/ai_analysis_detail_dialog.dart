@@ -253,7 +253,7 @@ class _ConditionFeedbackPage extends StatelessWidget {
                 ),
                 child: Text(
                   // '신뢰도: ${(feedback.confidence * 100).toStringAsFixed(0)}%',
-                  '출처 및 건강 정보 관련 안내 (외부 링크)',
+                  '출처 및 건강정보 관련 안내 (외부 링크)',
                   style: const TextStyle(fontSize: 11, color: Colors.grey),
                 ),
               ),

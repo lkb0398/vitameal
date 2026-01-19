@@ -26,12 +26,12 @@ class AppTheme {
       seedColor: Color(0xFF89CC00), // primary400
     ),
     appBarTheme: AppBarTheme(
-      backgroundColor: Color(0xFF242424),
+      backgroundColor: Color(0xFF333333),
       scrolledUnderElevation: 0,
     ),
-    scaffoldBackgroundColor: Color(0xFF242424),
-    bottomSheetTheme: BottomSheetThemeData(backgroundColor: Color(0xFF242424)),
-    dialogTheme: DialogThemeData(backgroundColor: Color(0xFF242424)),
+    scaffoldBackgroundColor: Color(0xFF333333),
+    bottomSheetTheme: BottomSheetThemeData(backgroundColor: Color(0xFF333333)),
+    dialogTheme: DialogThemeData(backgroundColor: Color(0xFF333333)),
     extensions: const [VariableColors.dark, FixedColors.constant],
   );
 }

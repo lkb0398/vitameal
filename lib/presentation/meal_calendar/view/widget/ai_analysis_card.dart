@@ -7,6 +7,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
 import 'package:vitameal/domain/constants/analysis_policy.dart';
+import 'package:vitameal/presentation/meal_calendar/view/util/link_launcher.dart';
 import 'package:vitameal/presentation/util/show_gray_snackbar.dart';
 
 class AiAnalysisCard extends HookConsumerWidget {
@@ -194,6 +195,25 @@ class AiAnalysisCard extends HookConsumerWidget {
               Text(
                 '본 분석은 AI가 제공하는 일반적인 건강 정보이며, 의료적 진단이나 치료를 대체하지 않습니다.',
                 style: TextStyle(fontSize: 11.5, color: vrc(context).hint),
+              ),
+              const SizedBox(height: 4),
+              Row(
+                children: [
+                  const Icon(Icons.info_outline, size: 14, color: Colors.grey),
+                  const SizedBox(width: 4),
+                  TextButton(
+                    onPressed: LinkLauncher.openNotion,
+                    style: TextButton.styleFrom(
+                      padding: EdgeInsets.zero,
+                      minimumSize: Size.zero,
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    ),
+                    child: Text(
+                      '출처 및 건강정보 관련 안내 (외부 링크)',
+                      style: const TextStyle(fontSize: 11, color: Colors.grey),
+                    ),
+                  ),
+                ],
               ),
             ],
           ] else
