@@ -170,54 +170,6 @@ VitaMeal은 사용자의 건강 상태와 식습관을 바탕으로 최적의 �
 
 ## 📂 프로젝트 구조
 <pre>
-lib/                      
- ㄴ core/
-     ㄴ config/   
-     ㄴ di/               
-     ㄴ services/               
-     ㄴ theme/ 
-     ㄴ util/                             
- ㄴ data/
-     ㄴ data_source/      
-         ㄴ local/
-         ㄴ remote/                 
-     ㄴ data_source_impl/  
-         ㄴ local/
-         ㄴ remote/   
-     ㄴ database/         
-     ㄴ dto/           
-         ㄴ local_cache_dto/               
-     ㄴ mapper/                        
-     ㄴ repository_impl/   
-     ㄴ util/     
-         ㄴ extension/       
- ㄴ domain/
-     ㄴ entity/   
-     ㄴ enum/                    
-     ㄴ repository/                   
-     ㄴ usecase/                        
- ㄴ presentation/
-     ㄴ core/util/                      
-     ㄴ view/                          
-         ㄴ pages/
-             ㄴ home/   
-             ㄴ login/            
-             ㄴ meal/               
-             ㄴ notification/           
-             ㄴ post/
-             ㄴ post_detail/
-             ㄴ post_editor
-             ㄴ schedule/
-             ㄴ school/
-             ㄴ splash/
-             ㄴ time_table/
-         ㄴ widgets/ 
-     ㄴ view_model/    
- ㄴ main         
-test/      
-assets/     
-README.md  
-</pre>
 vitameal/
 ├── .vscode/
 │   └── extensions.json
@@ -287,6 +239,8 @@ vitameal/
 ├── flutter_launcher_icons.yaml (아이콘 설정)
 ├── pubspec.yaml (의존성 관리)
 └── README.md
+</pre>
+
 <br/>
 
 ## 📝 커밋 컨벤션
