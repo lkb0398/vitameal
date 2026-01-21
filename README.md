@@ -37,59 +37,22 @@ VitaMeal은 사용자의 건강 상태와 식습관을 바탕으로 최적의 �
 <br/>
 
 ## 📌 주요 기능
- - 내가 먹을 식단을 관리 할 수 있습니다.
- - AI 기능을 통해 내가 먹은 식단 분석이 가능합니다.
- - 식단에 점수를 매겨, 건강한 식습관을 갖을 수 있습니다.
- - 레시피를 등록하여 다른 사람과 공유할 수 있습니다.
- - 건강을 위한 목표 설정이 가능하고, 그래프를 통해 쉽게 파악 할 수 있습니다.
- - 
-
+1. AI 질병별 식단 피드백
+    - 식단 기록만 하면, AI가 내 건강정보를 반영해 질병/상태별 맞춤 식단 피드백을 제공합니다.
+    - 주의 식품 · 추천 식품 · 개선 포인트를 한눈에 확인하세요.
+2. 건강 목표 설정 & 데이터 그래프 관리
+    - 나만의 건강 목표를 설정하고, 목표에 필요한 데이터를 직접 기록해 그래프로 추적할 수 있어요.
+    - 변화 흐름을 보며 꾸준한 관리 루틴을 만들 수 있습니다.
+3. 건강 레시피 등록 & 공유
+    - 내가 만든 건강 레시피를 등록하고 다른 사용자와 공유할 수 있어요.
+    - 즐겨찾기로 자주 보는 레시피를 모으고, 내가 작성한 레시피도 손쉽게 관리합니다.
+4. 위젯 캘린더로 식단 한눈에 보기
+    - 작은 위젯부터 큰 위젯까지, 원하는 사이즈로 설정해 내 식단을 캘린더 형태의 위젯에서 빠르게 확인할 수 있어요.
+    - 앱을 열지 않아도 오늘의 기록을 즉시 체크.
 
 <br/>
 
 ## 🛠️ 기술 스택
-
-분류,기술,상세 설명
-Framework,Flutter,크로스플랫폼 프레임워크
-Language,Dart,프로그래밍 언어
-Architecture,Clean Architecture,"의존성 역전, 도메인 중심 설계"
-분류,기술,상세 설명
-State Management,Riverpod,"전역 상태 관리, DI, Compile-time safety"
-Hooks,flutter_hooks,위젯 생명주기 관리 및 로직 간결화
-Data Modeling,Freezed,Immutable 데이터 모델링
-Serialization,JSON Serializable,API/DB 데이터 직렬화 자동화
-분류,기술,상세 설명
-Backend (BaaS),Supabase,"Auth(OAuth), PostgreSQL, Storage, RPC"
-Local DB,Drift (SQLite),로컬 SQLite DB 추상화 및 복잡한 쿼리 처리
-Storage,Shared Preferences,언어 및 간단한 설정값 저장
-Connectivity,connectivity_plus,실시간 네트워크 연결 상태 감지
-분류,기술,상세 설명
-Routing,Go Router,선언형 라우팅 및 인증 기반 화면 분기
-Localization,intl / ARB,한국어/영어 다국어 지원 (재시작 없이 반영)
-Deep Link,url_launcher,외부 링크 및 출처 페이지 연결
-분류,기술,상세 설명
-Push Notification,Firebase Messaging,FCM 푸시 알림 (FG/BG)
-Local Notify,flutter_local_notifications,로컬 알림 처리
-Crash Report,Firebase Crashlytics,런타임 크래시 분석
-Analytics,Firebase Analytics,사용자 행동 분석 및 트래킹
-분류,기술,상세 설명
-Visualization,fl_chart,건강 데이터 시각화 그래프
-Calendar,table_calendar,캘린더 UI 구현
-Icons,flutter_svg / phosphor_flutter,SVG 및 포스포 아이콘 라이브러리
-Image Process,Image Picker / Compress,이미지 선택 및 용량 최적화
-Image Cache,cached_network_image,네트워크 이미지 캐싱 개선
-Components,dropdown_button2 / slidable,커스텀 드롭다운 및 스와이프 UI
-Splash,flutter_native_splash,네이티브 스플래시 구성
-분류,기술,상세 설명
-AI,OpenAI API,기저질환 반영 AI 식단 분석
-Social Auth,Kakao / Web Auth 2,카카오 로그인 및 OAuth 인증
-Home Widget,home_widget,OS 홈 위젯 데이터 연동
-Environment,flutter_dotenv,환경변수(.env) 관리
-Code Gen,build_runner,코드 생성 자동화
-
-<!-- ================================== -->
-
-## 🛠 Tech Stack
 
 ### 🏗️ Architecture & Language
 | 분류 | 기술 | 상세 설명 |
