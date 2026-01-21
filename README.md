@@ -116,6 +116,7 @@ VitaMeal은 사용자의 건강 상태와 식습관을 바탕으로 최적의 �
 
 ## 📖 라이브러리
 
+<pre>
 ### Dependencies
   flutter_hooks: ^0.21.3+1
   freezed_annotation: ^3.1.0
@@ -165,6 +166,7 @@ VitaMeal은 사용자의 건강 상태와 식습관을 바탕으로 최적의 �
   change_app_package_name: ^1.5.0
   drift_dev: ^2.25.0
   flutter_native_splash: ^2.4.7
+</pre>
 
 <br/>
 
