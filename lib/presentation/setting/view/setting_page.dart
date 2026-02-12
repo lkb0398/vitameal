@@ -99,6 +99,7 @@ class SettingPage extends HookConsumerWidget {
                       confirmColor: themeFxc.primary400,
                       reverseButtons: true,
                       onConfirm: () async {
+                        Navigator.pop(context);
                         await ref
                             .read(authViewModelProvider.notifier)
                             .withdraw(
@@ -106,8 +107,6 @@ class SettingPage extends HookConsumerWidget {
                                 showGraySnackBar(context, l.withdraw_error);
                               },
                             );
-                        if (!context.mounted) return;
-                        Navigator.pop(context);
                         // 📝
                         AnalyticsService.event('withdraw');
                       },
