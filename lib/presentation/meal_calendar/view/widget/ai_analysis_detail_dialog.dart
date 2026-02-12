@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
+import 'package:vitameal/core/config/l10n/l10n.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
 import 'package:vitameal/domain/entity/meal_analysis_entity.dart';
 import 'package:vitameal/presentation/meal_calendar/view/util/link_launcher.dart';
@@ -13,6 +14,8 @@ class AiAnalysisDetailDialog extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = L10n.of(context)!; // 🌎
+
     final pageController = usePageController();
     final currentPage = useState(0);
 
@@ -43,7 +46,7 @@ class AiAnalysisDetailDialog extends HookWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    '기저질환별 피드백',
+                    l.feedback,
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -77,7 +80,7 @@ class AiAnalysisDetailDialog extends HookWidget {
                         );
                       },
                     )
-                  : const Center(
+                  : Center(
                       child: Padding(
                         padding: EdgeInsets.only(
                           left: 20,
@@ -85,7 +88,7 @@ class AiAnalysisDetailDialog extends HookWidget {
                           bottom: 20,
                         ),
                         child: Text(
-                          '기저질환 피드백이 없습니다',
+                          l.no_condition_feedback,
                           style: TextStyle(color: Colors.grey),
                         ),
                       ),
@@ -118,6 +121,8 @@ class _ConditionFeedbackPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = L10n.of(context)!; // 🌎
+
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -154,7 +159,7 @@ class _ConditionFeedbackPage extends StatelessWidget {
           // 주요 포인트
           if (feedback.points.isNotEmpty) ...[
             Text(
-              '주요 포인트',
+              l.key_points,
               style: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.bold,
@@ -195,7 +200,7 @@ class _ConditionFeedbackPage extends StatelessWidget {
           // 개선 제안
           if (feedback.suggestions.isNotEmpty) ...[
             Text(
-              '개선 제안',
+              l.suggestions,
               style: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.bold,
@@ -253,7 +258,7 @@ class _ConditionFeedbackPage extends StatelessWidget {
                 ),
                 child: Text(
                   // '신뢰도: ${(feedback.confidence * 100).toStringAsFixed(0)}%',
-                  '출처 및 건강정보 관련 안내 (외부 링크)',
+                  l.source_info,
                   style: const TextStyle(fontSize: 11, color: Colors.grey),
                 ),
               ),

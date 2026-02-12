@@ -322,45 +322,85 @@ final class DiseasesListProvider
 
 String _$diseasesListHash() => r'cb398f907aab939ef212b531b2ba29e374f659ea';
 
-@ProviderFor(userSelectedDiseases)
-const userSelectedDiseasesProvider = UserSelectedDiseasesProvider._();
+@ProviderFor(userDiseaseIds)
+const userDiseaseIdsProvider = UserDiseaseIdsProvider._();
 
-final class UserSelectedDiseasesProvider
+final class UserDiseaseIdsProvider
     extends
         $FunctionalProvider<
-          AsyncValue<List<String>>,
-          List<String>,
-          FutureOr<List<String>>
+          AsyncValue<List<int>>,
+          List<int>,
+          FutureOr<List<int>>
         >
-    with $FutureModifier<List<String>>, $FutureProvider<List<String>> {
-  const UserSelectedDiseasesProvider._()
+    with $FutureModifier<List<int>>, $FutureProvider<List<int>> {
+  const UserDiseaseIdsProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'userSelectedDiseasesProvider',
+        name: r'userDiseaseIdsProvider',
         isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$userSelectedDiseasesHash();
+  String debugGetCreateSourceHash() => _$userDiseaseIdsHash();
 
   @$internal
   @override
-  $FutureProviderElement<List<String>> $createElement(
+  $FutureProviderElement<List<int>> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<int>> create(Ref ref) {
+    return userDiseaseIds(ref);
+  }
+}
+
+String _$userDiseaseIdsHash() => r'0f461375cb86bf92f92b3d2069c31371021b2d19';
+
+@ProviderFor(userDiseaseEntities)
+const userDiseaseEntitiesProvider = UserDiseaseEntitiesProvider._();
+
+final class UserDiseaseEntitiesProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<DiseasesEntity>>,
+          List<DiseasesEntity>,
+          FutureOr<List<DiseasesEntity>>
+        >
+    with
+        $FutureModifier<List<DiseasesEntity>>,
+        $FutureProvider<List<DiseasesEntity>> {
+  const UserDiseaseEntitiesProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'userDiseaseEntitiesProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$userDiseaseEntitiesHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<List<DiseasesEntity>> $createElement(
     $ProviderPointer pointer,
   ) => $FutureProviderElement(pointer);
 
   @override
-  FutureOr<List<String>> create(Ref ref) {
-    return userSelectedDiseases(ref);
+  FutureOr<List<DiseasesEntity>> create(Ref ref) {
+    return userDiseaseEntities(ref);
   }
 }
 
-String _$userSelectedDiseasesHash() =>
-    r'a037dbca10641bd66a1a4c0d2cb4c251c24b1122';
+String _$userDiseaseEntitiesHash() =>
+    r'03b8079702717fb3f326dde4966e471b7cfdb1fc';
 
 @ProviderFor(allergiesList)
 const allergiesListProvider = AllergiesListProvider._();
@@ -403,42 +443,82 @@ final class AllergiesListProvider
 
 String _$allergiesListHash() => r'2f1c779c3756b91966a4556d2c4c6d0bb4b946fe';
 
-@ProviderFor(userSelectedAllergies)
-const userSelectedAllergiesProvider = UserSelectedAllergiesProvider._();
+@ProviderFor(userAllergyIds)
+const userAllergyIdsProvider = UserAllergyIdsProvider._();
 
-final class UserSelectedAllergiesProvider
+final class UserAllergyIdsProvider
     extends
         $FunctionalProvider<
-          AsyncValue<List<String>>,
-          List<String>,
-          FutureOr<List<String>>
+          AsyncValue<List<int>>,
+          List<int>,
+          FutureOr<List<int>>
         >
-    with $FutureModifier<List<String>>, $FutureProvider<List<String>> {
-  const UserSelectedAllergiesProvider._()
+    with $FutureModifier<List<int>>, $FutureProvider<List<int>> {
+  const UserAllergyIdsProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'userSelectedAllergiesProvider',
+        name: r'userAllergyIdsProvider',
         isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$userSelectedAllergiesHash();
+  String debugGetCreateSourceHash() => _$userAllergyIdsHash();
 
   @$internal
   @override
-  $FutureProviderElement<List<String>> $createElement(
+  $FutureProviderElement<List<int>> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<int>> create(Ref ref) {
+    return userAllergyIds(ref);
+  }
+}
+
+String _$userAllergyIdsHash() => r'2ee1963a721cba9970048bf0fcaa7f91446ac1f2';
+
+@ProviderFor(userAllergyEntities)
+const userAllergyEntitiesProvider = UserAllergyEntitiesProvider._();
+
+final class UserAllergyEntitiesProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<AllergiesEntity>>,
+          List<AllergiesEntity>,
+          FutureOr<List<AllergiesEntity>>
+        >
+    with
+        $FutureModifier<List<AllergiesEntity>>,
+        $FutureProvider<List<AllergiesEntity>> {
+  const UserAllergyEntitiesProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'userAllergyEntitiesProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$userAllergyEntitiesHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<List<AllergiesEntity>> $createElement(
     $ProviderPointer pointer,
   ) => $FutureProviderElement(pointer);
 
   @override
-  FutureOr<List<String>> create(Ref ref) {
-    return userSelectedAllergies(ref);
+  FutureOr<List<AllergiesEntity>> create(Ref ref) {
+    return userAllergyEntities(ref);
   }
 }
 
-String _$userSelectedAllergiesHash() =>
-    r'6cf9203807b5832da301e70098399f50d69e6e51';
+String _$userAllergyEntitiesHash() =>
+    r'6a170851831a9a0644e1046d0fd803e78d10d6f6';

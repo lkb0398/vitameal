@@ -56,24 +56,56 @@ Future<ProfilesEntity?> myProfile(Ref ref) async {
   return ref.read(profilesRepositoryProvider).getMyProfile(userId);
 }
 
+// 질병 전체 목록
 @riverpod
 Future<List<DiseasesEntity>> diseasesList(Ref ref) {
   return ref.read(diseasesRepositoryProvider).getAllDiseases();
 }
 
+// 사용자 질병 id 목록
 @riverpod
-Future<List<String>> userSelectedDiseases(Ref ref) async {
+Future<List<int>> userDiseaseIds(Ref ref) async {
   final userId = ref.read(userIdProvider);
-  return ref.read(userDiseasesRepositoryProvider).getUserDiseaseNames(userId);
+  return ref.read(diseasesRepositoryProvider).getUserDiseases(userId);
 }
 
+// 사용자 질병 entity 목록
+@riverpod
+Future<List<DiseasesEntity>> userDiseaseEntities(Ref ref) async {
+  final selectedIds = await ref.watch(userDiseaseIdsProvider.future);
+  final allDiseases = await ref.watch(diseasesListProvider.future);
+  // 조회용 Map 생성
+  final diseaseMap = {for (final d in allDiseases) d.id: d};
+  // id > entity 매핑
+  return selectedIds
+      .map((id) => diseaseMap[id])
+      .whereType<DiseasesEntity>()
+      .toList();
+}
+
+// 알레르기 전체 목록
 @riverpod
 Future<List<AllergiesEntity>> allergiesList(Ref ref) {
   return ref.read(allergiesRepositoryProvider).getAllAllergies();
 }
 
+// 사용자 알레르기 id 목록
 @riverpod
-Future<List<String>> userSelectedAllergies(Ref ref) async {
+Future<List<int>> userAllergyIds(Ref ref) async {
   final userId = ref.read(userIdProvider);
-  return ref.read(userAllergiesRepositoryProvider).getUserAllergyNames(userId);
+  return ref.read(allergiesRepositoryProvider).getUserAllergies(userId);
+}
+
+// 사용자 알레르기 entity 목록
+@riverpod
+Future<List<AllergiesEntity>> userAllergyEntities(Ref ref) async {
+  final selectedIds = await ref.watch(userAllergyIdsProvider.future);
+  final allAllergies = await ref.watch(allergiesListProvider.future);
+  // 조회용 Map 생성
+  final allergyMap = {for (final a in allAllergies) a.id: a};
+  // id > entity 매핑
+  return selectedIds
+      .map((id) => allergyMap[id])
+      .whereType<AllergiesEntity>()
+      .toList();
 }

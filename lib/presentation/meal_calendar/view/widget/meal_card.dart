@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:vitameal/core/config/l10n/l10n.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
 import 'package:vitameal/domain/enum/meal_category_enum.dart';
 
@@ -46,6 +47,8 @@ class MealCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = L10n.of(context)!; // 🌎
+
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: onTap,
@@ -138,7 +141,7 @@ class MealCard extends StatelessWidget {
                         )
                       else
                         Text(
-                          '내용이 없습니다',
+                          l.no_content,
                           style: TextStyle(
                             fontSize: 14,
                             color: vrc(context).content,

@@ -1,10 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:vitameal/core/config/l10n/l10n.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
 
 class TimeSelector extends StatelessWidget {
   /// 시간 선택
-  const TimeSelector({super.key, this.selectedTime, required this.date, required this.onTimeChanged});
+  const TimeSelector({
+    super.key,
+    this.selectedTime,
+    required this.date,
+    required this.onTimeChanged,
+  });
 
   final DateTime? selectedTime;
   final DateTime date;
@@ -12,6 +18,7 @@ class TimeSelector extends StatelessWidget {
 
   /// TimePicker 바텀시트
   Future<void> _showTimePicker(BuildContext context) async {
+    final l = L10n.of(context)!; // 🌎
     final now = DateTime.now();
     DateTime tempTime = selectedTime ?? now;
 
@@ -29,7 +36,10 @@ class TimeSelector extends StatelessWidget {
             Container(
               width: 40,
               height: 4,
-              decoration: BoxDecoration(color: fxc(context).textcolor200, borderRadius: BorderRadius.circular(2)),
+              decoration: BoxDecoration(
+                color: fxc(context).textcolor200,
+                borderRadius: BorderRadius.circular(2),
+              ),
             ),
             SizedBox(height: 30),
             // Cupertino TimePicker (IOS)
@@ -46,30 +56,43 @@ class TimeSelector extends StatelessWidget {
 
             // 완료 버튼
             Padding(
-              padding: EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 20),
+              padding: EdgeInsets.only(
+                left: 20,
+                right: 20,
+                top: 20,
+                bottom: 20,
+              ),
               child: SizedBox(
                 width: double.infinity,
                 height: 56,
                 child: ElevatedButton(
                   onPressed: () {
-                    onTimeChanged(DateTime(
-                      date.year,
-                      date.month,
-                      date.day,
-                      tempTime.hour,
-                      tempTime.minute,
-                    ));
+                    onTimeChanged(
+                      DateTime(
+                        date.year,
+                        date.month,
+                        date.day,
+                        tempTime.hour,
+                        tempTime.minute,
+                      ),
+                    );
                     Navigator.pop(context);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: fxc(context).primary100,
                     foregroundColor: Colors.white,
                     elevation: 0,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                   ),
                   child: Text(
-                    '완료',
-                    style: TextStyle(color: fxc(context).primary600, fontSize: 16, fontWeight: FontWeight.w700),
+                    l.complete,
+                    style: TextStyle(
+                      color: fxc(context).primary600,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                 ),
               ),
@@ -82,12 +105,18 @@ class TimeSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = L10n.of(context)!; // 🌎
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          "시간",
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: vrc(context).text),
+          l.time,
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w700,
+            color: vrc(context).text,
+          ),
         ),
         const SizedBox(height: 10),
         GestureDetector(
@@ -103,11 +132,13 @@ class TimeSelector extends StatelessWidget {
               children: [
                 Text(
                   selectedTime == null
-                      ? "시간 선택"
+                      ? l.select_time
                       : "${selectedTime!.hour.toString().padLeft(2, '0')} : ${selectedTime!.minute.toString().padLeft(2, '0')}",
                   style: TextStyle(
                     fontSize: 16,
-                    color: selectedTime == null ? vrc(context).hint : vrc(context).subTitle,
+                    color: selectedTime == null
+                        ? vrc(context).hint
+                        : vrc(context).subTitle,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -115,7 +146,9 @@ class TimeSelector extends StatelessWidget {
                 Icon(
                   Icons.access_time,
                   size: 18,
-                  color: selectedTime == null ? vrc(context).hint : vrc(context).subTitle,
+                  color: selectedTime == null
+                      ? vrc(context).hint
+                      : vrc(context).subTitle,
                 ),
               ],
             ),

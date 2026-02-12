@@ -1,10 +1,12 @@
 import 'dart:io';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tap_debouncer/tap_debouncer.dart';
+import 'package:vitameal/core/config/l10n/l10n.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
 import 'package:vitameal/data/data_source/profiles_data_source.dart';
 import 'package:vitameal/presentation/onboarding/view/widget/progress_text.dart';
@@ -19,6 +21,8 @@ class OnboardingProfilePage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     print('my userId : 🩷 ${ref.read(userIdProvider)}');
+
+    final l = L10n.of(context)!; // 🌎
 
     // 프로필 사진 : 사용자 갤러리에서 사진 가져오기
     final selectedImage = useState<File?>(null);
@@ -52,11 +56,11 @@ class OnboardingProfilePage extends HookConsumerWidget {
     final nicknameError = useState<String?>(null); // 서버 중복 체크 용
     String? validateNickname(String? value) {
       if (value == null || value.trim().isEmpty) {
-        return '닉네임을 입력해주세요.'; // 입력값 없을 때
+        return l.enter_nickname; // 입력값 없을 때
       }
       final nickname = value.trim();
       if (nickname.length > 10) {
-        return '닉네임은 10글자 이하로 입력해주세요.'; // 길이 제한 (1~10)
+        return l.nickname_max_length; // 길이 제한 (1~10)
       }
       if (nicknameError.value != null) {
         return nicknameError.value; // 서버 닉네임 중복 에러
@@ -125,28 +129,31 @@ class OnboardingProfilePage extends HookConsumerWidget {
             spacing: 10,
             children: [
               /// 설명
-              Text.rich(
+              AutoSizeText.rich(
                 TextSpan(
                   style: TextStyle(fontSize: 22, color: vrc(context).text),
                   children: [
                     TextSpan(
-                      text: 'VitaMeal',
+                      text: l.profileTitleAppName,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: fxc(context).primary400,
                       ),
                     ),
-                    TextSpan(text: '에서 사용할\n'),
+                    TextSpan(text: l.profileTitleSuffix),
                     TextSpan(
-                      text: '프로필',
+                      text: l.profileTitleProfile,
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
-                    TextSpan(text: '을 '),
-                    TextSpan(text: isEditing ? '수정' : '설정'),
-                    TextSpan(text: '해주세요.'),
+                    TextSpan(text: l.profileTitleObject),
+                    TextSpan(
+                      text: isEditing ? l.profileTitleEdit : l.profileTitleSet,
+                    ),
+                    TextSpan(text: l.profileTitleEnd),
                   ],
                 ),
               ),
+
               SizedBox(height: 30),
 
               /// 프로필 이미지
@@ -225,13 +232,13 @@ class OnboardingProfilePage extends HookConsumerWidget {
               ),
 
               /// 닉네임 입력창
-              Text("닉네임"),
+              Text(l.nickname),
               ValidateTextformfield(
                 readOnly: false,
-                hintText: "김비타밀",
+                hintText: l.nickname_example,
                 validator: validateNickname,
                 controller: nicknameController,
-                helperText: '닉네임은 10글자 이하로 입력해주세요.',
+                helperText: l.nickname_max_length,
                 errorText: nicknameError.value,
               ),
             ],
@@ -261,7 +268,7 @@ class OnboardingProfilePage extends HookConsumerWidget {
                       : context.push('/onboarding/physical');
                   // 닉네임 중복 시
                 } on DuplicateNicknameException {
-                  nicknameError.value = '이미 사용 중인 닉네임입니다.';
+                  nicknameError.value = l.duplicate_nickname;
                   nicknameController.value = nicknameController.value;
                 }
               }
@@ -274,7 +281,7 @@ class OnboardingProfilePage extends HookConsumerWidget {
               backgroundColor: isButtonEnabled.value
                   ? fxc(context).primary400!
                   : fxc(context).textcolor300!,
-              text: isEditing ? "수정 완료" : "다음",
+              text: isEditing ? l.edit_complete : l.next,
               textColor: Colors.white,
             ),
           );

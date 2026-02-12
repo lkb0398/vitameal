@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:vitameal/core/config/l10n/l10n.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
 import 'package:vitameal/domain/enum/meal_category_enum.dart';
 
 class CategorySelector extends StatelessWidget {
   /// 카테고리 선택
-  const CategorySelector({super.key, required this.selectedCategory, required this.onCategoryChanged});
+  const CategorySelector({
+    super.key,
+    required this.selectedCategory,
+    required this.onCategoryChanged,
+  });
 
   final MealCategory selectedCategory;
   final ValueChanged<MealCategory> onCategoryChanged;
@@ -18,12 +23,18 @@ class CategorySelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = L10n.of(context)!; // 🌎
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          "분류",
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: vrc(context).text),
+          l.category,
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w700,
+            color: vrc(context).text,
+          ),
         ),
         const SizedBox(height: 10),
         Wrap(

@@ -32,8 +32,9 @@ class SelectBox extends StatelessWidget {
         alignment: Alignment.center,
         child: Text(
           text,
+          textAlign: TextAlign.center,
           style: TextStyle(
-            fontSize: 13,
+            fontSize: 12,
             fontWeight: FontWeight.bold,
             color: isSelected ? fxc(context).primary500 : vrc(context).text,
           ),

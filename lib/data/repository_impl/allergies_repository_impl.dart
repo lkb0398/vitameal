@@ -15,12 +15,15 @@ class AllergiesRepositoryImpl implements AllergiesRepository {
   }
 
   @override
-  Future<List<int>> findAllergyIdsByNames(List<String> names) {
-    return dataSource.findIdsByNames(names);
+  Future<void> saveUserAllergies({
+    required String userId,
+    required List<int> allergyIds,
+  }) async {
+    await dataSource.saveUserAllergies(userId: userId, allergyIds: allergyIds);
   }
 
   @override
-  Future<List<String>> findAllergyNamesByIds(List<int> ids) {
-    return dataSource.findNamesByIds(ids);
+  Future<List<int>> getUserAllergies(String userId) async {
+    return await dataSource.getUserAllergies(userId);
   }
 }

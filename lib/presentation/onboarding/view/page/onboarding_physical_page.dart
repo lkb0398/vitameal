@@ -1,9 +1,11 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tap_debouncer/tap_debouncer.dart';
+import 'package:vitameal/core/config/l10n/l10n.dart';
 import 'package:vitameal/core/service/analytics_service.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
 import 'package:vitameal/domain/enum/gender_type_enum.dart';
@@ -19,6 +21,8 @@ class OnboardingPhysicalPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l = L10n.of(context)!; // 🌎
+
     // 성별 : 사용자 선택값 (기본값 unknown)
     final selectedGender = useState<GenderType>(GenderType.unknown);
 
@@ -28,15 +32,15 @@ class OnboardingPhysicalPage extends HookConsumerWidget {
       if (value == null || value.isEmpty) {
         return null; // 입력값 없을 때 (통과)
       }
-      if (value.length != 4) {
-        return '출생 연도는 4자리 숫자여야 해요.'; // 입력 형식 제한
+      if (value.length != 4 || int.tryParse(value) == null) {
+        return l.birth_year_invalid; // 입력 형식 제한
       }
       final year = int.tryParse(value);
       if (year == null) {
-        return '숫자를 입력해주세요.'; // 숫자가 아닐 때
+        return l.birth_year_invalid; // 숫자가 아닐 때
       }
       if (year < 1900 || year > DateTime.now().year) {
-        return '올바른 출생 연도를 입력해주세요.'; // 입력 범위 제한 (1900~현재년도)
+        return l.birth_year_wrong; // 입력 범위 제한 (1900~현재년도)
       }
       return null; // 통과
     }
@@ -49,10 +53,10 @@ class OnboardingPhysicalPage extends HookConsumerWidget {
       }
       final height = double.tryParse(value);
       if (height == null) {
-        return '잘못된 숫자입니다.'; // 숫자가 아닐 때
+        return l.invalid_number; // 숫자가 아닐 때
       }
       if (height < 0 || height > 300) {
-        return '잘못된 숫자입니다.'; // 입력 범위 제한 (0~300)
+        return l.invalid_number; // 입력 범위 제한 (0~300)
       }
       return null; // 통과
     }
@@ -65,10 +69,10 @@ class OnboardingPhysicalPage extends HookConsumerWidget {
       }
       final weight = double.tryParse(value);
       if (weight == null) {
-        return '잘못된 숫자입니다.'; // 숫자가 아닐 때
+        return l.invalid_number; // 숫자가 아닐 때
       }
       if (weight < 0 || weight > 300) {
-        return '잘못된 숫자입니다.'; // 입력 범위 제한 (0~300)
+        return l.invalid_number; // 입력 범위 제한 (0~300)
       }
       return null; // 통과
     }
@@ -103,9 +107,7 @@ class OnboardingPhysicalPage extends HookConsumerWidget {
         if (profile == null) return;
         if (didInit.value) return;
         didInit.value = true;
-        if (profile.gender != null) {
-          selectedGender.value = profile.genderType!;
-        }
+        selectedGender.value = profile.genderType!;
         if (profile.birthYear != null) {
           birthyearController.text = profile.birthYear.toString();
         }
@@ -118,6 +120,12 @@ class OnboardingPhysicalPage extends HookConsumerWidget {
       });
       return null;
     }, [isEditing, profileAsync]);
+
+    final nickname = profileAsync.when(
+      data: (profile) => profile?.nickname ?? l.member,
+      loading: () => l.member,
+      error: (_, __) => l.member,
+    );
 
     return Scaffold(
       appBar: AppBar(
@@ -138,50 +146,25 @@ class OnboardingPhysicalPage extends HookConsumerWidget {
             spacing: 10,
             children: [
               /// 설명
-              isEditing
-                  ? Text.rich(
-                      TextSpan(
-                        style: TextStyle(
-                          fontSize: 22,
-                          color: vrc(context).text,
-                        ),
-                        children: [
-                          TextSpan(
-                            text: profileAsync.when(
-                              data: (profile) => "${profile?.nickname}",
-                              loading: () => "회원",
-                              error: (_, __) => "회원",
-                            ),
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          TextSpan(text: '님의\n기본 정보를 수정해주세요. (선택)'),
-                        ],
-                      ),
-                    )
-                  : Text.rich(
-                      TextSpan(
-                        style: TextStyle(
-                          fontSize: 22,
-                          color: vrc(context).text,
-                        ),
-                        children: [
-                          TextSpan(text: '반갑습니다, '),
-                          TextSpan(
-                            text: profileAsync.when(
-                              data: (profile) => "${profile?.nickname}",
-                              loading: () => "회원",
-                              error: (_, __) => "회원",
-                            ),
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          TextSpan(text: '님!\n기본 정보를 입력해주세요. (선택)'),
-                        ],
-                      ),
+              AutoSizeText.rich(
+                TextSpan(
+                  style: TextStyle(fontSize: 22, color: vrc(context).text),
+                  children: [
+                    if (!isEditing) TextSpan(text: l.welcomePrefix),
+                    TextSpan(
+                      text: nickname,
+                      style: TextStyle(fontWeight: FontWeight.bold),
                     ),
+                    TextSpan(
+                      text: isEditing ? l.editInfoSuffix : l.inputInfoSuffix,
+                    ),
+                  ],
+                ),
+              ),
               SizedBox(height: 20),
 
               /// 성별 선택
-              Text("성별", style: TextStyle(fontSize: 16)),
+              Text(l.gender, style: TextStyle(fontSize: 16)),
               Row(
                 spacing: 10,
                 children: [
@@ -192,7 +175,7 @@ class OnboardingPhysicalPage extends HookConsumerWidget {
                           ? selectedGender.value = GenderType.unknown
                           : selectedGender.value = GenderType.male,
                       isSelected: selectedGender.value == GenderType.male,
-                      text: "남성",
+                      text: l.male,
                       height: 50,
                     ),
                   ),
@@ -204,7 +187,7 @@ class OnboardingPhysicalPage extends HookConsumerWidget {
                           ? selectedGender.value = GenderType.unknown
                           : selectedGender.value = GenderType.female,
                       isSelected: selectedGender.value == GenderType.female,
-                      text: "여성",
+                      text: l.female,
                       height: 50,
                     ),
                   ),
@@ -213,7 +196,7 @@ class OnboardingPhysicalPage extends HookConsumerWidget {
               SizedBox(height: 20),
 
               /// 출생년도 입력창
-              Text("출생 연도", style: TextStyle(fontSize: 16)),
+              Text(l.birth_year, style: TextStyle(fontSize: 16)),
               ValidateTextformfield(
                 readOnly: false,
                 hintText: "1988",
@@ -237,7 +220,7 @@ class OnboardingPhysicalPage extends HookConsumerWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         spacing: 10,
                         children: [
-                          Text("키", style: TextStyle(fontSize: 16)),
+                          Text(l.height, style: TextStyle(fontSize: 16)),
                           ValidateTextformfield(
                             readOnly: false,
                             hintText: "180.0",
@@ -268,7 +251,7 @@ class OnboardingPhysicalPage extends HookConsumerWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         spacing: 10,
                         children: [
-                          Text("몸무게", style: TextStyle(fontSize: 16)),
+                          Text(l.weight, style: TextStyle(fontSize: 16)),
                           ValidateTextformfield(
                             readOnly: false,
                             hintText: "80.0",
@@ -341,7 +324,7 @@ class OnboardingPhysicalPage extends HookConsumerWidget {
             child: DoneButton(
               onTap: onTap,
               backgroundColor: fxc(context).primary400!,
-              text: "다음",
+              text: l.next,
               textColor: Colors.white,
             ),
           );

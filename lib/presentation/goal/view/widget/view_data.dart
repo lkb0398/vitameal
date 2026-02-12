@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tap_debouncer/tap_debouncer.dart';
+import 'package:vitameal/core/config/l10n/l10n.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
 import 'package:vitameal/domain/entity/goals_entity.dart';
 import 'package:vitameal/presentation/goal/view_model/goal_datas_view_model.dart';
@@ -17,6 +18,8 @@ class ViewData extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l = L10n.of(context)!; // 🌎
+
     // 선택된 목표의 데이터 불러오기
     final datasAsync = ref.watch(getGoalDatasProvider(selectedGoal.goalId!));
 
@@ -51,7 +54,7 @@ class ViewData extends HookConsumerWidget {
                 items: [
                   DropdownMenuItem<bool>(
                     value: false,
-                    child: Text('최신순', style: TextStyle(fontSize: 12)),
+                    child: Text(l.latest, style: TextStyle(fontSize: 12)),
                   ),
                   DropdownMenuItem<bool>(
                     enabled: false,
@@ -63,7 +66,7 @@ class ViewData extends HookConsumerWidget {
                   ),
                   DropdownMenuItem<bool>(
                     value: true,
-                    child: Text('오래된순', style: TextStyle(fontSize: 12)),
+                    child: Text(l.oldest, style: TextStyle(fontSize: 12)),
                   ),
                 ],
                 onChanged: (value) {
@@ -119,9 +122,9 @@ class ViewData extends HookConsumerWidget {
                                 // UI 반영
                                 ref.invalidate(getGoalDatasProvider);
                               },
-                              title: '정말 삭제할까요?',
-                              confirmText: '삭제',
-                              cancelText: '취소',
+                              title: l.confirm_delete,
+                              confirmText: l.delete,
+                              cancelText: l.cancel,
                             );
                           },
                         );
@@ -131,7 +134,7 @@ class ViewData extends HookConsumerWidget {
                   return TextButton(
                     onPressed: onTap,
                     child: Text(
-                      "삭제",
+                      l.delete,
                       style: TextStyle(
                         fontSize: 12,
                         color: hasSelected
@@ -147,7 +150,7 @@ class ViewData extends HookConsumerWidget {
         ),
         datasAsync.when(
           loading: () => const Center(child: CircularProgressIndicator()),
-          error: (e, _) => Center(child: Text('에러 발생: $e')),
+          error: (e, _) => Center(child: Text('error: $e')),
           data: (datas) {
             // 데이터 없을 때 화면
             if (datas == null || datas.isEmpty) {
@@ -155,7 +158,7 @@ class ViewData extends HookConsumerWidget {
                 height: 100,
                 child: Center(
                   child: Text(
-                    "데이터를 추가해주세요.",
+                    l.add_data_hint,
                     style: TextStyle(color: fxc(context).textcolor300),
                   ),
                 ),

@@ -8,11 +8,13 @@ import 'package:vitameal/core/config/firebase_options.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:vitameal/core/config/l10n/l10n.dart';
 import 'package:vitameal/core/di/provider.dart';
 import 'package:vitameal/core/service/analytics_service.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
 import 'package:vitameal/core/service/firebase_service.dart';
 import 'package:vitameal/core/service/notification_service.dart';
+import 'package:vitameal/presentation/language/view_model/locale_view_model.dart';
 import 'package:vitameal/presentation/ui_provider/profiles_provider.dart';
 import 'core/config/routes.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -150,14 +152,16 @@ class VitamealApp extends HookConsumerWidget {
     final router = ref.watch(routerProvider);
 
     return MaterialApp.router(
-      locale: const Locale('ko', 'KR'),
-      supportedLocales: const [Locale('ko', 'KR'), Locale('en', 'US')],
+      // 🌎 언어 수동 변경 provider 연결
+      locale: ref.watch(localeViewModelProvider),
+      supportedLocales: const [Locale('en'), Locale('ko')],
       localizationsDelegates: const [
+        L10n.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate, // Cupertino 스타일 > 한국어 패치
         GlobalWidgetsLocalizations.delegate,
       ],
-      title: 'VitaMeal',
+      title: 'vitameal',
       debugShowCheckedModeBanner: false,
       routerConfig: router,
       themeMode: ThemeMode.system,

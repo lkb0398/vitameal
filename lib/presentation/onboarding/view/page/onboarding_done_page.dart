@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:vitameal/core/config/l10n/l10n.dart';
 import 'package:vitameal/core/service/analytics_service.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
 import 'package:vitameal/presentation/onboarding/viewmodel/onboarding_view_model.dart';
@@ -12,6 +13,8 @@ class OnboardingDonePage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l = L10n.of(context)!; // 🌎
+
     /// 프로필 불러오기 (닉네임 연동용)
     final profileAsync = ref.watch(myProfileProvider);
 
@@ -33,21 +36,21 @@ class OnboardingDonePage extends HookConsumerWidget {
                   color: fxc(context).textcolor400,
                 ),
                 children: [
-                  TextSpan(text: '환영합니다, '),
+                  TextSpan(text: '${l.welcome}, '),
                   TextSpan(
                     text: profileAsync.when(
                       data: (profile) => "${profile?.nickname}",
-                      loading: () => "회원",
-                      error: (_, __) => "회원",
+                      loading: () => "",
+                      error: (_, __) => "",
                     ),
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  TextSpan(text: '님!'),
+                  TextSpan(text: '!'),
                 ],
               ),
             ),
             Text(
-              '가입이 완료되었어요',
+              l.signup_complete,
               style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
@@ -77,7 +80,7 @@ class OnboardingDonePage extends HookConsumerWidget {
             AnalyticsService.event('obd_completed');
           },
           backgroundColor: fxc(context).primary400!,
-          text: "시작하기",
+          text: l.start,
           textColor: Colors.white,
         ),
       ),

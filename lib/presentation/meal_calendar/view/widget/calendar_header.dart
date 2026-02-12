@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vitameal/core/config/l10n/l10n.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
 
 class CalendarHeader extends StatelessWidget {
@@ -10,6 +11,8 @@ class CalendarHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = L10n.of(context)!; // 🌎
+
     return Column(
       children: [
         SizedBox(height: 10),
@@ -39,7 +42,7 @@ class CalendarHeader extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 6),
             child: Row(
-              children: const ['월', '화', '수', '목', '금', '토', '일']
+              children: [l.mon, l.tue, l.wed, l.thu, l.fri, l.sat, l.sun]
                   .map(
                     (day) => Expanded(
                       child: Center(

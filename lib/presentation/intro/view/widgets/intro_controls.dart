@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vitameal/core/config/l10n/l10n.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
 
 class IntroControls extends StatelessWidget {
@@ -17,6 +18,8 @@ class IntroControls extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = L10n.of(context)!; // 🌎
+
     final isLastPage = currentIndex == itemsCount - 1;
 
     return Padding(
@@ -60,8 +63,8 @@ class IntroControls extends StatelessWidget {
                 ),
                 elevation: 0,
               ),
-              child: const Text(
-                "다음",
+              child: Text(
+                l.next,
                 style: const TextStyle(
                   fontFamily: 'Pretendard',
                   fontSize: 16,
@@ -78,7 +81,7 @@ class IntroControls extends StatelessWidget {
             child: TextButton(
               onPressed: isLastPage ? null : onSkip,
               child: Text(
-                "건너뛰기",
+                l.skip,
                 style: TextStyle(
                   fontFamily: 'Pretendard',
                   color: Color(0xffbcbcbc),

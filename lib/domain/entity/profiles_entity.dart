@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:vitameal/domain/enum/gender_type_enum.dart';
 
@@ -24,10 +25,18 @@ abstract class ProfilesEntity with _$ProfilesEntity {
     return DateTime.now().year - birthYear!;
   }
 
-  // 성별 한글 변환
-  String? get gender {
-    if (genderType == GenderType.male) return "남성";
-    if (genderType == GenderType.female) return "여성";
+  // 성별 String 변환
+  String? gender(Locale locale) {
+    if (genderType == null) return null;
+
+    if (locale.languageCode == 'en') {
+      if (genderType == GenderType.male) return "Male";
+      if (genderType == GenderType.female) return "Female";
+    } else {
+      if (genderType == GenderType.male) return "남성";
+      if (genderType == GenderType.female) return "여성";
+    }
+
     return null;
   }
 }

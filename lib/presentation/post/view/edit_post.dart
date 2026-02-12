@@ -5,9 +5,11 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
+import 'package:vitameal/core/config/l10n/l10n.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
 import 'package:vitameal/core/service/analytics_service.dart';
 import 'package:vitameal/domain/entity/post_entity.dart';
+import 'package:vitameal/presentation/language/view_model/locale_view_model.dart';
 import 'package:vitameal/presentation/post/view_model/post_view_model.dart';
 import 'package:vitameal/presentation/post/view_model/recipe_step_ui_model.dart';
 import 'package:vitameal/presentation/post/view_model/tag_view_model.dart';
@@ -19,6 +21,10 @@ class EditPost extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l = L10n.of(context)!; // 🌎
+    final locale =
+        ref.watch(localeViewModelProvider) ?? Localizations.localeOf(context);
+
     // --- [상태 및 컨트롤러 초기화 섹션] ---
     final isEditMode = initialPost != null;
 
@@ -75,7 +81,7 @@ class EditPost extends HookConsumerWidget {
         appBar: AppBar(
           backgroundColor: vrc(context).background,
           title: Text(
-            isEditMode ? "레시피 수정" : "레시피 작성",
+            isEditMode ? l.edit_recipe : l.create_recipe,
             style: TextStyle(color: vrc(context).text),
           ),
           leading: IconButton(
@@ -89,14 +95,17 @@ class EditPost extends HookConsumerWidget {
                   : () async {
                       // 1. 제목 입력 검사
                       if (titleController.text.trim().isEmpty) {
-                        showGraySnackBar(context, "제목을 입력해주세요.");
+                        showGraySnackBar(context, l.enter_title);
                         return;
                       }
 
                       // 2. 메인 이미지 유효성 검사
                       if (selectedImage.value == null &&
                           existingImageUrl.value == null) {
-                        showGraySnackBar(context, "대표 이미지를 등록해주세요.");
+                        showGraySnackBar(
+                          context,
+                          l.register_representative_image,
+                        );
                         return;
                       }
 
@@ -113,7 +122,7 @@ class EditPost extends HookConsumerWidget {
                       });
 
                       if (hasInvalidStep) {
-                        showGraySnackBar(context, "모든 단계의 이미지와 설명을 등록해주세요.");
+                        showGraySnackBar(context, l.register_all_steps);
                         return;
                       }
 
@@ -150,7 +159,7 @@ class EditPost extends HookConsumerWidget {
                         if (context.mounted) context.pop();
                       } catch (e) {
                         isSubmitting.value = false;
-                        debugPrint("처리 오류: $e");
+                        debugPrint("error: $e");
                       }
                     },
               child: isSubmitting.value
@@ -163,7 +172,7 @@ class EditPost extends HookConsumerWidget {
                       ),
                     )
                   : Text(
-                      "완료",
+                      l.complete,
                       style: TextStyle(
                         color: fxc(context).primary400,
                         fontWeight: FontWeight.bold,
@@ -199,7 +208,7 @@ class EditPost extends HookConsumerWidget {
                                   ),
                                   SizedBox(height: 8),
                                   Text(
-                                    '대표 이미지 추가',
+                                    l.add_cover_image,
                                     style: TextStyle(
                                       color: vrc(context).hint,
                                       fontSize: 13,
@@ -215,12 +224,15 @@ class EditPost extends HookConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // --- [제목 입력 섹션] ---
-                    Text(
-                      "제목",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                        color: vrc(context).text,
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8),
+                      child: Text(
+                        l.title,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                          color: vrc(context).text,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 12),
@@ -231,10 +243,10 @@ class EditPost extends HookConsumerWidget {
                           titleTextLength.value = value.length,
                       style: TextStyle(color: vrc(context).text),
                       decoration: InputDecoration(
-                        hintText: "제목을 입력해주세요",
+                        hintText: l.enter_title_hint,
                         hintStyle: TextStyle(color: vrc(context).hint),
                         counterStyle: TextStyle(color: vrc(context).content),
-                        counterText: "${titleTextLength.value}/20자",
+                        counterText: "${titleTextLength.value}/20",
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12.0),
                         ),
@@ -252,12 +264,15 @@ class EditPost extends HookConsumerWidget {
                     ),
                     const SizedBox(height: 20),
                     // --- [재료 입력 섹션] ---
-                    Text(
-                      "재료",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                        color: vrc(context).text,
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8),
+                      child: Text(
+                        l.ingredients,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                          color: vrc(context).text,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 12),
@@ -269,10 +284,10 @@ class EditPost extends HookConsumerWidget {
                       maxLines: 5,
                       style: TextStyle(color: vrc(context).text),
                       decoration: InputDecoration(
-                        hintText: "재료 정보를 입력해주세요",
+                        hintText: l.enter_ingredients_hint,
                         hintStyle: TextStyle(color: vrc(context).hint),
                         counterStyle: TextStyle(color: vrc(context).content),
-                        counterText: "${ingredientTextLength.value}/300자",
+                        counterText: "${ingredientTextLength.value}/300",
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12.0),
                         ),
@@ -290,73 +305,96 @@ class EditPost extends HookConsumerWidget {
                     ),
                     const SizedBox(height: 33),
                     // --- [태그 선택 섹션] ---
-                    Text(
-                      "태그",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                        color: vrc(context).text,
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8),
+                      child: Text(
+                        l.tags,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                          color: vrc(context).text,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 12),
                     allTagsAsync.when(
-                      data: (tags) => Wrap(
-                        spacing: 8.0,
-                        children: tags.map((tag) {
-                          final isSelected = selectedTagIds.value.contains(
-                            tag.id,
+                      data: (tags) {
+                        // [추가] 렌더링 직전에 태그 리스트를 이름순(가나다/ABC)으로 정렬한 복사본 생성
+                        final sortedTags = [...tags]
+                          ..sort(
+                            (a, b) => locale == const Locale('ko')
+                                ? a.name.compareTo(b.name)
+                                : a.nameEn.compareTo(b.nameEn),
                           );
-                          return ChoiceChip(
-                            showCheckmark: false,
-                            label: Text(
-                              "#${tag.name}",
-                              style: TextStyle(
-                                color: isSelected
-                                    ? Colors.white
-                                    : fxc(context).primary400,
+                        return Wrap(
+                          spacing: 8.0,
+                          // [수정] tags 대신 정렬된 sortedTags를 사용하여 맵핑
+                          children: sortedTags.map((tag) {
+                            final isSelected = selectedTagIds.value.contains(
+                              tag.id,
+                            );
+                            final name = locale == Locale('ko')
+                                ? tag.name
+                                : tag.nameEn;
+                            return ChoiceChip(
+                              showCheckmark: false,
+                              label: Text(
+                                "#$name",
+                                style: TextStyle(
+                                  color: isSelected
+                                      ? fxc(context).primary500
+                                      : fxc(context).primary400,
+                                ),
                               ),
-                            ),
-                            selected: isSelected,
-                            onSelected: (selected) {
-                              if (selected) {
-                                selectedTagIds.value = [
-                                  ...selectedTagIds.value,
-                                  tag.id,
-                                ];
-                              } else {
-                                selectedTagIds.value = selectedTagIds.value
-                                    .where((id) => id != tag.id)
-                                    .toList();
-                              }
-                            },
-                            backgroundColor: vrc(context).background,
-                            selectedColor: fxc(context).primary400,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
-                              side: BorderSide(color: fxc(context).primary400!),
-                            ),
-                          );
-                        }).toList(),
-                      ),
+                              selected: isSelected,
+                              onSelected: (selected) {
+                                if (selected) {
+                                  selectedTagIds.value = [
+                                    ...selectedTagIds.value,
+                                    tag.id,
+                                  ];
+                                } else {
+                                  selectedTagIds.value = selectedTagIds.value
+                                      .where((id) => id != tag.id)
+                                      .toList();
+                                }
+                              },
+                              backgroundColor: vrc(context).background,
+                              selectedColor: fxc(context).primary200,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                side: BorderSide(
+                                  color: isSelected
+                                      ? fxc(context).primary500!
+                                      : fxc(context).primary400!,
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                        );
+                      },
                       loading: () => LinearProgressIndicator(
                         color: fxc(context).primary400,
                       ),
                       error: (e, _) => Text(
-                        "태그 로딩 실패",
+                        l.failed_to_load_tags,
                         style: TextStyle(color: vrc(context).text),
                       ),
                     ),
                     const SizedBox(height: 40),
                     // --- [레시피 상세 단계 섹션] ---
-                    Text(
-                      "레시피 순서",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                        color: vrc(context).text,
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8),
+                      child: Text(
+                        l.recipe_steps,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                          color: vrc(context).text,
+                        ),
                       ),
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 12),
                     ...recipeSteps.value.asMap().entries.map((entry) {
                       final index = entry.key;
                       final step = entry.value;
@@ -366,28 +404,29 @@ class EditPost extends HookConsumerWidget {
                         child: Column(
                           children: [
                             Padding(
-                              padding: const EdgeInsets.only(left: 8),
+                              padding: const EdgeInsets.all(8),
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(
-                                    "Step ${index + 1}",
-                                    style: TextStyle(
-                                      color: fxc(context).primary400,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
+                                  Center(
+                                    child: Text(
+                                      "Step ${index + 1}",
+                                      style: TextStyle(
+                                        color: fxc(context).primary400,
+                                        fontSize: 16,
+                                      ),
                                     ),
                                   ),
                                   if (recipeSteps.value.length > 1)
-                                    TextButton(
-                                      onPressed: () {
+                                    GestureDetector(
+                                      onTap: () {
                                         final newList = [...recipeSteps.value];
                                         newList.removeAt(index);
                                         recipeSteps.value = newList;
                                       },
                                       child: Text(
-                                        "삭제",
+                                        l.delete,
                                         style: TextStyle(
                                           color: fxc(context).secondary400,
                                         ),
@@ -450,7 +489,9 @@ class EditPost extends HookConsumerWidget {
                                     maxLength: 200,
                                     style: TextStyle(color: vrc(context).text),
                                     decoration: InputDecoration(
-                                      hintText: "Step ${index + 1} 설명을 입력하세요",
+                                      hintText: l.step_description_hint(
+                                        index + 1,
+                                      ),
                                       hintStyle: TextStyle(
                                         color: vrc(context).hint,
                                       ),
@@ -511,7 +552,7 @@ class EditPost extends HookConsumerWidget {
                             ),
                             const SizedBox(width: 8),
                             Text(
-                              "레시피 순서 추가",
+                              l.add_recipe_step,
                               style: TextStyle(
                                 color: fxc(context).primary400,
                                 fontSize: 16,

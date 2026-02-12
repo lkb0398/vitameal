@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
+import 'package:vitameal/core/config/l10n/l10n.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
 
 class ImageUploadCard extends StatelessWidget {
@@ -25,6 +26,8 @@ class ImageUploadCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = L10n.of(context)!; // 🌎
+
     return GestureDetector(
       onTap: hasImage ? null : onPickImage,
       child: Stack(
@@ -60,7 +63,7 @@ class ImageUploadCard extends StatelessWidget {
                           ),
                           SizedBox(height: 8),
                           Text(
-                            '이미지 추가',
+                            l.add_image,
                             style: TextStyle(
                               color: vrc(context).hint,
                               fontSize: 13,
