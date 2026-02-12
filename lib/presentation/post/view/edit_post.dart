@@ -22,7 +22,8 @@ class EditPost extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l = L10n.of(context)!; // 🌎
-    final locale = ref.watch(localeViewModelProvider);
+    final locale =
+        ref.watch(localeViewModelProvider) ?? Localizations.localeOf(context);
 
     // --- [상태 및 컨트롤러 초기화 섹션] ---
     final isEditMode = initialPost != null;

@@ -69,7 +69,7 @@ class OnboardingViewModel extends _$OnboardingViewModel {
     await ref
         .read(diseasesRepositoryProvider)
         .saveUserDiseases(userId: userId, diseaseIds: selectedIds);
-    ref.invalidate(userSelectedDiseasesProvider);
+    ref.invalidate(userDiseaseIdsProvider);
   }
 
   Future<void> saveAllergies(List<int> selectedIds) async {
@@ -77,6 +77,6 @@ class OnboardingViewModel extends _$OnboardingViewModel {
     await ref
         .read(allergiesRepositoryProvider)
         .saveUserAllergies(userId: userId, allergyIds: selectedIds);
-    ref.invalidate(userSelectedAllergiesProvider);
+    ref.invalidate(userAllergyIdsProvider);
   }
 }

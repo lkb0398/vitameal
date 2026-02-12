@@ -20,7 +20,8 @@ class OnboardingAllergyPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l = L10n.of(context)!; // 🌎
-    final locale = ref.watch(localeViewModelProvider);
+    final locale =
+        ref.read(localeViewModelProvider) ?? Localizations.localeOf(context);
 
     // 모바일 가로모드 이상의 디바이스 크기일 때 반응형 UI 적용 위한 변수
     final bool isWide = MediaQuery.sizeOf(context).width >= 480;
@@ -35,7 +36,7 @@ class OnboardingAllergyPage extends HookConsumerWidget {
     final isEditing = ref.watch(isEditFlowProvider);
 
     // 수정모드 시 기존값 불러오기
-    final selectedAsync = ref.watch(userSelectedAllergiesProvider);
+    final selectedAsync = ref.watch(userAllergyIdsProvider);
     final didInit = useRef(false);
     useEffect(() {
       if (!isEditing) return null;

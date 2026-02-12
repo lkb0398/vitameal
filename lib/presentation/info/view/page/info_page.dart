@@ -22,12 +22,13 @@ class InfoPage extends HookConsumerWidget {
     print('my userId : 🩷 ${Supabase.instance.client.auth.currentUser!.id}');
 
     final l = L10n.of(context)!; // 🌎
-    final locale = ref.read(localeViewModelProvider);
+    final locale =
+        ref.watch(localeViewModelProvider) ?? Localizations.localeOf(context);
 
     // 사용자 정보 불러오기
     final profileAsync = ref.watch(myProfileProvider);
-    final diseasesAsync = ref.watch(userDiseaseLabelsProvider);
-    final allergiesAsync = ref.watch(userAllergyLabelsProvider);
+    final diseasesAsync = ref.watch(userDiseaseEntitiesProvider);
+    final allergiesAsync = ref.watch(userAllergyEntitiesProvider);
 
     // 목표 정보 불러오기
     final mainGoal = ref.watch(getMainGoalProvider);
@@ -131,7 +132,7 @@ class InfoPage extends HookConsumerWidget {
                               if (profile == null) {
                                 return null;
                               }
-                              if (profile.gender(locale!) == null &&
+                              if (profile.gender(locale) == null &&
                                   profile.age == null &&
                                   profile.heightCm == null &&
                                   profile.weightKg == null) {
@@ -202,18 +203,24 @@ class InfoPage extends HookConsumerWidget {
                               return allergiesAsync.when(
                                 data: (allergies) {
                                   final tags = [
-                                    ...diseases.map(
-                                      (e) => UserTag(
-                                        label: e,
+                                    ...diseases.map((e) {
+                                      final name = locale.languageCode == 'ko'
+                                          ? e.name
+                                          : e.nameEn;
+                                      return UserTag(
+                                        label: name,
                                         type: TagType.disease,
-                                      ),
-                                    ),
-                                    ...allergies.map(
-                                      (e) => UserTag(
-                                        label: e,
+                                      );
+                                    }),
+                                    ...allergies.map((e) {
+                                      final name = locale.languageCode == 'ko'
+                                          ? e.name
+                                          : e.nameEn;
+                                      return UserTag(
+                                        label: name,
                                         type: TagType.allergy,
-                                      ),
-                                    ),
+                                      );
+                                    }),
                                   ];
 
                                   return Wrap(

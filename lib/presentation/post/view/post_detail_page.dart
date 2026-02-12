@@ -21,7 +21,8 @@ class PostDetailPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l = L10n.of(context)!; // 🌎
-    final locale = ref.watch(localeViewModelProvider);
+    final locale =
+        ref.watch(localeViewModelProvider) ?? Localizations.localeOf(context);
 
     // --- 초기 데이터 및 상태 설정 ---
     final currentUserId = ref.watch(userIdProvider);

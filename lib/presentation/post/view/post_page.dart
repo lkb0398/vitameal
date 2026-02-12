@@ -19,7 +19,8 @@ class PostPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l = L10n.of(context)!; // 🌎
-    final locale = ref.watch(localeViewModelProvider);
+    final locale =
+        ref.watch(localeViewModelProvider) ?? Localizations.localeOf(context);
 
     final currentUserId = ref.watch(userIdProvider);
     final postAsync = ref.watch(postViewModelProvider);
