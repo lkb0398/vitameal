@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$DiseasesEntity {
 
- int get id; String get name;
+ int get id; String get name; String get nameEn;
 /// Create a copy of DiseasesEntity
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $DiseasesEntityCopyWith<DiseasesEntity> get copyWith => _$DiseasesEntityCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is DiseasesEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DiseasesEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.nameEn, nameEn) || other.nameEn == nameEn));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,name);
+int get hashCode => Object.hash(runtimeType,id,name,nameEn);
 
 @override
 String toString() {
-  return 'DiseasesEntity(id: $id, name: $name)';
+  return 'DiseasesEntity(id: $id, name: $name, nameEn: $nameEn)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $DiseasesEntityCopyWith<$Res>  {
   factory $DiseasesEntityCopyWith(DiseasesEntity value, $Res Function(DiseasesEntity) _then) = _$DiseasesEntityCopyWithImpl;
 @useResult
 $Res call({
- int id, String name
+ int id, String name, String nameEn
 });
 
 
@@ -62,10 +62,11 @@ class _$DiseasesEntityCopyWithImpl<$Res>
 
 /// Create a copy of DiseasesEntity
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? nameEn = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,nameEn: null == nameEn ? _self.nameEn : nameEn // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }
@@ -151,10 +152,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String name)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String name,  String nameEn)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _DiseasesEntity() when $default != null:
-return $default(_that.id,_that.name);case _:
+return $default(_that.id,_that.name,_that.nameEn);case _:
   return orElse();
 
 }
@@ -172,10 +173,10 @@ return $default(_that.id,_that.name);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String name)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String name,  String nameEn)  $default,) {final _that = this;
 switch (_that) {
 case _DiseasesEntity():
-return $default(_that.id,_that.name);case _:
+return $default(_that.id,_that.name,_that.nameEn);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -192,10 +193,10 @@ return $default(_that.id,_that.name);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String name)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String name,  String nameEn)?  $default,) {final _that = this;
 switch (_that) {
 case _DiseasesEntity() when $default != null:
-return $default(_that.id,_that.name);case _:
+return $default(_that.id,_that.name,_that.nameEn);case _:
   return null;
 
 }
@@ -207,11 +208,12 @@ return $default(_that.id,_that.name);case _:
 
 
 class _DiseasesEntity implements DiseasesEntity {
-  const _DiseasesEntity({required this.id, required this.name});
+  const _DiseasesEntity({required this.id, required this.name, required this.nameEn});
   
 
 @override final  int id;
 @override final  String name;
+@override final  String nameEn;
 
 /// Create a copy of DiseasesEntity
 /// with the given fields replaced by the non-null parameter values.
@@ -223,16 +225,16 @@ _$DiseasesEntityCopyWith<_DiseasesEntity> get copyWith => __$DiseasesEntityCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DiseasesEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DiseasesEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.nameEn, nameEn) || other.nameEn == nameEn));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,name);
+int get hashCode => Object.hash(runtimeType,id,name,nameEn);
 
 @override
 String toString() {
-  return 'DiseasesEntity(id: $id, name: $name)';
+  return 'DiseasesEntity(id: $id, name: $name, nameEn: $nameEn)';
 }
 
 
@@ -243,7 +245,7 @@ abstract mixin class _$DiseasesEntityCopyWith<$Res> implements $DiseasesEntityCo
   factory _$DiseasesEntityCopyWith(_DiseasesEntity value, $Res Function(_DiseasesEntity) _then) = __$DiseasesEntityCopyWithImpl;
 @override @useResult
 $Res call({
- int id, String name
+ int id, String name, String nameEn
 });
 
 
@@ -260,10 +262,11 @@ class __$DiseasesEntityCopyWithImpl<$Res>
 
 /// Create a copy of DiseasesEntity
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? nameEn = null,}) {
   return _then(_DiseasesEntity(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,nameEn: null == nameEn ? _self.nameEn : nameEn // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }

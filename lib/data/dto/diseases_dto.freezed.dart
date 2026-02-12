@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$DiseasesDto {
 
- int get id; String get name;
+ int get id; String get name;@JsonKey(name: 'name_en') String get nameEn;
 /// Create a copy of DiseasesDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $DiseasesDtoCopyWith<DiseasesDto> get copyWith => _$DiseasesDtoCopyWithImpl<Dise
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is DiseasesDto&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DiseasesDto&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.nameEn, nameEn) || other.nameEn == nameEn));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name);
+int get hashCode => Object.hash(runtimeType,id,name,nameEn);
 
 @override
 String toString() {
-  return 'DiseasesDto(id: $id, name: $name)';
+  return 'DiseasesDto(id: $id, name: $name, nameEn: $nameEn)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $DiseasesDtoCopyWith<$Res>  {
   factory $DiseasesDtoCopyWith(DiseasesDto value, $Res Function(DiseasesDto) _then) = _$DiseasesDtoCopyWithImpl;
 @useResult
 $Res call({
- int id, String name
+ int id, String name,@JsonKey(name: 'name_en') String nameEn
 });
 
 
@@ -65,10 +65,11 @@ class _$DiseasesDtoCopyWithImpl<$Res>
 
 /// Create a copy of DiseasesDto
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? nameEn = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,nameEn: null == nameEn ? _self.nameEn : nameEn // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }
@@ -154,10 +155,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String name)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String name, @JsonKey(name: 'name_en')  String nameEn)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _DiseasesDto() when $default != null:
-return $default(_that.id,_that.name);case _:
+return $default(_that.id,_that.name,_that.nameEn);case _:
   return orElse();
 
 }
@@ -175,10 +176,10 @@ return $default(_that.id,_that.name);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String name)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String name, @JsonKey(name: 'name_en')  String nameEn)  $default,) {final _that = this;
 switch (_that) {
 case _DiseasesDto():
-return $default(_that.id,_that.name);case _:
+return $default(_that.id,_that.name,_that.nameEn);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -195,10 +196,10 @@ return $default(_that.id,_that.name);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String name)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String name, @JsonKey(name: 'name_en')  String nameEn)?  $default,) {final _that = this;
 switch (_that) {
 case _DiseasesDto() when $default != null:
-return $default(_that.id,_that.name);case _:
+return $default(_that.id,_that.name,_that.nameEn);case _:
   return null;
 
 }
@@ -210,11 +211,12 @@ return $default(_that.id,_that.name);case _:
 @JsonSerializable()
 
 class _DiseasesDto implements DiseasesDto {
-  const _DiseasesDto({required this.id, required this.name});
+  const _DiseasesDto({required this.id, required this.name, @JsonKey(name: 'name_en') required this.nameEn});
   factory _DiseasesDto.fromJson(Map<String, dynamic> json) => _$DiseasesDtoFromJson(json);
 
 @override final  int id;
 @override final  String name;
+@override@JsonKey(name: 'name_en') final  String nameEn;
 
 /// Create a copy of DiseasesDto
 /// with the given fields replaced by the non-null parameter values.
@@ -229,16 +231,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DiseasesDto&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DiseasesDto&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.nameEn, nameEn) || other.nameEn == nameEn));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name);
+int get hashCode => Object.hash(runtimeType,id,name,nameEn);
 
 @override
 String toString() {
-  return 'DiseasesDto(id: $id, name: $name)';
+  return 'DiseasesDto(id: $id, name: $name, nameEn: $nameEn)';
 }
 
 
@@ -249,7 +251,7 @@ abstract mixin class _$DiseasesDtoCopyWith<$Res> implements $DiseasesDtoCopyWith
   factory _$DiseasesDtoCopyWith(_DiseasesDto value, $Res Function(_DiseasesDto) _then) = __$DiseasesDtoCopyWithImpl;
 @override @useResult
 $Res call({
- int id, String name
+ int id, String name,@JsonKey(name: 'name_en') String nameEn
 });
 
 
@@ -266,10 +268,11 @@ class __$DiseasesDtoCopyWithImpl<$Res>
 
 /// Create a copy of DiseasesDto
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? nameEn = null,}) {
   return _then(_DiseasesDto(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,nameEn: null == nameEn ? _self.nameEn : nameEn // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }

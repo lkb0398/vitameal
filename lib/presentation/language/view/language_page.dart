@@ -11,13 +11,13 @@ class LanguagePage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final l = L10n.of(context)!;
-
-    var selected = useState<String>('자동');
+    final l = L10n.of(context)!; // 🌎
     final locale = ref.watch(localeViewModelProvider);
+
+    var selected = useState<String>(l.auto_language);
     useEffect(() {
       if (locale == null) {
-        selected.value = '자동';
+        selected.value = l.auto_language;
       } else if (locale.languageCode == 'ko') {
         selected.value = '한국어';
       } else if (locale.languageCode == 'en') {
@@ -29,7 +29,7 @@ class LanguagePage extends HookConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          l.language_page_title,
+          l.language_setting,
           style: TextStyle(
             fontSize: 22,
             fontWeight: FontWeight.w400,
@@ -45,9 +45,9 @@ class LanguagePage extends HookConsumerWidget {
             children: [
               LanguageItem(
                 selected: selected.value,
-                title: '자동',
+                title: l.auto_language,
                 onTap: () {
-                  selected.value = '자동';
+                  selected.value = l.auto_language;
                   ref.read(localeViewModelProvider.notifier).clearLocale();
                 },
               ),

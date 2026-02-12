@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$TagDto {
 
- int get id; String get name;
+ int get id; String get name;@JsonKey(name: 'name_en') String get nameEn;
 /// Create a copy of TagDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $TagDtoCopyWith<TagDto> get copyWith => _$TagDtoCopyWithImpl<TagDto>(this as Tag
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is TagDto&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TagDto&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.nameEn, nameEn) || other.nameEn == nameEn));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name);
+int get hashCode => Object.hash(runtimeType,id,name,nameEn);
 
 @override
 String toString() {
-  return 'TagDto(id: $id, name: $name)';
+  return 'TagDto(id: $id, name: $name, nameEn: $nameEn)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $TagDtoCopyWith<$Res>  {
   factory $TagDtoCopyWith(TagDto value, $Res Function(TagDto) _then) = _$TagDtoCopyWithImpl;
 @useResult
 $Res call({
- int id, String name
+ int id, String name,@JsonKey(name: 'name_en') String nameEn
 });
 
 
@@ -65,10 +65,11 @@ class _$TagDtoCopyWithImpl<$Res>
 
 /// Create a copy of TagDto
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? nameEn = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,nameEn: null == nameEn ? _self.nameEn : nameEn // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }
@@ -154,10 +155,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String name)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String name, @JsonKey(name: 'name_en')  String nameEn)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _TagDto() when $default != null:
-return $default(_that.id,_that.name);case _:
+return $default(_that.id,_that.name,_that.nameEn);case _:
   return orElse();
 
 }
@@ -175,10 +176,10 @@ return $default(_that.id,_that.name);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String name)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String name, @JsonKey(name: 'name_en')  String nameEn)  $default,) {final _that = this;
 switch (_that) {
 case _TagDto():
-return $default(_that.id,_that.name);case _:
+return $default(_that.id,_that.name,_that.nameEn);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -195,10 +196,10 @@ return $default(_that.id,_that.name);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String name)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String name, @JsonKey(name: 'name_en')  String nameEn)?  $default,) {final _that = this;
 switch (_that) {
 case _TagDto() when $default != null:
-return $default(_that.id,_that.name);case _:
+return $default(_that.id,_that.name,_that.nameEn);case _:
   return null;
 
 }
@@ -210,11 +211,12 @@ return $default(_that.id,_that.name);case _:
 @JsonSerializable()
 
 class _TagDto implements TagDto {
-  const _TagDto({required this.id, required this.name});
+  const _TagDto({required this.id, required this.name, @JsonKey(name: 'name_en') required this.nameEn});
   factory _TagDto.fromJson(Map<String, dynamic> json) => _$TagDtoFromJson(json);
 
 @override final  int id;
 @override final  String name;
+@override@JsonKey(name: 'name_en') final  String nameEn;
 
 /// Create a copy of TagDto
 /// with the given fields replaced by the non-null parameter values.
@@ -229,16 +231,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TagDto&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TagDto&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.nameEn, nameEn) || other.nameEn == nameEn));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name);
+int get hashCode => Object.hash(runtimeType,id,name,nameEn);
 
 @override
 String toString() {
-  return 'TagDto(id: $id, name: $name)';
+  return 'TagDto(id: $id, name: $name, nameEn: $nameEn)';
 }
 
 
@@ -249,7 +251,7 @@ abstract mixin class _$TagDtoCopyWith<$Res> implements $TagDtoCopyWith<$Res> {
   factory _$TagDtoCopyWith(_TagDto value, $Res Function(_TagDto) _then) = __$TagDtoCopyWithImpl;
 @override @useResult
 $Res call({
- int id, String name
+ int id, String name,@JsonKey(name: 'name_en') String nameEn
 });
 
 
@@ -266,10 +268,11 @@ class __$TagDtoCopyWithImpl<$Res>
 
 /// Create a copy of TagDto
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? nameEn = null,}) {
   return _then(_TagDto(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,nameEn: null == nameEn ? _self.nameEn : nameEn // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }

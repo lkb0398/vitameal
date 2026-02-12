@@ -41,7 +41,7 @@ final class LocaleViewModelProvider
   }
 }
 
-String _$localeViewModelHash() => r'ed0b5eda95309ccbf9b37723ad882c9cee0322e1';
+String _$localeViewModelHash() => r'46575e63f2224ea698430f7ab6191ed02bbadc84';
 
 abstract class _$LocaleViewModel extends $Notifier<Locale?> {
   Locale? build();

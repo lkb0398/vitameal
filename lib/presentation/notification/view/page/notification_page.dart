@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
+import 'package:vitameal/core/config/l10n/l10n.dart';
 import 'package:vitameal/core/service/analytics_service.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
 import 'package:vitameal/presentation/notification/view/widget/add_noti_bottom_sheet.dart';
@@ -15,13 +16,15 @@ class NotificationPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l = L10n.of(context)!; // 🌎
+
     final notisAsync = ref.watch(getAllNotisProvider);
 
     return Scaffold(
-      appBar: AppBar(title: Text("알림 설정")),
+      appBar: AppBar(title: Text(l.notification_setting)),
       body: notisAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('에러 발생: $e')),
+        error: (e, _) => Center(child: Text('error: $e')),
         data: (notis) {
           final list = notis ?? [];
           return Padding(
@@ -47,7 +50,7 @@ class NotificationPage extends HookConsumerWidget {
                                   color: vrc(context).emptyText,
                                 ),
                                 Text(
-                                  "등록한 알림이 없어요 :(",
+                                  "${l.no_notifications} :(",
                                   style: TextStyle(
                                     fontSize: 20,
                                     color: vrc(context).emptyText,
@@ -78,7 +81,7 @@ class NotificationPage extends HookConsumerWidget {
                           );
                         },
                         borderColor: fxc(context).primary400!,
-                        text: "+ 새 알림 추가하기",
+                        text: "+ ${l.add_notification}",
                         textColor: fxc(context).primary400!,
                       ),
                     ],
@@ -99,9 +102,9 @@ class NotificationPage extends HookConsumerWidget {
                             context: context,
                             builder: (_) => CustomDialog(
                               onConfirm: () => Navigator.pop(context, true),
-                              title: '정말 삭제할까요?',
-                              confirmText: '삭제',
-                              cancelText: '취소',
+                              title: l.confirm_delete,
+                              confirmText: l.delete,
+                              cancelText: l.cancel,
                             ),
                           );
                           if (yes != true) return;

@@ -328,11 +328,11 @@ const userSelectedDiseasesProvider = UserSelectedDiseasesProvider._();
 final class UserSelectedDiseasesProvider
     extends
         $FunctionalProvider<
-          AsyncValue<List<String>>,
-          List<String>,
-          FutureOr<List<String>>
+          AsyncValue<List<int>>,
+          List<int>,
+          FutureOr<List<int>>
         >
-    with $FutureModifier<List<String>>, $FutureProvider<List<String>> {
+    with $FutureModifier<List<int>>, $FutureProvider<List<int>> {
   const UserSelectedDiseasesProvider._()
     : super(
         from: null,
@@ -349,18 +349,56 @@ final class UserSelectedDiseasesProvider
 
   @$internal
   @override
+  $FutureProviderElement<List<int>> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<int>> create(Ref ref) {
+    return userSelectedDiseases(ref);
+  }
+}
+
+String _$userSelectedDiseasesHash() =>
+    r'030f589ca6bf4a50cd3a3e51df21f2262b655120';
+
+@ProviderFor(userDiseaseLabels)
+const userDiseaseLabelsProvider = UserDiseaseLabelsProvider._();
+
+final class UserDiseaseLabelsProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<String>>,
+          List<String>,
+          FutureOr<List<String>>
+        >
+    with $FutureModifier<List<String>>, $FutureProvider<List<String>> {
+  const UserDiseaseLabelsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'userDiseaseLabelsProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$userDiseaseLabelsHash();
+
+  @$internal
+  @override
   $FutureProviderElement<List<String>> $createElement(
     $ProviderPointer pointer,
   ) => $FutureProviderElement(pointer);
 
   @override
   FutureOr<List<String>> create(Ref ref) {
-    return userSelectedDiseases(ref);
+    return userDiseaseLabels(ref);
   }
 }
 
-String _$userSelectedDiseasesHash() =>
-    r'a037dbca10641bd66a1a4c0d2cb4c251c24b1122';
+String _$userDiseaseLabelsHash() => r'2ecb2f91fdecb292196ad488477b7204642ae44d';
 
 @ProviderFor(allergiesList)
 const allergiesListProvider = AllergiesListProvider._();
@@ -409,11 +447,11 @@ const userSelectedAllergiesProvider = UserSelectedAllergiesProvider._();
 final class UserSelectedAllergiesProvider
     extends
         $FunctionalProvider<
-          AsyncValue<List<String>>,
-          List<String>,
-          FutureOr<List<String>>
+          AsyncValue<List<int>>,
+          List<int>,
+          FutureOr<List<int>>
         >
-    with $FutureModifier<List<String>>, $FutureProvider<List<String>> {
+    with $FutureModifier<List<int>>, $FutureProvider<List<int>> {
   const UserSelectedAllergiesProvider._()
     : super(
         from: null,
@@ -430,15 +468,53 @@ final class UserSelectedAllergiesProvider
 
   @$internal
   @override
+  $FutureProviderElement<List<int>> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<int>> create(Ref ref) {
+    return userSelectedAllergies(ref);
+  }
+}
+
+String _$userSelectedAllergiesHash() =>
+    r'c2e759883200783e6b8caa89dbacea3f31675086';
+
+@ProviderFor(userAllergyLabels)
+const userAllergyLabelsProvider = UserAllergyLabelsProvider._();
+
+final class UserAllergyLabelsProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<String>>,
+          List<String>,
+          FutureOr<List<String>>
+        >
+    with $FutureModifier<List<String>>, $FutureProvider<List<String>> {
+  const UserAllergyLabelsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'userAllergyLabelsProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$userAllergyLabelsHash();
+
+  @$internal
+  @override
   $FutureProviderElement<List<String>> $createElement(
     $ProviderPointer pointer,
   ) => $FutureProviderElement(pointer);
 
   @override
   FutureOr<List<String>> create(Ref ref) {
-    return userSelectedAllergies(ref);
+    return userAllergyLabels(ref);
   }
 }
 
-String _$userSelectedAllergiesHash() =>
-    r'6cf9203807b5832da301e70098399f50d69e6e51';
+String _$userAllergyLabelsHash() => r'223042cb190b494769b0022a6c106aa8f13860aa';

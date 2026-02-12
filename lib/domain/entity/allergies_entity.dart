@@ -4,6 +4,9 @@ part 'allergies_entity.freezed.dart';
 
 @freezed
 abstract class AllergiesEntity with _$AllergiesEntity {
-  const factory AllergiesEntity({required int id, required String name}) =
-      _AllergiesEntity;
+  const factory AllergiesEntity({
+    required int id,
+    required String name,
+    required String nameEn,
+  }) = _AllergiesEntity;
 }

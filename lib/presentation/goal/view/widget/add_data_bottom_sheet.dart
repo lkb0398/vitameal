@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tap_debouncer/tap_debouncer.dart';
+import 'package:vitameal/core/config/l10n/l10n.dart';
 import 'package:vitameal/core/service/analytics_service.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
 import 'package:vitameal/presentation/goal/view_model/goal_datas_view_model.dart';
@@ -17,16 +18,18 @@ class AddDataBottomSheet extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l = L10n.of(context)!; // 🌎
+
     // 사용자 입력값 받기 + 입력값 검증
     final dataDateController = useTextEditingController();
     final dataValueController = useTextEditingController();
     String? validateDouble(String? value) {
       if (value == null || value.isEmpty) {
-        return '수치를 입력해주세요.'; // 입력값 없을 때
+        return l.enter_value; // 입력값 없을 때
       }
       final height = double.tryParse(value);
       if (height == null) {
-        return '숫자를 입력해주세요.'; // 숫자가 아닐 때
+        return l.invalid_number; // 숫자가 아닐 때
       }
       return null;
     }
@@ -77,10 +80,10 @@ class AddDataBottomSheet extends HookConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   spacing: 10,
                   children: [
-                    Text("데이터 추가", style: TextStyle(fontSize: 16)),
+                    Text(l.add_data, style: TextStyle(fontSize: 16)),
                     ValidateTextformfield(
                       readOnly: true,
-                      title: "일자",
+                      title: l.date,
                       hintText: "ex. 2000.01.01 13:30",
                       controller: dataDateController,
                       onTap: () async {
@@ -101,7 +104,7 @@ class AddDataBottomSheet extends HookConsumerWidget {
                     ),
                     ValidateTextformfield(
                       readOnly: false,
-                      title: "수치",
+                      title: l.value,
                       hintText: "ex. 5.0",
                       helperText: "",
                       validator: validateDouble,
@@ -151,7 +154,7 @@ class AddDataBottomSheet extends HookConsumerWidget {
                     backgroundColor: isButtonEnabled.value
                         ? fxc(context).secondary100!
                         : fxc(context).textcolor300!,
-                    text: "완료",
+                    text: l.complete,
                     textColor: isButtonEnabled.value
                         ? fxc(context).secondary400!
                         : Colors.white,

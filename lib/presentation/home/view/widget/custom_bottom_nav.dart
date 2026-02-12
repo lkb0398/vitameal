@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
+import 'package:vitameal/core/config/l10n/l10n.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
 
 class CustomBottomNav extends StatelessWidget {
@@ -14,6 +15,8 @@ class CustomBottomNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = L10n.of(context)!; // 🌎
+
     return SafeArea(
       top: false,
       child: Container(
@@ -34,19 +37,19 @@ class CustomBottomNav extends StatelessWidget {
           children: [
             _NavItem(
               icon: PhosphorIcons.bowlFood(),
-              label: '나의 식단',
+              label: l.my_diet,
               isSelected: currentIndex == 0,
               onTap: () => onTap(0),
             ),
             _NavItem(
               icon: PhosphorIcons.forkKnife(),
-              label: '레시피 피드',
+              label: l.recipe_feed,
               isSelected: currentIndex == 1,
               onTap: () => onTap(1),
             ),
             _NavItem(
               icon: PhosphorIcons.user(),
-              label: '내 정보',
+              label: l.my_info,
               isSelected: currentIndex == 2,
               onTap: () => onTap(2),
             ),

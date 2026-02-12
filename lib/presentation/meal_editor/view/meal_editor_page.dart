@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:vitameal/core/config/l10n/l10n.dart';
 import 'package:vitameal/core/service/analytics_service.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
 import 'package:vitameal/domain/enum/meal_category_enum.dart';
@@ -31,6 +32,8 @@ class MealEditorPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l = L10n.of(context)!; // 🌎
+
     // 수정 모드 여부
     final isEditMode = mealEntryId != null;
 
@@ -61,7 +64,7 @@ class MealEditorPage extends HookConsumerWidget {
             })
             .catchError((e) {
               if (context.mounted) {
-                showGraySnackBar(context, '데이터 로드 실패');
+                showGraySnackBar(context, l.failed_to_load_data);
               }
             });
       }
@@ -77,7 +80,7 @@ class MealEditorPage extends HookConsumerWidget {
         }
       } catch (e) {
         if (context.mounted) {
-          showGraySnackBar(context, '이미지 선택 실패');
+          showGraySnackBar(context, l.failed_to_select_image);
         }
       }
     }
@@ -96,7 +99,7 @@ class MealEditorPage extends HookConsumerWidget {
       final session = ref.read(authViewModelProvider);
       final userId = session?.user.id;
       if (userId == null) {
-        showGraySnackBar(context, '로그인이 필요합니다');
+        showGraySnackBar(context, l.login_required);
         return;
       }
 
@@ -132,7 +135,7 @@ class MealEditorPage extends HookConsumerWidget {
         AnalyticsService.event('meal_action', p: {'action': 'create'});
       } catch (e) {
         if (context.mounted) {
-          showGraySnackBar(context, '이미지나 식단 내용을 입력해주세요');
+          showGraySnackBar(context, l.enter_image_or_content);
         }
       } finally {
         if (shouldUpload) isImageUploading.value = false;
@@ -148,9 +151,9 @@ class MealEditorPage extends HookConsumerWidget {
         context: context,
 
         builder: (context) => CustomDialog(
-          title: '이 식단 기록을 삭제할까요?',
-          cancelText: '취소',
-          confirmText: '삭제',
+          title: l.confirm_delete_meal,
+          cancelText: l.cancel,
+          confirmText: l.delete,
           onConfirm: () => Navigator.pop(context, true),
           confirmColor: fxc(context).primary400,
         ),
@@ -174,7 +177,7 @@ class MealEditorPage extends HookConsumerWidget {
           AnalyticsService.event('meal_action', p: {'action': 'delete'});
         } catch (e) {
           if (context.mounted) {
-            showGraySnackBar(context, '삭제 실패');
+            showGraySnackBar(context, l.failed_to_delete);
           }
         } finally {
           isLoading.value = false;
@@ -198,7 +201,7 @@ class MealEditorPage extends HookConsumerWidget {
               TextButton(
                 onPressed: deleteMeal,
                 child: Text(
-                  "삭제",
+                  l.delete,
                   style: TextStyle(
                     color: vrc(context).content,
                     fontSize: 16,
@@ -218,7 +221,11 @@ class MealEditorPage extends HookConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "${date.year}년 ${date.month}월 ${date.day}일 식단",
+                  l.meal_date(
+                    date.day.toString().padLeft(2, '0'),
+                    date.month.toString().padLeft(2, '0'),
+                    date.year,
+                  ),
                   style: TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.w700,
@@ -292,8 +299,8 @@ class MealEditorPage extends HookConsumerWidget {
                           color: Colors.white,
                         ),
                       )
-                    : const Text(
-                        "완료",
+                    : Text(
+                        l.complete,
                         style: TextStyle(
                           fontSize: 17,
                           fontWeight: FontWeight.w700,

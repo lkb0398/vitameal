@@ -4,9 +4,11 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
+import 'package:vitameal/core/config/l10n/l10n.dart';
 import 'package:vitameal/core/config/routes.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
 import 'package:vitameal/core/service/analytics_service.dart';
+import 'package:vitameal/presentation/language/view_model/locale_view_model.dart';
 import 'package:vitameal/presentation/post/view_model/post_view_model.dart';
 import 'package:vitameal/presentation/post/view_model/tag_view_model.dart';
 import 'package:vitameal/presentation/ui_provider/profiles_provider.dart';
@@ -16,6 +18,9 @@ class PostPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l = L10n.of(context)!; // 🌎
+    final locale = ref.watch(localeViewModelProvider);
+
     final currentUserId = ref.watch(userIdProvider);
     final postAsync = ref.watch(postViewModelProvider);
     final allTagsAsync = ref.watch(allTagsProvider);
@@ -75,7 +80,7 @@ class PostPage extends HookConsumerWidget {
                   },
                   style: TextStyle(color: vrc(context).text),
                   decoration: InputDecoration(
-                    hintText: "원하는 레시피를 검색해보세요.",
+                    hintText: l.search_recipe_hint,
                     hintStyle: TextStyle(color: vrc(context).hint),
                     suffixIcon: Icon(Icons.search, color: vrc(context).hint),
                     contentPadding: const EdgeInsets.symmetric(horizontal: 16),
@@ -90,14 +95,18 @@ class PostPage extends HookConsumerWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 14),
 
               // --- 태그 필터 섹션 ---
               allTagsAsync.when(
                 data: (tags) {
                   // [추가] 렌더링 직전에 태그 리스트를 이름순(가나다/ABC)으로 정렬한 복사본 생성
                   final sortedTags = [...tags]
-                    ..sort((a, b) => a.name.compareTo(b.name));
+                    ..sort(
+                      (a, b) => locale == const Locale('ko')
+                          ? a.name.compareTo(b.name)
+                          : a.nameEn.compareTo(b.nameEn),
+                    );
 
                   return SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
@@ -107,19 +116,20 @@ class PostPage extends HookConsumerWidget {
                         final isSelected = selectedTagIds.value.contains(
                           tag.id,
                         );
+                        final name = locale == Locale('ko')
+                            ? tag.name
+                            : tag.nameEn;
                         return Padding(
                           padding: const EdgeInsets.only(right: 8.0),
                           child: ChoiceChip(
                             showCheckmark: false,
                             label: Text(
-                              "#${tag.name}",
+                              "#${name}",
                               style: TextStyle(
                                 color: isSelected
-                                    ? fxc(context).textcolor0
-                                    : fxc(context).primary500,
-                                fontWeight: isSelected
-                                    ? FontWeight.bold
-                                    : FontWeight.normal,
+                                    ? fxc(context).primary500
+                                    : fxc(context).primary400,
+                                fontWeight: FontWeight.normal,
                               ),
                             ),
                             selected: isSelected,
@@ -141,11 +151,15 @@ class PostPage extends HookConsumerWidget {
                                     tagIds: newList,
                                   );
                             },
-                            selectedColor: fxc(context).primary400,
+                            selectedColor: fxc(context).primary200,
                             backgroundColor: vrc(context).background,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8),
-                              side: BorderSide(color: fxc(context).primary400!),
+                              side: BorderSide(
+                                color: isSelected
+                                    ? fxc(context).primary500!
+                                    : fxc(context).primary400!,
+                              ),
                             ),
                           ),
                         );
@@ -155,7 +169,7 @@ class PostPage extends HookConsumerWidget {
                 },
                 loading: () => const SizedBox(height: 42),
                 error: (err, _) => Text(
-                  "태그 로드 실패",
+                  l.failed_to_load_tags,
                   style: TextStyle(color: vrc(context).text),
                 ),
               ),
@@ -177,7 +191,7 @@ class PostPage extends HookConsumerWidget {
                             const SizedBox(height: 100),
                             Center(
                               child: Text(
-                                "검색 결과가 없습니다.",
+                                l.no_search_result,
                                 style: TextStyle(color: vrc(context).content),
                               ),
                             ),
@@ -243,62 +257,72 @@ class PostPage extends HookConsumerWidget {
                                   ),
                                   const SizedBox(width: 12),
                                   Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          post.title,
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
-                                            color: vrc(context).text,
-                                          ),
-                                        ),
-                                        const SizedBox(height: 8),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                              post.authorName ?? "작성자",
-                                              style: TextStyle(
-                                                color: vrc(context).hint,
-                                                fontSize: 13,
-                                              ),
+                                    child: SizedBox(
+                                      height: 96,
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            post.title,
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                              color: vrc(context).text,
                                             ),
-                                            if (!isMyPost) // [추가] 내 글이 아닐 때만 북마크 아이콘 노출
-                                              IconButton(
-                                                onPressed: () {
-                                                  ref
-                                                      .read(
-                                                        postViewModelProvider
-                                                            .notifier,
-                                                      )
-                                                      .toggleBookmark(post.id!);
-
-                                                  AnalyticsService.event(
-                                                    'recipe_action',
-                                                    p: {'action': 'bookmark'},
-                                                  );
-                                                },
-                                                icon: Icon(
-                                                  post.isBookmarked
-                                                      ? Icons.bookmark
-                                                      : Icons.bookmark_outline,
-                                                  color: post.isBookmarked
-                                                      ? fxc(context).primary400
-                                                      : vrc(context).hint,
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                post.authorName ??
+                                                    l.anonymous_chef,
+                                                style: TextStyle(
+                                                  color: vrc(context).hint,
+                                                  fontSize: 12,
                                                 ),
-                                              )
-                                            else // [추가] 내 글일 경우 아이콘이 차지하던 공간을 비워둠
-                                              const SizedBox(
-                                                height: 48,
-                                                width: 48,
-                                              ), // IconButton의 기본 크기만큼 공간 유지
-                                          ],
-                                        ),
-                                      ],
+                                              ),
+                                              if (!isMyPost) // [추가] 내 글이 아닐 때만 북마크 아이콘 노출
+                                                IconButton(
+                                                  onPressed: () {
+                                                    ref
+                                                        .read(
+                                                          postViewModelProvider
+                                                              .notifier,
+                                                        )
+                                                        .toggleBookmark(
+                                                          post.id!,
+                                                        );
+
+                                                    AnalyticsService.event(
+                                                      'recipe_action',
+                                                      p: {'action': 'bookmark'},
+                                                    );
+                                                  },
+                                                  icon: Icon(
+                                                    post.isBookmarked
+                                                        ? Icons.bookmark
+                                                        : Icons
+                                                              .bookmark_outline,
+                                                    color: post.isBookmarked
+                                                        ? fxc(
+                                                            context,
+                                                          ).primary400
+                                                        : vrc(context).hint,
+                                                  ),
+                                                )
+                                              else // [추가] 내 글일 경우 아이콘이 차지하던 공간을 비워둠
+                                                const SizedBox(
+                                                  height: 48,
+                                                  width: 48,
+                                                ), // IconButton의 기본 크기만큼 공간 유지
+                                            ],
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -318,7 +342,7 @@ class PostPage extends HookConsumerWidget {
                   ),
                   error: (err, stack) => Center(
                     child: Text(
-                      '에러: $err',
+                      'error: $err',
                       style: TextStyle(color: vrc(context).text),
                     ),
                   ),

@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:vitameal/core/config/l10n/l10n.dart';
 import 'package:vitameal/core/config/routes.dart';
 import 'package:vitameal/core/service/analytics_service.dart';
 import 'package:vitameal/presentation/ui_provider/profiles_provider.dart';
@@ -68,6 +69,8 @@ class LoginPage extends HookConsumerWidget {
 
   // 로그인 전 상태의 UI
   Widget _buildLoginState(BuildContext context, WidgetRef ref) {
+    final l = L10n.of(context)!; // 🌎
+
     final vm = ref.read(authViewModelProvider.notifier);
 
     return Column(
@@ -86,7 +89,7 @@ class LoginPage extends HookConsumerWidget {
 
         // 애플 로그인
         SocialLoginButton(
-          label: 'Apple 로그인',
+          label: l.apple_login,
           backgroundColor: Colors.black,
           textColor: Colors.white,
           //fontFamily: 'SF Pro',
@@ -105,7 +108,7 @@ class LoginPage extends HookConsumerWidget {
 
         // 카카오 로그인
         SocialLoginButton(
-          label: 'Kakao 로그인',
+          label: l.kakao_login,
           backgroundColor: const Color(0xfffee500),
           textColor: const Color(0xff191919),
           //fontFamily: 'Apple SD Gothic Neo',
@@ -124,7 +127,7 @@ class LoginPage extends HookConsumerWidget {
 
         // 구글 로그인
         SocialLoginButton(
-          label: 'Google 로그인',
+          label: l.gogole_login,
           backgroundColor: const Color(0xfff2f2f2),
           textColor: Colors.black,
           //fontFamily: 'ROBOTO',

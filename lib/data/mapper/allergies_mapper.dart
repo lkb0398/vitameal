@@ -3,6 +3,6 @@ import 'package:vitameal/domain/entity/allergies_entity.dart';
 
 extension AllergiesMapper on AllergiesDto {
   AllergiesEntity toEntity() {
-    return AllergiesEntity(id: id, name: name);
+    return AllergiesEntity(id: id, name: name, nameEn: nameEn);
   }
 }

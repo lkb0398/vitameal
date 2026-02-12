@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:vitameal/core/config/l10n/l10n.dart';
 import 'package:vitameal/core/service/analytics_service.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
 import 'package:vitameal/presentation/auth/view_model/auth_view_model.dart';
 import 'package:go_router/go_router.dart';
 import 'package:vitameal/presentation/setting/view/widgets/menu_item.dart';
+import 'package:vitameal/presentation/util/show_gray_snackbar.dart';
 import 'package:vitameal/presentation/widget/dialog/custom_dialog.dart';
 
 class SettingPage extends HookConsumerWidget {
@@ -12,6 +14,8 @@ class SettingPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l = L10n.of(context)!; // 🌎
+
     final themeVrc = vrc(context);
     final themeFxc = fxc(context);
 
@@ -31,7 +35,7 @@ class SettingPage extends HookConsumerWidget {
           ),
         ),
         title: Text(
-          "메뉴",
+          l.menu,
           style: TextStyle(
             fontSize: 22,
             fontWeight: FontWeight.w400,
@@ -49,14 +53,14 @@ class SettingPage extends HookConsumerWidget {
             children: [
               MenuItem(
                 onTap: () => context.push('/language'),
-                title: "언어 설정",
+                title: l.language_setting,
                 showArrow: true,
               ),
               const SizedBox(height: 3),
 
               MenuItem(
                 onTap: () => context.push('/noti'),
-                title: "알림 설정",
+                title: l.notification_setting,
                 showArrow: true,
               ),
               const SizedBox(height: 3),
@@ -66,9 +70,9 @@ class SettingPage extends HookConsumerWidget {
                   showDialog(
                     context: context,
                     builder: (context) => CustomDialog(
-                      title: "로그아웃 하시겠습니까?",
-                      cancelText: "취소",
-                      confirmText: "확인",
+                      title: l.confirm_logout,
+                      cancelText: l.cancel,
+                      confirmText: l.confirm,
                       confirmColor: themeFxc.secondary400,
                       onConfirm: () async {
                         Navigator.pop(context);
@@ -79,7 +83,7 @@ class SettingPage extends HookConsumerWidget {
                     ),
                   );
                 },
-                title: "로그아웃",
+                title: l.logout,
               ),
               const SizedBox(height: 3),
 
@@ -88,32 +92,29 @@ class SettingPage extends HookConsumerWidget {
                   showDialog(
                     context: context,
                     builder: (context) => CustomDialog(
-                      title: "정말 탈퇴하시겠습니까?",
-                      content: "탈퇴 시 데이터가 모두 삭제되며 복구되지 않습니다.",
-                      cancelText: "유지하기",
-                      confirmText: "탈퇴하기",
+                      title: l.confirm_withdraw,
+                      content: l.withdraw_warning,
+                      cancelText: l.keep_account,
+                      confirmText: l.withdraw,
                       confirmColor: themeFxc.primary400,
                       reverseButtons: true,
                       onConfirm: () async {
-                        Navigator.pop(context);
                         await ref
                             .read(authViewModelProvider.notifier)
                             .withdraw(
                               onError: () {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text("회원 탈퇴 중 오류가 발생했습니다."),
-                                  ),
-                                );
+                                showGraySnackBar(context, l.withdraw_error);
                               },
                             );
+                        if (!context.mounted) return;
+                        Navigator.pop(context);
                         // 📝
                         AnalyticsService.event('withdraw');
                       },
                     ),
                   );
                 },
-                title: "회원 탈퇴",
+                title: l.withdraw_account,
               ),
             ],
           ),

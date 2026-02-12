@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:vitameal/core/config/l10n/l10n.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
 
 Future<DateTime?> pickDateTime(BuildContext context) async {
@@ -101,6 +102,8 @@ class _CupertinoActionBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = L10n.of(context)!; // 🌎
+
     return Container(
       height: 50,
       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -114,7 +117,7 @@ class _CupertinoActionBar extends StatelessWidget {
             padding: EdgeInsets.zero,
             onPressed: onCancel,
             child: Text(
-              '취소',
+              l.cancel,
               style: TextStyle(color: fxc(context).textcolor300),
             ),
           ),
@@ -122,7 +125,7 @@ class _CupertinoActionBar extends StatelessWidget {
             padding: EdgeInsets.zero,
             onPressed: onDone,
             child: Text(
-              '완료',
+              l.complete,
               style: TextStyle(color: fxc(context).secondary400),
             ),
           ),

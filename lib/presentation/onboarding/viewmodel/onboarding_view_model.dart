@@ -64,25 +64,19 @@ class OnboardingViewModel extends _$OnboardingViewModel {
     ref.invalidate(myProfileProvider);
   }
 
-  Future<void> saveDiseases(List<String> selectedNames) async {
+  Future<void> saveDiseases(List<int> selectedIds) async {
     final userId = ref.read(userIdProvider);
-    final diseaseIds = await ref
-        .read(diseasesRepositoryProvider)
-        .findDiseaseIdsByNames(selectedNames);
     await ref
-        .read(userDiseasesRepositoryProvider)
-        .saveUserDiseases(userId: userId, diseaseIds: diseaseIds);
+        .read(diseasesRepositoryProvider)
+        .saveUserDiseases(userId: userId, diseaseIds: selectedIds);
     ref.invalidate(userSelectedDiseasesProvider);
   }
 
-  Future<void> saveAllergies(List<String> selectedNames) async {
+  Future<void> saveAllergies(List<int> selectedIds) async {
     final userId = ref.read(userIdProvider);
-    final allergyIds = await ref
-        .read(allergiesRepositoryProvider)
-        .findAllergyIdsByNames(selectedNames);
     await ref
-        .read(userAllergiesRepositoryProvider)
-        .saveUserAllergies(userId: userId, allergyIds: allergyIds);
+        .read(allergiesRepositoryProvider)
+        .saveUserAllergies(userId: userId, allergyIds: selectedIds);
     ref.invalidate(userSelectedAllergiesProvider);
   }
 }

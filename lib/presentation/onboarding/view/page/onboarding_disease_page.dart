@@ -1,10 +1,13 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tap_debouncer/tap_debouncer.dart';
+import 'package:vitameal/core/config/l10n/l10n.dart';
 import 'package:vitameal/core/service/analytics_service.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
+import 'package:vitameal/presentation/language/view_model/locale_view_model.dart';
 import 'package:vitameal/presentation/onboarding/view/widget/progress_text.dart';
 import 'package:vitameal/presentation/onboarding/view/widget/select_box.dart';
 import 'package:vitameal/presentation/ui_provider/profiles_provider.dart';
@@ -16,6 +19,9 @@ class OnboardingDiseasePage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l = L10n.of(context)!; // 🌎
+    final locale = ref.watch(localeViewModelProvider);
+
     // 모바일 가로모드 이상의 디바이스 크기일 때 반응형 UI 적용 위한 변수
     final bool isWide = MediaQuery.sizeOf(context).width >= 480;
 
@@ -23,7 +29,7 @@ class OnboardingDiseasePage extends HookConsumerWidget {
     final diseasesAsync = ref.watch(diseasesListProvider);
 
     // 사용자 선택값
-    final selectedDiseases = useState<List<String>>([]);
+    final selectedDiseases = useState<List<int>>([]);
 
     // 수정모드 여부
     final isEditing = ref.watch(isEditFlowProvider);
@@ -59,17 +65,17 @@ class OnboardingDiseasePage extends HookConsumerWidget {
           spacing: 10,
           children: [
             /// 설명
-            Text.rich(
+            AutoSizeText.rich(
               TextSpan(
                 style: TextStyle(fontSize: 22, color: vrc(context).text),
                 children: [
                   TextSpan(
-                    text: "관리가 필요한 질환",
+                    text: l.diseaseTitle,
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  TextSpan(text: "을\n"),
+                  TextSpan(text: "\n"),
                   TextSpan(
-                    text: isEditing ? "수정해주세요. (선택)" : "모두 선택해주세요. (선택)",
+                    text: isEditing ? l.editOptional : l.allSelectOptional,
                   ),
                 ],
               ),
@@ -79,33 +85,44 @@ class OnboardingDiseasePage extends HookConsumerWidget {
             Expanded(
               child: diseasesAsync.when(
                 loading: () => const Center(child: CircularProgressIndicator()),
-                error: (e, _) => const Center(child: Text('질병 목록을 불러오지 못했어요')),
+                error: (e, _) => Center(child: Text(l.failed_loading_disease)),
                 data: (diseases) {
+                  // 질병 리스트 복사해서 언어에 따라 정렬
+                  final sortedDiseases = [...diseases]
+                    ..sort(
+                      (a, b) => locale == const Locale('ko')
+                          ? a.name.compareTo(b.name)
+                          : a.nameEn.compareTo(b.nameEn),
+                    );
+
                   return GridView.builder(
-                    itemCount: diseases.length,
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: isWide ? 5 : 3,
                       childAspectRatio: 3 / 2,
                       mainAxisSpacing: 10,
                       crossAxisSpacing: 10,
                     ),
+                    itemCount: sortedDiseases.length,
                     itemBuilder: (context, index) {
-                      final disease = diseases[index];
+                      final disease = sortedDiseases[index];
+                      final name = locale == Locale('ko')
+                          ? disease.name
+                          : disease.nameEn;
                       final isSelected = selectedDiseases.value.contains(
-                        disease.name,
+                        disease.id,
                       );
                       return SelectBox(
                         onTap: () {
                           final current = [...selectedDiseases.value];
                           if (isSelected) {
-                            current.remove(disease.name); // 선택된 것 누르면 제거
+                            current.remove(disease.id); // 선택된 것 누르면 제거
                           } else {
-                            current.add(disease.name); // 선택안된 것 누르면 추가
+                            current.add(disease.id); // 선택안된 것 누르면 추가
                           }
                           selectedDiseases.value = current;
                         },
                         isSelected: isSelected,
-                        text: disease.name,
+                        text: name,
                       );
                     },
                   );
@@ -141,7 +158,7 @@ class OnboardingDiseasePage extends HookConsumerWidget {
             child: DoneButton(
               onTap: onTap,
               backgroundColor: fxc(context).primary400!,
-              text: "다음",
+              text: l.next,
               textColor: Colors.white,
             ),
           );
