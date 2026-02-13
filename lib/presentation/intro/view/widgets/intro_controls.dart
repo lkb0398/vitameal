@@ -66,7 +66,7 @@ class IntroControls extends StatelessWidget {
               child: Text(
                 l.next,
                 style: const TextStyle(
-                  fontFamily: 'Pretendard',
+                  // fontFamily: 'Pretendard',
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
                 ),
@@ -83,10 +83,10 @@ class IntroControls extends StatelessWidget {
               child: Text(
                 l.skip,
                 style: TextStyle(
-                  fontFamily: 'Pretendard',
-                  color: Color(0xffbcbcbc),
+                  // fontFamily: 'Pretendard',
+                  color: fxc(context).textcolor300,
                   fontSize: 12,
-                  fontWeight: FontWeight.w400,
+                  // fontWeight: FontWeight.w400,
                 ),
               ),
             ),

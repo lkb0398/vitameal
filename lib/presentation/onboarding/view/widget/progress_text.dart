@@ -15,7 +15,7 @@ class ProgressText extends StatelessWidget {
           TextSpan(
             text: page,
             style: TextStyle(
-              fontWeight: FontWeight.bold,
+              fontWeight: FontWeight.w600,
               color: fxc(context).primary400,
             ),
           ),

@@ -103,7 +103,7 @@ class MealCard extends StatelessWidget {
                             style: TextStyle(
                               color: vrc(context).text,
                               fontSize: 16,
-                              fontWeight: FontWeight.w600,
+                              fontWeight: FontWeight.w500,
                             ),
                           ),
                           // 기록한 시간 있으면 출력
@@ -113,7 +113,6 @@ class MealCard extends StatelessWidget {
                               _timeLabel,
                               style: TextStyle(
                                 fontSize: 12,
-                                fontWeight: FontWeight.w500,
                                 color: vrc(context).hint,
                               ),
                             ),

@@ -27,33 +27,23 @@ class OnboardingDonePage extends HookConsumerWidget {
               scaleX: -1,
               child: Text("🎉", style: TextStyle(fontSize: 100)),
             ),
-
-            Text.rich(
-              TextSpan(
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: fxc(context).textcolor400,
-                ),
-                children: [
-                  TextSpan(text: '${l.welcome}, '),
-                  TextSpan(
-                    text: profileAsync.when(
-                      data: (profile) => "${profile?.nickname}",
-                      loading: () => "",
-                      error: (_, __) => "",
-                    ),
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  TextSpan(text: '!'),
-                ],
+            Text(
+              profileAsync.when(
+                data: (profile) => "${l.welcome}, ${profile?.nickname}!",
+                loading: () => "${l.welcome}!",
+                error: (_, __) => "${l.welcome}!",
+              ),
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                color: fxc(context).textcolor400,
               ),
             ),
             Text(
               l.signup_complete,
               style: TextStyle(
                 fontSize: 22,
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w600,
                 color: vrc(context).text,
               ),
             ),

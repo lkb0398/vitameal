@@ -228,7 +228,7 @@ class MealEditorPage extends HookConsumerWidget {
                   ),
                   style: TextStyle(
                     fontSize: 22,
-                    fontWeight: FontWeight.w700,
+                    fontWeight: FontWeight.w500,
                     color: vrc(context).text,
                   ),
                 ),

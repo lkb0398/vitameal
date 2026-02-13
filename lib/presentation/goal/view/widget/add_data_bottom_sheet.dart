@@ -80,7 +80,13 @@ class AddDataBottomSheet extends HookConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   spacing: 10,
                   children: [
-                    Text(l.add_data, style: TextStyle(fontSize: 16)),
+                    Text(
+                      l.add_data,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
                     ValidateTextformfield(
                       readOnly: true,
                       title: l.date,

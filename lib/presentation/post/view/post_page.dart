@@ -82,7 +82,10 @@ class PostPage extends HookConsumerWidget {
                   style: TextStyle(color: vrc(context).text),
                   decoration: InputDecoration(
                     hintText: l.search_recipe_hint,
-                    hintStyle: TextStyle(color: vrc(context).hint),
+                    hintStyle: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      color: vrc(context).hint,
+                    ),
                     suffixIcon: Icon(Icons.search, color: vrc(context).hint),
                     contentPadding: const EdgeInsets.symmetric(horizontal: 16),
                     enabledBorder: OutlineInputBorder(
@@ -125,12 +128,13 @@ class PostPage extends HookConsumerWidget {
                           child: ChoiceChip(
                             showCheckmark: false,
                             label: Text(
-                              "#${name}",
+                              "#$name",
                               style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
                                 color: isSelected
                                     ? fxc(context).primary500
                                     : fxc(context).primary400,
-                                fontWeight: FontWeight.normal,
                               ),
                             ),
                             selected: isSelected,
@@ -270,7 +274,7 @@ class PostPage extends HookConsumerWidget {
                                             post.title,
                                             style: TextStyle(
                                               fontSize: 16,
-                                              fontWeight: FontWeight.bold,
+                                              fontWeight: FontWeight.w500,
                                               color: vrc(context).text,
                                             ),
                                           ),

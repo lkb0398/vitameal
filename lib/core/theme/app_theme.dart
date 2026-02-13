@@ -4,7 +4,12 @@ import 'package:vitameal/core/theme/variable_colors.dart';
 
 class AppTheme {
   static ThemeData light = ThemeData(
-    //fontFamily: 'NotoSansKR',
+    fontFamily: 'Pretendard',
+    // < 종류별 폰트 적용 방법 >
+    // Regular - FontWeight.w400 (= normal, 기본 텍스트)
+    // Medium - FontWeight.w500
+    // SemiBold - FontWeight.w600
+    // Bold - FontWeight.w700 (= bold)
     colorScheme: ColorScheme.fromSeed(
       brightness: Brightness.light,
       seedColor: Color(0xFF89CC00), // primary400
@@ -20,7 +25,7 @@ class AppTheme {
   );
 
   static ThemeData dark = ThemeData(
-    //fontFamily: 'NotoSansKR',
+    fontFamily: 'Pretendard',
     colorScheme: ColorScheme.fromSeed(
       brightness: Brightness.dark,
       seedColor: Color(0xFF89CC00), // primary400

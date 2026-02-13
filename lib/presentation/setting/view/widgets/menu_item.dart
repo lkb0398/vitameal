@@ -35,7 +35,7 @@ class MenuItem extends StatelessWidget {
               title,
               style: TextStyle(
                 fontSize: 14,
-                fontFamily: 'Pretendard',
+                // fontFamily: 'Pretendard',
                 fontWeight: FontWeight.w400,
                 color: themeVrc.text,
               ),

@@ -57,10 +57,10 @@ class L10nKo extends L10n {
   String get kakao_login => 'Kakao 로그인';
 
   @override
-  String get gogole_login => 'Google 로그인';
+  String get gogole_login => 'Google 계정으로 로그인';
 
   @override
-  String get terms => '이용 약관';
+  String get terms => '이용약관';
 
   @override
   String get policy => '개인정보처리방침';

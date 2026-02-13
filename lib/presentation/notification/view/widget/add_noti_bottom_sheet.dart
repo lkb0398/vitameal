@@ -104,19 +104,13 @@ class AddNotiBottomSheet extends HookConsumerWidget {
               /// 알림명 입력창
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  spacing: 10,
-                  children: [
-                    Text(l.notification_name, style: TextStyle(fontSize: 16)),
-                    ValidateTextformfield(
-                      readOnly: false,
-                      hintText: l.breakfast_alarm,
-                      helperText: "",
-                      validator: validateLabel,
-                      controller: labelController,
-                    ),
-                  ],
+                child: ValidateTextformfield(
+                  label: l.notification_name,
+                  readOnly: false,
+                  hintText: l.breakfast_alarm,
+                  helperText: "",
+                  validator: validateLabel,
+                  controller: labelController,
                 ),
               ),
 

@@ -43,7 +43,13 @@ class BorderedContainer extends StatelessWidget {
                   Row(
                     spacing: 10,
                     children: [
-                      Text(title, style: TextStyle(fontSize: 16)),
+                      Text(
+                        title,
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
                       subtitle == null
                           ? SizedBox.shrink()
                           : Text(

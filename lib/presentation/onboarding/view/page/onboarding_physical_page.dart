@@ -153,7 +153,7 @@ class OnboardingPhysicalPage extends HookConsumerWidget {
                     if (!isEditing) TextSpan(text: l.welcomePrefix),
                     TextSpan(
                       text: nickname,
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      style: TextStyle(fontWeight: FontWeight.w600),
                     ),
                     TextSpan(
                       text: isEditing ? l.editInfoSuffix : l.inputInfoSuffix,
@@ -164,7 +164,13 @@ class OnboardingPhysicalPage extends HookConsumerWidget {
               SizedBox(height: 20),
 
               /// 성별 선택
-              Text(l.gender, style: TextStyle(fontSize: 16)),
+              Padding(
+                padding: const EdgeInsets.only(left: 8),
+                child: Text(
+                  l.gender,
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                ),
+              ),
               Row(
                 spacing: 10,
                 children: [
@@ -193,11 +199,12 @@ class OnboardingPhysicalPage extends HookConsumerWidget {
                   ),
                 ],
               ),
+
               SizedBox(height: 20),
 
               /// 출생년도 입력창
-              Text(l.birth_year, style: TextStyle(fontSize: 16)),
               ValidateTextformfield(
+                label: l.birth_year,
                 readOnly: false,
                 hintText: "1988",
                 validator: validateBirthYear,
@@ -208,7 +215,9 @@ class OnboardingPhysicalPage extends HookConsumerWidget {
                   LengthLimitingTextInputFormatter(4), // 정수 4자리만
                 ],
               ),
+
               SizedBox(height: 20),
+
               Row(
                 children: [
                   /// 키 입력창
@@ -216,28 +225,22 @@ class OnboardingPhysicalPage extends HookConsumerWidget {
                     flex: 1,
                     child: SizedBox(
                       height: 120,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        spacing: 10,
-                        children: [
-                          Text(l.height, style: TextStyle(fontSize: 16)),
-                          ValidateTextformfield(
-                            readOnly: false,
-                            hintText: "180.0",
-                            validator: validateHeight,
-                            controller: heightController,
-                            keyboardType: const TextInputType.numberWithOptions(
-                              decimal: true,
-                            ),
-                            inputFormatters: [
-                              FilteringTextInputFormatter.allow(
-                                // 정수 3자리 + 소수점 1자리 까지
-                                RegExp(r'^\d{0,3}\.?\d{0,1}$'),
-                              ),
-                            ],
-                            unit: "cm",
+                      child: ValidateTextformfield(
+                        label: l.height,
+                        readOnly: false,
+                        hintText: "180.0",
+                        validator: validateHeight,
+                        controller: heightController,
+                        keyboardType: const TextInputType.numberWithOptions(
+                          decimal: true,
+                        ),
+                        inputFormatters: [
+                          FilteringTextInputFormatter.allow(
+                            // 정수 3자리 + 소수점 1자리 까지
+                            RegExp(r'^\d{0,3}\.?\d{0,1}$'),
                           ),
                         ],
+                        unit: "cm",
                       ),
                     ),
                   ),
@@ -247,28 +250,22 @@ class OnboardingPhysicalPage extends HookConsumerWidget {
                     flex: 1,
                     child: SizedBox(
                       height: 120,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        spacing: 10,
-                        children: [
-                          Text(l.weight, style: TextStyle(fontSize: 16)),
-                          ValidateTextformfield(
-                            readOnly: false,
-                            hintText: "80.0",
-                            validator: validateWeight,
-                            controller: weightController,
-                            keyboardType: const TextInputType.numberWithOptions(
-                              decimal: true,
-                            ),
-                            inputFormatters: [
-                              FilteringTextInputFormatter.allow(
-                                // 정수 3자리 + 소수점 1자리
-                                RegExp(r'^\d{0,3}\.?\d{0,1}$'),
-                              ),
-                            ],
-                            unit: "kg",
+                      child: ValidateTextformfield(
+                        label: l.weight,
+                        readOnly: false,
+                        hintText: "80.0",
+                        validator: validateWeight,
+                        controller: weightController,
+                        keyboardType: const TextInputType.numberWithOptions(
+                          decimal: true,
+                        ),
+                        inputFormatters: [
+                          FilteringTextInputFormatter.allow(
+                            // 정수 3자리 + 소수점 1자리
+                            RegExp(r'^\d{0,3}\.?\d{0,1}$'),
                           ),
                         ],
+                        unit: "kg",
                       ),
                     ),
                   ),

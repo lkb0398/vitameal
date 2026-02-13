@@ -31,10 +31,7 @@ class BookmarkPage extends HookConsumerWidget {
         ),
         title: Text(
           l.saved_recipes,
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: vrc(context).text,
-          ),
+          style: TextStyle(color: vrc(context).text),
         ),
         centerTitle: true,
         elevation: 0,
@@ -126,14 +123,15 @@ class BookmarkPage extends HookConsumerWidget {
         decoration: BoxDecoration(
           color: isSelected
               ? fxc(context).primary400
-              : vrc(context).greyBackground,
+              : fxc(context).textcolor50,
           borderRadius: BorderRadius.circular(10),
         ),
         child: Text(
           label,
           style: TextStyle(
-            color: isSelected ? Colors.white : vrc(context).hint,
-            fontWeight: FontWeight.bold,
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
+            color: isSelected ? Colors.white : fxc(context).textcolor400,
           ),
         ),
       ),
