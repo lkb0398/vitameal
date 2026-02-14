@@ -87,7 +87,14 @@ class _NavItem extends StatelessWidget {
         children: [
           Icon(icon, size: 26, color: color),
           const SizedBox(height: 4),
-          Text(label, style: TextStyle(fontSize: 12, color: color)),
+          Text(
+            label,
+            style: TextStyle(
+              fontWeight: isSelected ? FontWeight.w500 : null,
+              fontSize: 12,
+              color: color,
+            ),
+          ),
         ],
       ),
     );

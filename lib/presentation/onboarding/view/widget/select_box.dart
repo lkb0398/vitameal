@@ -18,6 +18,7 @@ class SelectBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
+      borderRadius: BorderRadius.circular(8),
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
@@ -35,7 +36,7 @@ class SelectBox extends StatelessWidget {
           textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: 12,
-            fontWeight: FontWeight.bold,
+            fontWeight: FontWeight.w600,
             color: isSelected ? fxc(context).primary500 : vrc(context).text,
           ),
         ),

@@ -126,7 +126,7 @@ class OnboardingProfilePage extends HookConsumerWidget {
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            spacing: 10,
+            spacing: 40,
             children: [
               /// 설명
               AutoSizeText.rich(
@@ -136,14 +136,14 @@ class OnboardingProfilePage extends HookConsumerWidget {
                     TextSpan(
                       text: l.profileTitleAppName,
                       style: TextStyle(
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w600,
                         color: fxc(context).primary400,
                       ),
                     ),
                     TextSpan(text: l.profileTitleSuffix),
                     TextSpan(
                       text: l.profileTitleProfile,
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      style: TextStyle(fontWeight: FontWeight.w600),
                     ),
                     TextSpan(text: l.profileTitleObject),
                     TextSpan(
@@ -153,8 +153,6 @@ class OnboardingProfilePage extends HookConsumerWidget {
                   ],
                 ),
               ),
-
-              SizedBox(height: 30),
 
               /// 프로필 이미지
               Center(
@@ -232,8 +230,8 @@ class OnboardingProfilePage extends HookConsumerWidget {
               ),
 
               /// 닉네임 입력창
-              Text(l.nickname),
               ValidateTextformfield(
+                label: l.nickname,
                 readOnly: false,
                 hintText: l.nickname_example,
                 validator: validateNickname,

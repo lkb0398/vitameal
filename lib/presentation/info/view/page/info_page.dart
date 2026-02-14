@@ -261,6 +261,7 @@ class InfoPage extends HookConsumerWidget {
                               "${l.no_representative_goal} :(",
                               style: TextStyle(
                                 fontSize: 16,
+                                fontWeight: FontWeight.w500,
                                 color: fxc(context).textcolor100,
                               ),
                             ),
@@ -285,6 +286,7 @@ class InfoPage extends HookConsumerWidget {
                               l.add_data_hint,
                               style: TextStyle(
                                 fontSize: 16,
+                                fontWeight: FontWeight.w500,
                                 color: fxc(context).textcolor100,
                               ),
                             ),

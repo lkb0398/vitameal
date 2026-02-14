@@ -205,7 +205,7 @@ class PostDetailPage extends HookConsumerWidget {
                     style: TextStyle(
                       color: vrc(context).text,
                       fontSize: 22,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                   const SizedBox(height: 20),
@@ -274,7 +274,7 @@ class PostDetailPage extends HookConsumerWidget {
                                   "#$tagName",
                                   style: TextStyle(
                                     color: fxc(context).primary400,
-                                    fontSize: 13,
+                                    fontSize: 12,
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
@@ -297,7 +297,7 @@ class PostDetailPage extends HookConsumerWidget {
                   // --- 작성자 정보 섹션 ---
                   SizedBox(
                     width: double.infinity,
-                    height: 64,
+                    height: 48,
                     child: Row(
                       children: [
                         CircleAvatar(
@@ -339,8 +339,8 @@ class PostDetailPage extends HookConsumerWidget {
                       l.recipe_steps,
                       style: TextStyle(
                         fontSize: 18,
+                        fontWeight: FontWeight.w500,
                         color: vrc(context).text,
-                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
@@ -360,8 +360,8 @@ class PostDetailPage extends HookConsumerWidget {
                               "Step ${step.stepOrder}",
                               style: TextStyle(
                                 fontSize: 16,
-                                color: fxc(context).primary400,
                                 fontWeight: FontWeight.w500,
+                                color: fxc(context).primary400,
                               ),
                             ),
                           ),

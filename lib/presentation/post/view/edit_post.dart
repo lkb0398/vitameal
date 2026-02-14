@@ -210,8 +210,9 @@ class EditPost extends HookConsumerWidget {
                                   Text(
                                     l.add_cover_image,
                                     style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w500,
                                       color: vrc(context).hint,
-                                      fontSize: 13,
                                     ),
                                   ),
                                 ],
@@ -229,8 +230,8 @@ class EditPost extends HookConsumerWidget {
                       child: Text(
                         l.title,
                         style: TextStyle(
-                          fontWeight: FontWeight.bold,
                           fontSize: 18,
+                          fontWeight: FontWeight.w500,
                           color: vrc(context).text,
                         ),
                       ),
@@ -269,8 +270,8 @@ class EditPost extends HookConsumerWidget {
                       child: Text(
                         l.ingredients,
                         style: TextStyle(
-                          fontWeight: FontWeight.bold,
                           fontSize: 18,
+                          fontWeight: FontWeight.w500,
                           color: vrc(context).text,
                         ),
                       ),
@@ -310,8 +311,8 @@ class EditPost extends HookConsumerWidget {
                       child: Text(
                         l.tags,
                         style: TextStyle(
-                          fontWeight: FontWeight.bold,
                           fontSize: 18,
+                          fontWeight: FontWeight.w500,
                           color: vrc(context).text,
                         ),
                       ),
@@ -341,6 +342,8 @@ class EditPost extends HookConsumerWidget {
                               label: Text(
                                 "#$name",
                                 style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
                                   color: isSelected
                                       ? fxc(context).primary500
                                       : fxc(context).primary400,
@@ -388,8 +391,8 @@ class EditPost extends HookConsumerWidget {
                       child: Text(
                         l.recipe_steps,
                         style: TextStyle(
-                          fontWeight: FontWeight.bold,
                           fontSize: 18,
+                          fontWeight: FontWeight.w500,
                           color: vrc(context).text,
                         ),
                       ),
@@ -413,8 +416,9 @@ class EditPost extends HookConsumerWidget {
                                     child: Text(
                                       "Step ${index + 1}",
                                       style: TextStyle(
-                                        color: fxc(context).primary400,
                                         fontSize: 16,
+                                        fontWeight: FontWeight.w500,
+                                        color: fxc(context).primary400,
                                       ),
                                     ),
                                   ),

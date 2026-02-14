@@ -136,7 +136,8 @@ class ViewData extends HookConsumerWidget {
                     child: Text(
                       l.delete,
                       style: TextStyle(
-                        fontSize: 12,
+                        fontSize: 11,
+                        fontWeight: FontWeight.w500,
                         color: hasSelected
                             ? fxc(context).secondary400
                             : fxc(context).textcolor300,
@@ -194,7 +195,7 @@ class ViewData extends HookConsumerWidget {
                           decoration: BoxDecoration(
                             border: Border(
                               bottom: BorderSide(
-                                color: fxc(context).textcolor300!,
+                                color: fxc(context).textcolor200!,
                               ),
                             ),
                           ),
@@ -207,8 +208,10 @@ class ViewData extends HookConsumerWidget {
                                 child: Text(
                                   '${data.dataDate.year}.${data.dataDate.month.toString().padLeft(2, '0')}.${data.dataDate.day.toString().padLeft(2, '0')}\n${data.dataDate.hour.toString().padLeft(2, '0')}:${data.dataDate.minute.toString().padLeft(2, '0')}',
                                   style: TextStyle(
-                                    color: fxc(context).textcolor400,
                                     fontSize: 11,
+                                    color: isDone
+                                        ? fxc(context).textcolor300
+                                        : fxc(context).textcolor400,
                                   ),
                                 ),
                               ),
@@ -216,8 +219,11 @@ class ViewData extends HookConsumerWidget {
                                 child: Text(
                                   "${formatNumber(data.dataValue)} ${selectedGoal.goalUnit}",
                                   style: TextStyle(
-                                    color: fxc(context).textcolor400,
                                     fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: isDone
+                                        ? fxc(context).textcolor300
+                                        : vrc(context).text,
                                   ),
                                   overflow: TextOverflow.ellipsis,
                                   textAlign: TextAlign.end,
@@ -230,7 +236,9 @@ class ViewData extends HookConsumerWidget {
                                       : Icons.radio_button_unchecked,
                                   color: isSelected
                                       ? fxc(context).secondary400
-                                      : Colors.grey,
+                                      : isDone
+                                      ? fxc(context).textcolor300
+                                      : fxc(context).textcolor200,
                                 ),
                                 onPressed: () {
                                   final newSet = {...selectedDataIds.value};

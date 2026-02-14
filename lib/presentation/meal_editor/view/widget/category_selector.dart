@@ -31,8 +31,8 @@ class CategorySelector extends StatelessWidget {
         Text(
           l.category,
           style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w700,
+            fontSize: 18,
+            fontWeight: FontWeight.w500,
             color: vrc(context).text,
           ),
         ),

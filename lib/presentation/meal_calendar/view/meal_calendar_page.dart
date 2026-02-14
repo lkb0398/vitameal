@@ -550,7 +550,10 @@ class MealCalendarPage extends HookConsumerWidget {
             },
             child: IgnorePointer(
               ignoring: !showFabBubble.value,
-              child: _FabBubble(text: l.record_today_meal, onTap: () async {}),
+              child: _FabBubble(
+                text: '${l.record_today_meal}!',
+                onTap: () async {},
+              ),
             ),
           ),
           const SizedBox(height: 8),
@@ -614,7 +617,11 @@ class _EmptyMealView extends StatelessWidget {
                   const SizedBox(height: 10),
                   Text(
                     '${l.no_meal_record} :(',
-                    style: TextStyle(color: vrc(context).border, fontSize: 18),
+                    style: TextStyle(
+                      color: vrc(context).border,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ],
               ),

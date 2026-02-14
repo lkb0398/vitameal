@@ -142,7 +142,11 @@ class AddGoalPage extends HookConsumerWidget {
                       onPressed: onTap,
                       child: Text(
                         l.delete,
-                        style: TextStyle(color: fxc(context).secondary400),
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          color: fxc(context).secondary400,
+                        ),
                       ),
                     );
                   },
@@ -155,16 +159,16 @@ class AddGoalPage extends HookConsumerWidget {
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            spacing: 10,
+            spacing: 20,
             children: [
-              Text(l.goal_title, style: TextStyle(fontSize: 16)),
               ValidateTextformfield(
+                label: l.goal_title,
                 readOnly: false,
                 hintText: "ex. ${l.uric_acid}",
                 controller: goalTitleController,
               ),
-              Text(l.goal_period, style: TextStyle(fontSize: 16)),
               ValidateTextformfield(
+                label: l.goal_period,
                 readOnly: true,
                 hintText: "ex. 2000.01.01",
                 controller: goalDateController,
@@ -180,14 +184,14 @@ class AddGoalPage extends HookConsumerWidget {
                       '${date.year}.${date.month.toString().padLeft(2, '0')}.${date.day.toString().padLeft(2, '0')}';
                 },
               ),
-              Text(l.unit, style: TextStyle(fontSize: 16)),
               ValidateTextformfield(
+                label: l.unit,
                 readOnly: false,
                 hintText: "ex. mg/dL",
                 controller: goalUnitController,
               ),
-              Text(l.goal_amount, style: TextStyle(fontSize: 16)),
               ValidateTextformfield(
+                label: l.goal_amount,
                 readOnly: false,
                 hintText: "ex. 2.46",
                 validator: validateDouble,

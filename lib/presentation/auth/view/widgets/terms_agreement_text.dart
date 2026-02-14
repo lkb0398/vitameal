@@ -23,18 +23,17 @@ class TermsAgreementText extends StatelessWidget {
   Widget build(BuildContext context) {
     final l = L10n.of(context)!; // 🌎
 
-    final Color mainTextColor = vrc(context).text!;
-    final Color subTextColor = fxc(context).textcolor400!;
+    final Color textColor = fxc(context).textcolor300!;
 
     final TextStyle linkStyle = TextStyle(
-      color: mainTextColor,
+      color: textColor,
       fontWeight: FontWeight.bold, // 두께 강조
       decoration: TextDecoration.underline, // 밑줄
-      decorationColor: mainTextColor,
+      decorationColor: textColor,
       fontSize: 12,
     );
 
-    final TextStyle normalStyle = TextStyle(color: subTextColor, fontSize: 12);
+    final TextStyle normalStyle = TextStyle(color: textColor, fontSize: 12);
 
     return RichText(
       textAlign: TextAlign.center,

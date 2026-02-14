@@ -19,7 +19,11 @@ class Graph extends StatelessWidget {
       return Center(
         child: Text(
           l.add_data_hint,
-          style: TextStyle(fontSize: 16, color: fxc(context).textcolor100),
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+            color: fxc(context).textcolor100,
+          ),
         ),
       );
     }
@@ -75,6 +79,7 @@ class Graph extends StatelessWidget {
                         : value.toStringAsFixed(1),
                     style: TextStyle(
                       fontSize: 11,
+                      fontWeight: FontWeight.w500,
                       color: fxc(context).textcolor300,
                     ),
                   );
@@ -98,6 +103,7 @@ class Graph extends StatelessWidget {
                       '${date.month}/${date.day}',
                       style: TextStyle(
                         fontSize: 11,
+                        fontWeight: FontWeight.w500,
                         color: fxc(context).textcolor300,
                       ),
                     ),
@@ -169,7 +175,7 @@ class Graph extends StatelessWidget {
                     TextStyle(
                       color: Colors.white, // 텍스트 색
                       fontSize: 12,
-                      fontWeight: FontWeight.w600,
+                      fontWeight: FontWeight.bold,
                     ),
                   );
                 }).toList();

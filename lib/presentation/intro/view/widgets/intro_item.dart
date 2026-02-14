@@ -35,7 +35,7 @@ class IntroItem extends StatelessWidget {
 
   Widget _buildRichTitle(BuildContext context) {
     final baseStyle = TextStyle(
-      fontFamily: 'Pretendard',
+      // fontFamily: 'Pretendard',
       fontSize: 22,
       fontWeight: FontWeight.w500,
       height: 1.45,
@@ -54,7 +54,7 @@ class IntroItem extends StatelessWidget {
           TextSpan(
             text: item.highlight,
             style: TextStyle(
-              fontFamily: 'Pretendard',
+              // fontFamily: 'Pretendard',
               fontWeight: FontWeight.w600,
               color: fxc(context).secondary400,
             ),

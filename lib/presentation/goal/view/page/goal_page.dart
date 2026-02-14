@@ -40,8 +40,23 @@ class GoalPage extends HookConsumerWidget {
             height: 40,
             child: Row(
               children: [
-                SizedBox(width: 100, child: Center(child: Text(l.goal_title))),
-                Expanded(child: Center(child: Text(l.goal_value))),
+                SizedBox(
+                  width: 100,
+                  child: Center(
+                    child: Text(
+                      l.goal_title,
+                      style: TextStyle(fontWeight: FontWeight.w500),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Center(
+                    child: Text(
+                      l.goal_value,
+                      style: TextStyle(fontWeight: FontWeight.w500),
+                    ),
+                  ),
+                ),
                 SizedBox(
                   width: 100,
                   child: Center(
@@ -86,6 +101,7 @@ class GoalPage extends HookConsumerWidget {
                                         "${l.no_goals} :(",
                                         style: TextStyle(
                                           fontSize: 20,
+                                          fontWeight: FontWeight.w500,
                                           color: vrc(context).emptyText,
                                         ),
                                       ),
@@ -229,6 +245,7 @@ class GoalPage extends HookConsumerWidget {
                                     child: Text(
                                       goal.goalTitle,
                                       style: TextStyle(
+                                        fontSize: 12,
                                         color: goal.isDone
                                             ? fxc(context).textcolor400!
                                             : vrc(context).text,
@@ -242,6 +259,7 @@ class GoalPage extends HookConsumerWidget {
                                     child: Text(
                                       '${formatNumber(goal.goalValue)} ${goal.goalUnit}',
                                       style: TextStyle(
+                                        fontSize: 12,
                                         color: goal.isDone
                                             ? fxc(context).textcolor400!
                                             : vrc(context).text,

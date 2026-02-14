@@ -25,7 +25,11 @@ class Guage extends StatelessWidget {
       return Center(
         child: Text(
           l.add_data_hint,
-          style: TextStyle(fontSize: 16, color: fxc(context).textcolor100),
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+            color: fxc(context).textcolor100,
+          ),
         ),
       );
     }
@@ -73,7 +77,7 @@ class Guage extends StatelessWidget {
                 top: 80,
                 child: Text(
                   '${(percent * 100).round()}%',
-                  style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 32, fontWeight: FontWeight.w600),
                 ),
               ),
             ],
@@ -82,21 +86,33 @@ class Guage extends StatelessWidget {
 
         /// 수치
         SizedBox(
-          width: 300,
+          width: 260,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
                 '${l.initial}: ${formatNumber(startValue)}',
-                style: TextStyle(color: fxc(context).textcolor300),
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500,
+                  color: fxc(context).textcolor300,
+                ),
               ),
               Text(
                 '${l.current}: ${formatNumber(currentValue)}',
-                style: TextStyle(color: fxc(context).textcolor300),
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500,
+                  color: fxc(context).textcolor300,
+                ),
               ),
               Text(
                 '${l.target}: ${formatNumber(targetValue)}',
-                style: TextStyle(color: fxc(context).textcolor300),
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500,
+                  color: fxc(context).textcolor300,
+                ),
               ),
             ],
           ),

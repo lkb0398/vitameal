@@ -57,7 +57,7 @@ class SocialLoginButton extends StatelessWidget {
             Text(
               label,
               style: TextStyle(
-                fontFamily: fontFamily ?? 'pretendard',
+                fontFamily: fontFamily ?? 'Pretendard',
                 fontSize: 15,
                 fontWeight: fontWeight ?? FontWeight.w600,
                 height: height ?? 1.60,
