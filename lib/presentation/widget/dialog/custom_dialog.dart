@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
 
@@ -44,7 +45,7 @@ class CustomDialog extends StatelessWidget {
                 // 제목
                 Text(
                   title,
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
                 ),
                 // 내용
                 if (content != null) ...[
@@ -74,11 +75,11 @@ class CustomDialog extends StatelessWidget {
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                    child: Text(
+                    child: AutoSizeText(
                       cancelText,
                       style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+                        // fontSize: 14,
+                        fontWeight: FontWeight.w600,
                         color: reverseButtons
                             ? Colors.white
                             : vrc(context).text,
@@ -104,11 +105,11 @@ class CustomDialog extends StatelessWidget {
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                    child: Text(
+                    child: AutoSizeText(
                       confirmText,
                       style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+                        // fontSize: 14,
+                        fontWeight: FontWeight.w600,
                         color: reverseButtons
                             ? vrc(context).text
                             : Colors.white,

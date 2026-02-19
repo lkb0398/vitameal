@@ -24,7 +24,7 @@ void showGraySnackBar(BuildContext context, String message) {
             style: TextStyle(
               color: fxc(context).textcolor600,
               fontSize: 12,
-              fontWeight: FontWeight.bold,
+              fontWeight: FontWeight.w600,
             ),
           ),
         ),

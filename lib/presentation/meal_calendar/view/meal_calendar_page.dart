@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:vitameal/core/config/l10n/l10n.dart';
 import 'package:vitameal/core/config/routes.dart';
 import 'package:vitameal/core/di/provider.dart';
 import 'package:vitameal/core/service/analytics_service.dart';
@@ -37,8 +38,10 @@ class MealCalendarPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // ----- 인증 정보 -----
+    final l = L10n.of(context)!; // 🌎
 
+    // ----- 인증 정보 -----
+    
     final session = ref.watch(authViewModelProvider);
     final userId = session?.user.id;
     if (userId == null) {
@@ -464,6 +467,7 @@ class MealCalendarPage extends HookConsumerWidget {
                                           hasEntries: hasEntries,
                                           onAnalyze: handleAnalyze,
                                           onOpenDetail: handleOpenDetail,
+                                          title: l.ai_result,
                                         ),
                                     ],
                                   ),
@@ -508,7 +512,7 @@ class MealCalendarPage extends HookConsumerWidget {
                             const Center(child: CircularProgressIndicator()),
                         error: (e, _) => Center(
                           child: Text(
-                            '에러 발생: $e',
+                            'error: $e',
                             style: const TextStyle(color: Colors.red),
                           ),
                         ),
@@ -546,7 +550,10 @@ class MealCalendarPage extends HookConsumerWidget {
             },
             child: IgnorePointer(
               ignoring: !showFabBubble.value,
-              child: _FabBubble(text: '오늘의 식단을 기록해보세요', onTap: () async {}),
+              child: _FabBubble(
+                text: '${l.record_today_meal}!',
+                onTap: () async {},
+              ),
             ),
           ),
           const SizedBox(height: 8),
@@ -588,6 +595,8 @@ class _EmptyMealView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = L10n.of(context)!; // 🌎
+
     // Expanded 영역의 높이를 받아서 가운데 정렬
     // 스크롤로 overflow 방지
     return LayoutBuilder(
@@ -607,8 +616,12 @@ class _EmptyMealView extends StatelessWidget {
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    '기록한 식단이 없어요 :(',
-                    style: TextStyle(color: vrc(context).border, fontSize: 18),
+                    '${l.no_meal_record} :(',
+                    style: TextStyle(
+                      color: vrc(context).border,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ],
               ),

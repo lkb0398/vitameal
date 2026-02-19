@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:vitameal/core/config/l10n/l10n.dart';
 import 'package:vitameal/core/config/routes.dart';
 import 'package:vitameal/presentation/intro/model/intro_content.dart';
 import 'package:vitameal/presentation/intro/view/widgets/intro_controls.dart';
@@ -12,28 +13,30 @@ class IntroPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l = L10n.of(context)!; // 🌎
+
     final pageController = usePageController();
     final currentPage = useState(0);
 
     final introItems = [
       IntroContent(
-        title: "오늘의 식단을\n손쉽게 기록해 보세요",
-        highlight: "기록",
+        title: l.intro_1_title,
+        highlight: l.intro_1_highlight,
         image: "assets/images/intro_1.png",
       ),
       IntroContent(
-        title: "식사 알림으로\n내 건강정보를 한눈에",
-        highlight: "건강정보",
+        title: l.intro_2_title,
+        highlight: l.intro_2_highlight,
         image: "assets/images/intro_2.png",
       ),
       IntroContent(
-        title: "나만의 건강 레시피를\n사람들과 공유해요",
-        highlight: "건강 레시피",
+        title: l.intro_3_title,
+        highlight: l.intro_3_highlight,
         image: "assets/images/intro_3.png",
       ),
       IntroContent(
-        title: "위젯으로 식단 관리를\n더욱 더 간편하게",
-        highlight: "위젯",
+        title: l.intro_4_title,
+        highlight: l.intro_4_highlight,
         image: "assets/images/intro_4.png",
       ),
     ];

@@ -6,8 +6,15 @@ part of 'diseases_dto.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_DiseasesDto _$DiseasesDtoFromJson(Map<String, dynamic> json) =>
-    _DiseasesDto(id: (json['id'] as num).toInt(), name: json['name'] as String);
+_DiseasesDto _$DiseasesDtoFromJson(Map<String, dynamic> json) => _DiseasesDto(
+  id: (json['id'] as num).toInt(),
+  name: json['name'] as String,
+  nameEn: json['name_en'] as String,
+);
 
 Map<String, dynamic> _$DiseasesDtoToJson(_DiseasesDto instance) =>
-    <String, dynamic>{'id': instance.id, 'name': instance.name};
+    <String, dynamic>{
+      'id': instance.id,
+      'name': instance.name,
+      'name_en': instance.nameEn,
+    };

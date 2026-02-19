@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
+import 'package:vitameal/core/config/l10n/l10n.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
 import 'package:vitameal/presentation/util/show_gray_snackbar.dart';
 import 'package:vitameal/presentation/goal/view/widget/add_data_bottom_sheet.dart';
@@ -16,6 +17,8 @@ class DataPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l = L10n.of(context)!; // 🌎
+
     // 전체 목표 불러오기
     final goalsAsync = ref.watch(getAllGoalsProvider);
 
@@ -32,7 +35,7 @@ class DataPage extends HookConsumerWidget {
     }
 
     return Scaffold(
-      appBar: AppBar(title: Text("최근 데이터")),
+      appBar: AppBar(title: Text(l.recent_data)),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -47,13 +50,6 @@ class DataPage extends HookConsumerWidget {
                     underline: SizedBox(),
                     isExpanded: true,
                     value: selectedGoal.goalId,
-                    hint: Text(
-                      '항목 선택하기',
-                      style: TextStyle(
-                        color: fxc(context).textcolor300,
-                        fontSize: 14,
-                      ),
-                    ),
                     items: goalsAsync.when(
                       loading: () => [],
                       error: (_, __) => [],
@@ -194,7 +190,7 @@ class DataPage extends HookConsumerWidget {
                       ? Align(
                           alignment: Alignment.centerLeft,
                           child: Text(
-                            "🥳 이미 달성한 목표입니다!",
+                            "🥳 ${l.goal_already_done}",
                             style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.bold,
@@ -216,7 +212,7 @@ class DataPage extends HookConsumerWidget {
         onPressed: () async {
           // 1. 완료된 목표 > 스낵바 + 버튼 비활성화
           if (isDone) {
-            showGraySnackBar(context, '이미 달성한 목표에는 데이터를 추가할 수 없어요.');
+            showGraySnackBar(context, l.goal_already_achieved);
             return;
             // 2. 데이터 추가 bottomsheet
           } else {

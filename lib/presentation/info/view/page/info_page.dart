@@ -4,11 +4,13 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:vitameal/core/config/l10n/l10n.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
 import 'package:vitameal/presentation/info/view/widget/bordered_container.dart';
 import 'package:vitameal/presentation/info/view/widget/graph.dart';
 import 'package:vitameal/presentation/info/view/widget/guage.dart';
 import 'package:vitameal/presentation/info/view/widget/tag_chip.dart';
+import 'package:vitameal/presentation/language/view_model/locale_view_model.dart';
 import 'package:vitameal/presentation/ui_provider/goals_provider.dart';
 import 'package:vitameal/presentation/ui_provider/profiles_provider.dart';
 
@@ -19,10 +21,14 @@ class InfoPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     print('my userId : 🩷 ${Supabase.instance.client.auth.currentUser!.id}');
 
+    final l = L10n.of(context)!; // 🌎
+    final locale =
+        ref.watch(localeViewModelProvider) ?? Localizations.localeOf(context);
+
     // 사용자 정보 불러오기
     final profileAsync = ref.watch(myProfileProvider);
-    final diseasesAsync = ref.watch(userSelectedDiseasesProvider);
-    final allergiesAsync = ref.watch(userSelectedAllergiesProvider);
+    final diseasesAsync = ref.watch(userDiseaseEntitiesProvider);
+    final allergiesAsync = ref.watch(userAllergyEntitiesProvider);
 
     // 목표 정보 불러오기
     final mainGoal = ref.watch(getMainGoalProvider);
@@ -34,6 +40,13 @@ class InfoPage extends HookConsumerWidget {
     String formatNumber(double value) {
       return value % 1 == 0 ? value.toInt().toString() : value.toString();
     }
+
+    // 기본 프로필 이미지
+    Image defaultImg = Image.asset(
+      'assets/images/profile_image_s.webp',
+      height: 48,
+      width: 48,
+    );
 
     return Scaffold(
       appBar: AppBar(
@@ -71,11 +84,7 @@ class InfoPage extends HookConsumerWidget {
                           profileAsync.when(
                             data: (profile) {
                               return profile!.photoUrl == null
-                                  ? Image.asset(
-                                      'assets/images/profile_image_s.webp',
-                                      height: 48,
-                                      width: 48,
-                                    )
+                                  ? defaultImg
                                   : ClipRRect(
                                       borderRadius: BorderRadius.circular(100),
                                       child: SizedBox(
@@ -88,20 +97,8 @@ class InfoPage extends HookConsumerWidget {
                                       ),
                                     );
                             },
-                            loading: () {
-                              return Image.asset(
-                                'assets/images/profile_image_s.webp',
-                                height: 48,
-                                width: 48,
-                              );
-                            },
-                            error: (_, __) {
-                              return Image.asset(
-                                'assets/images/profile_image_s.webp',
-                                height: 48,
-                                width: 48,
-                              );
-                            },
+                            loading: () => defaultImg,
+                            error: (_, __) => defaultImg,
                           ),
 
                           profileAsync.when(
@@ -113,8 +110,7 @@ class InfoPage extends HookConsumerWidget {
                               ),
                             ),
                             loading: () => const Text(""),
-                            error: (_, _) =>
-                                Center(child: Text('정보를 불러오지 못했습니다')),
+                            error: (_, _) => const Text(""),
                           ),
                         ],
                       ),
@@ -123,7 +119,7 @@ class InfoPage extends HookConsumerWidget {
 
                   /// 내 정보 영역
                   BorderedContainer(
-                    title: "내 정보",
+                    title: l.my_info,
                     onTap: () => context.push('/edit/physical'),
                     child: Column(
                       spacing: 10,
@@ -136,7 +132,7 @@ class InfoPage extends HookConsumerWidget {
                               if (profile == null) {
                                 return null;
                               }
-                              if (profile.gender == null &&
+                              if (profile.gender(locale) == null &&
                                   profile.age == null &&
                                   profile.heightCm == null &&
                                   profile.weightKg == null) {
@@ -146,8 +142,8 @@ class InfoPage extends HookConsumerWidget {
                                 TextSpan(
                                   children: [
                                     TextSpan(
-                                      text: profile.gender != null
-                                          ? "${profile.gender}  "
+                                      text: profile.gender(locale) != null
+                                          ? "${profile.gender(locale)}   "
                                           : null,
                                     ),
                                     TextSpan(
@@ -159,7 +155,9 @@ class InfoPage extends HookConsumerWidget {
                                       ),
                                     ),
                                     TextSpan(
-                                      text: profile.age != null ? " 세  " : null,
+                                      text: profile.age != null
+                                          ? l.year_old
+                                          : null,
                                     ),
                                     TextSpan(
                                       text: profile.heightCm != null
@@ -171,7 +169,7 @@ class InfoPage extends HookConsumerWidget {
                                     ),
                                     TextSpan(
                                       text: profile.heightCm != null
-                                          ? " cm  "
+                                          ? "cm   "
                                           : null,
                                     ),
                                     TextSpan(
@@ -184,7 +182,7 @@ class InfoPage extends HookConsumerWidget {
                                     ),
                                     TextSpan(
                                       text: profile.weightKg != null
-                                          ? " kg"
+                                          ? "kg"
                                           : null,
                                     ),
                                   ],
@@ -193,8 +191,7 @@ class InfoPage extends HookConsumerWidget {
                             },
 
                             loading: () => const Text(""),
-                            error: (_, _) =>
-                                Center(child: Text('정보를 불러오지 못했습니다')),
+                            error: (_, _) => Text(l.failed_loading_info),
                           ),
                         ),
 
@@ -206,18 +203,24 @@ class InfoPage extends HookConsumerWidget {
                               return allergiesAsync.when(
                                 data: (allergies) {
                                   final tags = [
-                                    ...diseases.map(
-                                      (e) => UserTag(
-                                        label: e,
+                                    ...diseases.map((e) {
+                                      final name = locale.languageCode == 'ko'
+                                          ? e.name
+                                          : e.nameEn;
+                                      return UserTag(
+                                        label: name,
                                         type: TagType.disease,
-                                      ),
-                                    ),
-                                    ...allergies.map(
-                                      (e) => UserTag(
-                                        label: e,
+                                      );
+                                    }),
+                                    ...allergies.map((e) {
+                                      final name = locale.languageCode == 'ko'
+                                          ? e.name
+                                          : e.nameEn;
+                                      return UserTag(
+                                        label: name,
                                         type: TagType.allergy,
-                                      ),
-                                    ),
+                                      );
+                                    }),
                                   ];
 
                                   return Wrap(
@@ -229,13 +232,11 @@ class InfoPage extends HookConsumerWidget {
                                   );
                                 },
                                 loading: () => SizedBox.shrink(),
-                                error: (_, _) =>
-                                    Center(child: Text('정보를 불러오지 못했습니다')),
+                                error: (_, _) => Text(l.failed_loading_info),
                               );
                             },
                             loading: () => SizedBox.shrink(),
-                            error: (_, _) =>
-                                Center(child: Text('정보를 불러오지 못했습니다')),
+                            error: (_, _) => Text(l.failed_loading_info),
                           ),
                         ),
                       ],
@@ -244,7 +245,7 @@ class InfoPage extends HookConsumerWidget {
 
                   /// 건강 목표
                   BorderedContainer(
-                    title: "건강 목표",
+                    title: l.health_goals,
                     subtitle: mainGoal != null
                         ? '${mainGoal.goalTitle}  ${mainGoal.goalDate.year}.${mainGoal.goalDate.month.toString().padLeft(2, '0')}.${mainGoal.goalDate.day.toString().padLeft(2, '0')}'
                         : null,
@@ -257,9 +258,10 @@ class InfoPage extends HookConsumerWidget {
                           )
                         : Center(
                             child: Text(
-                              "대표 설정한 목표가 없어요 :(",
+                              "${l.no_representative_goal} :(",
                               style: TextStyle(
                                 fontSize: 16,
+                                fontWeight: FontWeight.w500,
                                 color: fxc(context).textcolor100,
                               ),
                             ),
@@ -268,7 +270,7 @@ class InfoPage extends HookConsumerWidget {
 
                   /// 최근 그래프
                   BorderedContainer(
-                    title: "최근 그래프",
+                    title: l.recent_graph,
                     subtitle: mainGoal != null
                         ? '${mainGoal.goalTitle}  ${mainGoal.goalUnit}'
                         : null,
@@ -281,9 +283,10 @@ class InfoPage extends HookConsumerWidget {
                         ? Graph(datas: current5Datas ?? [])
                         : Center(
                             child: Text(
-                              "데이터를 추가해 주세요.",
+                              l.add_data_hint,
                               style: TextStyle(
                                 fontSize: 16,
+                                fontWeight: FontWeight.w500,
                                 color: fxc(context).textcolor100,
                               ),
                             ),

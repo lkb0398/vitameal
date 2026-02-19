@@ -3,10 +3,10 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tap_debouncer/tap_debouncer.dart';
+import 'package:vitameal/core/config/l10n/l10n.dart';
 import 'package:vitameal/core/service/analytics_service.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
 import 'package:vitameal/domain/entity/goals_entity.dart';
-import 'package:vitameal/presentation/util/show_gray_snackbar.dart';
 import 'package:vitameal/presentation/goal/view_model/goals_view_model.dart';
 import 'package:vitameal/presentation/ui_provider/goals_provider.dart';
 import 'package:vitameal/presentation/goal/view/function/pick_date.dart';
@@ -21,12 +21,11 @@ class AddGoalPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l = L10n.of(context)!; // 🌎
+
     final goal = goalId == null
         ? null // goal == null > 추가 화면
         : ref.watch(getGoalProvider(goalId!)); // goal != null > 수정 화면
-
-    // 달성된 목표 여부
-    final isDone = goal?.isDone == true;
 
     // 날짜 선택
     final selectedGoalDate = useState<DateTime?>(null);
@@ -38,11 +37,11 @@ class AddGoalPage extends HookConsumerWidget {
     final goalDateController = useTextEditingController();
     String? validateDouble(String? value) {
       if (value == null || value.isEmpty) {
-        return '수치를 입력해주세요.'; // 입력값 없을 때
+        return l.enter_value; // 입력값 없을 때
       }
       final height = double.tryParse(value);
       if (height == null) {
-        return '숫자를 입력해주세요.'; // 숫자가 아닐 때
+        return l.invalid_number; // 숫자가 아닐 때
       }
       return null; // 통과
     }
@@ -103,7 +102,7 @@ class AddGoalPage extends HookConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(goal != null ? "목표 수정" : "새 목표"),
+        title: Text(goal != null ? l.edit_goal : l.new_goal),
         actions: [
           /// 삭제 버튼
           goal != null
@@ -131,9 +130,9 @@ class AddGoalPage extends HookConsumerWidget {
                               p: {'action': 'delete'},
                             );
                           },
-                          title: '정말 삭제할까요?',
-                          confirmText: '삭제',
-                          cancelText: '취소',
+                          title: l.confirm_delete,
+                          confirmText: l.delete,
+                          cancelText: l.cancel,
                         );
                       },
                     );
@@ -142,8 +141,12 @@ class AddGoalPage extends HookConsumerWidget {
                     return TextButton(
                       onPressed: onTap,
                       child: Text(
-                        "삭제",
-                        style: TextStyle(color: fxc(context).secondary400),
+                        l.delete,
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          color: fxc(context).secondary400,
+                        ),
                       ),
                     );
                   },
@@ -156,16 +159,16 @@ class AddGoalPage extends HookConsumerWidget {
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            spacing: 10,
+            spacing: 20,
             children: [
-              Text("목표명", style: TextStyle(fontSize: 16)),
               ValidateTextformfield(
+                label: l.goal_title,
                 readOnly: false,
-                hintText: "ex. 요산",
+                hintText: "ex. ${l.uric_acid}",
                 controller: goalTitleController,
               ),
-              Text("목표 기간", style: TextStyle(fontSize: 16)),
               ValidateTextformfield(
+                label: l.goal_period,
                 readOnly: true,
                 hintText: "ex. 2000.01.01",
                 controller: goalDateController,
@@ -181,14 +184,14 @@ class AddGoalPage extends HookConsumerWidget {
                       '${date.year}.${date.month.toString().padLeft(2, '0')}.${date.day.toString().padLeft(2, '0')}';
                 },
               ),
-              Text("단위", style: TextStyle(fontSize: 16)),
               ValidateTextformfield(
+                label: l.unit,
                 readOnly: false,
                 hintText: "ex. mg/dL",
                 controller: goalUnitController,
               ),
-              Text("목표 수치", style: TextStyle(fontSize: 16)),
               ValidateTextformfield(
+                label: l.goal_amount,
                 readOnly: false,
                 hintText: "ex. 2.46",
                 validator: validateDouble,
@@ -207,44 +210,38 @@ class AddGoalPage extends HookConsumerWidget {
         onTap: isButtonEnabled.value
             ? () async {
                 if (goal != null) {
-                  // 1. 완료된 목표 > 스낵바 + 버튼 비활성화
-                  if (isDone) {
-                    showGraySnackBar(context, '이미 달성한 목표는 수정할 수 없어요.');
-                    return;
-                  } else {
-                    // 2. 목표 수정
-                    await ref
-                        .read(goalsViewModelProvider.notifier)
-                        .updateGoal(
-                          goalId: goal.goalId!,
-                          goalTitle: goalTitleController.text,
-                          goalUnit: goalUnitController.text,
-                          goalValue: double.tryParse(goalValueController.text)!,
-                          goalDate: selectedGoalDate.value!,
-                          isDone: goal.isDone,
-                          isMain: goal.isMain,
-                        );
-                    // 기존값 업데이트
-                    savedGoalRef.value = GoalsEntity(
-                      goalId: goal.goalId,
-                      goalTitle: goalTitleController.text.trim(),
-                      goalUnit: goalUnitController.text.trim(),
-                      goalValue: double.tryParse(goalValueController.text)!,
-                      goalDate: selectedGoalDate.value!,
-                      isDone: goal.isDone,
-                      isMain: goal.isMain,
-                    );
-                    // 버튼 비활성화
-                    isButtonEnabled.value = false;
-                    // mounted 체크
-                    if (!context.mounted) return;
-                    // 페이지 이동
-                    context.pop();
-                    // UI 반영
-                    ref.invalidate(getAllGoalsProvider);
-                  }
+                  // 1. 목표 수정
+                  await ref
+                      .read(goalsViewModelProvider.notifier)
+                      .updateGoal(
+                        goalId: goal.goalId!,
+                        goalTitle: goalTitleController.text,
+                        goalUnit: goalUnitController.text,
+                        goalValue: double.tryParse(goalValueController.text)!,
+                        goalDate: selectedGoalDate.value!,
+                        isDone: goal.isDone,
+                        isMain: goal.isMain,
+                      );
+                  // 기존값 업데이트
+                  savedGoalRef.value = GoalsEntity(
+                    goalId: goal.goalId,
+                    goalTitle: goalTitleController.text.trim(),
+                    goalUnit: goalUnitController.text.trim(),
+                    goalValue: double.tryParse(goalValueController.text)!,
+                    goalDate: selectedGoalDate.value!,
+                    isDone: goal.isDone,
+                    isMain: goal.isMain,
+                  );
+                  // 버튼 비활성화
+                  isButtonEnabled.value = false;
+                  // mounted 체크
+                  if (!context.mounted) return;
+                  // 페이지 이동
+                  context.pop();
+                  // UI 반영
+                  ref.invalidate(getAllGoalsProvider);
                 } else {
-                  // 3. 목표 추가
+                  // 2. 목표 추가
                   await ref
                       .read(goalsViewModelProvider.notifier)
                       .saveGoal(
@@ -274,7 +271,7 @@ class AddGoalPage extends HookConsumerWidget {
             padding: const EdgeInsets.only(bottom: 10),
             child: DoneButton(
               onTap: onTap,
-              text: "완료",
+              text: l.complete,
               backgroundColor: isButtonEnabled.value
                   ? fxc(context).secondary400!
                   : fxc(context).textcolor200!,

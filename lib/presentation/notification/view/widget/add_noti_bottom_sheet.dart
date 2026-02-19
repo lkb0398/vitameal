@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tap_debouncer/tap_debouncer.dart';
+import 'package:vitameal/core/config/l10n/l10n.dart';
 import 'package:vitameal/core/service/analytics_service.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
 import 'package:vitameal/domain/entity/notifications_entity.dart';
@@ -19,6 +20,8 @@ class AddNotiBottomSheet extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l = L10n.of(context)!; // 🌎
+
     TimeOfDay selectedTime = initialTime;
 
     // next_fire_at 계산
@@ -43,7 +46,7 @@ class AddNotiBottomSheet extends HookConsumerWidget {
     final labelController = useTextEditingController();
     String? validateLabel(String? value) {
       if (value == null || value.trim().isEmpty) {
-        return '알림 이름을 입력해주세요.'; // 입력값 없을 때
+        return l.enter_notification_name; // 입력값 없을 때
       }
       return null; // 통과
     }
@@ -101,19 +104,13 @@ class AddNotiBottomSheet extends HookConsumerWidget {
               /// 알림명 입력창
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  spacing: 10,
-                  children: [
-                    Text("알림 이름", style: TextStyle(fontSize: 16)),
-                    ValidateTextformfield(
-                      readOnly: false,
-                      hintText: "아침",
-                      helperText: "",
-                      validator: validateLabel,
-                      controller: labelController,
-                    ),
-                  ],
+                child: ValidateTextformfield(
+                  label: l.notification_name,
+                  readOnly: false,
+                  hintText: l.breakfast_alarm,
+                  helperText: "",
+                  validator: validateLabel,
+                  controller: labelController,
                 ),
               ),
 
@@ -192,7 +189,7 @@ class AddNotiBottomSheet extends HookConsumerWidget {
                     backgroundColor: isButtonEnabled.value
                         ? fxc(context).primary100!
                         : fxc(context).textcolor300!,
-                    text: "완료",
+                    text: l.complete,
                     textColor: isButtonEnabled.value
                         ? fxc(context).primary600!
                         : Colors.white,

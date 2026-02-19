@@ -10,8 +10,6 @@ import 'package:vitameal/data/data_source/meal_remote_data_source.dart';
 import 'package:vitameal/data/data_source/post_remote_data_source.dart';
 import 'package:vitameal/data/data_source/profiles_data_source.dart';
 import 'package:vitameal/data/data_source/storage_data_source.dart';
-import 'package:vitameal/data/data_source/user_allergies_data_source.dart';
-import 'package:vitameal/data/data_source/user_diseases_data_source.dart';
 import 'package:vitameal/data/data_source/goal_datas_data_source.dart';
 import 'package:vitameal/data/database/database.dart';
 import 'package:vitameal/data/repository_impl/meal_analysis_repository_impl.dart';
@@ -26,8 +24,6 @@ import 'package:vitameal/data/data_source/goals_data_source.dart';
 import 'package:vitameal/data/repository_impl/allergies_repository_impl.dart';
 import 'package:vitameal/data/repository_impl/diseases_repository_impl.dart';
 import 'package:vitameal/data/repository_impl/profiles_repository_impl.dart';
-import 'package:vitameal/data/repository_impl/user_allergies_repository_impl.dart';
-import 'package:vitameal/data/repository_impl/user_diseases_repository_impl.dart';
 import 'package:vitameal/domain/repository/allergies_repository.dart';
 import 'package:vitameal/domain/repository/diseases_repository.dart';
 import 'package:vitameal/domain/repository/meal_analysis_repository.dart';
@@ -35,8 +31,6 @@ import 'package:vitameal/domain/repository/meal_repository.dart';
 import 'package:vitameal/domain/repository/post_repository.dart';
 import 'package:vitameal/domain/repository/profiles_repository.dart';
 import 'package:vitameal/domain/repository/storage_repository.dart';
-import 'package:vitameal/domain/repository/user_allergies_repository.dart';
-import 'package:vitameal/domain/repository/user_diseases_repository.dart';
 import 'package:vitameal/domain/repository/goals_repository.dart';
 import 'package:vitameal/data/repository_impl/goals_repository_impl.dart';
 import 'package:vitameal/data/data_source/auth_data_source.dart';
@@ -74,21 +68,9 @@ ProfilesDataSource profilesDataSource(Ref ref) {
 }
 
 @riverpod
-UserDiseasesDataSource userDiseasesDataSource(Ref ref) {
-  final client = ref.read(supabaseClientProvider);
-  return UserDiseasesDataSourceImpl(client);
-}
-
-@riverpod
 DiseasesDataSource diseasesDataSource(Ref ref) {
   final client = ref.read(supabaseClientProvider);
   return DiseasesDataSourceImpl(client);
-}
-
-@riverpod
-UserAllergiesDataSource userAllergiesDataSource(Ref ref) {
-  final client = ref.read(supabaseClientProvider);
-  return UserAllergiesDataSourceImpl(client);
 }
 
 @riverpod
@@ -153,23 +135,9 @@ ProfilesRepository profilesRepository(Ref ref) {
 }
 
 @riverpod
-UserDiseasesRepository userDiseasesRepository(Ref ref) {
-  final userDiseasesDS = ref.read(userDiseasesDataSourceProvider);
-  final diseasesDS = ref.read(diseasesDataSourceProvider);
-  return UserDiseasesRepositoryImpl(userDiseasesDS, diseasesDS);
-}
-
-@riverpod
 DiseasesRepository diseasesRepository(Ref ref) {
   final dataSource = ref.read(diseasesDataSourceProvider);
   return DiseasesRepositoryImpl(dataSource);
-}
-
-@riverpod
-UserAllergiesRepository userAllergiesRepository(Ref ref) {
-  final userAllergiesDS = ref.read(userAllergiesDataSourceProvider);
-  final allergiesDS = ref.read(allergiesDataSourceProvider);
-  return UserAllergiesRepositoryImpl(userAllergiesDS, allergiesDS);
 }
 
 @riverpod

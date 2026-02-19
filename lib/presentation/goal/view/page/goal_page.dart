@@ -3,6 +3,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
+import 'package:vitameal/core/config/l10n/l10n.dart';
 import 'package:vitameal/core/service/analytics_service.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
 import 'package:vitameal/presentation/goal/view_model/goals_view_model.dart';
@@ -15,6 +16,8 @@ class GoalPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l = L10n.of(context)!; // 🌎
+
     final goalsAsync = ref.watch(getAllGoalsProvider);
 
     // 소수점 0 일 때 제거
@@ -23,7 +26,7 @@ class GoalPage extends HookConsumerWidget {
     }
 
     return Scaffold(
-      appBar: AppBar(title: Text("건강 목표")),
+      appBar: AppBar(title: Text(l.health_goals)),
       body: Column(
         children: [
           /// 제목 행
@@ -37,13 +40,28 @@ class GoalPage extends HookConsumerWidget {
             height: 40,
             child: Row(
               children: [
-                SizedBox(width: 100, child: Center(child: Text("목표명"))),
-                Expanded(child: Center(child: Text("목표 수치값"))),
                 SizedBox(
                   width: 100,
                   child: Center(
                     child: Text(
-                      "대표설정",
+                      l.goal_title,
+                      style: TextStyle(fontWeight: FontWeight.w500),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Center(
+                    child: Text(
+                      l.goal_value,
+                      style: TextStyle(fontWeight: FontWeight.w500),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  width: 100,
+                  child: Center(
+                    child: Text(
+                      l.set_representative,
                       style: TextStyle(color: fxc(context).secondary400),
                     ),
                   ),
@@ -56,7 +74,7 @@ class GoalPage extends HookConsumerWidget {
           Expanded(
             child: goalsAsync.when(
               loading: () => const Center(child: CircularProgressIndicator()),
-              error: (e, _) => Center(child: Text('에러 발생: $e')),
+              error: (e, _) => Center(child: Text('error: $e')),
               data: (goals) {
                 final list = goals ?? [];
                 return Padding(
@@ -80,9 +98,10 @@ class GoalPage extends HookConsumerWidget {
                                         color: vrc(context).emptyText,
                                       ),
                                       Text(
-                                        "등록한 목표가 없어요 :(",
+                                        "${l.no_goals} :(",
                                         style: TextStyle(
                                           fontSize: 20,
+                                          fontWeight: FontWeight.w500,
                                           color: vrc(context).emptyText,
                                         ),
                                       ),
@@ -95,7 +114,7 @@ class GoalPage extends HookConsumerWidget {
                             AddButton(
                               onTap: () => context.push('/add/goal'),
                               borderColor: fxc(context).secondary400!,
-                              text: "목표 추가하기",
+                              text: l.add_goal,
                               textColor: fxc(context).secondary400!,
                             ),
                           ],
@@ -119,9 +138,9 @@ class GoalPage extends HookConsumerWidget {
                                         context: context,
                                         builder: (context) {
                                           return CustomDialog(
-                                            title: '정말 삭제할까요?',
-                                            confirmText: '삭제',
-                                            cancelText: '취소',
+                                            title: l.confirm_delete,
+                                            confirmText: l.delete,
+                                            cancelText: l.cancel,
                                             onConfirm: () async {
                                               // 목표 삭제
                                               await ref
@@ -196,9 +215,9 @@ class GoalPage extends HookConsumerWidget {
                                     // UI 반영
                                     ref.invalidate(getAllGoalsProvider);
                                   },
-                                  title: "대표로 설정할까요?",
-                                  confirmText: "확인",
-                                  cancelText: '취소',
+                                  title: l.set_as_representative,
+                                  confirmText: l.confirm,
+                                  cancelText: l.cancel,
                                 );
                               },
                             );
@@ -226,6 +245,7 @@ class GoalPage extends HookConsumerWidget {
                                     child: Text(
                                       goal.goalTitle,
                                       style: TextStyle(
+                                        fontSize: 12,
                                         color: goal.isDone
                                             ? fxc(context).textcolor400!
                                             : vrc(context).text,
@@ -239,6 +259,7 @@ class GoalPage extends HookConsumerWidget {
                                     child: Text(
                                       '${formatNumber(goal.goalValue)} ${goal.goalUnit}',
                                       style: TextStyle(
+                                        fontSize: 12,
                                         color: goal.isDone
                                             ? fxc(context).textcolor400!
                                             : vrc(context).text,

@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:vitameal/core/config/l10n/l10n.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
 
 Future<DateTime?> pickDate(BuildContext context) async {
@@ -7,6 +8,8 @@ Future<DateTime?> pickDate(BuildContext context) async {
   return showCupertinoModalPopup<DateTime>(
     context: context,
     builder: (context) {
+      final l = L10n.of(context)!; // 🌎
+
       return Container(
         height: 300,
         color: vrc(context).background,
@@ -27,7 +30,7 @@ Future<DateTime?> pickDate(BuildContext context) async {
                   CupertinoButton(
                     padding: EdgeInsets.zero,
                     child: Text(
-                      '취소',
+                      l.cancel,
                       style: TextStyle(color: fxc(context).textcolor300),
                     ),
                     onPressed: () => Navigator.pop(context),
@@ -35,7 +38,7 @@ Future<DateTime?> pickDate(BuildContext context) async {
                   CupertinoButton(
                     padding: EdgeInsets.zero,
                     child: Text(
-                      '완료',
+                      l.complete,
                       style: TextStyle(color: fxc(context).secondary400),
                     ),
                     onPressed: () =>

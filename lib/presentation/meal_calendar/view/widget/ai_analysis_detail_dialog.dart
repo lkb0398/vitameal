@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
+import 'package:vitameal/core/config/l10n/l10n.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
 import 'package:vitameal/domain/entity/meal_analysis_entity.dart';
 import 'package:vitameal/presentation/meal_calendar/view/util/link_launcher.dart';
@@ -14,6 +15,8 @@ class AiAnalysisDetailDialog extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = L10n.of(context)!; // 🌎
+
     final pageController = usePageController();
     final currentPage = useState(0);
 
@@ -46,7 +49,7 @@ class AiAnalysisDetailDialog extends HookWidget {
                 children: [
                   hasPages
                       ? Text(
-                          '기저질환별 피드백',
+                          l.feedback,
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -121,6 +124,8 @@ class _ConditionFeedbackPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = L10n.of(context)!; // 🌎
+
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -157,7 +162,7 @@ class _ConditionFeedbackPage extends StatelessWidget {
           // 주요 포인트
           if (feedback.points.isNotEmpty) ...[
             Text(
-              '주요 포인트',
+              l.key_points,
               style: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.bold,
@@ -198,7 +203,7 @@ class _ConditionFeedbackPage extends StatelessWidget {
           // 개선 제안
           if (feedback.suggestions.isNotEmpty) ...[
             Text(
-              '개선 제안',
+              l.suggestions,
               style: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.bold,
@@ -382,7 +387,7 @@ class _GeneralFeedbackPage extends StatelessWidget {
 }
 
 class _PointCard extends StatelessWidget {
-  /// 포인트 카드 (좋아요 & 아쉬워요에 사용 : 재사용할수있도록 리팩토링 하기)
+  /// 포인트 카드 (재사용할수있도록 리팩토링 하기)
   const _PointCard({
     required this.title,
     required this.icon,
@@ -492,7 +497,7 @@ class _InfoLink extends StatelessWidget {
             tapTargetSize: MaterialTapTargetSize.shrinkWrap,
           ),
           child: Text(
-            '출처 및 건강정보 관련 안내',
+            l.source_info,
             style: const TextStyle(fontSize: 11, color: Colors.grey),
           ),
         ),

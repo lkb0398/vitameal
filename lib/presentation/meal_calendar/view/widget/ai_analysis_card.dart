@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
+import 'package:vitameal/core/config/l10n/l10n.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
 import 'package:vitameal/domain/constants/analysis_policy.dart';
 import 'package:vitameal/presentation/meal_calendar/view/util/link_launcher.dart';
@@ -37,6 +38,8 @@ class AiAnalysisCard extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l = L10n.of(context)!; // 🌎
+
     final isAnalyzing = useState(false); // 분석 트랜잭션 플래그
     final isOnline = useState(true); // 네트워크 연결 상태
 
@@ -88,7 +91,7 @@ class AiAnalysisCard extends HookConsumerWidget {
       final online = await checkOnline();
       if (!online) {
         if (context.mounted) {
-          showGraySnackBar(context, '네트워크 연결을 확인해주세요');
+          showGraySnackBar(context, l.check_connection);
         }
         return;
       }
@@ -100,7 +103,7 @@ class AiAnalysisCard extends HookConsumerWidget {
         await onAnalyze();
       } catch (e) {
         if (context.mounted) {
-          showGraySnackBar(context, '분석 실패');
+          showGraySnackBar(context, l.failed_to_analyze);
         }
       } finally {
         isAnalyzing.value = false;
@@ -116,12 +119,12 @@ class AiAnalysisCard extends HookConsumerWidget {
           showDialog(
             context: context,
             builder: (context) => AlertDialog(
-              title: const Text('네트워크 연결 필요'),
-              content: const Text('자세한 분석 결과를 보려면 인터넷 연결이 필요합니다.'),
+              title: Text(l.need_connection),
+              content: Text(l.need_connection_detail),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(),
-                  child: const Text('확인'),
+                  child: Text(l.confirm),
                 ),
               ],
             ),
@@ -177,12 +180,12 @@ class AiAnalysisCard extends HookConsumerWidget {
                         key: const ValueKey('analyze_button'),
                         // TODO : vm 쪽에서 label 결정하도록 리팩토링 하기
                         label: !isOnline.value
-                            ? '네트워크 연결 필요'
+                            ? l.need_connection
                             : isAnalyzing.value || isCountLoading
-                            ? '분석 중...'
+                            ? l.analyzing
                             : canAnalyze
-                            ? '다시 분석하기 ($todayCount/${AnalysisPolicy.maxDailyAnalysisCount})'
-                            : '오늘 분석 횟수를 모두 사용했어요 ($todayCount/${AnalysisPolicy.maxDailyAnalysisCount})',
+                            ? '${l.reanalyze} ($todayCount/${AnalysisPolicy.maxDailyAnalysisCount})'
+                            : '${l.over_analysis_limit} ($todayCount/${AnalysisPolicy.maxDailyAnalysisCount})',
                         enabled:
                             isOnline.value && !isAnalyzing.value && canAnalyze,
                         onTap: handleAnalyze,
@@ -193,8 +196,8 @@ class AiAnalysisCard extends HookConsumerWidget {
             if (hasSummary) ...[
               const SizedBox(height: 6),
               Text(
-                '본 분석은 AI가 제공하는 일반적인 건강 정보이며, 의료적 진단이나 치료를 대체하지 않습니다.',
-                style: TextStyle(fontSize: 11.5, color: Colors.grey),
+                l.ai_disclaimer,
+                style: TextStyle(fontSize: 11.5, color: vrc(context).hint),
               ),
               const SizedBox(height: 4),
               Row(
@@ -209,7 +212,7 @@ class AiAnalysisCard extends HookConsumerWidget {
                       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     ),
                     child: Text(
-                      '출처 및 건강정보 관련 안내',
+                      l.source_info,
                       style: const TextStyle(fontSize: 11, color: Colors.grey),
                     ),
                   ),
@@ -226,12 +229,12 @@ class AiAnalysisCard extends HookConsumerWidget {
               child: _AnalyzeButton(
                 key: const ValueKey('analyze_button'),
                 label: !isOnline.value
-                    ? '네트워크 연결 필요'
+                    ? l.need_connection
                     : isAnalyzing.value || isCountLoading
-                    ? '분석 중...'
+                    ? l.analyzing
                     : canAnalyze
-                    ? '분석하기 $todayCount/${AnalysisPolicy.maxDailyAnalysisCount}'
-                    : '오늘 분석 횟수를 모두 사용했어요 ($todayCount/${AnalysisPolicy.maxDailyAnalysisCount})',
+                    ? '${l.analyze} $todayCount/${AnalysisPolicy.maxDailyAnalysisCount}'
+                    : '${l.over_analysis_limit} ($todayCount/${AnalysisPolicy.maxDailyAnalysisCount})',
                 enabled: isOnline.value && !isAnalyzing.value && canAnalyze,
                 onTap: handleAnalyze,
               ),
@@ -240,7 +243,7 @@ class AiAnalysisCard extends HookConsumerWidget {
             const SizedBox(height: 6),
             if (!hasSummary)
               Text(
-                '분석은 하루 최대 3회까지 가능하며, 매일 자정에 갱신됩니다.',
+                l.analysis_limit,
                 style: TextStyle(fontSize: 11.5, color: vrc(context).hint),
               ),
           ],
@@ -334,7 +337,7 @@ class _AnalyzeButton extends StatelessWidget {
                           label,
                           style: const TextStyle(
                             fontSize: 14,
-                            fontWeight: FontWeight.w700,
+                            fontWeight: FontWeight.w600,
                             color: Colors.white,
                           ),
                         ),
@@ -372,6 +375,8 @@ class _ResultTextWithDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = L10n.of(context)!; // 🌎
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -389,7 +394,7 @@ class _ResultTextWithDetail extends StatelessWidget {
         GestureDetector(
           onTap: onDetailTap,
           child: Text(
-            '자세히 보기',
+            l.view_details,
             style: TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w600,

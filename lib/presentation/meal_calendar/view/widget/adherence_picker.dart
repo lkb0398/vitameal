@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
+import 'package:vitameal/core/config/l10n/l10n.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
 
 class AdherencePicker extends StatelessWidget {
@@ -17,6 +18,8 @@ class AdherencePicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = L10n.of(context)!; // 🌎
+
     return Container(
       padding: const EdgeInsets.fromLTRB(0, 20, 0, 24),
       child: Column(
@@ -26,7 +29,7 @@ class AdherencePicker extends StatelessWidget {
             children: [
               SizedBox(width: 2),
               Text(
-                "오늘 식단을 평가해주세요",
+                l.rate_today_meal,
                 style: TextStyle(fontSize: 13.5, color: vrc(context).content),
               ),
             ],
@@ -39,7 +42,7 @@ class AdherencePicker extends StatelessWidget {
                   color: Colors.redAccent,
                   selected: adherence == Colors.redAccent,
                   onTap: () => onPick(Colors.redAccent),
-                  label: "노력해요",
+                  label: l.fine,
                   icon: PhosphorIcons.smileySad(),
                 ),
               ),
@@ -49,7 +52,7 @@ class AdherencePicker extends StatelessWidget {
                   color: Colors.orangeAccent,
                   selected: adherence == Colors.orangeAccent,
                   onTap: () => onPick(Colors.orangeAccent),
-                  label: "괜찮아요",
+                  label: l.good,
                   icon: PhosphorIcons.smileyMeh(),
                 ),
               ),
@@ -59,7 +62,7 @@ class AdherencePicker extends StatelessWidget {
                   color: Color(0xFF89CC00),
                   selected: adherence == Color(0xFF89CC00),
                   onTap: () => onPick(Color(0xFF89CC00)),
-                  label: "최고예요",
+                  label: l.great,
                   icon: PhosphorIcons.smiley(),
                 ),
               ),
@@ -126,7 +129,7 @@ class _AdherenceChip extends StatelessWidget {
                   label,
                   style: TextStyle(
                     fontSize: 14,
-                    fontWeight: FontWeight.w700,
+                    fontWeight: FontWeight.w600,
                     color: color,
                   ),
                 ),

@@ -139,54 +139,6 @@ final class ProfilesDataSourceProvider
 String _$profilesDataSourceHash() =>
     r'30aae55e04069365c11dd90155ce8c67a3d49a62';
 
-@ProviderFor(userDiseasesDataSource)
-const userDiseasesDataSourceProvider = UserDiseasesDataSourceProvider._();
-
-final class UserDiseasesDataSourceProvider
-    extends
-        $FunctionalProvider<
-          UserDiseasesDataSource,
-          UserDiseasesDataSource,
-          UserDiseasesDataSource
-        >
-    with $Provider<UserDiseasesDataSource> {
-  const UserDiseasesDataSourceProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'userDiseasesDataSourceProvider',
-        isAutoDispose: true,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
-
-  @override
-  String debugGetCreateSourceHash() => _$userDiseasesDataSourceHash();
-
-  @$internal
-  @override
-  $ProviderElement<UserDiseasesDataSource> $createElement(
-    $ProviderPointer pointer,
-  ) => $ProviderElement(pointer);
-
-  @override
-  UserDiseasesDataSource create(Ref ref) {
-    return userDiseasesDataSource(ref);
-  }
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(UserDiseasesDataSource value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<UserDiseasesDataSource>(value),
-    );
-  }
-}
-
-String _$userDiseasesDataSourceHash() =>
-    r'eba12f69a75c2d31a44fa445bb920ec101d7efb9';
-
 @ProviderFor(diseasesDataSource)
 const diseasesDataSourceProvider = DiseasesDataSourceProvider._();
 
@@ -234,54 +186,6 @@ final class DiseasesDataSourceProvider
 
 String _$diseasesDataSourceHash() =>
     r'7311d0154d69a4c9c0539d89ea0fe3dcbd207afc';
-
-@ProviderFor(userAllergiesDataSource)
-const userAllergiesDataSourceProvider = UserAllergiesDataSourceProvider._();
-
-final class UserAllergiesDataSourceProvider
-    extends
-        $FunctionalProvider<
-          UserAllergiesDataSource,
-          UserAllergiesDataSource,
-          UserAllergiesDataSource
-        >
-    with $Provider<UserAllergiesDataSource> {
-  const UserAllergiesDataSourceProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'userAllergiesDataSourceProvider',
-        isAutoDispose: true,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
-
-  @override
-  String debugGetCreateSourceHash() => _$userAllergiesDataSourceHash();
-
-  @$internal
-  @override
-  $ProviderElement<UserAllergiesDataSource> $createElement(
-    $ProviderPointer pointer,
-  ) => $ProviderElement(pointer);
-
-  @override
-  UserAllergiesDataSource create(Ref ref) {
-    return userAllergiesDataSource(ref);
-  }
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(UserAllergiesDataSource value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<UserAllergiesDataSource>(value),
-    );
-  }
-}
-
-String _$userAllergiesDataSourceHash() =>
-    r'60add92dc17acb72a0a786b1bedbd93d9ace5927';
 
 @ProviderFor(allergiesDataSource)
 const allergiesDataSourceProvider = AllergiesDataSourceProvider._();
@@ -754,54 +658,6 @@ final class ProfilesRepositoryProvider
 String _$profilesRepositoryHash() =>
     r'7ff6d8926664bccda7add95dc573e13be8b2fd62';
 
-@ProviderFor(userDiseasesRepository)
-const userDiseasesRepositoryProvider = UserDiseasesRepositoryProvider._();
-
-final class UserDiseasesRepositoryProvider
-    extends
-        $FunctionalProvider<
-          UserDiseasesRepository,
-          UserDiseasesRepository,
-          UserDiseasesRepository
-        >
-    with $Provider<UserDiseasesRepository> {
-  const UserDiseasesRepositoryProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'userDiseasesRepositoryProvider',
-        isAutoDispose: true,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
-
-  @override
-  String debugGetCreateSourceHash() => _$userDiseasesRepositoryHash();
-
-  @$internal
-  @override
-  $ProviderElement<UserDiseasesRepository> $createElement(
-    $ProviderPointer pointer,
-  ) => $ProviderElement(pointer);
-
-  @override
-  UserDiseasesRepository create(Ref ref) {
-    return userDiseasesRepository(ref);
-  }
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(UserDiseasesRepository value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<UserDiseasesRepository>(value),
-    );
-  }
-}
-
-String _$userDiseasesRepositoryHash() =>
-    r'c8c2ab2c4827fab365be8db8a5fc8dd60e735521';
-
 @ProviderFor(diseasesRepository)
 const diseasesRepositoryProvider = DiseasesRepositoryProvider._();
 
@@ -849,54 +705,6 @@ final class DiseasesRepositoryProvider
 
 String _$diseasesRepositoryHash() =>
     r'2a49e747c22713d4d01262e03bd3fe0b70a2f04b';
-
-@ProviderFor(userAllergiesRepository)
-const userAllergiesRepositoryProvider = UserAllergiesRepositoryProvider._();
-
-final class UserAllergiesRepositoryProvider
-    extends
-        $FunctionalProvider<
-          UserAllergiesRepository,
-          UserAllergiesRepository,
-          UserAllergiesRepository
-        >
-    with $Provider<UserAllergiesRepository> {
-  const UserAllergiesRepositoryProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'userAllergiesRepositoryProvider',
-        isAutoDispose: true,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
-
-  @override
-  String debugGetCreateSourceHash() => _$userAllergiesRepositoryHash();
-
-  @$internal
-  @override
-  $ProviderElement<UserAllergiesRepository> $createElement(
-    $ProviderPointer pointer,
-  ) => $ProviderElement(pointer);
-
-  @override
-  UserAllergiesRepository create(Ref ref) {
-    return userAllergiesRepository(ref);
-  }
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(UserAllergiesRepository value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<UserAllergiesRepository>(value),
-    );
-  }
-}
-
-String _$userAllergiesRepositoryHash() =>
-    r'c6516d9dda75205a9d59f94f1430b228ff8a45f9';
 
 @ProviderFor(allergiesRepository)
 const allergiesRepositoryProvider = AllergiesRepositoryProvider._();

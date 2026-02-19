@@ -3,9 +3,11 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:vitameal/core/config/l10n/l10n.dart';
 import 'package:vitameal/core/config/routes.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
 import 'package:vitameal/core/service/analytics_service.dart';
+import 'package:vitameal/presentation/language/view_model/locale_view_model.dart';
 import 'package:vitameal/presentation/post/view_model/post_view_model.dart';
 import 'package:vitameal/presentation/post/view_model/tag_view_model.dart';
 import 'package:vitameal/presentation/ui_provider/profiles_provider.dart';
@@ -18,6 +20,10 @@ class PostDetailPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l = L10n.of(context)!; // 🌎
+    final locale =
+        ref.watch(localeViewModelProvider) ?? Localizations.localeOf(context);
+
     // --- 초기 데이터 및 상태 설정 ---
     final currentUserId = ref.watch(userIdProvider);
     final postsAsync = ref.watch(postViewModelProvider);
@@ -45,7 +51,7 @@ class PostDetailPage extends HookConsumerWidget {
         appBar: AppBar(backgroundColor: vrc(context).background),
         body: Center(
           child: Text(
-            "게시글을 불러올 수 없습니다.",
+            l.failed_to_load_posts,
             style: TextStyle(color: vrc(context).text),
           ),
         ),
@@ -77,9 +83,9 @@ class PostDetailPage extends HookConsumerWidget {
                   final confirm = await showDialog<bool>(
                     context: context,
                     builder: (context) => CustomDialog(
-                      title: '정말 삭제할까요?',
-                      cancelText: '취소',
-                      confirmText: '삭제',
+                      title: l.confirm_delete,
+                      cancelText: l.cancel,
+                      confirmText: l.delete,
                       onConfirm: () => Navigator.pop(context, true),
                       confirmColor: fxc(context).primary400,
                     ),
@@ -92,11 +98,11 @@ class PostDetailPage extends HookConsumerWidget {
                           .deletePost(post.id!);
                       if (context.mounted) {
                         context.pop();
-                        showGraySnackBar(context, '게시글이 삭제되었습니다.');
+                        showGraySnackBar(context, l.post_deleted);
                       }
                     } catch (e) {
                       if (context.mounted) {
-                        showGraySnackBar(context, '삭제에 실패했습니다.');
+                        showGraySnackBar(context, l.failed_to_delete);
                       }
                       // 📝
                       AnalyticsService.event(
@@ -113,14 +119,14 @@ class PostDetailPage extends HookConsumerWidget {
                 PopupMenuItem(
                   value: 'modify',
                   child: Text(
-                    '수정하기',
+                    l.edit,
                     style: TextStyle(fontSize: 12, color: vrc(context).text),
                   ),
                 ),
                 PopupMenuItem(
                   value: 'delete',
                   child: Text(
-                    '삭제하기',
+                    l.delete_action,
                     style: TextStyle(
                       color: fxc(context).secondary400,
                       fontSize: 12,
@@ -131,7 +137,7 @@ class PostDetailPage extends HookConsumerWidget {
             )
           else
             const SizedBox.shrink(),
-          const SizedBox(width: 20),
+          const SizedBox(width: 10),
         ],
       ),
       body: SingleChildScrollView(
@@ -167,11 +173,7 @@ class PostDetailPage extends HookConsumerWidget {
                     child: GestureDetector(
                       onTap: () {
                         if (isMyPost) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text("자신의 글은 즐겨찾기 할 수 없습니다."),
-                            ),
-                          );
+                          showGraySnackBar(context, l.cannot_bookmark_own_post);
                           return;
                         }
                         ref
@@ -203,7 +205,7 @@ class PostDetailPage extends HookConsumerWidget {
                     style: TextStyle(
                       color: vrc(context).text,
                       fontSize: 22,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                   const SizedBox(height: 20),
@@ -215,7 +217,7 @@ class PostDetailPage extends HookConsumerWidget {
                   Text(
                     post.createdAt != null
                         ? DateFormat('yyyy.MM.dd').format(post.createdAt!)
-                        : "날짜 정보 없음",
+                        : l.no_date_info,
                     style: TextStyle(color: vrc(context).hint, fontSize: 12),
                   ),
                   const SizedBox(height: 20),
@@ -223,18 +225,29 @@ class PostDetailPage extends HookConsumerWidget {
                   // --- 태그 리스트 섹션 ---
                   allTagsAsync.when(
                     data: (tags) {
-                      final displayTags =
-                          post.selectedTagIds
-                              ?.map(
-                                (id) => tags
-                                    .firstWhere(
-                                      (t) => t.id == id,
-                                      orElse: () => tags[0],
+                      final displayTags = locale == Locale('ko')
+                          ? post.selectedTagIds
+                                    ?.map(
+                                      (id) => tags
+                                          .firstWhere(
+                                            (t) => t.id == id,
+                                            orElse: () => tags[0],
+                                          )
+                                          .name,
                                     )
-                                    .name,
-                              )
-                              .toList() ??
-                          [];
+                                    .toList() ??
+                                []
+                          : post.selectedTagIds
+                                    ?.map(
+                                      (id) => tags
+                                          .firstWhere(
+                                            (t) => t.id == id,
+                                            orElse: () => tags[0],
+                                          )
+                                          .nameEn,
+                                    )
+                                    .toList() ??
+                                [];
 
                       displayTags.sort();
 
@@ -253,7 +266,7 @@ class PostDetailPage extends HookConsumerWidget {
                                   color: fxc(context).primary100,
                                   borderRadius: BorderRadius.circular(8),
                                   border: Border.all(
-                                    color: fxc(context).primary400!,
+                                    color: fxc(context).primary100!,
                                     width: 1,
                                   ),
                                 ),
@@ -261,7 +274,7 @@ class PostDetailPage extends HookConsumerWidget {
                                   "#$tagName",
                                   style: TextStyle(
                                     color: fxc(context).primary400,
-                                    fontSize: 13,
+                                    fontSize: 12,
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
@@ -284,7 +297,7 @@ class PostDetailPage extends HookConsumerWidget {
                   // --- 작성자 정보 섹션 ---
                   SizedBox(
                     width: double.infinity,
-                    height: 64,
+                    height: 48,
                     child: Row(
                       children: [
                         CircleAvatar(
@@ -307,11 +320,10 @@ class PostDetailPage extends HookConsumerWidget {
                         ),
                         const SizedBox(width: 12),
                         Text(
-                          post.authorName ?? "익명 요리사",
+                          post.authorName ?? l.anonymous_chef,
                           style: TextStyle(
-                            color: vrc(context).text,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 15,
+                            color: fxc(context).textcolor400,
+                            fontSize: 16,
                           ),
                         ),
                       ],
@@ -324,11 +336,11 @@ class PostDetailPage extends HookConsumerWidget {
                   Padding(
                     padding: const EdgeInsets.only(left: 8),
                     child: Text(
-                      "레시피 순서",
+                      l.recipe_steps,
                       style: TextStyle(
                         fontSize: 18,
+                        fontWeight: FontWeight.w500,
                         color: vrc(context).text,
-                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
@@ -342,15 +354,18 @@ class PostDetailPage extends HookConsumerWidget {
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            "Step ${step.stepOrder}",
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: fxc(context).primary400,
-                              fontWeight: FontWeight.w500,
+                          Padding(
+                            padding: const EdgeInsets.only(left: 8),
+                            child: Text(
+                              "Step ${step.stepOrder}",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                                color: fxc(context).primary400,
+                              ),
                             ),
                           ),
-                          const SizedBox(height: 24),
+                          const SizedBox(height: 12),
                           if (step.imageUrl != null &&
                               step.imageUrl!.isNotEmpty)
                             Padding(

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:vitameal/core/config/l10n/l10n.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
 import 'package:vitameal/domain/entity/post_entity.dart';
 import 'package:vitameal/presentation/post/view_model/post_view_model.dart';
@@ -12,6 +13,8 @@ class BookmarkPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l = L10n.of(context)!; // 🌎
+
     // --- 초기 상태 및 데이터 로드 섹션 ---
     final selectedTabIndex = useState(0);
     final postsAsync = selectedTabIndex.value == 0
@@ -27,11 +30,8 @@ class BookmarkPage extends HookConsumerWidget {
           onPressed: () => context.pop(),
         ),
         title: Text(
-          "저장된 레시피",
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: vrc(context).text,
-          ),
+          l.saved_recipes,
+          style: TextStyle(color: vrc(context).text),
         ),
         centerTitle: true,
         elevation: 0,
@@ -45,14 +45,14 @@ class BookmarkPage extends HookConsumerWidget {
               children: [
                 buildTabButton(
                   context,
-                  "즐겨찾기",
+                  l.favorites,
                   selectedTabIndex.value == 0,
                   () => selectedTabIndex.value = 0,
                 ),
                 const SizedBox(width: 10),
                 buildTabButton(
                   context,
-                  "나의 레시피",
+                  l.my_recipes,
                   selectedTabIndex.value == 1,
                   () => selectedTabIndex.value = 1,
                 ),
@@ -67,7 +67,7 @@ class BookmarkPage extends HookConsumerWidget {
                 if (posts.isEmpty) {
                   return Center(
                     child: Text(
-                      "목록이 비어있습니다.",
+                      l.empty_list,
                       style: TextStyle(color: vrc(context).content),
                     ),
                   );
@@ -98,7 +98,7 @@ class BookmarkPage extends HookConsumerWidget {
               ),
               error: (err, _) => Center(
                 child: Text(
-                  "오류가 발생했습니다: $err",
+                  "error: $err",
                   style: TextStyle(color: vrc(context).text),
                 ),
               ),
@@ -123,14 +123,15 @@ class BookmarkPage extends HookConsumerWidget {
         decoration: BoxDecoration(
           color: isSelected
               ? fxc(context).primary400
-              : vrc(context).greyBackground,
+              : fxc(context).textcolor50,
           borderRadius: BorderRadius.circular(10),
         ),
         child: Text(
           label,
           style: TextStyle(
-            color: isSelected ? Colors.white : vrc(context).hint,
-            fontWeight: FontWeight.bold,
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
+            color: isSelected ? Colors.white : fxc(context).textcolor400,
           ),
         ),
       ),
