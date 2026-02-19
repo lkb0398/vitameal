@@ -45,7 +45,7 @@ final class OnboardingViewModelProvider
 }
 
 String _$onboardingViewModelHash() =>
-    r'487b61cbed94bba3c77075fd4bfbda200e8dd07d';
+    r'f81a0c4fa4da784c57f57290a6b30e6c8f849a54';
 
 /// 액션 전용 ViewModel
 

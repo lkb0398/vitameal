@@ -400,7 +400,7 @@ final class UserDiseaseEntitiesProvider
 }
 
 String _$userDiseaseEntitiesHash() =>
-    r'03b8079702717fb3f326dde4966e471b7cfdb1fc';
+    r'879cd24eb33887a2cace0d6aedb8226bca602d0d';
 
 @ProviderFor(allergiesList)
 const allergiesListProvider = AllergiesListProvider._();
@@ -521,4 +521,4 @@ final class UserAllergyEntitiesProvider
 }
 
 String _$userAllergyEntitiesHash() =>
-    r'6a170851831a9a0644e1046d0fd803e78d10d6f6';
+    r'cfe98a27133abe1ce5834ea2e64818863cfbb2ff';

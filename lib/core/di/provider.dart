@@ -167,10 +167,9 @@ AuthRepository authRepository(Ref ref) {
 @riverpod
 MealRepository mealRepository(Ref ref) {
   final localDataSource = ref.watch(mealLocalDataSourceProvider);
-  final database = ref.watch(appDatabaseProvider);
   final syncService = ref.read(syncServiceProvider); // 순환참조 끊기 (read)
 
-  return MealRepositoryImpl(localDataSource, database, syncService);
+  return MealRepositoryImpl(localDataSource, syncService);
 }
 
 @riverpod

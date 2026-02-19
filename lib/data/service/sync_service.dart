@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:drift/drift.dart' as drift;
 import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:vitameal/core/util/date_time_utils.dart';
@@ -86,6 +87,25 @@ class SyncService {
     }
   }
 
+  /// Outbox에 동기화 작업 추가
+  Future<void> addToOutbox({
+    required String operation,
+    required String tableName,
+    required String recordId,
+    required String payload,
+  }) async {
+    await _database.outboxDao.insertOutbox(
+      OutboxCompanion(
+        operation: drift.Value(operation),
+        targetTable: drift.Value(tableName),
+        recordId: drift.Value(recordId),
+        payload: drift.Value(payload),
+        createdAt: drift.Value(DateTime.now()),
+        retryCount: const drift.Value(0),
+      ),
+    );
+  }
+
   /// 네트워크 연결 감지 시작
   void _startNetworkListener() {
     _connectivitySubscription = _connectivity.onConnectivityChanged.listen(
@@ -157,7 +177,7 @@ class SyncService {
         await _processMealEntryTask(task.operation, task.recordId, payload);
         break;
       default:
-        throw Exception('잘못된 테이블 ㅠㅠ [${task.targetTable}]');
+        throw Exception('잘못된 테이블 [${task.targetTable}]');
     }
   }
 
