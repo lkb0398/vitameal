@@ -15,7 +15,7 @@ import 'package:vitameal/core/service/analytics_service.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
 import 'package:vitameal/presentation/auth/view_model/auth_view_model.dart';
 import 'package:vitameal/presentation/meal_calendar/view/widget/ai_analysis_card.dart';
-import 'package:vitameal/presentation/meal_calendar/view/widget/ai_analysis_detail_dialog.dart';
+import 'package:vitameal/presentation/meal_calendar/view/widget/dialog/ai_analysis_detail_dialog.dart';
 import 'package:vitameal/presentation/meal_calendar/view/widget/calendar_header.dart';
 import 'package:vitameal/presentation/meal_calendar/view/util/calendar_utils.dart';
 import 'package:vitameal/presentation/meal_calendar/view/widget/adherence_picker.dart';
@@ -41,7 +41,6 @@ class MealCalendarPage extends HookConsumerWidget {
     final l = L10n.of(context)!; // 🌎
 
     // ----- 인증 정보 -----
-    
     final session = ref.watch(authViewModelProvider);
     final userId = session?.user.id;
     if (userId == null) {
@@ -49,7 +48,6 @@ class MealCalendarPage extends HookConsumerWidget {
     }
 
     // ----- UI 상태 관련 -----
-
     final focusedDay = useState(DateTime.now()); // 현재 캘린더 페이지의 렌더링 기준이 되는 날
     final selectedDay = useState(DateTime.now().dateOnly); // 선택된 날짜
     final lastTappedDay = useState<DateTime?>(null); // 마지막으로 선택된 날짜

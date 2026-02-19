@@ -924,7 +924,7 @@ final class MealRepositoryProvider
   }
 }
 
-String _$mealRepositoryHash() => r'd30f20a4b110d22568f690ae9872f6f930470009';
+String _$mealRepositoryHash() => r'a13b3d3110dcdd59cdd2042409b9d4dea6a8bb6a';
 
 @ProviderFor(storageRepository)
 const storageRepositoryProvider = StorageRepositoryProvider._();

@@ -18,25 +18,51 @@ abstract class MealLocalDataSource {
   });
 
   /// 특정 날짜의 MealDay 조회
-  Future<MealDayEntity?> getMealDayByDate({required String userId, required DateTime date});
+  Future<MealDayEntity?> getMealDayByDate({
+    required String userId,
+    required DateTime date,
+  });
+
+  /// ID로 MealDay 조회
+  Future<MealDayEntity?> getMealDayById(String mealDayId);
 
   /// MealDay Upsert
   Future<void> upsertMealDay(MealDayEntity entity);
 
   /// MealDay adherence 업데이트
-  Future<void> updateMealDayAdherence({required String mealDayId, required AdherenceLevel adherence});
+  Future<void> updateMealDayAdherence({
+    required String mealDayId,
+    required AdherenceLevel adherence,
+  });
+
+  /// meal_entries 변경 후 MealDay AI 메타데이터 갱신
+  Future<void> updateMealDayAiMeta(String mealDayId);
 
   /// AI 분석 완료 후 MealDay 메타데이터 갱신
-  Future<void> updateMealDayAfterAnalysis({required String mealDayId, required String summary});
+  Future<void> updateMealDayMetaAfterAnalysis({
+    required String mealDayId,
+    required String summary,
+  });
 
   /// MealEntry 목록 조회
-  Future<List<MealEntryEntity>> getMealEntriesByMealDayId({required String mealDayId});
+  Future<List<MealEntryEntity>> getMealEntriesByMealDayId({
+    required String mealDayId,
+  });
+
+  /// ID로 MealEntry 조회
+  Future<MealEntryEntity?> getMealEntryById(String entryId);
 
   /// MealEntry 생성
   Future<void> createMealEntry(MealEntryEntity entity);
 
   /// MealEntry 수정
-  Future<void> updateMealEntry({required String entryId, required MealCategory category, String? content, String? photoUrl, DateTime? eatenAt});
+  Future<void> updateMealEntry({
+    required String entryId,
+    required MealCategory category,
+    String? content,
+    String? photoUrl,
+    DateTime? eatenAt,
+  });
 
   /// MealEntry 삭제 (Soft Delete)
   Future<void> deleteMealEntry(String entryId);
@@ -71,9 +97,15 @@ class MealLocalDataSourceImpl implements MealLocalDataSource {
   }
 
   @override
-  Future<MealDayEntity?> getMealDayByDate({required String userId, required DateTime date}) async {
+  Future<MealDayEntity?> getMealDayByDate({
+    required String userId,
+    required DateTime date,
+  }) async {
     try {
-      final data = await _database.mealDao.getMealDayByDate(userId: userId, date: date);
+      final data = await _database.mealDao.getMealDayByDate(
+        userId: userId,
+        date: date,
+      );
       final entity = data?.toEntity();
       if (entity != null) {
         debugPrint('🥕 MealDay 조회 [${entity.mealDate.logFormat}]');
@@ -84,6 +116,23 @@ class MealLocalDataSourceImpl implements MealLocalDataSource {
     } catch (e) {
       debugPrint('🥕 getMealDayByDate: $e');
       throw Exception('getMealDayByDate: $e');
+    }
+  }
+
+  @override
+  Future<MealDayEntity?> getMealDayById(String mealDayId) async {
+    try {
+      final data = await _database.mealDao.getMealDayById(mealDayId);
+      final entity = data?.toEntity();
+      if (entity != null) {
+        debugPrint('🥕 MealDay 조회 [${mealDayId.substring(0, 8)}]');
+      } else {
+        debugPrint('🥕 MealDay가 없음 [${mealDayId.substring(0, 8)}]');
+      }
+      return entity;
+    } catch (e) {
+      debugPrint('🥕 getMealDayById: $e');
+      throw Exception('getMealDayById: $e');
     }
   }
 
@@ -101,9 +150,15 @@ class MealLocalDataSourceImpl implements MealLocalDataSource {
   }
 
   @override
-  Future<void> updateMealDayAdherence({required String mealDayId, required AdherenceLevel adherence}) async {
+  Future<void> updateMealDayAdherence({
+    required String mealDayId,
+    required AdherenceLevel adherence,
+  }) async {
     try {
-      await _database.mealDao.updateMealDayAdherence(mealDayId: mealDayId, adherence: adherence.value);
+      await _database.mealDao.updateMealDayAdherence(
+        mealDayId: mealDayId,
+        adherence: adherence.value,
+      );
       debugPrint('🥕 MealDay 성취도 자가평가 변경 [${adherence.value}]');
     } catch (e) {
       debugPrint('🥕 updateMealDayAdherence: $e');
@@ -112,20 +167,41 @@ class MealLocalDataSourceImpl implements MealLocalDataSource {
   }
 
   @override
-  Future<void> updateMealDayAfterAnalysis({required String mealDayId, required String summary}) async {
+  Future<void> updateMealDayAiMeta(String mealDayId) async {
     try {
-      await _database.mealDao.updateMealDayAfterAnalysis(mealDayId: mealDayId, summary: summary);
-      debugPrint('🥕 MealDay 메타데이터 갱신 [${mealDayId.substring(0, 8)}]');
+      await _database.mealDao.updateMealDayAiMeta(mealDayId);
+      debugPrint('🥕 meal_entries 변경 후 MealDay AI 메타데이터 갱신 [${mealDayId.substring(0, 8)}]');
     } catch (e) {
-      debugPrint('🥕 updateMealDayAfterAnalysis: $e');
-      throw Exception('updateMealDayAfterAnalysis: $e');
+      debugPrint('🥕 updateMealDayAiMeta: $e');
+      throw Exception('updateMealDayAiMeta: $e');
     }
   }
 
   @override
-  Future<List<MealEntryEntity>> getMealEntriesByMealDayId({required String mealDayId}) async {
+  Future<void> updateMealDayMetaAfterAnalysis({
+    required String mealDayId,
+    required String summary,
+  }) async {
     try {
-      final dataList = await _database.mealDao.getMealEntriesByMealDayId(mealDayId: mealDayId);
+      await _database.mealDao.updateMealDayAiMetaAfterAnalysis(
+        mealDayId: mealDayId,
+        summary: summary,
+      );
+      debugPrint('🥕 AI 분석 후 MealDay 메타데이터 갱신 [${mealDayId.substring(0, 8)}]');
+    } catch (e) {
+      debugPrint('🥕 updateMealDayMetaAfterAnalysis: $e');
+      throw Exception('updateMealDayMetaAfterAnalysis: $e');
+    }
+  }
+
+  @override
+  Future<List<MealEntryEntity>> getMealEntriesByMealDayId({
+    required String mealDayId,
+  }) async {
+    try {
+      final dataList = await _database.mealDao.getMealEntriesByMealDayId(
+        mealDayId: mealDayId,
+      );
       final entities = dataList.map((data) => data.toEntity()).toList();
       debugPrint(
         '🥕 MealEntries 불러옴 ${jsonEncode(entities.map((e) => {'category': e.category.value}).toList())}',
@@ -134,6 +210,23 @@ class MealLocalDataSourceImpl implements MealLocalDataSource {
     } catch (e) {
       debugPrint('🥕 getMealEntriesByMealDayId: $e');
       throw Exception('getMealEntriesByMealDayId: $e');
+    }
+  }
+
+  @override
+  Future<MealEntryEntity?> getMealEntryById(String entryId) async {
+    try {
+      final data = await _database.mealDao.getMealEntryById(entryId);
+      final entity = data?.toEntity();
+      if (entity != null) {
+        debugPrint('🥕 MealEntry 조회 [${entryId.substring(0, 8)}]');
+      } else {
+        debugPrint('🥕 MealEntry가 없음 [${entryId.substring(0, 8)}]');
+      }
+      return entity;
+    } catch (e) {
+      debugPrint('🥕 getMealEntryById: $e');
+      throw Exception('getMealEntryById: $e');
     }
   }
 
@@ -149,9 +242,21 @@ class MealLocalDataSourceImpl implements MealLocalDataSource {
   }
 
   @override
-  Future<void> updateMealEntry({required String entryId, required MealCategory category, String? content, String? photoUrl, DateTime? eatenAt}) async {
+  Future<void> updateMealEntry({
+    required String entryId,
+    required MealCategory category,
+    String? content,
+    String? photoUrl,
+    DateTime? eatenAt,
+  }) async {
     try {
-      await _database.mealDao.updateMealEntry(entryId: entryId, category: category, content: content, photoUrl: photoUrl, eatenAt: eatenAt);
+      await _database.mealDao.updateMealEntry(
+        entryId: entryId,
+        category: category,
+        content: content,
+        photoUrl: photoUrl,
+        eatenAt: eatenAt,
+      );
       debugPrint('🥕 MealEntry 수정 [${entryId.substring(0, 8)}]');
     } catch (e) {
       debugPrint('🥕 updateMealEntry: $e');

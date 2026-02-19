@@ -1,9 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:drift/drift.dart' as drift;
 import 'package:uuid/uuid.dart';
 import 'package:vitameal/data/data_source/meal_local_data_source.dart';
-import 'package:vitameal/data/database/database.dart';
 import 'package:vitameal/data/mapper/meal_day_mapper.dart';
 import 'package:vitameal/data/mapper/meal_entry_mapper.dart';
 import 'package:vitameal/data/service/sync_service.dart';
@@ -15,10 +13,9 @@ import 'package:vitameal/domain/repository/meal_repository.dart';
 
 class MealRepositoryImpl implements MealRepository {
   /// 로컬 db를 기반으로 동작, 원격 db는 outbox를 통한 동기화
-  MealRepositoryImpl(this._localDataSource, this._database, this._syncService);
+  MealRepositoryImpl(this._localDataSource, this._syncService);
 
   final MealLocalDataSource _localDataSource;
-  final AppDatabase _database;
   final SyncService _syncService;
   final Uuid _uuid = const Uuid();
 
@@ -137,12 +134,12 @@ class MealRepositoryImpl implements MealRepository {
         }),
       );
 
-      // 업데이트된 MealDay 조회 후 반환
-      final updatedData = await _database.mealDao.getMealDayById(mealDayId); // TODO : data_source로 이동
-      if (updatedData == null) {
+      // 업데이트된 MealDay 조회 후 반환 (UI 갱신용)
+      final updatedEntity = await _localDataSource.getMealDayById(mealDayId);
+      if (updatedEntity == null) {
         throw Exception('MealDay 조회 실패 (로컬)');
       }
-      return updatedData.toEntity();
+      return updatedEntity;
     } catch (e) {
       rethrow;
     }
@@ -156,7 +153,7 @@ class MealRepositoryImpl implements MealRepository {
   }) async {
     try {
       // 로컬 DB 업데이트 (summary, needs_ai_refresh=false)
-      await _localDataSource.updateMealDayAfterAnalysis(
+      await _localDataSource.updateMealDayMetaAfterAnalysis(
         mealDayId: mealDayId,
         summary: summary,
       );
@@ -191,8 +188,8 @@ class MealRepositoryImpl implements MealRepository {
       // 로컬 업데이트
       await _localDataSource.createMealEntry(entity);
 
-      // MealDay AI 메타데이터 갱신 (오프라인에서의 UX를 위한 버튼 활성화용)
-      await _database.mealDao.updateMealDayAiMetadata(mealDayId); // TODO : data_source로 이동
+      // MealDay AI 메타데이터 갱신 (버튼 활성화용)
+      await _localDataSource.updateMealDayAiMeta(mealDayId);
 
       // Outbox에 작업 추가
       await _addToOutbox(
@@ -218,9 +215,9 @@ class MealRepositoryImpl implements MealRepository {
   }) async {
     try {
       // 기존 MealEntry 조회
-      final existingData = await _database.mealDao.getMealEntryById(entryId); // TODO : data_source로 이동
-      if (existingData == null) {
-        throw Exception('존재하지 않는 MealEntry를 수정할라고 함');
+      final existingEntity = await _localDataSource.getMealEntryById(entryId);
+      if (existingEntity == null) {
+        throw Exception('존재하지 않는 MealEntry를 수정');
       }
 
       // 로컬 업데이트
@@ -232,8 +229,8 @@ class MealRepositoryImpl implements MealRepository {
         eatenAt: eatenAt,
       );
 
-      // MealDay AI 메타데이터 갱신 (오프라인에서의 UX를 위한 버튼 활성화용)
-      await _database.mealDao.updateMealDayAiMetadata(existingData.mealDayId); // TODO : data_source로 이동
+      // MealDay AI 메타데이터 갱신 (버튼 활성화용)
+      await _localDataSource.updateMealDayAiMeta(existingEntity.mealDayId);
 
       // Outbox에 작업 추가
       final updateData = <String, dynamic>{
@@ -252,11 +249,11 @@ class MealRepositoryImpl implements MealRepository {
       );
 
       // 업데이트된 MealEntry 조회 및 반환
-      final updatedData = await _database.mealDao.getMealEntryById(entryId); // TODO : data_source로 이동
-      if (updatedData == null) {
+      final updatedEntity = await _localDataSource.getMealEntryById(entryId);
+      if (updatedEntity == null) {
         throw Exception('MealEntry 조회 실패 (로컬)');
       }
-      return updatedData.toEntity();
+      return updatedEntity;
     } catch (e) {
       rethrow;
     }
@@ -264,21 +261,19 @@ class MealRepositoryImpl implements MealRepository {
 
   /// MealEntry 삭제 (soft delete)
   @override
-  Future<void> deleteMealEntry({
-    required String entryId,
-  }) async {
+  Future<void> deleteMealEntry({required String entryId}) async {
     try {
       // 기존 MealEntry 조회
-      final existingData = await _database.mealDao.getMealEntryById(entryId); // TODO : data_source로 이동
-      if (existingData == null) {
-        throw Exception('Meal entry not found');
+      final existingEntity = await _localDataSource.getMealEntryById(entryId);
+      if (existingEntity == null) {
+        throw Exception('존재하지 않는 MealEntry를 삭제');
       }
 
       // 로컬 Soft Delete
       await _localDataSource.deleteMealEntry(entryId);
 
-      // MealDay AI 메타데이터 갱신 (오프라인에서 UX를 위한 버튼 활성화용)
-      await _database.mealDao.updateMealDayAiMetadata(existingData.mealDayId); // TODO : data_source로 이동
+      // MealDay AI 메타데이터 갱신 (버튼 활성화용)
+      await _localDataSource.updateMealDayAiMeta(existingEntity.mealDayId);
 
       // Outbox에 작업 추가
       await _addToOutbox(
@@ -302,15 +297,11 @@ class MealRepositoryImpl implements MealRepository {
     required String recordId,
     required String payload,
   }) async {
-    await _database.outboxDao.insertOutbox(
-      OutboxCompanion(
-        operation: drift.Value(operation),
-        targetTable: drift.Value(tableName),
-        recordId: drift.Value(recordId),
-        payload: drift.Value(payload),
-        createdAt: drift.Value(DateTime.now()),
-        retryCount: const drift.Value(0),
-      ),
+    await _syncService.addToOutbox(
+      operation: operation,
+      tableName: tableName,
+      recordId: recordId,
+      payload: payload,
     );
 
     // Outbox 추가 후 즉시 동기화 (백그라운드에서 실행, 에러는 syncService 내부에서 처리)

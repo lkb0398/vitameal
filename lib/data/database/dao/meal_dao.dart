@@ -77,10 +77,10 @@ class MealDao extends DatabaseAccessor<AppDatabase> with _$MealDaoMixin {
     return (delete(mealDays)..where((t) => t.id.equals(mealDayId))).go();
   }
 
-  /// MealDay AI 메타데이터 갱신 (오프라인상태에서 meal_entries 변경 시 호출)
+  /// MealDay AI 메타데이터 갱신 (meal_entries 변경 시 호출)
   /// data_version은 건드리지 않음 (서버 트리거로만 증가시킴)
-  /// needs_ai_refresh = true, last_entry_updated_at = now()로만 갱신해서 버튼 보이게 (UX 개선)
-  Future<void> updateMealDayAiMetadata(String mealDayId) async {
+  /// needs_ai_refresh = true, last_entry_updated_at = now()로만 갱신해서 버튼 보이게
+  Future<void> updateMealDayAiMeta(String mealDayId) async {
     final now = DateTime.now();
 
     await customUpdate(
@@ -96,9 +96,9 @@ class MealDao extends DatabaseAccessor<AppDatabase> with _$MealDaoMixin {
     );
   }
 
-  /// AI 분석 완료 후 메타데이터 갱신
+  /// AI 분석 완료 후 MealDay AI 메타데이터 갱신
   /// needs_ai_refresh = false, latest_ai_summary 업데이트
-  Future<void> updateMealDayAfterAnalysis({required String mealDayId, required String summary}) async {
+  Future<void> updateMealDayAiMetaAfterAnalysis({required String mealDayId, required String summary}) async {
     await customUpdate(
       'UPDATE meal_days SET '
       'needs_ai_refresh = 0, '
