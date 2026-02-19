@@ -323,7 +323,7 @@ class L10nKo extends L10n {
   String get suggestions => '개선 제안';
 
   @override
-  String get source_info => '출처 및 건강 정보 관련 안내 (외부 링크)';
+  String get source_info => '출처 및 건강 정보 관련 안내';
 
   @override
   String get failed_to_analyze => '분석 실패';
