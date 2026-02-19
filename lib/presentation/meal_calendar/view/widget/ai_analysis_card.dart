@@ -194,7 +194,7 @@ class AiAnalysisCard extends HookConsumerWidget {
               const SizedBox(height: 6),
               Text(
                 '본 분석은 AI가 제공하는 일반적인 건강 정보이며, 의료적 진단이나 치료를 대체하지 않습니다.',
-                style: TextStyle(fontSize: 11.5, color: vrc(context).hint),
+                style: TextStyle(fontSize: 11.5, color: Colors.grey),
               ),
               const SizedBox(height: 4),
               Row(
@@ -209,7 +209,7 @@ class AiAnalysisCard extends HookConsumerWidget {
                       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     ),
                     child: Text(
-                      '출처 및 건강정보 관련 안내 (외부 링크)',
+                      '출처 및 건강정보 관련 안내',
                       style: const TextStyle(fontSize: 11, color: Colors.grey),
                     ),
                   ),

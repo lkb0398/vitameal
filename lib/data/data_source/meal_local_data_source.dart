@@ -10,7 +10,7 @@ import 'package:vitameal/domain/enum/adherence_level_enum.dart';
 import 'package:vitameal/domain/enum/meal_category_enum.dart';
 
 abstract class MealLocalDataSource {
-  /// 날짜 범위로 MealDay 목록 조회 (캘린더용)
+  /// 날짜 범위로 MealDay 목록 조회
   Future<List<MealDayEntity>> getMealDaysByDateRange({
     required String userId,
     required DateTime startDate,
@@ -25,6 +25,9 @@ abstract class MealLocalDataSource {
 
   /// MealDay adherence 업데이트
   Future<void> updateMealDayAdherence({required String mealDayId, required AdherenceLevel adherence});
+
+  /// AI 분석 완료 후 MealDay 메타데이터 갱신
+  Future<void> updateMealDayAfterAnalysis({required String mealDayId, required String summary});
 
   /// MealEntry 목록 조회
   Future<List<MealEntryEntity>> getMealEntriesByMealDayId({required String mealDayId});
@@ -105,6 +108,17 @@ class MealLocalDataSourceImpl implements MealLocalDataSource {
     } catch (e) {
       debugPrint('🥕 updateMealDayAdherence: $e');
       throw Exception('updateMealDayAdherence: $e');
+    }
+  }
+
+  @override
+  Future<void> updateMealDayAfterAnalysis({required String mealDayId, required String summary}) async {
+    try {
+      await _database.mealDao.updateMealDayAfterAnalysis(mealDayId: mealDayId, summary: summary);
+      debugPrint('🥕 MealDay 메타데이터 갱신 [${mealDayId.substring(0, 8)}]');
+    } catch (e) {
+      debugPrint('🥕 updateMealDayAfterAnalysis: $e');
+      throw Exception('updateMealDayAfterAnalysis: $e');
     }
   }
 

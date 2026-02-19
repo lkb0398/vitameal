@@ -29,81 +29,82 @@ import 'package:vitameal/presentation/ui_provider/meal_provider.dart';
 class MealCalendarPage extends HookConsumerWidget {
   const MealCalendarPage({super.key});
 
-  // 년.월 라벨 + 요일 고정 영역 (40 + 40)
-  static const double _headerHeight = 84;
-  // Week 모드 높이 (화면 내렸을 때 표시되는 주 캘린더)
-  static const double _weekCalendarHeight = 44;
-  // Month 모드 행 개수 = 6주
-  static const int _rowCount = 6;
-  // 헤더 제외 공간 중 월 캘린더가 차지할 비율 (1.0 = 꽉차게)
-  static const double _monthCalendarRatio = 1.0;
+  static const double _headerHeight = 84; // 년.월 라벨 + 요일 고정 영역
+  static const double _weekCalendarHeight = 44; // Week 모드 높이 (화면 내렸을 때)
+  static const int _rowCount = 6; // Month 모드 행 개수 = 6주
+  static const double _monthCalendarRatio =
+      1.0; // 헤더 제외 공간 중 월 캘린더가 차지할 비율 (1.0 = 꽉차게)
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // 인증 정보
+    // ----- 인증 정보 -----
+
     final session = ref.watch(authViewModelProvider);
     final userId = session?.user.id;
-
-    // userId가 없으면 로딩 표시
     if (userId == null) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
-    // UI 상태 값들
-    final contentScrollController = useScrollController();
+    // ----- UI 상태 관련 -----
+
     final focusedDay = useState(DateTime.now()); // 현재 캘린더 페이지의 렌더링 기준이 되는 날
     final selectedDay = useState(DateTime.now().dateOnly); // 선택된 날짜
     final lastTappedDay = useState<DateTime?>(null); // 마지막으로 선택된 날짜
-    final dragStartY = useState<double?>(null); // 세로 드래그
-    final dragEndY = useState<double?>(null); // 세로 드래그
-    final showFabBubble = useState(false); // 말풍선 표시 상태
 
-    // 애니메이션 컨트롤러
+    // 애니메이션 컨트롤러 (0.0: Month 모드, 1.0: Week 모드)
     final collapseCtrl = useAnimationController(
       duration: const Duration(milliseconds: 360),
-      initialValue: 1.0, // 처음부터 아래 화면에서 시작
+      initialValue: 1.0, // 초기 Week
     );
+    // 애니메이션 현재 진행도, collapseCtrl.value 상태 구독
+    final t = useAnimation(collapseCtrl);
 
-    // 월의 시작/끝 날짜 계산 (focusedDay 기준)
+    final isWeekMode = t >= 0.9; // Week 모드 여부
+    final dragStartY = useState<double?>(null); // 세로 드래그 상태
+    final dragEndY = useState<double?>(null); // 세로 드래그 상태
+
+    final contentScrollController = useScrollController();
+    final showFabBubble = useState(false); // 말풍선 표시 상태
+
+    // ----- 데이터 조회 관련 -----
+
     final startOfMonth = DateTime(
       focusedDay.value.year,
       focusedDay.value.month,
       1,
-    );
+    ); // 1일 부터
     final endOfMonth = DateTime(
       focusedDay.value.year,
       focusedDay.value.month + 1,
       0,
-    );
+    ); // 말일 까지
 
-    // MealCalendarViewModel - 캘린더 색상 바용
+    // 이번달 식단 데이터 vm
     final calendarViewModel = ref.watch(
       mealCalendarViewModelProvider(userId, startOfMonth, endOfMonth),
     );
-
-    // 캘린더 색상 맵 생성
+    // 이번달 Adherence Map
     final colorOfDay = calendarViewModel.maybeWhen(
       data: (mealDays) => AdherenceUtils.buildColorMap(mealDays),
       orElse: () => <DateTime, Color>{},
     );
-
-    // 선택된 날짜의 MealDay 찾기
+    // focusedDay의 MealDay
     final selectedMealDay = calendarViewModel.maybeWhen(
       data: (mealDays) => mealDays.firstWhereOrNull(
         (day) => CalendarUtils.isSameDay(day.mealDate, selectedDay.value),
       ),
       orElse: () => null,
     );
-
-    // 선택된 날짜의 식단 항목 조회
+    // focusedDay의 mealEntries 목록
     final mealEntriesAsync = selectedMealDay != null
         ? ref.watch(mealEntriesProvider(selectedMealDay.id))
         : null;
 
-    // 오늘 사용한 분석 횟수 조회
-    final todayCountAsync = ref.watch(todayAnalysisCountProvider(userId));
+    // ----- AI 분석 카드 관련 -----
 
-    // AI 분석 카드에 전달할 값들, 설명은 ai_analysis_card 변수에,,
+    final todayCountAsync = ref.watch(
+      todayAnalysisCountProvider(userId),
+    ); // 오늘 사용한 분석 횟수 provider
     final todayCount = todayCountAsync.maybeWhen(
       data: (count) => count,
       orElse: () => 0,
@@ -115,15 +116,16 @@ class MealCalendarPage extends HookConsumerWidget {
           orElse: () => false,
         ) ??
         false;
-
     final isEntriesEmpty = mealEntriesAsync == null
         ? true // MealDay 자체가 없으면, 식단도 없음
         : mealEntriesAsync.maybeWhen(
             data: (entries) => entries.isEmpty,
-            orElse: () => false, // 로딩에러 중엔 false
+            orElse: () => false, // 로딩 중
           );
 
-    /// 날짜 탭 인터렉션
+    // ----- ✋ (핸들러) -----
+
+    /// ✋ 날짜 탭 인터렉션
     void onDayTapped(DateTime day) {
       final tapped = day.dateOnly;
 
@@ -154,7 +156,7 @@ class MealCalendarPage extends HookConsumerWidget {
       }
     }
 
-    /// 페이지 변경 콜백. 좌우 스크롤 시 호출
+    /// ✋ 페이지 변경 콜백, 좌우 스크롤 시 호출
     void onPageChanged(DateTime newFocused) {
       focusedDay.value = newFocused;
       // Week 모드에서만 selectedDay 업데이트 (Month 모드에서는 년.월만 업데이트)
@@ -164,7 +166,7 @@ class MealCalendarPage extends HookConsumerWidget {
       }
     }
 
-    // 성취도 평가 업데이트
+    /// ✋ 성취도 평가 업데이트
     Future<void> setColorBar(Color color) async {
       final adherence = AdherenceUtils.colorToAdherence(color);
 
@@ -199,7 +201,7 @@ class MealCalendarPage extends HookConsumerWidget {
       }
     }
 
-    // AI 분석
+    /// ✋ AI 분석 수행
     Future<void> handleAnalyze() async {
       if (selectedMealDay == null) return;
 
@@ -209,13 +211,13 @@ class MealCalendarPage extends HookConsumerWidget {
         selectedMealDay.id,
       );
 
-      // 로컬 DB 업데이트 (summary + needs_ai_refresh=false)
-      // TODO : data_source로 옮기기
-      final database = ref.read(appDatabaseProvider);
-      await database.mealDao.updateMealDayAfterAnalysis(
-        mealDayId: selectedMealDay.id,
-        summary: analysisResult.overallSummary,
-      );
+      // 로컬 DB 업데이트 (summary, needs_ai_refresh=false)
+      await ref
+          .read(mealRepositoryProvider)
+          .updateMealDayAfterAnalysis(
+            mealDayId: selectedMealDay.id,
+            summary: analysisResult.overallSummary,
+          );
 
       // Provider 갱신
       ref.invalidate(mealCalendarViewModelProvider); // 버튼 활성화 여부
@@ -227,11 +229,11 @@ class MealCalendarPage extends HookConsumerWidget {
       AnalyticsService.event('meal_action', p: {'action': 'ai_analyze'});
     }
 
-    // 자세히 보기: 기저질환에 관한 피드백이 들어있는 대화상자 출력
+    /// ✋ 기저질환 피드백 대화상자 출력
     Future<void> handleOpenDetail() async {
       if (selectedMealDay == null) return;
 
-      // 분석 결과 받아오기 (원격 db)
+      // 분석 결과 받아오기 (remote)
       final notifier = ref.read(mealAnalysisViewModelProvider.notifier);
       final analysis = await notifier.getLatestAnalysis(selectedMealDay.id);
 
@@ -247,17 +249,12 @@ class MealCalendarPage extends HookConsumerWidget {
       }
     }
 
-    // 애니메이션 진행도 (0.0: Month 모드, 1.0: Week 모드)
-    final t = useAnimation(collapseCtrl); // collapseCtrl.value 상태 구독
-
-    // Week 모드 여부
-    final isWeekMode = t >= 0.9;
-
+    // FAB 말풍선 표시 여부 판단
     useEffect(
       () {
-        showFabBubble.value = false; // 기본적으로 숨김
-        if (!isEntriesEmpty) return null; // 조건이 안 맞으면 아무것도 안 함
-        if (!isWeekMode) return null; // Month 모드 일때는 안뜸
+        showFabBubble.value = false; // 기본적으로 안뜸
+        if (!isEntriesEmpty) return null; // 식단 있을때 안뜸
+        if (!isWeekMode) return null; // Month 모드 일때 안뜸
         showFabBubble.value = true;
         return null;
       },
@@ -311,7 +308,7 @@ class MealCalendarPage extends HookConsumerWidget {
 
             return Column(
               children: [
-                // 상단 고정 영역 (년.월 + 월화수목금토일)
+                // ----- 상단 고정 영역 -----
                 SizedBox(
                   height: _headerHeight,
                   child: CalendarHeader(
@@ -331,6 +328,7 @@ class MealCalendarPage extends HookConsumerWidget {
                   ),
                 ),
 
+                // ----- 캘린더 영역 -----
                 SizedBox(
                   // ClipRect와 calendarHeight를 통해 실제 보이는 부분 제어
                   height: calendarHeight,
@@ -416,7 +414,7 @@ class MealCalendarPage extends HookConsumerWidget {
                   ),
                 ),
 
-                // 식단 내용 영역
+                // ----- 식단내용 영역 -----
                 Expanded(
                   child: Builder(
                     builder: (context) {
@@ -523,6 +521,8 @@ class MealCalendarPage extends HookConsumerWidget {
           },
         ),
       ),
+
+      // ----- FAB 영역 -----
       floatingActionButton: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.end,
@@ -560,8 +560,8 @@ class MealCalendarPage extends HookConsumerWidget {
                   'date': selectedDay.value,
                 },
               );
-              // Provider로 따로 뺀거라 돌아온 후 갱신 해줘야함
               // TODO: vm에서 state 클래스로 같이 관리하도록 리팩토링 하기
+              // Provider로 따로 뺀거라 돌아온 후 갱신 해줘야함
               if (selectedMealDay != null) {
                 ref.invalidate(mealEntriesProvider(selectedMealDay.id));
               }

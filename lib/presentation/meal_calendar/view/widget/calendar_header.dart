@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
 
 class CalendarHeader extends StatelessWidget {
-  /// 캘린더 헤더
+  /// 캘린더 헤더 (년.월 + 월화수목금토일)
   const CalendarHeader({super.key, required this.focused, this.onTapYearMonth});
 
   final DateTime focused;

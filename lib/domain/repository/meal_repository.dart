@@ -29,6 +29,12 @@ abstract class MealRepository {
     required AdherenceLevel adherence,
   });
 
+  /// AI 분석 완료 후 MealDay 메타데이터 갱신
+  Future<void> updateMealDayAfterAnalysis({
+    required String mealDayId,
+    required String summary,
+  });
+
   /// MealDay의 MealEntry 목록 조회
   Future<List<MealEntryEntity>> getMealEntriesByMealDayId({
     required String mealDayId,
@@ -53,7 +59,5 @@ abstract class MealRepository {
   });
 
   /// MealEntry 삭제
-  Future<void> deleteMealEntry({
-    required String entryId,
-  });
+  Future<void> deleteMealEntry({required String entryId});
 }

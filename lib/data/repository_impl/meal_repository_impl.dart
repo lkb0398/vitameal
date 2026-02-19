@@ -148,6 +148,23 @@ class MealRepositoryImpl implements MealRepository {
     }
   }
 
+  /// AI 분석 완료 후 MealDay 메타데이터 갱신
+  @override
+  Future<void> updateMealDayAfterAnalysis({
+    required String mealDayId,
+    required String summary,
+  }) async {
+    try {
+      // 로컬 DB 업데이트 (summary, needs_ai_refresh=false)
+      await _localDataSource.updateMealDayAfterAnalysis(
+        mealDayId: mealDayId,
+        summary: summary,
+      );
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   /// 새 MealEntry 추가
   @override
   Future<MealEntryEntity> createMealEntry({
