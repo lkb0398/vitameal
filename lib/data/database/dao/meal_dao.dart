@@ -116,8 +116,7 @@ class MealDao extends DatabaseAccessor<AppDatabase> with _$MealDaoMixin {
   }) {
     return (select(mealEntries)
           ..where((t) => t.mealDayId.equals(mealDayId))
-          ..where((t) => t.deletedAt.isNull())
-          ..orderBy([(t) => OrderingTerm.asc(t.createdAt)]))
+          ..where((t) => t.deletedAt.isNull()))
         .get();
   }
 

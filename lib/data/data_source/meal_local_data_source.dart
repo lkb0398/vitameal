@@ -203,6 +203,10 @@ class MealLocalDataSourceImpl implements MealLocalDataSource {
         mealDayId: mealDayId,
       );
       final entities = dataList.map((data) => data.toEntity()).toList();
+
+      // 시간만 기준으로 정렬 (날짜 무시)
+      entities.sort((a, b) => compareTimeOnlyWithCategory(a.eatenAt, b.eatenAt, a.category, b.category));
+
       debugPrint(
         '🥕 MealEntries 불러옴 ${jsonEncode(entities.map((e) => {'category': e.category.value}).toList())}',
       );
