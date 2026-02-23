@@ -261,7 +261,7 @@ class SyncService {
       params: {
         'p_user_id': userId,
         'p_last_sync_at':
-            lastSyncAt?.toIso8601String() ?? '1970-01-01T00:00:00Z',
+            lastSyncAt?.toUtc().toIso8601String() ?? '1970-01-01T00:00:00Z',
       },
     );
 
@@ -306,7 +306,7 @@ class SyncService {
       params: {
         'p_user_id': userId,
         'p_last_sync_at':
-            lastSyncAt?.toIso8601String() ?? '1970-01-01T00:00:00Z',
+            lastSyncAt?.toUtc().toIso8601String() ?? '1970-01-01T00:00:00Z',
       },
     );
 
