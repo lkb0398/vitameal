@@ -1,0 +1,8 @@
+/* 위젯 갤러리 표시 이름 및 설명 */
+"diet_widget_name" = "식단";
+"diet_widget_desc" = "이번 달 식단 성취를 확인하세요.";
+"diet_widget_adherence_desc" = "달성도를 함께 표시합니다.";
+ 
+/* 위젯 설정 Intent */
+"widget_config_title" = "위젯 설정";
+"widget_config_desc" = "Vitameal 캘린더 위젯 설정";

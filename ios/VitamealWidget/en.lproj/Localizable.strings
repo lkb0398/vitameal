@@ -1,0 +1,8 @@
+/* Widget gallery display name and description */
+"diet_widget_name" = "Diet";
+"diet_widget_desc" = "Check this month's diet achievement.";
+"diet_widget_adherence_desc" = "Displays adherence together.";
+ 
+/* Widget configuration Intent */
+"widget_config_title" = "Widget Settings";
+"widget_config_desc" = "Vitameal calendar widget settings";
