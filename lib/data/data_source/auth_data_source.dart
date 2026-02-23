@@ -18,7 +18,19 @@ class AuthDataSource {
     final result = await FlutterWebAuth2.authenticate(
       url: url,
       callbackUrlScheme: 'io.supabase.vitameal',
-      options: const FlutterWebAuth2Options(preferEphemeral: false),
+      options: const FlutterWebAuth2Options(
+        preferEphemeral: false,
+        // 커스텀 탭(안드로이드) 크롬 우선 설정
+        customTabsPackageOrder: [
+          'com.android.chrome',
+          'com.chrome.beta',
+          'com.chrome.dev',
+          'org.mozilla.firefox',
+          'com.microsoft.emmx',
+          // 삼성 브라우저는 창 안닫히는 오류있음. 최후 폴백으로 사용.
+          'com.sec.android.app.sbrowser',
+        ],
+      ),
     );
 
     final uri = Uri.parse(result);
