@@ -10,6 +10,7 @@ class AuthDataSource {
     final res = await _client.auth.getOAuthSignInUrl(
       provider: provider,
       redirectTo: 'io.supabase.vitameal://login-callback',
+      queryParams: {'prompt': 'select_account'},
     );
 
     final url = res.url;
