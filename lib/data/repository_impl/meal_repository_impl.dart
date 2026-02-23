@@ -130,7 +130,7 @@ class MealRepositoryImpl implements MealRepository {
         recordId: mealDayId,
         payload: jsonEncode({
           'adherence': adherence.value,
-          'updated_at': DateTime.now().toIso8601String(), // 일단 로컬시간 사용
+          'updated_at': DateTime.now().toUtc().toIso8601String(),
         }),
       );
 
@@ -234,12 +234,12 @@ class MealRepositoryImpl implements MealRepository {
 
       // Outbox에 작업 추가
       final updateData = <String, dynamic>{
-        'updated_at': DateTime.now().toIso8601String(), // 일단 로컬시간 사용
+        'updated_at': DateTime.now().toUtc().toIso8601String(),
       };
       updateData['category'] = category.value;
       updateData['photo_url'] = photoUrl;
       if (content != null) updateData['content'] = content;
-      if (eatenAt != null) updateData['eaten_at'] = eatenAt.toIso8601String();
+      if (eatenAt != null) updateData['eaten_at'] = eatenAt.toUtc().toIso8601String();
 
       await _addToOutbox(
         operation: 'update',
@@ -281,8 +281,8 @@ class MealRepositoryImpl implements MealRepository {
         tableName: 'meal_entries',
         recordId: entryId,
         payload: jsonEncode({
-          'deleted_at': DateTime.now().toIso8601String(), // 일단 로컬시간 사용
-          'updated_at': DateTime.now().toIso8601String(), // 일단 로컬시간 사용
+          'deleted_at': DateTime.now().toUtc().toIso8601String(),
+          'updated_at': DateTime.now().toUtc().toIso8601String(),
         }),
       );
     } catch (e) {
