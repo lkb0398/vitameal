@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="widget_small_name">Diet Achievement</string>
+    <string name="widget_small_desc">Tap the border area of the widget to change its style.</string>
+
+    <!-- configure activity -->
+    <string name="widget_config_title">Widget Settings</string>
+    <string name="widget_config_dark_mode">Dark Mode</string>
+    <string name="widget_config_opacity">Border Opacity</string>
+    <string name="widget_config_adherence">Show Adherence</string>
+    <string name="widget_config_palette">Cell Style Monochrome</string>
+    <string name="widget_config_notice">Widget updates may have a short delay due to Android system policy. Changes will be reflected within 1 minute.</string>
+    <string name="widget_config_cancel">Cancel</string>
+    <string name="widget_config_save">Save</string>
+</resources>
