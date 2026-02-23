@@ -4,7 +4,7 @@ import 'package:vitameal/data/dto/meal_analysis_dto.dart';
 
 abstract class MealAnalysisDataSource {
   /// Edge Function을 호출하여 AI 분석 및 DB 저장
-  Future<Map<String, dynamic>> requestAnalysis(String mealDayId);
+  Future<Map<String, dynamic>> requestAnalysis(String mealDayId, String locale);
 
   /// 특정 MealDay의 최신 분석 결과 조회
   Future<MealAnalysisDto?> getLatestAnalysis(String mealDayId);
@@ -18,13 +18,13 @@ class MealAnalysisDataSourceImpl implements MealAnalysisDataSource {
   final SupabaseClient _supabase;
 
   @override
-  Future<Map<String, dynamic>> requestAnalysis(String mealDayId) async {
+  Future<Map<String, dynamic>> requestAnalysis(String mealDayId, String locale) async {
     try {
       debugPrint('🤖 AI 분석 요청 시작 [$mealDayId]');
       // Edge Function : OpenAI API 호출 - DB에 저장 - 분석 결과 반환
       final response = await _supabase.functions.invoke(
         'analyze-meals',
-        body: {'mealDayId': mealDayId},
+        body: {'mealDayId': mealDayId, 'locale': locale},
       );
       if (response.status != 200) {
         throw Exception('AI 분석 실패 ${response.status}');

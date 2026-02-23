@@ -1,9 +1,21 @@
 // 플러터 앱에서: POST /functions/v1/analyze-meals
-// Request Body: { mealDayId, userId }
+// Request Body: { mealDayId, locale }
 // Prompt Input: { raw_text, category, locale }
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+
+// 언어별 카테고리 매핑
+const CATEGORY_MAP: Record<string, Record<string, string>> = {
+  ko: { breakfast: '아침', lunch: '점심', dinner: '저녁', snack: '간식' },
+  en: { breakfast: 'Breakfast', lunch: 'Lunch', dinner: 'Dinner', snack: 'Snack' },
+};
+ 
+// 언어 설정 지시문
+const LANGUAGE_INSTRUCTION: Record<string, string> = {
+  ko: '모든 사용자 노출 문구는 한국어(ko-KR)로 작성',
+  en: 'Write all user-facing text in English (en-US)',
+};
 
 // 프롬프트 템플릿
 const MEAL_ANALYSIS_PROMPT = `너는 하루 식단 기록을 분석해 영양 및 기저질환 관련 피드백을 생성하는 엔진이다.
@@ -20,7 +32,7 @@ const MEAL_ANALYSIS_PROMPT = `너는 하루 식단 기록을 분석해 영양 �
 
 출력 규칙:
 - 출력은 반드시 **JSON만** 반환한다 (설명 문장, 마크다운 금지)
-- 모든 사용자 노출 문구는 한국어(ko-KR)로 작성
+- {language_instruction}
 - 간결하고 실용적인 톤 유지
 
 분석 기준:
@@ -74,14 +86,6 @@ conditions:
 meal_logs:
 {meal_logs}`;
 
-// 카테고리 한글 매핑
-const CATEGORY_MAP: Record<string, string> = {
-  'breakfast': '아침',
-  'lunch': '점심',
-  'dinner': '저녁',
-  'snack': '간식',
-};
-
 serve(async (req) => {
   try {
     // 인증 확인
@@ -108,13 +112,15 @@ serve(async (req) => {
     }
 
     // 요청 파라미터 파싱
-    const { mealDayId } = await req.json();
+    const { mealDayId, locale } = await req.json();
     if (!mealDayId) {
       return new Response(
         JSON.stringify({ error: 'mealDayId is required' }),
         { status: 400, headers: { 'Content-Type': 'application/json' } }
       );
     }
+    const lang = locale === 'ko' ? 'ko' : 'en';
+    const localeTag = lang === 'ko' ? 'ko-KR' : 'en-US';
 
     // Supabase Web Dashboard 에서 확인 가능
     console.log(`[AI 분석 시작] User: ${user.id}, MealDay: ${mealDayId}`); // 로깅
@@ -146,23 +152,27 @@ serve(async (req) => {
     }
 
     // 사용자 기저질환 조회
+    const diseaseField = lang === 'ko' ? 'diseases(name)' : 'diseases(name_en)';
     const { data: userDiseases, error: diseasesError } = await supabase
       .from('user_diseases')
-      .select('diseases(name)')
+      .select(diseaseField)
       .eq('user_id', user.id);
     if (diseasesError) {
       console.error('user_diseases 조인 실패', diseasesError);
     }
-    const conditions: string[] = userDiseases?.map((item: any) => item.diseases.name) || [];
+    const conditions: string[] = userDiseases?.map((item: any) =>
+      lang === 'ko' ? item.diseases.name : item.diseases.name_en
+    ) || [];
     console.log(`[기저질환] ${conditions.length > 0 ? conditions.join(', ') : '없음'}`); // 로깅
 
     // meal_logs 포맷팅
+    const categoryMap = CATEGORY_MAP[lang];
     const mealLogs = (mealDayData.meal_entries || [])
       .filter((entry: any) => entry.content) // content가 있는 것만
       .map((entry: any) => ({
         raw_text: entry.content,
-        category: CATEGORY_MAP[entry.category] || entry.category,
-        locale: 'ko-KR',
+        category: categoryMap[entry.category] || entry.category,
+        locale: localeTag,
       }));
 
     if (mealLogs.length === 0) {
@@ -175,6 +185,7 @@ serve(async (req) => {
 
     // 프롬프트 생성
     const prompt = MEAL_ANALYSIS_PROMPT
+      .replace('{language_instruction}', LANGUAGE_INSTRUCTION[lang])
       .replace('{conditions}', JSON.stringify(conditions, null, 2))
       .replace('{meal_logs}', JSON.stringify(mealLogs, null, 2));
 
@@ -239,7 +250,7 @@ serve(async (req) => {
       p_overall_summary: analysisJson.overall_summary,
       p_condition_feedback: analysisJson.condition_feedback || null,
       p_suggestions: analysisJson.nutrition_feedback?.next_actions || null,
-      p_locale: 'ko-KR',
+      p_locale: localeTag,
     });
     if (rpcError) {
       console.error('RPC Error:', rpcError);
