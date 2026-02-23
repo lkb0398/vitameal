@@ -13,6 +13,7 @@ import 'package:vitameal/core/config/routes.dart';
 import 'package:vitameal/core/di/provider.dart';
 import 'package:vitameal/core/service/analytics_service.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
+import 'package:vitameal/domain/entity/meal_day_entity.dart';
 import 'package:vitameal/presentation/auth/view_model/auth_view_model.dart';
 import 'package:vitameal/presentation/meal_calendar/view/widget/ai_analysis_card.dart';
 import 'package:vitameal/presentation/meal_calendar/view/widget/dialog/ai_analysis_detail_dialog.dart';
@@ -41,6 +42,7 @@ class MealCalendarPage extends HookConsumerWidget {
     final l = L10n.of(context)!; // 🌎
 
     // ----- 인증 정보 -----
+
     final session = ref.watch(authViewModelProvider);
     final userId = session?.user.id;
     if (userId == null) {
@@ -48,6 +50,7 @@ class MealCalendarPage extends HookConsumerWidget {
     }
 
     // ----- UI 상태 관련 -----
+
     final focusedDay = useState(DateTime.now()); // 현재 캘린더 페이지의 렌더링 기준이 되는 날
     final selectedDay = useState(DateTime.now().dateOnly); // 선택된 날짜
     final lastTappedDay = useState<DateTime?>(null); // 마지막으로 선택된 날짜
@@ -74,6 +77,7 @@ class MealCalendarPage extends HookConsumerWidget {
       focusedDay.value.month,
       1,
     ); // 1일 부터
+
     final endOfMonth = DateTime(
       focusedDay.value.year,
       focusedDay.value.month + 1,
@@ -84,18 +88,19 @@ class MealCalendarPage extends HookConsumerWidget {
     final calendarViewModel = ref.watch(
       mealCalendarViewModelProvider(userId, startOfMonth, endOfMonth),
     );
+
     // 이번달 Adherence Map
-    final colorOfDay = calendarViewModel.maybeWhen(
-      data: (mealDays) => AdherenceUtils.buildColorMap(mealDays),
-      orElse: () => <DateTime, Color>{},
+    final mealDays = calendarViewModel.maybeWhen(
+      data: (v) => v,
+      orElse: () => <MealDayEntity>[],
     );
+    final colorOfDay = AdherenceUtils.buildColorMap(mealDays);
+
     // focusedDay의 MealDay
-    final selectedMealDay = calendarViewModel.maybeWhen(
-      data: (mealDays) => mealDays.firstWhereOrNull(
-        (day) => CalendarUtils.isSameDay(day.mealDate, selectedDay.value),
-      ),
-      orElse: () => null,
+    final selectedMealDay = mealDays.firstWhereOrNull(
+      (day) => CalendarUtils.isSameDay(day.mealDate, selectedDay.value),
     );
+
     // focusedDay의 mealEntries 목록
     final mealEntriesAsync = selectedMealDay != null
         ? ref.watch(mealEntriesProvider(selectedMealDay.id))
@@ -106,17 +111,21 @@ class MealCalendarPage extends HookConsumerWidget {
     final todayCountAsync = ref.watch(
       todayAnalysisCountProvider(userId),
     ); // 오늘 사용한 분석 횟수 provider
+
     final todayCount = todayCountAsync.maybeWhen(
       data: (count) => count,
       orElse: () => 0,
     );
+
     final isCountLoading = todayCountAsync.isLoading;
+
     final hasEntries =
         mealEntriesAsync?.maybeWhen(
           data: (entries) => entries.isNotEmpty,
           orElse: () => false,
         ) ??
         false;
+
     final isEntriesEmpty = mealEntriesAsync == null
         ? true // MealDay 자체가 없으면, 식단도 없음
         : mealEntriesAsync.maybeWhen(
@@ -220,8 +229,6 @@ class MealCalendarPage extends HookConsumerWidget {
             summary: analysisResult.overallSummary,
           );
 
-      // Provider 갱신
-      ref.invalidate(mealCalendarViewModelProvider); // 버튼 활성화 여부
       ref
           .read(todayAnalysisCountProvider(userId).notifier)
           .refresh(); // 사용한 분석 횟수

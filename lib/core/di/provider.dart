@@ -228,11 +228,13 @@ SyncService syncService(Ref ref) {
     supabase: supabase,
     connectivity: Connectivity(),
     onSyncCompleted: () {
-      // 동기화 완료시 위젯 데이터 갱신
-      // 순환 참조 방지를 위해 SyncService가 WidgetService를 주입받지 않게 함 (read)
-      final userId = supabase.auth.currentUser?.id; // TODO : 리팩토링
+      // TODO : 리팩토링
+      final userId = supabase.auth.currentUser?.id;
       if (userId != null) {
-        ref.read(widgetServiceProvider).updateWidgetData(userId);
+        // 동기화 완료시 위젯 데이터 갱신
+        ref
+            .read(widgetServiceProvider) // 순환참조 끊기 (read)
+            .updateWidgetData(userId);
       }
     },
   );

@@ -17,6 +17,13 @@ abstract class MealLocalDataSource {
     required DateTime endDate,
   });
 
+  /// 날짜 범위로 MealDay 스트림 구독
+  Stream<List<MealDayEntity>> watchMealDaysByDateRange({
+    required String userId,
+    required DateTime startDate,
+    required DateTime endDate,
+  });
+
   /// 특정 날짜의 MealDay 조회
   Future<MealDayEntity?> getMealDayByDate({
     required String userId,
@@ -97,6 +104,21 @@ class MealLocalDataSourceImpl implements MealLocalDataSource {
   }
 
   @override
+  Stream<List<MealDayEntity>> watchMealDaysByDateRange({
+    required String userId,
+    required DateTime startDate,
+    required DateTime endDate,
+  }) {
+    return _database.mealDao
+        .watchMealDaysByDateRange(
+          userId: userId,
+          startDate: startDate,
+          endDate: endDate,
+        )
+        .map((dataList) => dataList.map((data) => data.toEntity()).toList());
+  }
+
+  @override
   Future<MealDayEntity?> getMealDayByDate({
     required String userId,
     required DateTime date,
@@ -170,7 +192,9 @@ class MealLocalDataSourceImpl implements MealLocalDataSource {
   Future<void> updateMealDayAiMeta(String mealDayId) async {
     try {
       await _database.mealDao.updateMealDayAiMeta(mealDayId);
-      debugPrint('🥕 meal_entries 변경 후 MealDay AI 메타데이터 갱신 [${mealDayId.substring(0, 8)}]');
+      debugPrint(
+        '🥕 meal_entries 변경 후 MealDay AI 메타데이터 갱신 [${mealDayId.substring(0, 8)}]',
+      );
     } catch (e) {
       debugPrint('🥕 updateMealDayAiMeta: $e');
       throw Exception('updateMealDayAiMeta: $e');
