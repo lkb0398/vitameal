@@ -14,16 +14,16 @@ class CategorySelector extends StatelessWidget {
   final MealCategory selectedCategory;
   final ValueChanged<MealCategory> onCategoryChanged;
 
-  static const categoryMap = {
-    '아침': MealCategory.breakfast,
-    '점심': MealCategory.lunch,
-    '저녁': MealCategory.dinner,
-    '간식': MealCategory.snack,
-  };
-
   @override
   Widget build(BuildContext context) {
     final l = L10n.of(context)!; // 🌎
+
+    final categoryMap = {
+      l.breakfast: MealCategory.breakfast,
+      l.lunch: MealCategory.lunch,
+      l.dinner: MealCategory.dinner,
+      l.snack: MealCategory.snack,
+    };
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

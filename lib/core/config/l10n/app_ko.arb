@@ -208,5 +208,13 @@
   "add_notification": "새 알림 추가하기",
   "notification_name": "알림 이름",
   "breakfast_alarm": "아침 식사",
-  "enter_notification_name": "알림 이름을 입력해주세요."
+  "enter_notification_name": "알림 이름을 입력해주세요.",
+
+
+
+  "meal_feedback": "식단 피드백",
+  "meal_analysis": "식단 분석",
+  "good_thing": "좋아요",
+  "bad_thing": "아쉬워요",
+  "next_step": "다음 식사에 참고해보세요"
 }

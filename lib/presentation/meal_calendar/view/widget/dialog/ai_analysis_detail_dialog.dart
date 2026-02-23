@@ -59,7 +59,7 @@ class AiAnalysisDetailDialog extends HookWidget {
                           ),
                         )
                       : Text(
-                          '식단 피드백',
+                          l.meal_feedback,
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,

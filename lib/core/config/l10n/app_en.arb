@@ -212,5 +212,13 @@
   "add_notification": "Add Notification",
   "notification_name": "Notification Name",
   "breakfast_alarm": "Breakfast",
-  "enter_notification_name": "Please enter a notification name."
+  "enter_notification_name": "Please enter a notification name.",
+
+
+  
+  "meal_feedback": "Meal Feedback",
+  "meal_analysis": "Analysis",
+  "good_thing": "Good",
+  "bad_thing": "Improve",
+  "next_step": "Next steps"
 }
