@@ -122,7 +122,7 @@
   "failed_to_analyze": "분석 실패",
   "check_connection": "네트워크 연결을 확인해주세요.",
   "need_connection": "네트워크 연결 필요",
-  "neec_connection_detail": "자세한 분석 결과를 보려면 인터넷 연결이 필요합니다.",
+  "need_connection_detail": "자세한 분석 결과를 보려면 인터넷 연결이 필요합니다.",
   "over_analysis_limit": "오늘 분석 횟수를 모두 사용했어요",
   "no_condition_feedback": "기저질환 피드백이 없습니다",
 
@@ -208,5 +208,11 @@
   "add_notification": "새 알림 추가하기",
   "notification_name": "알림 이름",
   "breakfast_alarm": "아침 식사",
-  "enter_notification_name": "알림 이름을 입력해주세요."
+  "enter_notification_name": "알림 이름을 입력해주세요.",
+
+
+
+  "meal_tutorial_step_one": "아래로 당기면 한 달 성취도를\n한눈에 볼 수 있어요.",
+  "meal_tutorial_step_two": "버튼을 눌러서\n오늘 식단을 기록해보세요.",
+  "meal_tutorial_step_three": "식단 기록을 채우고\nAI 분석으로 나의 식습관을 확인해보세요."
 }
