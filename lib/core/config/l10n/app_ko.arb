@@ -214,5 +214,13 @@
 
   "meal_tutorial_step_one": "아래로 당기면 한 달 성취도를\n한눈에 볼 수 있어요.",
   "meal_tutorial_step_two": "버튼을 눌러서\n오늘 식단을 기록해보세요.",
-  "meal_tutorial_step_three": "식단 기록을 채우고\nAI 분석으로 나의 식습관을 확인해보세요."
+  "meal_tutorial_step_three": "식단 기록을 채우고\nAI 분석으로 나의 식습관을 확인해보세요.",
+  
+  
+  
+  "meal_feedback": "식단 피드백",
+  "meal_analysis": "식단 분석",
+  "good_thing": "좋아요",
+  "bad_thing": "아쉬워요",
+  "next_step": "다음 식사에 참고해보세요"
 }

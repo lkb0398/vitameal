@@ -30,7 +30,7 @@ class GeneralFeedbackPage extends StatelessWidget {
               borderRadius: BorderRadius.circular(8),
             ),
             child: Text(
-              '식단 분석',
+              l.meal_analysis,
               style: const TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.bold,
@@ -68,7 +68,7 @@ class GeneralFeedbackPage extends StatelessWidget {
                 children: [
                   Expanded(
                     child: PointCard(
-                      title: '좋아요',
+                      title: l.good_thing,
                       icon: PhosphorIcons.checkCircle(),
                       points: nf.goodPoints,
                     ),
@@ -76,7 +76,7 @@ class GeneralFeedbackPage extends StatelessWidget {
                   const SizedBox(width: 10),
                   Expanded(
                     child: PointCard(
-                      title: '아쉬워요',
+                      title: l.bad_thing,
                       icon: PhosphorIcons.warningCircle(),
                       points: nf.improvePoints,
                     ),
@@ -90,7 +90,7 @@ class GeneralFeedbackPage extends StatelessWidget {
           // 개선 제안
           if (nf.nextActions.isNotEmpty) ...[
             Text(
-              '다음 식사에 참고해보세요',
+              l.next_step,
               style: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.bold,

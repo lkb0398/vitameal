@@ -1200,7 +1200,7 @@ abstract class L10n {
   /// In en, this message translates to:
   /// **'Please enter a notification name.'**
   String get enter_notification_name;
-
+  
   /// No description provided for @meal_tutorial_step_one.
   ///
   /// In en, this message translates to:
@@ -1218,6 +1218,36 @@ abstract class L10n {
   /// In en, this message translates to:
   /// **'Log your meals and discover insights with AI.'**
   String get meal_tutorial_step_three;
+
+  /// No description provided for @meal_feedback.
+  ///
+  /// In en, this message translates to:
+  /// **'Meal Feedback'**
+  String get meal_feedback;
+
+  /// No description provided for @meal_analysis.
+  ///
+  /// In en, this message translates to:
+  /// **'Analysis'**
+  String get meal_analysis;
+
+  /// No description provided for @good_thing.
+  ///
+  /// In en, this message translates to:
+  /// **'Good'**
+  String get good_thing;
+
+  /// No description provided for @bad_thing.
+  ///
+  /// In en, this message translates to:
+  /// **'Improve'**
+  String get bad_thing;
+
+  /// No description provided for @next_step.
+  ///
+  /// In en, this message translates to:
+  /// **'Next steps'**
+  String get next_step;
 }
 
 class _L10nDelegate extends LocalizationsDelegate<L10n> {

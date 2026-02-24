@@ -42,7 +42,7 @@ final class MealAnalysisViewModelProvider
 }
 
 String _$mealAnalysisViewModelHash() =>
-    r'23c1c7e432f3f2cfc5beaf607d85efad3e840532';
+    r'7c374a191a0929a895829ff67f2d2f01c00d9e7d';
 
 abstract class _$MealAnalysisViewModel extends $Notifier<void> {
   void build();

@@ -9,10 +9,10 @@ class MealAnalysisRepositoryImpl implements MealAnalysisRepository {
   final MealAnalysisDataSource _dataSource;
 
   @override
-  Future<MealAnalysisEntity> requestAnalysis(String mealDayId) async {
+  Future<MealAnalysisEntity> requestAnalysis(String mealDayId, String locale) async {
     try {
       // Edge Function 호출 (분석 수행 + DB 저장)
-      final response = await _dataSource.requestAnalysis(mealDayId);
+      final response = await _dataSource.requestAnalysis(mealDayId, locale);
       // Edge Function에서 반환한 JSON을 Entity로 변환
       final analysisJson = response['analysis'] as Map<String, dynamic>;
       return analysisJson.toMealAnalysisEntity(mealDayId: mealDayId);

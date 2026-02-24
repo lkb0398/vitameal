@@ -101,6 +101,7 @@ class ConditionFeedbackPage extends StatelessWidget {
             const SizedBox(height: 8),
             ...feedback.suggestions.map(
               (suggestion) => Container(
+                width: double.infinity,
                 margin: const EdgeInsets.only(bottom: 12),
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(

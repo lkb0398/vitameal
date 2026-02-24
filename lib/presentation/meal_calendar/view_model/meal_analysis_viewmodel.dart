@@ -1,7 +1,10 @@
+import 'dart:ui';
+
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:vitameal/core/di/provider.dart';
 import 'package:vitameal/domain/entity/meal_analysis_entity.dart';
 import 'package:vitameal/domain/repository/meal_analysis_repository.dart';
+import 'package:vitameal/presentation/language/view_model/locale_view_model.dart';
 
 part 'meal_analysis_viewmodel.g.dart';
 
@@ -15,7 +18,10 @@ class MealAnalysisViewModel extends _$MealAnalysisViewModel {
 
   /// AI 분석 요청
   Future<MealAnalysisEntity> requestAnalysis(String mealDayId) async {
-    return await _repository.requestAnalysis(mealDayId);
+    final locale =
+        ref.read(localeViewModelProvider)?.languageCode ??
+        PlatformDispatcher.instance.locale.languageCode;
+    return await _repository.requestAnalysis(mealDayId, locale);
   }
 
   /// 특정 MealDay의 최신 분석 결과 조회

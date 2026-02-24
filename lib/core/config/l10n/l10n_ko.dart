@@ -566,7 +566,7 @@ class L10nKo extends L10n {
 
   @override
   String get enter_notification_name => '알림 이름을 입력해주세요.';
-
+  
   @override
   String get meal_tutorial_step_one => '아래로 당기면 한 달 성취도를\n한눈에 볼 수 있어요.';
 
@@ -575,4 +575,19 @@ class L10nKo extends L10n {
 
   @override
   String get meal_tutorial_step_three => '식단 기록을 채우고\nAI 분석으로 나의 식습관을 확인해보세요.';
+
+  @override
+  String get meal_feedback => '식단 피드백';
+
+  @override
+  String get meal_analysis => '식단 분석';
+
+  @override
+  String get good_thing => '좋아요';
+
+  @override
+  String get bad_thing => '아쉬워요';
+
+  @override
+  String get next_step => '다음 식사에 참고해보세요';
 }

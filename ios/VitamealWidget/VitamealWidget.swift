@@ -154,8 +154,8 @@ struct VitamealWidget: Widget {
         StaticConfiguration(kind: kind, provider: CalendarProvider()) { entry in
             VitamealWidgetEntryView(entry: entry, showAdherence: false)
         }
-        .configurationDisplayName("식단")
-        .description("이번 달 식단 성취를 확인하세요.")
+        .configurationDisplayName(LocalizedStringResource("diet_widget_name"))
+        .description(LocalizedStringResource("diet_widget_desc"))
         .contentMarginsDisabled().supportedFamilies([
             .systemSmall,
             .systemLarge
@@ -170,8 +170,8 @@ struct VitamealWidgetSimple: Widget {
         StaticConfiguration(kind: kind, provider: CalendarProvider()) { entry in
             VitamealWidgetEntryView(entry: entry, showAdherence: false)
         }
-        .configurationDisplayName("식단")
-        .description("이번 달 식단 성취를 확인하세요.")
+        .configurationDisplayName(LocalizedStringResource("diet_widget_name"))
+        .description(LocalizedStringResource("diet_widget_desc"))
         .contentMarginsDisabled()
         .supportedFamilies([.systemSmall, .systemLarge])
     }
@@ -184,8 +184,8 @@ struct VitamealWidgetWithAdherence: Widget {
         StaticConfiguration(kind: kind, provider: CalendarProvider()) { entry in
             VitamealWidgetEntryView(entry: entry, showAdherence: true)
         }
-        .configurationDisplayName("식단")
-        .description("달성도를 함께 표시합니다.")
+        .configurationDisplayName(LocalizedStringResource("diet_widget_name"))
+        .description(LocalizedStringResource("diet_widget_adherence_desc"))
         .contentMarginsDisabled()
         .supportedFamilies([.systemSmall, .systemLarge])
     }
@@ -212,6 +212,6 @@ struct VitamealWidgetWithAdherence: Widget {
 
 /// 사용자가 위젯을 길게 눌러 편집 상태에서 보여지는 옵션
 struct CalendarConfigurationIntent: WidgetConfigurationIntent {
-    static var title: LocalizedStringResource = "위젯 설정"
-    static var description = IntentDescription("Vitameal 캘린더 위젯 설정")
+    static var title: LocalizedStringResource = "widget_config_title"
+    static var description = IntentDescription(LocalizedStringResource("widget_config_desc"))
 }
