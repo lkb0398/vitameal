@@ -22,7 +22,9 @@ extension MealDayDtoMapper on MealDayDto {
           : null,
       needsAiRefresh: needsAiRefresh,
       latestAiSummary: latestAiSummary,
-      deletedAt: deletedAt != null ? DateTime.parse(deletedAt!).toLocal() : null,
+      deletedAt: deletedAt != null
+          ? DateTime.parse(deletedAt!).toLocal()
+          : null,
     );
   }
 }
@@ -33,7 +35,7 @@ extension MealDayEntityToDto on MealDayEntity {
     return MealDayDto(
       id: id,
       userId: userId,
-      mealDate: mealDate.toUtc().toIso8601String(),
+      mealDate: mealDate.toIso8601String().split('T')[0],
       adherence: adherence?.value,
       createdAt: createdAt.toUtc().toIso8601String(),
       updatedAt: updatedAt.toUtc().toIso8601String(),

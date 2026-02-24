@@ -16,4 +16,18 @@ enum MealCategory {
       orElse: () => MealCategory.breakfast,
     );
   }
+
+  /// 정렬 순서
+  int get order {
+    switch (this) {
+      case MealCategory.breakfast:
+        return 0;
+      case MealCategory.lunch:
+        return 1;
+      case MealCategory.dinner:
+        return 2;
+      case MealCategory.snack:
+        return 3;
+    }
+  }
 }

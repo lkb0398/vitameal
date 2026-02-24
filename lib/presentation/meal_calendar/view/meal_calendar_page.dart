@@ -489,12 +489,6 @@ class MealCalendarPage extends HookConsumerWidget {
                                 scrollController: contentScrollController,
                               );
                             }
-                            final sortedEntries = entries.toList()
-                              ..sort((a, b) {
-                                final aTime = a.eatenAt ?? DateTime(2000);
-                                final bTime = b.eatenAt ?? DateTime(2000);
-                                return aTime.compareTo(bTime);
-                              });
 
                             return Padding(
                               padding: const EdgeInsets.symmetric(
@@ -531,9 +525,9 @@ class MealCalendarPage extends HookConsumerWidget {
                                   ),
 
                                   SliverList.separated(
-                                    itemCount: sortedEntries.length,
+                                    itemCount: entries.length,
                                     itemBuilder: (context, index) {
-                                      final entry = sortedEntries[index];
+                                      final entry = entries[index];
                                       return MealCard(
                                         entryId: entry.id,
                                         category: entry.category,
