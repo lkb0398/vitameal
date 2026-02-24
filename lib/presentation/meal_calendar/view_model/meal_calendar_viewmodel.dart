@@ -14,48 +14,38 @@ class MealCalendarViewModel extends _$MealCalendarViewModel {
 
   /// MealDays 불러오기
   @override
-  Future<List<MealDayEntity>> build(String userId, DateTime startDate, DateTime endDate) async {
-    return await _repository.getMealDaysByDateRange(userId: userId, startDate: startDate, endDate: endDate);
+  Stream<List<MealDayEntity>> build(
+    String userId,
+    DateTime startDate,
+    DateTime endDate,
+  ) {
+    return _repository.watchMealDaysByDateRange(
+      userId: userId,
+      startDate: startDate,
+      endDate: endDate,
+    );
   }
 
-  /// 날짜 범위 변경 시 MealDays 불러오기
-  Future<void> changeDateRange(DateTime newStartDate, DateTime newEndDate) async {
-    state = const AsyncValue.loading();
-    state = await AsyncValue.guard(() async {
-      return await _repository.getMealDaysByDateRange(userId: userId, startDate: newStartDate, endDate: newEndDate);
-    });
-  }
-
-  /// 새로고침
-  Future<void> refresh() async {
-    state = const AsyncValue.loading();
-    state = await AsyncValue.guard(() async {
-      return await _repository.getMealDaysByDateRange(userId: userId, startDate: startDate, endDate: endDate);
-    });
-  }
-
-  /// 특정 날짜의 MealDay 조회 (VM의 캐시된 목록에서 찾기)
+  /// 특정 날짜의 MealDay 조회 (vm의 state 이용)
   MealDayEntity? getMealDayByDate(DateTime date) {
     return state.maybeWhen(
-      data: (mealDays) => mealDays.firstWhereOrNull((mealDay) => isSameDate(mealDay.mealDate, date)),
+      data: (mealDays) => mealDays.firstWhereOrNull(
+        (mealDay) => isSameDate(mealDay.mealDate, date),
+      ),
       orElse: () => null,
     );
   }
 
   /// MealDay의 Adherence 업데이트
-  Future<void> updateAdherence({required String mealDayId, required AdherenceLevel adherence}) async {
+  Future<void> updateAdherence({
+    required String mealDayId,
+    required AdherenceLevel adherence,
+  }) async {
     // 로컬 db로 업데이트
-    await _repository.updateMealDayAdherence(mealDayId: mealDayId, adherence: adherence);
-
-    // state 업데이트 (UI 즉시 반영)
-    state = state.whenData((mealDays) {
-      return mealDays.map((mealDay) {
-        if (mealDay.id == mealDayId) {
-          return mealDay.copyWith(adherence: adherence);
-        }
-        return mealDay;
-      }).toList();
-    });
+    await _repository.updateMealDayAdherence(
+      mealDayId: mealDayId,
+      adherence: adherence,
+    );
 
     // 위젯 갱신
     final widgetService = ref.read(widgetServiceProvider); // TODO : 리팩토링

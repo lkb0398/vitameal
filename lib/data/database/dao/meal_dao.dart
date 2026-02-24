@@ -11,7 +11,7 @@ part 'meal_dao.g.dart';
 class MealDao extends DatabaseAccessor<AppDatabase> with _$MealDaoMixin {
   MealDao(AppDatabase db) : super(db);
 
-  /// 날짜 범위로 MealDay 조회 (캘린더용)
+  /// 날짜 범위로 MealDay 목록 조회
   Future<List<MealDayData>> getMealDaysByDateRange({
     required String userId,
     required DateTime startDate,
@@ -24,6 +24,21 @@ class MealDao extends DatabaseAccessor<AppDatabase> with _$MealDaoMixin {
           ..where((t) => t.mealDate.isSmallerOrEqualValue(endDate))
           ..orderBy([(t) => OrderingTerm.desc(t.mealDate)]))
         .get();
+  }
+
+  /// 날짜 범위로 MealDay 스트림 구독
+  Stream<List<MealDayData>> watchMealDaysByDateRange({
+    required String userId,
+    required DateTime startDate,
+    required DateTime endDate,
+  }) {
+    return (select(mealDays)
+          ..where((t) => t.userId.equals(userId))
+          ..where((t) => t.deletedAt.isNull())
+          ..where((t) => t.mealDate.isBiggerOrEqualValue(startDate))
+          ..where((t) => t.mealDate.isSmallerOrEqualValue(endDate))
+          ..orderBy([(t) => OrderingTerm.desc(t.mealDate)]))
+        .watch();
   }
 
   /// 특정 날짜의 MealDay 조회
@@ -56,23 +71,25 @@ class MealDao extends DatabaseAccessor<AppDatabase> with _$MealDaoMixin {
     required String mealDayId,
     required String adherence,
   }) {
-    return (update(mealDays)..where((t) => t.id.equals(mealDayId)))
-        .write(MealDaysCompanion(
-      adherence: Value(adherence),
-      updatedAt: Value(DateTime.now()),
-    ));
+    return (update(mealDays)..where((t) => t.id.equals(mealDayId))).write(
+      MealDaysCompanion(
+        adherence: Value(adherence),
+        updatedAt: Value(DateTime.now()),
+      ),
+    );
   }
 
-  /// MealDay 삭제 (Soft Delete)
+  /// MealDay Soft Delete
   Future<int> deleteMealDay(String mealDayId) {
-    return (update(mealDays)..where((t) => t.id.equals(mealDayId)))
-        .write(MealDaysCompanion(
-      deletedAt: Value(DateTime.now()),
-      updatedAt: Value(DateTime.now()),
-    ));
+    return (update(mealDays)..where((t) => t.id.equals(mealDayId))).write(
+      MealDaysCompanion(
+        deletedAt: Value(DateTime.now()),
+        updatedAt: Value(DateTime.now()),
+      ),
+    );
   }
 
-  /// MealDay 하드 삭제 (동기화용)
+  /// MealDay Hard Delete (동기화용)
   Future<int> hardDeleteMealDay(String mealDayId) {
     return (delete(mealDays)..where((t) => t.id.equals(mealDayId))).go();
   }
@@ -88,24 +105,28 @@ class MealDao extends DatabaseAccessor<AppDatabase> with _$MealDaoMixin {
       'needs_ai_refresh = 1, '
       'last_entry_updated_at = ? '
       'WHERE id = ?',
-      variables: [
-        Variable.withDateTime(now),
-        Variable.withString(mealDayId),
-      ],
+      variables: [Variable.withDateTime(now), Variable.withString(mealDayId)],
       updates: {mealDays},
     );
   }
 
   /// AI 분석 완료 후 MealDay AI 메타데이터 갱신
   /// needs_ai_refresh = false, latest_ai_summary 업데이트
-  Future<void> updateMealDayAiMetaAfterAnalysis({required String mealDayId, required String summary}) async {
+  Future<void> updateMealDayAiMetaAfterAnalysis({
+    required String mealDayId,
+    required String summary,
+  }) async {
     await customUpdate(
       'UPDATE meal_days SET '
       'needs_ai_refresh = 0, '
       'latest_ai_summary = ?, '
       'updated_at = ? '
       'WHERE id = ?',
-      variables: [Variable.withString(summary), Variable.withDateTime(DateTime.now()), Variable.withString(mealDayId)],
+      variables: [
+        Variable.withString(summary),
+        Variable.withDateTime(DateTime.now()),
+        Variable.withString(mealDayId),
+      ],
       updates: {mealDays},
     );
   }
@@ -146,26 +167,28 @@ class MealDao extends DatabaseAccessor<AppDatabase> with _$MealDaoMixin {
     String? photoUrl,
     DateTime? eatenAt,
   }) {
-    return (update(mealEntries)..where((t) => t.id.equals(entryId)))
-        .write(MealEntriesCompanion(
-      category: Value(category.value),
-      content: content != null ? Value(content) : const Value.absent(),
-      photoUrl: photoUrl != null ? Value(photoUrl) : const Value.absent(),
-      eatenAt: eatenAt != null ? Value(eatenAt) : const Value.absent(),
-      updatedAt: Value(DateTime.now()),
-    ));
+    return (update(mealEntries)..where((t) => t.id.equals(entryId))).write(
+      MealEntriesCompanion(
+        category: Value(category.value),
+        content: content != null ? Value(content) : const Value.absent(),
+        photoUrl: photoUrl != null ? Value(photoUrl) : const Value.absent(),
+        eatenAt: eatenAt != null ? Value(eatenAt) : const Value.absent(),
+        updatedAt: Value(DateTime.now()),
+      ),
+    );
   }
 
-  /// MealEntry 삭제 (Soft Delete)
+  /// MealEntry Soft Delete
   Future<int> deleteMealEntry(String entryId) {
-    return (update(mealEntries)..where((t) => t.id.equals(entryId)))
-        .write(MealEntriesCompanion(
-      deletedAt: Value(DateTime.now()),
-      updatedAt: Value(DateTime.now()),
-    ));
+    return (update(mealEntries)..where((t) => t.id.equals(entryId))).write(
+      MealEntriesCompanion(
+        deletedAt: Value(DateTime.now()),
+        updatedAt: Value(DateTime.now()),
+      ),
+    );
   }
 
-  /// MealEntry 하드 삭제 (동기화용)
+  /// MealEntry Hard Delete (동기화용)
   Future<int> hardDeleteMealEntry(String entryId) {
     return (delete(mealEntries)..where((t) => t.id.equals(entryId))).go();
   }

@@ -13,6 +13,7 @@ import 'package:vitameal/core/config/routes.dart';
 import 'package:vitameal/core/di/provider.dart';
 import 'package:vitameal/core/service/analytics_service.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
+import 'package:vitameal/domain/entity/meal_day_entity.dart';
 import 'package:vitameal/presentation/auth/view_model/auth_view_model.dart';
 import 'package:vitameal/presentation/meal_calendar/view/widget/ai_analysis_card.dart';
 import 'package:vitameal/presentation/meal_calendar/view/widget/dialog/ai_analysis_detail_dialog.dart';
@@ -23,9 +24,11 @@ import 'package:vitameal/presentation/meal_calendar/view/widget/meal_card.dart';
 import 'package:vitameal/presentation/meal_calendar/view/widget/meal_calendar.dart';
 import 'package:vitameal/presentation/meal_calendar/view/util/adherence_color_utils.dart';
 import 'package:vitameal/core/util/date_time_utils.dart';
+import 'package:vitameal/presentation/meal_calendar/view/widget/tutorial/meal_tutorial.dart';
 import 'package:vitameal/presentation/meal_calendar/view_model/meal_analysis_viewmodel.dart';
 import 'package:vitameal/presentation/meal_calendar/view_model/meal_calendar_viewmodel.dart';
 import 'package:vitameal/presentation/ui_provider/meal_provider.dart';
+import 'package:vitameal/presentation/ui_provider/tutorial_provider.dart';
 
 class MealCalendarPage extends HookConsumerWidget {
   const MealCalendarPage({super.key});
@@ -41,6 +44,7 @@ class MealCalendarPage extends HookConsumerWidget {
     final l = L10n.of(context)!; // 🌎
 
     // ----- 인증 정보 -----
+
     final session = ref.watch(authViewModelProvider);
     final userId = session?.user.id;
     if (userId == null) {
@@ -48,6 +52,7 @@ class MealCalendarPage extends HookConsumerWidget {
     }
 
     // ----- UI 상태 관련 -----
+
     final focusedDay = useState(DateTime.now()); // 현재 캘린더 페이지의 렌더링 기준이 되는 날
     final selectedDay = useState(DateTime.now().dateOnly); // 선택된 날짜
     final lastTappedDay = useState<DateTime?>(null); // 마지막으로 선택된 날짜
@@ -66,6 +71,13 @@ class MealCalendarPage extends HookConsumerWidget {
 
     final contentScrollController = useScrollController();
     final showFabBubble = useState(false); // 말풍선 표시 상태
+    final tutorialShown = ref.watch(mealTutorialShownProvider).value ?? false;
+
+    // ----- 튜토리얼 GlobalKey -----
+
+    final calendarKey = useMemoized(() => GlobalKey(), const []);
+    final fabKey = useMemoized(() => GlobalKey(), const []);
+    final contentAreaKey = useMemoized(() => GlobalKey(), const []);
 
     // ----- 데이터 조회 관련 -----
 
@@ -74,6 +86,7 @@ class MealCalendarPage extends HookConsumerWidget {
       focusedDay.value.month,
       1,
     ); // 1일 부터
+
     final endOfMonth = DateTime(
       focusedDay.value.year,
       focusedDay.value.month + 1,
@@ -84,18 +97,19 @@ class MealCalendarPage extends HookConsumerWidget {
     final calendarViewModel = ref.watch(
       mealCalendarViewModelProvider(userId, startOfMonth, endOfMonth),
     );
+
     // 이번달 Adherence Map
-    final colorOfDay = calendarViewModel.maybeWhen(
-      data: (mealDays) => AdherenceUtils.buildColorMap(mealDays),
-      orElse: () => <DateTime, Color>{},
+    final mealDays = calendarViewModel.maybeWhen(
+      data: (v) => v,
+      orElse: () => <MealDayEntity>[],
     );
+    final colorOfDay = AdherenceUtils.buildColorMap(mealDays);
+
     // focusedDay의 MealDay
-    final selectedMealDay = calendarViewModel.maybeWhen(
-      data: (mealDays) => mealDays.firstWhereOrNull(
-        (day) => CalendarUtils.isSameDay(day.mealDate, selectedDay.value),
-      ),
-      orElse: () => null,
+    final selectedMealDay = mealDays.firstWhereOrNull(
+      (day) => CalendarUtils.isSameDay(day.mealDate, selectedDay.value),
     );
+
     // focusedDay의 mealEntries 목록
     final mealEntriesAsync = selectedMealDay != null
         ? ref.watch(mealEntriesProvider(selectedMealDay.id))
@@ -106,17 +120,21 @@ class MealCalendarPage extends HookConsumerWidget {
     final todayCountAsync = ref.watch(
       todayAnalysisCountProvider(userId),
     ); // 오늘 사용한 분석 횟수 provider
+
     final todayCount = todayCountAsync.maybeWhen(
       data: (count) => count,
       orElse: () => 0,
     );
+
     final isCountLoading = todayCountAsync.isLoading;
+
     final hasEntries =
         mealEntriesAsync?.maybeWhen(
           data: (entries) => entries.isNotEmpty,
           orElse: () => false,
         ) ??
         false;
+
     final isEntriesEmpty = mealEntriesAsync == null
         ? true // MealDay 자체가 없으면, 식단도 없음
         : mealEntriesAsync.maybeWhen(
@@ -220,8 +238,6 @@ class MealCalendarPage extends HookConsumerWidget {
             summary: analysisResult.overallSummary,
           );
 
-      // Provider 갱신
-      ref.invalidate(mealCalendarViewModelProvider); // 버튼 활성화 여부
       ref
           .read(todayAnalysisCountProvider(userId).notifier)
           .refresh(); // 사용한 분석 횟수
@@ -254,17 +270,41 @@ class MealCalendarPage extends HookConsumerWidget {
     useEffect(
       () {
         showFabBubble.value = false; // 기본적으로 안뜸
+        if (!tutorialShown) return null; // 튜토리얼 미완료 시 안뜸
         if (!isEntriesEmpty) return null; // 식단 있을때 안뜸
         if (!isWeekMode) return null; // Month 모드 일때 안뜸
         showFabBubble.value = true;
         return null;
       },
       [
+        tutorialShown, // 튜토리얼 완료 여부 바뀌면 다시 판단
         isEntriesEmpty, // 해당 날짜에 식단 없어지면 다시 판단
         isWeekMode, // Month - Week 모드 바뀌면 다시 판단
         selectedDay.value, // 날짜 바뀌면 다시 판단
       ],
     );
+
+    // 최초 실행 시 튜토리얼 표시
+    useEffect(() {
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        if (!context.mounted) return;
+        final shown = await ref.read(mealTutorialShownProvider.future);
+        if (!shown && context.mounted) {
+          MealTutorial.show(
+            context: context,
+            calendarKey: calendarKey,
+            fabKey: fabKey,
+            contentAreaKey: contentAreaKey,
+            onDone: () =>
+                ref.read(mealTutorialShownProvider.notifier).markShown(),
+            stepOne: l.meal_tutorial_step_one,
+            stepTwo: l.meal_tutorial_step_two,
+            stepThree: l.meal_tutorial_step_three,
+          );
+        }
+      });
+      return null;
+    }, const []);
 
     return Scaffold(
       body: SafeArea(
@@ -309,207 +349,229 @@ class MealCalendarPage extends HookConsumerWidget {
 
             return Column(
               children: [
-                // ----- 상단 고정 영역 -----
                 SizedBox(
-                  height: _headerHeight,
-                  child: CalendarHeader(
-                    focused: focusedDay.value,
-                    onTapYearMonth: () {
-                      final target = DateTime.now().dateOnly;
-                      focusedDay.value = target;
-                      selectedDay.value = target.dateOnly;
-                      lastTappedDay.value = selectedDay.value;
+                  key: calendarKey, // 튜토리얼용 키
+                  height: _headerHeight + calendarHeight,
+                  child: Column(
+                    children: [
+                      // ----- 상단 고정 영역 -----
+                      SizedBox(
+                        height: _headerHeight,
+                        child: CalendarHeader(
+                          focused: focusedDay.value,
+                          onTapYearMonth: () {
+                            final target = DateTime.now().dateOnly;
+                            focusedDay.value = target;
+                            selectedDay.value = target.dateOnly;
+                            lastTappedDay.value = selectedDay.value;
 
-                      if (collapseCtrl.value >= 0.9) {
-                        collapseCtrl.animateTo(0.0, curve: Curves.easeOutCubic);
-                      } else {
-                        collapseCtrl.animateTo(1.0, curve: Curves.easeOutCubic);
-                      }
-                    },
-                  ),
-                ),
+                            if (collapseCtrl.value >= 0.9) {
+                              collapseCtrl.animateTo(
+                                0.0,
+                                curve: Curves.easeOutCubic,
+                              );
+                            } else {
+                              collapseCtrl.animateTo(
+                                1.0,
+                                curve: Curves.easeOutCubic,
+                              );
+                            }
+                          },
+                        ),
+                      ),
 
-                // ----- 캘린더 영역 -----
-                SizedBox(
-                  // ClipRect와 calendarHeight를 통해 실제 보이는 부분 제어
-                  height: calendarHeight,
-                  child: ClipRect(
-                    child: Stack(
-                      children: [
-                        // 스크롤 진행도에 따라 위로 translate 해서 선택 주가 맨 위에 오게
-                        Transform.translate(
-                          offset: Offset(0, translateY),
-                          child: OverflowBox(
-                            minHeight:
-                                monthCalendarHeight, // 오버플로우 방지, 항상 월 캘린더 높이로
-                            maxHeight:
-                                monthCalendarHeight, // 오버플로우 방지, 항상 월 캘린더 높이로
-                            alignment: Alignment.topCenter,
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 6,
+                      // ----- 캘린더 영역 -----
+                      SizedBox(
+                        // ClipRect와 calendarHeight를 통해 실제 보이는 부분 제어
+                        height: calendarHeight,
+                        child: ClipRect(
+                          child: Stack(
+                            children: [
+                              // 스크롤 진행도에 따라 위로 translate 해서 선택 주가 맨 위에 오게
+                              Transform.translate(
+                                offset: Offset(0, translateY),
+                                child: OverflowBox(
+                                  minHeight:
+                                      monthCalendarHeight, // 오버플로우 방지, 항상 월 캘린더 높이로
+                                  maxHeight:
+                                      monthCalendarHeight, // 오버플로우 방지, 항상 월 캘린더 높이로
+                                  alignment: Alignment.topCenter,
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 6,
+                                    ),
+                                    child: MonthCalendar(
+                                      focusedDay: focusedDay.value,
+                                      selectedDay: selectedDay.value,
+                                      rowHeight: rowHeight,
+                                      barAreaHeight: barArea,
+                                      barColorByDay: colorOfDay,
+                                      onDayTap: onDayTapped,
+                                      calendarFormat: isWeekMode
+                                          ? CalendarFormat.week
+                                          : CalendarFormat.month,
+                                      onPageChanged: onPageChanged,
+                                    ),
+                                  ),
+                                ),
                               ),
-                              child: MonthCalendar(
-                                focusedDay: focusedDay.value,
-                                selectedDay: selectedDay.value,
-                                rowHeight: rowHeight,
-                                barAreaHeight: barArea,
-                                barColorByDay: colorOfDay,
-                                onDayTap: onDayTapped,
-                                calendarFormat: isWeekMode
-                                    ? CalendarFormat.week
-                                    : CalendarFormat.month,
-                                onPageChanged: onPageChanged,
+
+                              // 수직 드래그 감지
+                              Positioned.fill(
+                                child: GestureDetector(
+                                  behavior: HitTestBehavior.translucent,
+                                  // 드래그 시작 위치 저장
+                                  onVerticalDragStart: (details) {
+                                    dragStartY.value =
+                                        details.globalPosition.dy;
+                                    dragEndY.value = details.globalPosition.dy;
+                                  },
+                                  // 드래그 중 현재 위치 업데이트
+                                  onVerticalDragUpdate: (details) {
+                                    dragEndY.value = details.globalPosition.dy;
+                                  },
+                                  onVerticalDragEnd: (details) {
+                                    if (dragStartY.value == null ||
+                                        dragEndY.value == null)
+                                      return;
+                                    // 드래그 방향 체크
+                                    final dragDistance =
+                                        dragEndY.value! - dragStartY.value!;
+                                    dragStartY.value = null;
+                                    dragEndY.value = null;
+                                    // 최소 50px 드래그
+                                    if (dragDistance.abs() < 50) return;
+                                    // 위로 드래그 (Month -> Week)
+                                    if (dragDistance < 0) {
+                                      if (!isWeekMode) {
+                                        collapseCtrl.animateTo(
+                                          1.0,
+                                          curve: Curves.easeOutCubic,
+                                        );
+                                      }
+                                    }
+                                    // 아래로 드래그 (Week -> Month)
+                                    else {
+                                      if (isWeekMode) {
+                                        collapseCtrl.animateTo(
+                                          0.0,
+                                          curve: Curves.easeOutCubic,
+                                        );
+                                      }
+                                    }
+                                  },
+                                ),
                               ),
-                            ),
+                            ],
                           ),
                         ),
-
-                        // 수직 드래그 감지
-                        Positioned.fill(
-                          child: GestureDetector(
-                            behavior: HitTestBehavior.translucent,
-                            // 드래그 시작 위치 저장
-                            onVerticalDragStart: (details) {
-                              dragStartY.value = details.globalPosition.dy;
-                              dragEndY.value = details.globalPosition.dy;
-                            },
-                            // 드래그 중 현재 위치 업데이트
-                            onVerticalDragUpdate: (details) {
-                              dragEndY.value = details.globalPosition.dy;
-                            },
-                            onVerticalDragEnd: (details) {
-                              if (dragStartY.value == null ||
-                                  dragEndY.value == null)
-                                return;
-                              // 드래그 방향 체크
-                              final dragDistance =
-                                  dragEndY.value! - dragStartY.value!;
-                              dragStartY.value = null;
-                              dragEndY.value = null;
-                              // 최소 50px 드래그
-                              if (dragDistance.abs() < 50) return;
-                              // 위로 드래그 (Month -> Week)
-                              if (dragDistance < 0) {
-                                if (!isWeekMode) {
-                                  collapseCtrl.animateTo(
-                                    1.0,
-                                    curve: Curves.easeOutCubic,
-                                  );
-                                }
-                              }
-                              // 아래로 드래그 (Week -> Month)
-                              else {
-                                if (isWeekMode) {
-                                  collapseCtrl.animateTo(
-                                    0.0,
-                                    curve: Curves.easeOutCubic,
-                                  );
-                                }
-                              }
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
 
                 // ----- 식단내용 영역 -----
                 Expanded(
-                  child: Builder(
-                    builder: (context) {
-                      // MealDay가 없을 경우
-                      if (mealEntriesAsync == null) {
-                        return _EmptyMealView(
-                          scrollController: contentScrollController,
-                        );
-                      }
-                      return mealEntriesAsync.when(
-                        data: (entries) {
-                          if (entries.isEmpty) {
-                            return _EmptyMealView(
-                              scrollController: contentScrollController,
-                            );
-                          }
-
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
-                            child: CustomScrollView(
-                              controller: contentScrollController,
-                              slivers: [
-                                SliverToBoxAdapter(
-                                  child: Column(
-                                    children: [
-                                      AdherencePicker(
-                                        selectedDay: selectedDay.value,
-                                        adherence:
-                                            colorOfDay[selectedDay.value],
-                                        onPick: setColorBar,
-                                      ),
-                                      if (selectedMealDay != null)
-                                        AiAnalysisCard(
-                                          mealDayId: selectedMealDay.id,
-                                          needsAiRefresh:
-                                              selectedMealDay.needsAiRefresh,
-                                          latestAiSummary:
-                                              selectedMealDay.latestAiSummary,
-                                          todayCount: todayCount,
-                                          isCountLoading: isCountLoading,
-                                          hasEntries: hasEntries,
-                                          onAnalyze: handleAnalyze,
-                                          onOpenDetail: handleOpenDetail,
-                                          title: l.ai_result,
-                                        ),
-                                    ],
-                                  ),
-                                ),
-
-                                SliverList.separated(
-                                  itemCount: entries.length,
-                                  itemBuilder: (context, index) {
-                                    final entry = entries[index];
-                                    return MealCard(
-                                      entryId: entry.id,
-                                      category: entry.category,
-                                      content: entry.content,
-                                      photoUrl: entry.photoUrl,
-                                      eatenAt: entry.eatenAt,
-                                      onTap: () async {
-                                        await context.push(
-                                          AppRoutePath.mealEditor,
-                                          extra: {
-                                            'mealEntryId': entry.id,
-                                            'mealDayId': selectedMealDay!.id,
-                                            'date': selectedDay.value,
-                                          },
-                                        );
-                                        ref.invalidate(
-                                          mealEntriesProvider(
-                                            selectedMealDay.id,
-                                          ),
-                                        );
-                                      },
-                                    );
-                                  },
-                                  separatorBuilder: (_, __) =>
-                                      Divider(color: vrc(context).border),
-                                ),
-                                SliverToBoxAdapter(child: SizedBox(height: 9)),
-                              ],
-                            ),
+                  child: Container(
+                    key: contentAreaKey, // 튜토리얼용 키
+                    child: Builder(
+                      builder: (context) {
+                        // MealDay가 없을 경우
+                        if (mealEntriesAsync == null) {
+                          return _EmptyMealView(
+                            scrollController: contentScrollController,
                           );
-                        },
-                        loading: () =>
-                            const Center(child: CircularProgressIndicator()),
-                        error: (e, _) => Center(
-                          child: Text(
-                            'error: $e',
-                            style: const TextStyle(color: Colors.red),
+                        }
+                        return mealEntriesAsync.when(
+                          data: (entries) {
+                            if (entries.isEmpty) {
+                              return _EmptyMealView(
+                                scrollController: contentScrollController,
+                              );
+                            }
+
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 20,
+                              ),
+                              child: CustomScrollView(
+                                controller: contentScrollController,
+                                slivers: [
+                                  SliverToBoxAdapter(
+                                    child: Column(
+                                      children: [
+                                        AdherencePicker(
+                                          selectedDay: selectedDay.value,
+                                          adherence:
+                                              colorOfDay[selectedDay.value],
+                                          onPick: setColorBar,
+                                        ),
+                                        if (selectedMealDay != null)
+                                          AiAnalysisCard(
+                                            mealDayId: selectedMealDay.id,
+                                            needsAiRefresh:
+                                                selectedMealDay.needsAiRefresh,
+                                            latestAiSummary:
+                                                selectedMealDay.latestAiSummary,
+                                            todayCount: todayCount,
+                                            isCountLoading: isCountLoading,
+                                            hasEntries: hasEntries,
+                                            onAnalyze: handleAnalyze,
+                                            onOpenDetail: handleOpenDetail,
+                                            title: l.ai_result,
+                                          ),
+                                      ],
+                                    ),
+                                  ),
+
+                                  SliverList.separated(
+                                    itemCount: entries.length,
+                                    itemBuilder: (context, index) {
+                                      final entry = entries[index];
+                                      return MealCard(
+                                        entryId: entry.id,
+                                        category: entry.category,
+                                        content: entry.content,
+                                        photoUrl: entry.photoUrl,
+                                        eatenAt: entry.eatenAt,
+                                        onTap: () async {
+                                          await context.push(
+                                            AppRoutePath.mealEditor,
+                                            extra: {
+                                              'mealEntryId': entry.id,
+                                              'mealDayId': selectedMealDay!.id,
+                                              'date': selectedDay.value,
+                                            },
+                                          );
+                                          ref.invalidate(
+                                            mealEntriesProvider(
+                                              selectedMealDay.id,
+                                            ),
+                                          );
+                                        },
+                                      );
+                                    },
+                                    separatorBuilder: (_, __) =>
+                                        Divider(color: vrc(context).border),
+                                  ),
+                                  SliverToBoxAdapter(
+                                    child: SizedBox(height: 9),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                          loading: () =>
+                              const Center(child: CircularProgressIndicator()),
+                          error: (e, _) => Center(
+                            child: Text(
+                              'error: $e',
+                              style: const TextStyle(color: Colors.red),
+                            ),
                           ),
-                        ),
-                      );
-                    },
+                        );
+                      },
+                    ),
                   ),
                 ),
               ],
@@ -550,6 +612,7 @@ class MealCalendarPage extends HookConsumerWidget {
           ),
           const SizedBox(height: 8),
           FloatingActionButton(
+            key: fabKey, // 튜토리얼용 키
             heroTag: null,
             onPressed: () async {
               await context.push(

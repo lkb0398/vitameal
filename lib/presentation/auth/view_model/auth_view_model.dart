@@ -24,6 +24,8 @@ class AuthViewModel extends _$AuthViewModel {
       if (session != null) {
         // 🔔 로그인 성공 직후 토큰 저장 (앱 삭제 후 재설치 시 토큰 갱신 위해)
         await FirebaseService.saveFcmToken();
+        // 로그인 후 동기화 트리거 (앱 삭제 후 재설치 시 동기화 보장을 위해)
+        ref.read(syncServiceProvider).syncAll();
       }
     });
 
