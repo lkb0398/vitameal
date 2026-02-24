@@ -1200,6 +1200,24 @@ abstract class L10n {
   /// In en, this message translates to:
   /// **'Please enter a notification name.'**
   String get enter_notification_name;
+  
+  /// No description provided for @meal_tutorial_step_one.
+  ///
+  /// In en, this message translates to:
+  /// **'Swipe down to view your monthly summary.'**
+  String get meal_tutorial_step_one;
+
+  /// No description provided for @meal_tutorial_step_two.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to log today’s meals.'**
+  String get meal_tutorial_step_two;
+
+  /// No description provided for @meal_tutorial_step_three.
+  ///
+  /// In en, this message translates to:
+  /// **'Log your meals and discover insights with AI.'**
+  String get meal_tutorial_step_three;
 
   /// No description provided for @meal_feedback.
   ///

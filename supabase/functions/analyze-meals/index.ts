@@ -1,5 +1,5 @@
 // 플러터 앱에서: POST /functions/v1/analyze-meals
-// Request Body: { mealDayId, locale }
+// Request Body: { mealDayId, locale, usageDate }
 // Prompt Input: { raw_text, category, locale }
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
@@ -112,7 +112,7 @@ serve(async (req) => {
     }
 
     // 요청 파라미터 파싱
-    const { mealDayId, locale } = await req.json();
+    const { mealDayId, locale, usageDate } = await req.json();
     if (!mealDayId) {
       return new Response(
         JSON.stringify({ error: 'mealDayId is required' }),
@@ -251,6 +251,7 @@ serve(async (req) => {
       p_condition_feedback: analysisJson.condition_feedback || null,
       p_suggestions: analysisJson.nutrition_feedback?.next_actions || null,
       p_locale: localeTag,
+      p_usage_date: usageDate ?? null,
     });
     if (rpcError) {
       console.error('RPC Error:', rpcError);

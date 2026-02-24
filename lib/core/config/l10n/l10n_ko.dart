@@ -335,8 +335,7 @@ class L10nKo extends L10n {
   String get need_connection => '네트워크 연결 필요';
 
   @override
-  String get need_connection_detail =>
-      'An internet connection is required to view detailed analysis results.';
+  String get need_connection_detail => '자세한 분석 결과를 보려면 인터넷 연결이 필요합니다.';
 
   @override
   String get over_analysis_limit => '오늘 분석 횟수를 모두 사용했어요';
@@ -567,6 +566,15 @@ class L10nKo extends L10n {
 
   @override
   String get enter_notification_name => '알림 이름을 입력해주세요.';
+  
+  @override
+  String get meal_tutorial_step_one => '아래로 당기면 한 달 성취도를\n한눈에 볼 수 있어요.';
+
+  @override
+  String get meal_tutorial_step_two => '버튼을 눌러서\n오늘 식단을 기록해보세요.';
+
+  @override
+  String get meal_tutorial_step_three => '식단 기록을 채우고\nAI 분석으로 나의 식습관을 확인해보세요.';
 
   @override
   String get meal_feedback => '식단 피드백';

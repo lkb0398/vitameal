@@ -24,7 +24,11 @@ class MealAnalysisDataSourceImpl implements MealAnalysisDataSource {
       // Edge Function : OpenAI API 호출 - DB에 저장 - 분석 결과 반환
       final response = await _supabase.functions.invoke(
         'analyze-meals',
-        body: {'mealDayId': mealDayId, 'locale': locale},
+        body: {
+          'mealDayId': mealDayId,
+          'locale': locale,
+          'usageDate': DateTime.now().toIso8601String().split('T')[0],
+        },
       );
       if (response.status != 200) {
         throw Exception('AI 분석 실패 ${response.status}');
@@ -66,18 +70,16 @@ class MealAnalysisDataSourceImpl implements MealAnalysisDataSource {
   @override
   Future<int> getTodayAnalysisCount(String userId) async {
     try {
-      final now = DateTime.now();
-      final todayStart = DateTime(now.year, now.month, now.day).toUtc().toIso8601String();
-      final todayEnd = DateTime(now.year, now.month, now.day, 23, 59, 59).toUtc().toIso8601String();
+      final usageDate = DateTime.now().toIso8601String().split('T')[0];
 
       final response = await _supabase
-          .from('meal_day_analyses')
-          .select('id')
+          .from('meal_analysis_daily_usage')
+          .select('used_count')
           .eq('user_id', userId)
-          .gte('created_at', todayStart)
-          .lte('created_at', todayEnd);
+          .eq('usage_date', usageDate)
+          .maybeSingle();
 
-      final count = (response as List).length;
+      final count = (response?['used_count'] as int?) ?? 0;
       debugPrint('🤖 오늘 분석 횟수 조회 [$userId: $count회]');
       return count;
     } catch (e) {

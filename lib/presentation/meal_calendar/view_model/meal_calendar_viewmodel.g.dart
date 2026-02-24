@@ -13,7 +13,8 @@ part of 'meal_calendar_viewmodel.dart';
 const mealCalendarViewModelProvider = MealCalendarViewModelFamily._();
 
 final class MealCalendarViewModelProvider
-    extends $AsyncNotifierProvider<MealCalendarViewModel, List<MealDayEntity>> {
+    extends
+        $StreamNotifierProvider<MealCalendarViewModel, List<MealDayEntity>> {
   const MealCalendarViewModelProvider._({
     required MealCalendarViewModelFamily super.from,
     required (String, DateTime, DateTime) super.argument,
@@ -51,7 +52,7 @@ final class MealCalendarViewModelProvider
 }
 
 String _$mealCalendarViewModelHash() =>
-    r'5c88f3fcbb71bcf44bdd0ac5811a7e7ff14dfe88';
+    r'83ed0f05797e211e7956a347cebbb3f9dd76957f';
 
 final class MealCalendarViewModelFamily extends $Family
     with
@@ -59,7 +60,7 @@ final class MealCalendarViewModelFamily extends $Family
           MealCalendarViewModel,
           AsyncValue<List<MealDayEntity>>,
           List<MealDayEntity>,
-          FutureOr<List<MealDayEntity>>,
+          Stream<List<MealDayEntity>>,
           (String, DateTime, DateTime)
         > {
   const MealCalendarViewModelFamily._()
@@ -85,13 +86,13 @@ final class MealCalendarViewModelFamily extends $Family
 }
 
 abstract class _$MealCalendarViewModel
-    extends $AsyncNotifier<List<MealDayEntity>> {
+    extends $StreamNotifier<List<MealDayEntity>> {
   late final _$args = ref.$arg as (String, DateTime, DateTime);
   String get userId => _$args.$1;
   DateTime get startDate => _$args.$2;
   DateTime get endDate => _$args.$3;
 
-  FutureOr<List<MealDayEntity>> build(
+  Stream<List<MealDayEntity>> build(
     String userId,
     DateTime startDate,
     DateTime endDate,

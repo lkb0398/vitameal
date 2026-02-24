@@ -19,7 +19,7 @@ class MealRepositoryImpl implements MealRepository {
   final SyncService _syncService;
   final Uuid _uuid = const Uuid();
 
-  /// 날짜 범위만큼 Mealday 불러오기
+  /// 날짜 범위로 MealDay 목록 조회
   @override
   Future<List<MealDayEntity>> getMealDaysByDateRange({
     required String userId,
@@ -35,6 +35,20 @@ class MealRepositoryImpl implements MealRepository {
     } catch (e) {
       rethrow;
     }
+  }
+
+  /// 날짜 범위로 MealDay 스트림 구독
+  @override
+  Stream<List<MealDayEntity>> watchMealDaysByDateRange({
+    required String userId,
+    required DateTime startDate,
+    required DateTime endDate,
+  }) {
+    return _localDataSource.watchMealDaysByDateRange(
+      userId: userId,
+      startDate: startDate,
+      endDate: endDate,
+    );
   }
 
   /// 해당 날짜의 Mealday 불러오기

@@ -573,6 +573,17 @@ class L10nEn extends L10n {
 
   @override
   String get enter_notification_name => 'Please enter a notification name.';
+  
+  @override
+  String get meal_tutorial_step_one =>
+      'Swipe down to view your monthly summary.';
+
+  @override
+  String get meal_tutorial_step_two => 'Tap to log today’s meals.';
+
+  @override
+  String get meal_tutorial_step_three =>
+      'Log your meals and discover insights with AI.';
 
   @override
   String get meal_feedback => 'Meal Feedback';
