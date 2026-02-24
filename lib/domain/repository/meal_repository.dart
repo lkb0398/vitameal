@@ -11,6 +11,13 @@ abstract class MealRepository {
     required DateTime endDate,
   });
 
+  /// 날짜 범위로 MealDay 스트림 구독
+  Stream<List<MealDayEntity>> watchMealDaysByDateRange({
+    required String userId,
+    required DateTime startDate,
+    required DateTime endDate,
+  });
+
   /// 특정 날짜의 MealDay 조회
   Future<MealDayEntity?> getMealDayByDate({
     required String userId,

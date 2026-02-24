@@ -13,6 +13,7 @@ import 'package:vitameal/core/config/routes.dart';
 import 'package:vitameal/core/di/provider.dart';
 import 'package:vitameal/core/service/analytics_service.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
+import 'package:vitameal/domain/entity/meal_day_entity.dart';
 import 'package:vitameal/presentation/auth/view_model/auth_view_model.dart';
 import 'package:vitameal/presentation/meal_calendar/view/widget/ai_analysis_card.dart';
 import 'package:vitameal/presentation/meal_calendar/view/widget/dialog/ai_analysis_detail_dialog.dart';
@@ -98,17 +99,15 @@ class MealCalendarPage extends HookConsumerWidget {
     );
 
     // 이번달 Adherence Map
-    final colorOfDay = calendarViewModel.maybeWhen(
-      data: (mealDays) => AdherenceUtils.buildColorMap(mealDays),
-      orElse: () => <DateTime, Color>{},
+    final mealDays = calendarViewModel.maybeWhen(
+      data: (v) => v,
+      orElse: () => <MealDayEntity>[],
     );
+    final colorOfDay = AdherenceUtils.buildColorMap(mealDays);
 
     // focusedDay의 MealDay
-    final selectedMealDay = calendarViewModel.maybeWhen(
-      data: (mealDays) => mealDays.firstWhereOrNull(
-        (day) => CalendarUtils.isSameDay(day.mealDate, selectedDay.value),
-      ),
-      orElse: () => null,
+    final selectedMealDay = mealDays.firstWhereOrNull(
+      (day) => CalendarUtils.isSameDay(day.mealDate, selectedDay.value),
     );
 
     // focusedDay의 mealEntries 목록
@@ -239,8 +238,6 @@ class MealCalendarPage extends HookConsumerWidget {
             summary: analysisResult.overallSummary,
           );
 
-      // Provider 갱신
-      ref.invalidate(mealCalendarViewModelProvider); // 버튼 활성화 여부
       ref
           .read(todayAnalysisCountProvider(userId).notifier)
           .refresh(); // 사용한 분석 횟수
