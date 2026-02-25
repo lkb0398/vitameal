@@ -718,7 +718,7 @@ abstract class L10n {
   /// No description provided for @source_info.
   ///
   /// In en, this message translates to:
-  /// **'Sources & Health Information (External)'**
+  /// **'Sources & Health Information'**
   String get source_info;
 
   /// No description provided for @failed_to_analyze.
@@ -1200,7 +1200,7 @@ abstract class L10n {
   /// In en, this message translates to:
   /// **'Please enter a notification name.'**
   String get enter_notification_name;
-  
+
   /// No description provided for @meal_tutorial_step_one.
   ///
   /// In en, this message translates to:

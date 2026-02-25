@@ -11,7 +11,7 @@ class MealTutorialShown extends _$MealTutorialShown {
   @override
   Future<bool> build() async {
     final prefs = await SharedPreferences.getInstance();
-    return false;
+    return prefs.getBool(_prefKey) ?? false;
   }
 
   Future<void> markShown() async {

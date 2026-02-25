@@ -326,7 +326,7 @@ class L10nEn extends L10n {
   String get suggestions => 'Suggestions';
 
   @override
-  String get source_info => 'Sources & Health Information (External)';
+  String get source_info => 'Sources & Health Information';
 
   @override
   String get failed_to_analyze => 'Analysis failed';
@@ -573,7 +573,7 @@ class L10nEn extends L10n {
 
   @override
   String get enter_notification_name => 'Please enter a notification name.';
-  
+
   @override
   String get meal_tutorial_step_one =>
       'Swipe down to view your monthly summary.';
