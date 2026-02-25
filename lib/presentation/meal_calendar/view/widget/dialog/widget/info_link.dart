@@ -15,7 +15,9 @@ class InfoLink extends StatelessWidget {
         const Icon(Icons.info_outline, size: 14, color: Colors.grey),
         const SizedBox(width: 4),
         TextButton(
-          onPressed: LinkLauncher.openNotion,
+          onPressed: () => LinkLauncher.openNotion(
+            Localizations.localeOf(context).languageCode,
+          ),
           style: TextButton.styleFrom(
             padding: EdgeInsets.zero,
             minimumSize: Size.zero,

@@ -566,7 +566,7 @@ class L10nKo extends L10n {
 
   @override
   String get enter_notification_name => '알림 이름을 입력해주세요.';
-  
+
   @override
   String get meal_tutorial_step_one => '아래로 당기면 한 달 성취도를\n한눈에 볼 수 있어요.';
 
