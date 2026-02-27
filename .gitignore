@@ -43,3 +43,15 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+ios/Runner.xcworkspace/
+.vscode/settings.json
+.vscode/extensions.json
+devtools_options.yaml
+
+# Environment variables
+.env
+.env.*
+supabase/.env
+supabase/.env.*
+ios/build/

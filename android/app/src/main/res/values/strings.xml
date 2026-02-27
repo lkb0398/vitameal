@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="widget_small_name">식단 성취도</string>
+    <string name="widget_small_desc">
+        위젯의 테두리 영역을 터치하면 스타일을 변경할 수 있습니다.
+    </string>
+
+    <!-- configure activity -->
+    <string name="widget_config_title">위젯 설정</string>
+    <string name="widget_config_dark_mode">다크모드</string>
+    <string name="widget_config_opacity">테두리 투명도</string>
+    <string name="widget_config_adherence">달성도 표시</string>
+    <string name="widget_config_palette">셀 스타일 단색모드</string>
+    <string name="widget_config_notice">위젯 업데이트는 안드로이드 시스템 정책에 따라 짧은 대기 시간이 발생할 수 있습니다. 변경사항은 최대 1분 이내에 반영됩니다.</string>
+    <string name="widget_config_cancel">취소</string>
+    <string name="widget_config_save">저장</string>
+</resources>

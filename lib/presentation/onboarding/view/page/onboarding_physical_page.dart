@@ -1,0 +1,332 @@
+import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:go_router/go_router.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:tap_debouncer/tap_debouncer.dart';
+import 'package:vitameal/core/config/l10n/l10n.dart';
+import 'package:vitameal/core/service/analytics_service.dart';
+import 'package:vitameal/core/theme/app_theme.dart';
+import 'package:vitameal/domain/enum/gender_type_enum.dart';
+import 'package:vitameal/presentation/onboarding/view/widget/progress_text.dart';
+import 'package:vitameal/presentation/onboarding/view/widget/select_box.dart';
+import 'package:vitameal/presentation/widget/button/done_button.dart';
+import 'package:vitameal/presentation/widget/validate_textformfield.dart';
+import 'package:vitameal/presentation/ui_provider/profiles_provider.dart';
+import 'package:vitameal/presentation/onboarding/viewmodel/onboarding_view_model.dart';
+
+class OnboardingPhysicalPage extends HookConsumerWidget {
+  const OnboardingPhysicalPage({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l = L10n.of(context)!; // 🌎
+
+    // 성별 : 사용자 선택값 (기본값 unknown)
+    final selectedGender = useState<GenderType>(GenderType.unknown);
+
+    // 출생년도 : 사용자 입력값 받기 + 검증 메시지
+    final birthyearController = useTextEditingController();
+    String? validateBirthYear(String? value) {
+      if (value == null || value.isEmpty) {
+        return null; // 입력값 없을 때 (통과)
+      }
+      if (value.length != 4 || int.tryParse(value) == null) {
+        return l.birth_year_invalid; // 입력 형식 제한
+      }
+      final year = int.tryParse(value);
+      if (year == null) {
+        return l.birth_year_invalid; // 숫자가 아닐 때
+      }
+      if (year < 1900 || year > DateTime.now().year) {
+        return l.birth_year_wrong; // 입력 범위 제한 (1900~현재년도)
+      }
+      return null; // 통과
+    }
+
+    // 키 : 사용자 입력값 받기 + 검증 메시지
+    final heightController = useTextEditingController();
+    String? validateHeight(String? value) {
+      if (value == null || value.isEmpty) {
+        return null; // 입력값 없을 때 (통과)
+      }
+      final height = double.tryParse(value);
+      if (height == null) {
+        return l.invalid_number; // 숫자가 아닐 때
+      }
+      if (height < 0 || height > 300) {
+        return l.invalid_number; // 입력 범위 제한 (0~300)
+      }
+      return null; // 통과
+    }
+
+    // 몸무게 : 사용자 입력값 받기 + 검증 메시지
+    final weightController = useTextEditingController();
+    String? validateWeight(String? value) {
+      if (value == null || value.isEmpty) {
+        return null; // 입력값 없을 때 (통과)
+      }
+      final weight = double.tryParse(value);
+      if (weight == null) {
+        return l.invalid_number; // 숫자가 아닐 때
+      }
+      if (weight < 0 || weight > 300) {
+        return l.invalid_number; // 입력 범위 제한 (0~300)
+      }
+      return null; // 통과
+    }
+
+    useEffect(() {
+      void listener() {
+        birthyearController.text.trim();
+        heightController.text.trim();
+        weightController.text.trim();
+      }
+
+      birthyearController.addListener(listener);
+      heightController.addListener(listener);
+      weightController.addListener(listener);
+
+      return () {
+        birthyearController.removeListener(listener);
+        heightController.removeListener(listener);
+        weightController.removeListener(listener);
+      };
+    }, []);
+
+    // 수정모드 여부
+    final isEditing = ref.watch(isEditFlowProvider);
+
+    // 수정모드 시 기존값 불러오기
+    final profileAsync = ref.watch(myProfileProvider);
+    final didInit = useRef(false);
+    useEffect(() {
+      if (!isEditing) return null;
+      profileAsync.whenData((profile) {
+        if (profile == null) return;
+        if (didInit.value) return;
+        didInit.value = true;
+        selectedGender.value = profile.genderType!;
+        if (profile.birthYear != null) {
+          birthyearController.text = profile.birthYear.toString();
+        }
+        if (profile.heightCm != null) {
+          heightController.text = profile.heightCm!.toString();
+        }
+        if (profile.weightKg != null) {
+          weightController.text = profile.weightKg!.toString();
+        }
+      });
+      return null;
+    }, [isEditing, profileAsync]);
+
+    final nickname = profileAsync.when(
+      data: (profile) => profile?.nickname ?? l.member,
+      loading: () => l.member,
+      error: (_, __) => l.member,
+    );
+
+    return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          onPressed: context.pop,
+          icon: Icon(Icons.arrow_back_ios, color: fxc(context).textcolor200),
+        ),
+
+        /// 단계 표시
+        actions: [isEditing ? SizedBox.shrink() : ProgressText(page: "2")],
+        actionsPadding: EdgeInsets.only(right: 26),
+      ),
+      body: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 20),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 10,
+            children: [
+              /// 설명
+              AutoSizeText.rich(
+                TextSpan(
+                  style: TextStyle(fontSize: 22, color: vrc(context).text),
+                  children: [
+                    if (!isEditing) TextSpan(text: l.welcomePrefix),
+                    TextSpan(
+                      text: nickname,
+                      style: TextStyle(fontWeight: FontWeight.w600),
+                    ),
+                    TextSpan(
+                      text: isEditing ? l.editInfoSuffix : l.inputInfoSuffix,
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 20),
+
+              /// 성별 선택
+              Padding(
+                padding: const EdgeInsets.only(left: 8),
+                child: Text(
+                  l.gender,
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                ),
+              ),
+              Row(
+                spacing: 10,
+                children: [
+                  Expanded(
+                    flex: 1,
+                    child: SelectBox(
+                      onTap: () async => selectedGender.value == GenderType.male
+                          ? selectedGender.value = GenderType.unknown
+                          : selectedGender.value = GenderType.male,
+                      isSelected: selectedGender.value == GenderType.male,
+                      text: l.male,
+                      height: 50,
+                    ),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: SelectBox(
+                      onTap: () async =>
+                          selectedGender.value == GenderType.female
+                          ? selectedGender.value = GenderType.unknown
+                          : selectedGender.value = GenderType.female,
+                      isSelected: selectedGender.value == GenderType.female,
+                      text: l.female,
+                      height: 50,
+                    ),
+                  ),
+                ],
+              ),
+
+              SizedBox(height: 20),
+
+              /// 출생년도 입력창
+              ValidateTextformfield(
+                label: l.birth_year,
+                readOnly: false,
+                hintText: "1988",
+                validator: validateBirthYear,
+                controller: birthyearController,
+                keyboardType: TextInputType.number,
+                inputFormatters: [
+                  FilteringTextInputFormatter.digitsOnly, // 숫자만
+                  LengthLimitingTextInputFormatter(4), // 정수 4자리만
+                ],
+              ),
+
+              SizedBox(height: 20),
+
+              Row(
+                children: [
+                  /// 키 입력창
+                  Expanded(
+                    flex: 1,
+                    child: SizedBox(
+                      height: 120,
+                      child: ValidateTextformfield(
+                        label: l.height,
+                        readOnly: false,
+                        hintText: "180.0",
+                        validator: validateHeight,
+                        controller: heightController,
+                        keyboardType: const TextInputType.numberWithOptions(
+                          decimal: true,
+                        ),
+                        inputFormatters: [
+                          FilteringTextInputFormatter.allow(
+                            // 정수 3자리 + 소수점 1자리 까지
+                            RegExp(r'^\d{0,3}\.?\d{0,1}$'),
+                          ),
+                        ],
+                        unit: "cm",
+                      ),
+                    ),
+                  ),
+
+                  /// 몸무게 입력창
+                  Expanded(
+                    flex: 1,
+                    child: SizedBox(
+                      height: 120,
+                      child: ValidateTextformfield(
+                        label: l.weight,
+                        readOnly: false,
+                        hintText: "80.0",
+                        validator: validateWeight,
+                        controller: weightController,
+                        keyboardType: const TextInputType.numberWithOptions(
+                          decimal: true,
+                        ),
+                        inputFormatters: [
+                          FilteringTextInputFormatter.allow(
+                            // 정수 3자리 + 소수점 1자리
+                            RegExp(r'^\d{0,3}\.?\d{0,1}$'),
+                          ),
+                        ],
+                        unit: "kg",
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+
+      /// 하단 버튼
+      bottomNavigationBar: TapDebouncer(
+        onTap: () async {
+          final gender = selectedGender.value;
+          final birthYear = birthyearController.text.trim();
+          final heightCm = heightController.text.trim();
+          final weightKg = weightController.text.trim();
+
+          // 입력값 잘못되었을 시 진행 막기 (입력값 없을 때는 가능)
+          if (validateBirthYear(birthYear) != null ||
+              validateHeight(heightCm) != null ||
+              validateWeight(weightKg) != null) {
+            return;
+          }
+
+          // 프로필 업데이트
+          await ref
+              .read(onboardingViewModelProvider.notifier)
+              .updatePhysical(
+                gender: gender,
+                birthYear: int.tryParse(birthYear),
+                heightCm: double.tryParse(heightCm),
+                weightKg: double.tryParse(weightKg),
+              );
+          // mounted 체크
+          if (!context.mounted) return;
+          // 페이지 이동
+          isEditing
+              ? context.push('/edit/disease')
+              : context.push('/onboarding/disease');
+          // 📝
+          AnalyticsService.event(
+            'profile_saved',
+            p: {
+              'gender': gender.name,
+              'birth_year': double.tryParse(birthYear) ?? "",
+            },
+          );
+        },
+        builder: (BuildContext context, TapDebouncerFunc? onTap) {
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 10),
+            child: DoneButton(
+              onTap: onTap,
+              backgroundColor: fxc(context).primary400!,
+              text: l.next,
+              textColor: Colors.white,
+            ),
+          );
+        },
+      ),
+    );
+  }
+}

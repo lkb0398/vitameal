@@ -1,0 +1,140 @@
+import 'dart:io';
+
+import 'package:flutter/material.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
+import 'package:vitameal/core/config/l10n/l10n.dart';
+import 'package:vitameal/core/theme/app_theme.dart';
+
+class ImageUploadCard extends StatelessWidget {
+  /// 이미지 카드
+  const ImageUploadCard({
+    super.key,
+    this.imageFile,
+    this.photoUrl,
+    this.isUploading = false,
+    required this.onPickImage,
+    required this.onRemoveImage,
+  });
+
+  final File? imageFile;
+  final String? photoUrl;
+  final bool isUploading;
+  final VoidCallback onPickImage;
+  final VoidCallback onRemoveImage;
+
+  bool get hasImage => imageFile != null || photoUrl != null;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = L10n.of(context)!; // 🌎
+
+    return GestureDetector(
+      onTap: hasImage ? null : onPickImage,
+      child: Stack(
+        children: [
+          AspectRatio(
+            aspectRatio: 120 / 112,
+            child: Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: hasImage ? null : vrc(context).greyBackground,
+                borderRadius: BorderRadius.circular(14),
+                image: imageFile != null
+                    ? DecorationImage(
+                        image: FileImage(imageFile!),
+                        fit: BoxFit.cover,
+                      )
+                    : photoUrl != null
+                    ? DecorationImage(
+                        image: NetworkImage(photoUrl!),
+                        fit: BoxFit.cover,
+                      )
+                    : null,
+              ),
+              child: !hasImage
+                  ? Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            PhosphorIcons.plus(),
+                            size: 44,
+                            color: vrc(context).border,
+                          ),
+                          SizedBox(height: 8),
+                          Text(
+                            l.add_image,
+                            style: TextStyle(
+                              color: vrc(context).hint,
+                              fontSize: 13,
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  : null,
+            ),
+          ),
+
+          // 이미지 변경/제거 버튼
+          if (hasImage)
+            Positioned(
+              top: 12,
+              right: 12,
+              child: Row(
+                children: [
+                  // 변경 버튼
+                  GestureDetector(
+                    onTap: onPickImage,
+                    child: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: const BoxDecoration(
+                        color: Colors.black54,
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        Icons.edit,
+                        color: Colors.white,
+                        size: 20,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  // 제거 버튼
+                  GestureDetector(
+                    onTap: onRemoveImage,
+                    child: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: const BoxDecoration(
+                        color: Colors.black54,
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        Icons.close,
+                        color: Colors.white,
+                        size: 20,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+          // 업로드 중 표시
+          if (isUploading)
+            Positioned.fill(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.black45,
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                child: const Center(
+                  child: CircularProgressIndicator(color: Colors.white),
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
