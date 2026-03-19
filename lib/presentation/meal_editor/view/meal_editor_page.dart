@@ -15,6 +15,7 @@ import 'package:vitameal/presentation/meal_editor/view/widget/description_input.
 import 'package:vitameal/presentation/meal_editor/view/widget/image_upload_card.dart';
 import 'package:vitameal/presentation/meal_editor/view/widget/time_selector.dart';
 import 'package:vitameal/presentation/meal_editor/view_model/meal_editor_viewmodel.dart';
+import 'package:vitameal/presentation/ui_provider/formatted_date_provider.dart';
 import 'package:vitameal/presentation/util/show_gray_snackbar.dart';
 import 'package:vitameal/presentation/widget/dialog/custom_dialog.dart';
 
@@ -221,11 +222,7 @@ class MealEditorPage extends HookConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  l.meal_date(
-                    date.day.toString().padLeft(2, '0'),
-                    date.month.toString().padLeft(2, '0'),
-                    date.year,
-                  ),
+                  l.meal_date(ref.watch(formattedDateProvider(date))),
                   style: TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.w500,

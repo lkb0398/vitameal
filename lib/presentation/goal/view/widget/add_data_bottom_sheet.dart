@@ -6,7 +6,9 @@ import 'package:vitameal/core/config/l10n/l10n.dart';
 import 'package:vitameal/core/service/analytics_service.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
 import 'package:vitameal/presentation/goal/view_model/goal_datas_view_model.dart';
+import 'package:vitameal/presentation/ui_provider/formatted_date_provider.dart';
 import 'package:vitameal/presentation/ui_provider/goals_provider.dart';
+import 'package:vitameal/presentation/util/date_time_utils.dart';
 import 'package:vitameal/presentation/widget/button/done_button.dart';
 import 'package:vitameal/presentation/goal/view/function/pick_datetime.dart.dart';
 import 'package:vitameal/presentation/widget/validate_textformfield.dart';
@@ -90,7 +92,8 @@ class AddDataBottomSheet extends HookConsumerWidget {
                     ValidateTextformfield(
                       readOnly: true,
                       title: l.date,
-                      hintText: "ex. 2000.01.01 13:30",
+                      hintText:
+                          "ex. ${ref.watch(formattedDateProvider(DateTime(2000, 1, 31)))}  13:30",
                       controller: dataDateController,
                       onTap: () async {
                         final dataDate = await pickDateTime(context);
@@ -105,7 +108,7 @@ class AddDataBottomSheet extends HookConsumerWidget {
                         );
 
                         dataDateController.text =
-                            '${dataDate.year}.${dataDate.month.toString().padLeft(2, '0')}.${dataDate.day.toString().padLeft(2, '0')} ${dataDate.hour.toString().padLeft(2, '0')}:${dataDate.minute.toString().padLeft(2, '0')}';
+                            '${ref.watch(formattedDateProvider(dataDate))}  ${dataDate.timeLabel}';
                       },
                     ),
                     ValidateTextformfield(

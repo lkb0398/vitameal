@@ -89,7 +89,7 @@
   "sun": "Sun",
   "no_meal_record": "No meal records yet",
   "record_today_meal": "Record today’s meal",
-  "meal_date": "Meals on {year}.{month}.{day}",
+  "meal_date": "Meals on {day}",
   "add_image": "Add Image",
   "category": "Category",
   "breakfast": "Breakfast",
@@ -200,6 +200,7 @@
 
   "menu": "Menu",
   "language_setting": "Language",
+  "date_setting": "Date Notation",
   "notification_setting": "Notifications",
   "logout": "Log Out",
   "withdraw_account": "Delete Account",
@@ -208,6 +209,7 @@
 
 
   "auto_language": "Auto Language",
+  "auto_date": "Auto Date Notation",
   "no_notifications": "No notifications set",
   "add_notification": "Add Notification",
   "notification_name": "Notification Name",

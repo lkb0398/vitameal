@@ -3,7 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:vitameal/core/config/l10n/l10n.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
-import 'package:vitameal/presentation/language/view/widget/language_item.dart';
+import 'package:vitameal/presentation/widget/setting_select_menu_item.dart';
 import 'package:vitameal/presentation/language/view_model/locale_view_model.dart';
 
 class LanguagePage extends HookConsumerWidget {
@@ -27,7 +27,9 @@ class LanguagePage extends HookConsumerWidget {
     }, [locale]);
 
     return Scaffold(
+      /// 앱바
       appBar: AppBar(
+        centerTitle: true,
         title: Text(
           l.language_setting,
           style: TextStyle(
@@ -36,14 +38,14 @@ class LanguagePage extends HookConsumerWidget {
             color: vrc(context).text,
           ),
         ),
-        centerTitle: true,
       ),
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: SingleChildScrollView(
           child: Column(
             children: [
-              LanguageItem(
+              /// 언어 자동 설정
+              SettingSelectMenuItem(
                 selected: selected.value,
                 title: l.auto_language,
                 onTap: () {
@@ -52,7 +54,8 @@ class LanguagePage extends HookConsumerWidget {
                 },
               ),
 
-              LanguageItem(
+              /// 한국어
+              SettingSelectMenuItem(
                 selected: selected.value,
                 title: '한국어',
                 onTap: () {
@@ -63,7 +66,8 @@ class LanguagePage extends HookConsumerWidget {
                 },
               ),
 
-              LanguageItem(
+              /// 영어
+              SettingSelectMenuItem(
                 selected: selected.value,
                 title: 'English',
                 onTap: () {
