@@ -160,6 +160,15 @@
 
 
 
+  "eats": "건강 지도",
+  "steps": "걸음",
+  "kcal": "칼로리",
+  "need_permission": "위치 권한이 필요해요",
+  "request_permission": "지금 권한을 허용하고 내 주변 건강 음식점을 찾아보세요",
+  "allow_access": "재설정",
+
+
+
   "my_info": "내 정보",
   "year_old": "세   ",
   "failed_loading_info": "정보를 불러오지 못했어요.",

@@ -433,6 +433,24 @@ class L10nKo extends L10n {
   String get anonymous_chef => '익명 요리사';
 
   @override
+  String get eats => '건강 지도';
+
+  @override
+  String get steps => '걸음';
+
+  @override
+  String get kcal => '칼로리';
+
+  @override
+  String get need_permission => '위치 권한이 필요해요';
+
+  @override
+  String get request_permission => '지금 권한을 허용하고 내 주변 건강 음식점을 찾아보세요';
+
+  @override
+  String get allow_access => '재설정';
+
+  @override
   String get my_info => '내 정보';
 
   @override
