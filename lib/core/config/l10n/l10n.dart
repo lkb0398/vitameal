@@ -532,8 +532,8 @@ abstract class L10n {
   /// No description provided for @meal_date.
   ///
   /// In en, this message translates to:
-  /// **'Meals on {year}.{month}.{day}'**
-  String meal_date(Object day, Object month, Object year);
+  /// **'Meals on {day}'**
+  String meal_date(Object day);
 
   /// No description provided for @add_image.
   ///
@@ -1141,6 +1141,12 @@ abstract class L10n {
   /// **'Language'**
   String get language_setting;
 
+  /// No description provided for @date_setting.
+  ///
+  /// In en, this message translates to:
+  /// **'Date Notation'**
+  String get date_setting;
+
   /// No description provided for @notification_setting.
   ///
   /// In en, this message translates to:
@@ -1170,6 +1176,12 @@ abstract class L10n {
   /// In en, this message translates to:
   /// **'Auto Language'**
   String get auto_language;
+
+  /// No description provided for @auto_date.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto Date Notation'**
+  String get auto_date;
 
   /// No description provided for @no_notifications.
   ///

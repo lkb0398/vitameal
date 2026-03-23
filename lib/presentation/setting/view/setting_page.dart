@@ -20,9 +20,8 @@ class SettingPage extends HookConsumerWidget {
     final themeFxc = fxc(context);
 
     return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      /// 앱바
       appBar: AppBar(
-        leadingWidth: 64,
         leading: Padding(
           padding: const EdgeInsets.only(left: 16.0),
           child: IconButton(
@@ -43,29 +42,36 @@ class SettingPage extends HookConsumerWidget {
           ),
         ),
         centerTitle: true,
-        elevation: 0,
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       ),
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: SingleChildScrollView(
           child: Column(
             children: [
+              /// 알림 설정
               MenuItem(
-                onTap: () => context.push('/language'),
-                title: l.language_setting,
-                showArrow: true,
-              ),
-              const SizedBox(height: 3),
-
-              MenuItem(
-                onTap: () => context.push('/noti'),
                 title: l.notification_setting,
                 showArrow: true,
+                onTap: () => context.push('/noti'),
               ),
-              const SizedBox(height: 3),
 
+              /// 언어 설정
               MenuItem(
+                title: l.language_setting,
+                showArrow: true,
+                onTap: () => context.push('/language'),
+              ),
+
+              /// 날짜 설정
+              MenuItem(
+                title: l.date_setting,
+                showArrow: true,
+                onTap: () => context.push('/date'),
+              ),
+
+              /// 로그아웃
+              MenuItem(
+                title: l.logout,
                 onTap: () {
                   showDialog(
                     context: context,
@@ -83,11 +89,11 @@ class SettingPage extends HookConsumerWidget {
                     ),
                   );
                 },
-                title: l.logout,
               ),
-              const SizedBox(height: 3),
 
+              /// 회원 탈퇴
               MenuItem(
+                title: l.withdraw_account,
                 onTap: () {
                   showDialog(
                     context: context,
@@ -113,7 +119,6 @@ class SettingPage extends HookConsumerWidget {
                     ),
                   );
                 },
-                title: l.withdraw_account,
               ),
             ],
           ),

@@ -5,6 +5,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:vitameal/core/config/l10n/l10n.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
+import 'package:vitameal/presentation/ui_provider/formatted_date_provider.dart';
+import 'package:vitameal/presentation/util/remove_decimals.dart';
 import 'package:vitameal/presentation/util/show_gray_snackbar.dart';
 import 'package:vitameal/presentation/goal/view/widget/add_data_bottom_sheet.dart';
 import 'package:vitameal/presentation/goal/view/widget/view_data.dart';
@@ -28,11 +30,6 @@ class DataPage extends HookConsumerWidget {
 
     // 달성된 목표 여부
     final isDone = selectedGoal!.isDone == true;
-
-    // 소수점 0 일 때 제거
-    String formatNumber(double value) {
-      return value % 1 == 0 ? value.toInt().toString() : value.toString();
-    }
 
     return Scaffold(
       appBar: AppBar(title: Text(l.recent_data)),
@@ -158,7 +155,7 @@ class DataPage extends HookConsumerWidget {
                         ),
                         Expanded(
                           child: Text(
-                            '${formatNumber(selectedGoal.goalValue)} ${selectedGoal.goalUnit}',
+                            '${removeDecimals(selectedGoal.goalValue)} ${selectedGoal.goalUnit}',
                             style: TextStyle(
                               fontSize: 12,
                               color: fxc(context).textcolor700,
@@ -173,7 +170,9 @@ class DataPage extends HookConsumerWidget {
                         ),
                         Expanded(
                           child: Text(
-                            '${selectedGoal.goalDate.year}.${selectedGoal.goalDate.month.toString().padLeft(2, '0')}.${selectedGoal.goalDate.day.toString().padLeft(2, '0')}',
+                            ref.watch(
+                              formattedDateProvider(selectedGoal.goalDate),
+                            ),
                             style: TextStyle(
                               fontSize: 12,
                               color: fxc(context).textcolor700,

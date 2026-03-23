@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:vitameal/core/config/app_router_observer.dart';
 import 'package:vitameal/domain/entity/post_entity.dart';
+import 'package:vitameal/presentation/date_notation/view/date_notation_page.dart';
 import 'package:vitameal/presentation/goal/view/page/add_goal_page.dart';
 import 'package:vitameal/presentation/goal/view/page/data_page.dart';
 import 'package:vitameal/presentation/goal/view/page/goal_page.dart';
@@ -28,13 +29,15 @@ import 'package:vitameal/presentation/intro/view/intro_page.dart';
 
 class AppRoutePath {
   static const home = '/';
-  static const setting = '/setting';
   static const melon = '/melon';
   static const login = '/login';
   static const splash = '/splash';
   static const intro = '/intro';
+  // 설정
+  static const setting = '/setting';
   static const noti = '/noti';
   static const language = '/language';
+  static const date = '/date';
   // 사용자 정보 입력/수정
   static const onboardingProfile = '/onboarding/profile';
   static const onboardingPhysical = '/onboarding/physical';
@@ -110,6 +113,11 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: AppRoutePath.language,
         name: AppRoutePath.language,
         builder: (context, state) => const LanguagePage(),
+      ),
+      GoRoute(
+        path: AppRoutePath.date,
+        name: AppRoutePath.date,
+        builder: (context, state) => const DateNotationPage(),
       ),
       GoRoute(
         path: AppRoutePath.onboardingProfile,

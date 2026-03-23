@@ -1,17 +1,19 @@
 import 'dart:math';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:vitameal/core/config/l10n/l10n.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
 import 'package:vitameal/domain/entity/goal_datas_entity.dart';
+import 'package:vitameal/presentation/ui_provider/formatted_date_provider.dart';
 
-class Graph extends StatelessWidget {
+class Graph extends HookConsumerWidget {
   const Graph({super.key, required this.datas});
 
   final List<GoalDatasEntity> datas;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l = L10n.of(context)!; // 🌎
 
     // 데이터 없을 때 화면
@@ -100,7 +102,7 @@ class Graph extends StatelessWidget {
                   return Padding(
                     padding: const EdgeInsets.only(top: 8),
                     child: Text(
-                      '${date.month}/${date.day}',
+                      ref.watch(formattedDateProvider(date, showYear: false)),
                       style: TextStyle(
                         fontSize: 11,
                         fontWeight: FontWeight.w500,

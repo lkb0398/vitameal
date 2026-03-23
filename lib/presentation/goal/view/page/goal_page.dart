@@ -8,6 +8,7 @@ import 'package:vitameal/core/service/analytics_service.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
 import 'package:vitameal/presentation/goal/view_model/goals_view_model.dart';
 import 'package:vitameal/presentation/ui_provider/goals_provider.dart';
+import 'package:vitameal/presentation/util/remove_decimals.dart';
 import 'package:vitameal/presentation/widget/button/add_button.dart';
 import 'package:vitameal/presentation/widget/dialog/custom_dialog.dart';
 
@@ -19,11 +20,6 @@ class GoalPage extends HookConsumerWidget {
     final l = L10n.of(context)!; // 🌎
 
     final goalsAsync = ref.watch(getAllGoalsProvider);
-
-    // 소수점 0 일 때 제거
-    String formatNumber(double value) {
-      return value % 1 == 0 ? value.toInt().toString() : value.toString();
-    }
 
     return Scaffold(
       appBar: AppBar(title: Text(l.health_goals)),
@@ -257,7 +253,7 @@ class GoalPage extends HookConsumerWidget {
                                 Expanded(
                                   child: Center(
                                     child: Text(
-                                      '${formatNumber(goal.goalValue)} ${goal.goalUnit}',
+                                      '${removeDecimals(goal.goalValue)} ${goal.goalUnit}',
                                       style: TextStyle(
                                         fontSize: 12,
                                         color: goal.isDone

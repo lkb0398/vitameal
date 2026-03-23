@@ -26,7 +26,7 @@ class MenuItem extends StatelessWidget {
             bottom: BorderSide(color: themeVrc.border!, width: 1.5),
           ),
         ),
-        height: 56,
+        height: 59,
         width: double.infinity,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -35,7 +35,6 @@ class MenuItem extends StatelessWidget {
               title,
               style: TextStyle(
                 fontSize: 14,
-                // fontFamily: 'Pretendard',
                 fontWeight: FontWeight.w400,
                 color: themeVrc.text,
               ),
