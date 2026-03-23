@@ -931,6 +931,42 @@ abstract class L10n {
   /// **'Anonymous Chef'**
   String get anonymous_chef;
 
+  /// No description provided for @eats.
+  ///
+  /// In en, this message translates to:
+  /// **'Eats'**
+  String get eats;
+
+  /// No description provided for @steps.
+  ///
+  /// In en, this message translates to:
+  /// **'steps'**
+  String get steps;
+
+  /// No description provided for @kcal.
+  ///
+  /// In en, this message translates to:
+  /// **'kcal'**
+  String get kcal;
+
+  /// No description provided for @need_permission.
+  ///
+  /// In en, this message translates to:
+  /// **'Location access is required'**
+  String get need_permission;
+
+  /// No description provided for @request_permission.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable location permission\nto discover healthy restaurants nearby'**
+  String get request_permission;
+
+  /// No description provided for @allow_access.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow Access'**
+  String get allow_access;
+
   /// No description provided for @my_info.
   ///
   /// In en, this message translates to:

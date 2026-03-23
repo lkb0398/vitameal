@@ -48,10 +48,16 @@ class CustomBottomNav extends StatelessWidget {
               onTap: () => onTap(1),
             ),
             _NavItem(
-              icon: PhosphorIcons.user(),
-              label: l.my_info,
+              icon: PhosphorIcons.mapPinArea(),
+              label: l.eats,
               isSelected: currentIndex == 2,
               onTap: () => onTap(2),
+            ),
+            _NavItem(
+              icon: PhosphorIcons.user(),
+              label: l.my_info,
+              isSelected: currentIndex == 3,
+              onTap: () => onTap(3),
             ),
           ],
         ),

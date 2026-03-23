@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:vitameal/presentation/home/view/widget/custom_bottom_nav.dart';
 import 'package:vitameal/presentation/info/view/page/info_page.dart';
+import 'package:vitameal/presentation/eats/view/page/eats_page.dart';
 import 'package:vitameal/presentation/meal_calendar/view/meal_calendar_page.dart';
 import 'package:vitameal/presentation/post/view/post_page.dart';
 import 'package:vitameal/presentation/ui_provider/home_tab_provider.dart';
@@ -9,7 +10,12 @@ import 'package:vitameal/presentation/ui_provider/home_tab_provider.dart';
 class HomePage extends HookConsumerWidget {
   const HomePage({super.key});
 
-  static const _pages = [MealCalendarPage(), PostPage(), InfoPage()];
+  static const _pages = [
+    MealCalendarPage(),
+    PostPage(),
+    EatsPage(),
+    InfoPage(),
+  ];
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
