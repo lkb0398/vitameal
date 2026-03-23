@@ -4,6 +4,8 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:vitameal/core/platform/widget_bridge.dart';
 import 'package:vitameal/data/data_source/allergies_data_source.dart';
 import 'package:vitameal/data/data_source/diseases_data_source.dart';
+import 'package:vitameal/data/data_source/eats_remote_data_source.dart';
+import 'package:vitameal/data/data_source/local/eats_local_data_source.dart';
 import 'package:vitameal/data/data_source/meal_analysis_data_source.dart';
 import 'package:vitameal/data/data_source/meal_local_data_source.dart';
 import 'package:vitameal/data/data_source/meal_remote_data_source.dart';
@@ -12,12 +14,14 @@ import 'package:vitameal/data/data_source/profiles_data_source.dart';
 import 'package:vitameal/data/data_source/storage_data_source.dart';
 import 'package:vitameal/data/data_source/goal_datas_data_source.dart';
 import 'package:vitameal/data/database/database.dart';
+import 'package:vitameal/data/repository_impl/eats_repository_impl.dart';
 import 'package:vitameal/data/repository_impl/meal_analysis_repository_impl.dart';
 import 'package:vitameal/data/repository_impl/meal_repository_impl.dart';
 import 'package:vitameal/data/repository_impl/post_repository_impl.dart';
 import 'package:vitameal/data/repository_impl/storage_repository_impl.dart';
 import 'package:vitameal/data/service/sync_service.dart';
 import 'package:vitameal/data/service/widget_service.dart';
+import 'package:vitameal/domain/repository/eats_repository.dart';
 import 'package:vitameal/domain/repository/goal_datas_repository.dart';
 import 'package:vitameal/data/repository_impl/goal_datas_repository_impl.dart';
 import 'package:vitameal/data/data_source/goals_data_source.dart';
@@ -127,6 +131,16 @@ NotificationDataSource notificationsDataSource(Ref ref) {
   return NotificationsDataSourceImpl(client);
 }
 
+@riverpod
+EatsRemoteDataSource eatsRemoteDataSource(Ref ref) {
+  return EatsRemoteDataSourceImpl();
+}
+
+@riverpod
+EatsLocalDataSource eatsLocalDataSource(Ref ref) {
+  return EatsLocalDataSourceImpl();
+}
+
 /// 🤍 Repository
 @riverpod
 ProfilesRepository profilesRepository(Ref ref) {
@@ -188,6 +202,13 @@ MealAnalysisRepository mealAnalysisRepository(Ref ref) {
 NotificationsRepository notificationsRepository(Ref ref) {
   final dataSource = ref.read(notificationsDataSourceProvider);
   return NotificationsRepositoryImpl(dataSource);
+}
+
+@riverpod
+EatsRepository eatsRepository(Ref ref) {
+  final remoteDS = ref.read(eatsRemoteDataSourceProvider);
+  final localDS = ref.read(eatsLocalDataSourceProvider);
+  return EatsRepositoryImpl(remoteDS, localDS);
 }
 
 // 포스트

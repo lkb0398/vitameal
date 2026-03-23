@@ -439,6 +439,25 @@ class L10nEn extends L10n {
   String get anonymous_chef => 'Anonymous Chef';
 
   @override
+  String get eats => 'Eats';
+
+  @override
+  String get steps => 'steps';
+
+  @override
+  String get kcal => 'kcal';
+
+  @override
+  String get need_permission => 'Location access is required';
+
+  @override
+  String get request_permission =>
+      'Enable location permission\nto discover healthy restaurants nearby';
+
+  @override
+  String get allow_access => 'Allow Access';
+
+  @override
   String get my_info => 'My Info';
 
   @override

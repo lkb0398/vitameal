@@ -162,6 +162,15 @@
 
 
 
+  "eats": "Eats",
+  "steps": "steps",
+  "kcal": "kcal",
+  "need_permission": "Location access is required",
+  "request_permission": "Enable location permission\nto discover healthy restaurants nearby",
+  "allow_access": "Allow Access",
+
+
+
   "my_info": "My Info",
   "year_old": "   ",
   "failed_loading_info": "Failed to load the info.",

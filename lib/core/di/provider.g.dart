@@ -605,6 +605,102 @@ final class NotificationsDataSourceProvider
 String _$notificationsDataSourceHash() =>
     r'bd148e9a7785ffd9230502200f08ba8de50c20f9';
 
+@ProviderFor(eatsRemoteDataSource)
+const eatsRemoteDataSourceProvider = EatsRemoteDataSourceProvider._();
+
+final class EatsRemoteDataSourceProvider
+    extends
+        $FunctionalProvider<
+          EatsRemoteDataSource,
+          EatsRemoteDataSource,
+          EatsRemoteDataSource
+        >
+    with $Provider<EatsRemoteDataSource> {
+  const EatsRemoteDataSourceProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'eatsRemoteDataSourceProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$eatsRemoteDataSourceHash();
+
+  @$internal
+  @override
+  $ProviderElement<EatsRemoteDataSource> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  EatsRemoteDataSource create(Ref ref) {
+    return eatsRemoteDataSource(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(EatsRemoteDataSource value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<EatsRemoteDataSource>(value),
+    );
+  }
+}
+
+String _$eatsRemoteDataSourceHash() =>
+    r'5e98ce994e222b5b63e770dbd758bb436723c0ce';
+
+@ProviderFor(eatsLocalDataSource)
+const eatsLocalDataSourceProvider = EatsLocalDataSourceProvider._();
+
+final class EatsLocalDataSourceProvider
+    extends
+        $FunctionalProvider<
+          EatsLocalDataSource,
+          EatsLocalDataSource,
+          EatsLocalDataSource
+        >
+    with $Provider<EatsLocalDataSource> {
+  const EatsLocalDataSourceProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'eatsLocalDataSourceProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$eatsLocalDataSourceHash();
+
+  @$internal
+  @override
+  $ProviderElement<EatsLocalDataSource> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  EatsLocalDataSource create(Ref ref) {
+    return eatsLocalDataSource(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(EatsLocalDataSource value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<EatsLocalDataSource>(value),
+    );
+  }
+}
+
+String _$eatsLocalDataSourceHash() =>
+    r'17ebfa936c9ed43a004497fff6e74136e6ab9d32';
+
 /// 🤍 Repository
 
 @ProviderFor(profilesRepository)
@@ -1068,6 +1164,47 @@ final class NotificationsRepositoryProvider
 
 String _$notificationsRepositoryHash() =>
     r'abcdb3c01c132670aca5801f847fc2b6fc9667cf';
+
+@ProviderFor(eatsRepository)
+const eatsRepositoryProvider = EatsRepositoryProvider._();
+
+final class EatsRepositoryProvider
+    extends $FunctionalProvider<EatsRepository, EatsRepository, EatsRepository>
+    with $Provider<EatsRepository> {
+  const EatsRepositoryProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'eatsRepositoryProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$eatsRepositoryHash();
+
+  @$internal
+  @override
+  $ProviderElement<EatsRepository> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  EatsRepository create(Ref ref) {
+    return eatsRepository(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(EatsRepository value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<EatsRepository>(value),
+    );
+  }
+}
+
+String _$eatsRepositoryHash() => r'27b23e462e8cfc4238d8861d86000d37175e4648';
 
 @ProviderFor(postRemoteDataSource)
 const postRemoteDataSourceProvider = PostRemoteDataSourceProvider._();
