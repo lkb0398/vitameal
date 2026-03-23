@@ -10,6 +10,7 @@ import 'package:vitameal/core/service/analytics_service.dart';
 import 'package:vitameal/presentation/language/view_model/locale_view_model.dart';
 import 'package:vitameal/presentation/post/view_model/post_view_model.dart';
 import 'package:vitameal/presentation/post/view_model/tag_view_model.dart';
+import 'package:vitameal/presentation/ui_provider/formatted_date_provider.dart';
 import 'package:vitameal/presentation/ui_provider/profiles_provider.dart';
 import 'package:vitameal/presentation/util/show_gray_snackbar.dart';
 import 'package:vitameal/presentation/widget/dialog/custom_dialog.dart';
@@ -216,7 +217,9 @@ class PostDetailPage extends HookConsumerWidget {
                   const SizedBox(height: 12),
                   Text(
                     post.createdAt != null
-                        ? DateFormat('yyyy.MM.dd').format(post.createdAt!)
+                        ? ref.watch(formattedDateProvider(post.createdAt!))
+                        // [수정] 날짜 형식 로컬라이제이션
+                        // DateFormat('yyyy.MM.dd').format(post.createdAt!)
                         : l.no_date_info,
                     style: TextStyle(color: vrc(context).hint, fontSize: 12),
                   ),

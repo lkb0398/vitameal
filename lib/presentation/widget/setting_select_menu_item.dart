@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
 
-class LanguageItem extends StatelessWidget {
-  const LanguageItem({
+/// 언어 설정, 날짜 설정 내 선택 아이템 UI
+class SettingSelectMenuItem extends StatelessWidget {
+  const SettingSelectMenuItem({
     super.key,
     required this.selected,
     required this.title,

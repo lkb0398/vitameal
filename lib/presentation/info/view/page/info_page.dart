@@ -11,8 +11,10 @@ import 'package:vitameal/presentation/info/view/widget/graph.dart';
 import 'package:vitameal/presentation/info/view/widget/guage.dart';
 import 'package:vitameal/presentation/info/view/widget/tag_chip.dart';
 import 'package:vitameal/presentation/language/view_model/locale_view_model.dart';
+import 'package:vitameal/presentation/ui_provider/formatted_date_provider.dart';
 import 'package:vitameal/presentation/ui_provider/goals_provider.dart';
 import 'package:vitameal/presentation/ui_provider/profiles_provider.dart';
+import 'package:vitameal/presentation/util/remove_decimals.dart';
 
 class InfoPage extends HookConsumerWidget {
   const InfoPage({super.key});
@@ -35,11 +37,6 @@ class InfoPage extends HookConsumerWidget {
     final startData = ref.watch(oldestMainGoalDataProvider);
     final currentData = ref.watch(latestMainGoalDataProvider);
     final current5Datas = ref.watch(latest5MainGoalDatasProvider);
-
-    // 소수점 0 일 때 제거
-    String formatNumber(double value) {
-      return value % 1 == 0 ? value.toInt().toString() : value.toString();
-    }
 
     // 기본 프로필 이미지
     Image defaultImg = Image.asset(
@@ -161,7 +158,7 @@ class InfoPage extends HookConsumerWidget {
                                     ),
                                     TextSpan(
                                       text: profile.heightCm != null
-                                          ? formatNumber(profile.heightCm!)
+                                          ? removeDecimals(profile.heightCm!)
                                           : null,
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
@@ -174,7 +171,7 @@ class InfoPage extends HookConsumerWidget {
                                     ),
                                     TextSpan(
                                       text: profile.weightKg != null
-                                          ? formatNumber(profile.weightKg!)
+                                          ? removeDecimals(profile.weightKg!)
                                           : null,
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
@@ -247,7 +244,7 @@ class InfoPage extends HookConsumerWidget {
                   BorderedContainer(
                     title: l.health_goals,
                     subtitle: mainGoal != null
-                        ? '${mainGoal.goalTitle}  ${mainGoal.goalDate.year}.${mainGoal.goalDate.month.toString().padLeft(2, '0')}.${mainGoal.goalDate.day.toString().padLeft(2, '0')}'
+                        ? '${mainGoal.goalTitle}  ${ref.watch(formattedDateProvider(mainGoal.goalDate))}'
                         : null,
                     onTap: () => context.push('/goal'),
                     child: mainGoal != null

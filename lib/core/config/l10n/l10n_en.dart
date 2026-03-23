@@ -229,8 +229,8 @@ class L10nEn extends L10n {
   String get record_today_meal => 'Record today’s meal';
 
   @override
-  String meal_date(Object day, Object month, Object year) {
-    return 'Meals on $year.$month.$day';
+  String meal_date(Object day) {
+    return 'Meals on $day';
   }
 
   @override
@@ -545,6 +545,9 @@ class L10nEn extends L10n {
   String get language_setting => 'Language';
 
   @override
+  String get date_setting => 'Date Notation';
+
+  @override
   String get notification_setting => 'Notifications';
 
   @override
@@ -558,6 +561,9 @@ class L10nEn extends L10n {
 
   @override
   String get auto_language => 'Auto Language';
+
+  @override
+  String get auto_date => 'Auto Date Notation';
 
   @override
   String get no_notifications => 'No notifications set';

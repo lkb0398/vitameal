@@ -7,7 +7,10 @@ import 'package:vitameal/core/config/l10n/l10n.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
 import 'package:vitameal/domain/entity/goals_entity.dart';
 import 'package:vitameal/presentation/goal/view_model/goal_datas_view_model.dart';
+import 'package:vitameal/presentation/ui_provider/formatted_date_provider.dart';
 import 'package:vitameal/presentation/ui_provider/goals_provider.dart';
+import 'package:vitameal/presentation/util/date_time_utils.dart';
+import 'package:vitameal/presentation/util/remove_decimals.dart';
 import 'package:vitameal/presentation/widget/dialog/custom_dialog.dart';
 
 class ViewData extends HookConsumerWidget {
@@ -29,11 +32,6 @@ class ViewData extends HookConsumerWidget {
     // 삭제 선택값들
     final selectedDataIds = useState<Set<String>>({});
     final hasSelected = selectedDataIds.value.isNotEmpty;
-
-    // 소수점 0 일 때 제거
-    String formatNumber(double value) {
-      return value % 1 == 0 ? value.toInt().toString() : value.toString();
-    }
 
     return Column(
       children: [
@@ -206,7 +204,7 @@ class ViewData extends HookConsumerWidget {
                               SizedBox(
                                 width: 80,
                                 child: Text(
-                                  '${data.dataDate.year}.${data.dataDate.month.toString().padLeft(2, '0')}.${data.dataDate.day.toString().padLeft(2, '0')}\n${data.dataDate.hour.toString().padLeft(2, '0')}:${data.dataDate.minute.toString().padLeft(2, '0')}',
+                                  '${ref.watch(formattedDateProvider(data.dataDate))}\n${data.dataDate.timeLabel}',
                                   style: TextStyle(
                                     fontSize: 11,
                                     color: isDone
@@ -217,7 +215,7 @@ class ViewData extends HookConsumerWidget {
                               ),
                               Expanded(
                                 child: Text(
-                                  "${formatNumber(data.dataValue)} ${selectedGoal.goalUnit}",
+                                  "${removeDecimals(data.dataValue)} ${selectedGoal.goalUnit}",
                                   style: TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w500,
