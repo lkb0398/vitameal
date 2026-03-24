@@ -75,7 +75,7 @@ class LoginPage extends HookConsumerWidget {
 
     return Column(
       children: [
-        const Spacer(flex: 2),
+        const Spacer(flex: 5),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: SvgPicture.asset(
@@ -85,7 +85,7 @@ class LoginPage extends HookConsumerWidget {
           ),
         ),
 
-        const Spacer(flex: 2),
+        const Spacer(flex: 3),
 
         // 애플 로그인
         SocialLoginButton(
@@ -104,7 +104,7 @@ class LoginPage extends HookConsumerWidget {
                   AnalyticsService.event('login', p: {'type': 'apple'}); // 📝
                 },
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: 8),
 
         // 카카오 로그인
         SocialLoginButton(
@@ -123,12 +123,13 @@ class LoginPage extends HookConsumerWidget {
                   AnalyticsService.event('login', p: {'type': 'kakao'}); // 📝
                 },
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: 8),
 
         // 구글 로그인
         SocialLoginButton(
           label: l.gogole_login,
-          backgroundColor: const Color(0xfff2f2f2),
+          backgroundColor: Colors.white,
+          // backgroundColor: const Color(0xfff2f2f2),
           textColor: Colors.black,
           //fontFamily: 'ROBOTO',
           fontWeight: FontWeight.w500,
@@ -147,7 +148,7 @@ class LoginPage extends HookConsumerWidget {
 
         const TermsAgreementText(),
 
-        const Spacer(flex: 2),
+        const Spacer(flex: 3),
       ],
     );
   }
