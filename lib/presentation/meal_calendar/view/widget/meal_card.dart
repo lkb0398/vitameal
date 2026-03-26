@@ -23,18 +23,12 @@ class MealCard extends StatelessWidget {
   final DateTime? eatenAt;
   final VoidCallback? onTap;
 
-  String get _categoryLabel {
-    switch (category) {
-      case MealCategory.breakfast:
-        return '아침';
-      case MealCategory.lunch:
-        return '점심';
-      case MealCategory.dinner:
-        return '저녁';
-      case MealCategory.snack:
-        return '간식';
-    }
-  }
+  String _categoryLabel(L10n l) => switch (category) {
+    MealCategory.breakfast => l.breakfast,
+    MealCategory.lunch => l.lunch,
+    MealCategory.dinner => l.dinner,
+    MealCategory.snack => l.snack,
+  };
 
   String get _timeLabel {
     if (eatenAt == null) return '';
@@ -99,7 +93,7 @@ class MealCard extends StatelessWidget {
                         children: [
                           // 아침 점심 저녁 등 식단의 카테고리
                           Text(
-                            _categoryLabel,
+                            _categoryLabel(l),
                             style: TextStyle(
                               color: vrc(context).text,
                               fontSize: 16,
