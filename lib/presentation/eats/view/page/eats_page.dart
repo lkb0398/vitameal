@@ -91,6 +91,7 @@ class _EatsPageState extends ConsumerState<EatsPage> {
 
                   /// 지도
                   GoogleMap(
+                    padding: const EdgeInsets.only(left: 6, bottom: 2),
                     myLocationEnabled:
                         state.permission == PermissionState.granted,
                     myLocationButtonEnabled: false,
@@ -132,8 +133,8 @@ class _EatsPageState extends ConsumerState<EatsPage> {
 
                       return Positioned(
                         top: 10,
-                        left: 12,
-                        right: 12,
+                        left: 0,
+                        right: 0,
                         child: SizedBox(
                           height: 34,
                           child: ScrollablePositionedList.builder(
@@ -143,9 +144,14 @@ class _EatsPageState extends ConsumerState<EatsPage> {
                             itemBuilder: (context, index) {
                               final tag = tags[index];
                               final selected = tag.id == state.selectedTag?.id;
+                              final isFirst = index == 0;
+                              final isLast = index == tags.length - 1;
 
                               return Padding(
-                                padding: const EdgeInsets.only(right: 8),
+                                padding: EdgeInsets.only(
+                                  left: isFirst ? 12 : 0, // 첫번째 아이템만 좌측패딩 12
+                                  right: isLast ? 12 : 8, // 마지막 아이템만 우측패딩 12
+                                ),
                                 child: ChoiceChip(
                                   label: Text(
                                     locale == Locale('ko')
@@ -220,69 +226,77 @@ class _EatsPageState extends ConsumerState<EatsPage> {
                     ),
 
                   /// 음식점 목록 Bottom sheet
-                  DraggableScrollableSheet(
-                    initialChildSize: 0.3,
-                    minChildSize: 0.3,
-                    maxChildSize: 0.3,
-                    builder: (context, scroll) {
-                      return ListView.builder(
-                        controller: _itemScrollController,
-                        itemCount: state.eats.length,
-                        itemBuilder: (context, i) {
-                          final r = state.eats[i];
-                          final itemSelected = state.selected == i;
+                  IgnorePointer(
+                    ignoring: state.eats.isEmpty,
+                    child: DraggableScrollableSheet(
+                      initialChildSize: 0.3,
+                      minChildSize: 0.3,
+                      maxChildSize: 0.3,
+                      builder: (context, scroll) {
+                        return ListView.builder(
+                          controller: _itemScrollController,
+                          itemCount: state.eats.length,
+                          itemBuilder: (context, i) {
+                            final r = state.eats[i];
+                            final itemSelected = state.selected == i;
 
-                          return GestureDetector(
-                            onTap: () => vm.select(i),
-                            child: Card(
-                              elevation: 1,
-                              color: itemSelected
-                                  ? f.primary200
-                                  : v.infoContainer,
-                              margin: const EdgeInsets.fromLTRB(12, 0, 12, 12),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                              child: ListTile(
-                                leading: Column(
-                                  children: [
-                                    const Text(
-                                      "🥗",
-                                      style: TextStyle(fontSize: 22),
-                                    ),
-                                    Text(
-                                      r.score.toStringAsFixed(1),
-                                      style: TextStyle(
-                                        color: f.primary500,
-                                        fontWeight: FontWeight.bold,
+                            return GestureDetector(
+                              onTap: () => vm.select(i),
+                              child: Card(
+                                elevation: 1,
+                                color: itemSelected
+                                    ? f.primary200
+                                    : v.infoContainer,
+                                margin: const EdgeInsets.fromLTRB(
+                                  12,
+                                  0,
+                                  12,
+                                  12,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                                child: ListTile(
+                                  leading: Column(
+                                    children: [
+                                      const Text(
+                                        "🥗",
+                                        style: TextStyle(fontSize: 22),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                                title: Text(
-                                  r.name,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    color: itemSelected
-                                        ? f.textcolor700
-                                        : v.text,
+                                      Text(
+                                        r.score.toStringAsFixed(1),
+                                        style: TextStyle(
+                                          color: f.primary500,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ),
-                                subtitle: Text(
-                                  "⭐ ${r.rating} · ${r.distance.toStringAsFixed(2)} km",
-                                  style: TextStyle(
-                                    color: itemSelected
-                                        ? f.textcolor700
-                                        : v.text,
+                                  title: Text(
+                                    r.name,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      color: itemSelected
+                                          ? f.textcolor700
+                                          : v.text,
+                                    ),
+                                  ),
+                                  subtitle: Text(
+                                    "⭐ ${r.rating} · ${r.distance.toStringAsFixed(2)} km",
+                                    style: TextStyle(
+                                      color: itemSelected
+                                          ? f.textcolor700
+                                          : v.text,
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                          );
-                        },
-                      );
-                    },
+                            );
+                          },
+                        );
+                      },
+                    ),
                   ),
                 ],
               ),
