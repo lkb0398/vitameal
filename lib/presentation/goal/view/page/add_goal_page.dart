@@ -8,6 +8,7 @@ import 'package:vitameal/core/service/analytics_service.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
 import 'package:vitameal/domain/entity/goals_entity.dart';
 import 'package:vitameal/presentation/goal/view_model/goals_view_model.dart';
+import 'package:vitameal/presentation/ui_provider/formatted_date_provider.dart';
 import 'package:vitameal/presentation/ui_provider/goals_provider.dart';
 import 'package:vitameal/presentation/goal/view/function/pick_date.dart';
 import 'package:vitameal/presentation/widget/dialog/custom_dialog.dart';
@@ -170,7 +171,8 @@ class AddGoalPage extends HookConsumerWidget {
               ValidateTextformfield(
                 label: l.goal_period,
                 readOnly: true,
-                hintText: "ex. 2000.01.01",
+                hintText:
+                    "ex. ${ref.watch(formattedDateProvider(DateTime(2000, 01, 31)))}",
                 controller: goalDateController,
                 onTap: () async {
                   final date = await pickDate(context);
@@ -180,8 +182,9 @@ class AddGoalPage extends HookConsumerWidget {
                     date.month,
                     date.day,
                   );
-                  goalDateController.text =
-                      '${date.year}.${date.month.toString().padLeft(2, '0')}.${date.day.toString().padLeft(2, '0')}';
+                  goalDateController.text = ref.watch(
+                    formattedDateProvider(date),
+                  );
                 },
               ),
               ValidateTextformfield(

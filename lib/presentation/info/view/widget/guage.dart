@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:vitameal/core/config/l10n/l10n.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
 import 'package:vitameal/domain/entity/goal_datas_entity.dart';
+import 'package:vitameal/presentation/util/remove_decimals.dart';
 
 class Guage extends StatelessWidget {
   const Guage({
@@ -56,11 +57,6 @@ class Guage extends StatelessWidget {
       target: targetValue,
     );
 
-    // 소수점 0 일 때 제거
-    String formatNumber(double value) {
-      return value % 1 == 0 ? value.toInt().toString() : value.toString();
-    }
-
     return Column(
       spacing: 20,
       children: [
@@ -91,7 +87,7 @@ class Guage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                '${l.initial}: ${formatNumber(startValue)}',
+                '${l.initial}: ${removeDecimals(startValue)}',
                 style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w500,
@@ -99,7 +95,7 @@ class Guage extends StatelessWidget {
                 ),
               ),
               Text(
-                '${l.current}: ${formatNumber(currentValue)}',
+                '${l.current}: ${removeDecimals(currentValue)}',
                 style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w500,
@@ -107,7 +103,7 @@ class Guage extends StatelessWidget {
                 ),
               ),
               Text(
-                '${l.target}: ${formatNumber(targetValue)}',
+                '${l.target}: ${removeDecimals(targetValue)}',
                 style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w500,

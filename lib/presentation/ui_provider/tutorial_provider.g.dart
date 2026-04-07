@@ -36,7 +36,7 @@ final class MealTutorialShownProvider
   MealTutorialShown create() => MealTutorialShown();
 }
 
-String _$mealTutorialShownHash() => r'906f8a2cd3de379c04327561a50d7e150b7ae625';
+String _$mealTutorialShownHash() => r'148e9fa6f006cb8ded581e71ef42ec87a685ce70';
 
 /// 식단 기록 페이지 튜토리얼 완료 여부 provider
 

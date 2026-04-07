@@ -227,8 +227,8 @@ class L10nKo extends L10n {
   String get record_today_meal => '오늘의 식단을 기록해보세요';
 
   @override
-  String meal_date(Object day, Object month, Object year) {
-    return '$year년 $month월 $day일 식단';
+  String meal_date(Object day) {
+    return '$day 식단';
   }
 
   @override
@@ -433,6 +433,24 @@ class L10nKo extends L10n {
   String get anonymous_chef => '익명 요리사';
 
   @override
+  String get eats => '건강 지도';
+
+  @override
+  String get steps => '걸음';
+
+  @override
+  String get kcal => '칼로리';
+
+  @override
+  String get need_permission => '위치 권한이 필요해요';
+
+  @override
+  String get request_permission => '지금 권한을 허용하고 내 주변 건강 음식점을 찾아보세요';
+
+  @override
+  String get allow_access => '재설정';
+
+  @override
   String get my_info => '내 정보';
 
   @override
@@ -538,6 +556,9 @@ class L10nKo extends L10n {
   String get language_setting => '언어 설정';
 
   @override
+  String get date_setting => '날짜 설정';
+
+  @override
   String get notification_setting => '알림 설정';
 
   @override
@@ -551,6 +572,9 @@ class L10nKo extends L10n {
 
   @override
   String get auto_language => '언어 자동 설정';
+
+  @override
+  String get auto_date => '날짜 자동 설정';
 
   @override
   String get no_notifications => '등록한 알림이 없어요';

@@ -4,11 +4,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:vitameal/core/config/app_router_observer.dart';
 import 'package:vitameal/domain/entity/post_entity.dart';
+import 'package:vitameal/presentation/date_notation/view/date_notation_page.dart';
 import 'package:vitameal/presentation/goal/view/page/add_goal_page.dart';
 import 'package:vitameal/presentation/goal/view/page/data_page.dart';
 import 'package:vitameal/presentation/goal/view/page/goal_page.dart';
 import 'package:vitameal/presentation/home/view/page/home_page.dart';
 import 'package:vitameal/presentation/language/view/language_page.dart';
+import 'package:vitameal/presentation/eats/view/page/eats_page.dart';
 import 'package:vitameal/presentation/meal_editor/view/meal_editor_page.dart';
 import 'package:vitameal/presentation/notification/view/page/notification_page.dart';
 import 'package:vitameal/presentation/onboarding/view/page/onboarding_allergy_page.dart';
@@ -28,13 +30,15 @@ import 'package:vitameal/presentation/intro/view/intro_page.dart';
 
 class AppRoutePath {
   static const home = '/';
-  static const setting = '/setting';
   static const melon = '/melon';
   static const login = '/login';
   static const splash = '/splash';
   static const intro = '/intro';
+  // 설정
+  static const setting = '/setting';
   static const noti = '/noti';
   static const language = '/language';
+  static const date = '/date';
   // 사용자 정보 입력/수정
   static const onboardingProfile = '/onboarding/profile';
   static const onboardingPhysical = '/onboarding/physical';
@@ -45,14 +49,15 @@ class AppRoutePath {
   static const editPhysical = '/edit/physical';
   static const editDisease = '/edit/disease';
   static const editAllergy = '/edit/allergy';
-  // 목표,데이터 입력/수정
+  // 목표 및 데이터 입력/수정
   static const goal = '/goal';
   static const addGoal = '/add/goal';
   static const editGoal = '/edit/goal';
   static const data = '/data';
+  // 건강 지도
+  static const eats = '/eats';
   // 식단 작성 및 편집 페이지
   static const mealEditor = '/meal-editor';
-
   // 레시피
   static const post = '/post';
   static const editPost = '/edit/post';
@@ -102,6 +107,16 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const IntroPage(),
       ),
       GoRoute(
+        path: AppRoutePath.home,
+        name: AppRoutePath.home,
+        builder: (context, state) => const HomePage(),
+      ),
+      GoRoute(
+        path: AppRoutePath.setting,
+        name: AppRoutePath.setting,
+        builder: (context, state) => const SettingPage(),
+      ),
+      GoRoute(
         path: AppRoutePath.noti,
         name: AppRoutePath.noti,
         builder: (context, state) => const NotificationPage(),
@@ -110,6 +125,13 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: AppRoutePath.language,
         name: AppRoutePath.language,
         builder: (context, state) => const LanguagePage(),
+      ),
+
+      /// 사용자 정보 입력/수정
+      GoRoute(
+        path: AppRoutePath.date,
+        name: AppRoutePath.date,
+        builder: (context, state) => const DateNotationPage(),
       ),
       GoRoute(
         path: AppRoutePath.onboardingProfile,
@@ -156,16 +178,15 @@ final routerProvider = Provider<GoRouter>((ref) {
         name: AppRoutePath.editAllergy,
         builder: (context, state) => const OnboardingAllergyPage(),
       ),
+
+      /// 건강 지도
       GoRoute(
-        path: AppRoutePath.home,
-        name: AppRoutePath.home,
-        builder: (context, state) => const HomePage(),
+        path: AppRoutePath.eats,
+        name: AppRoutePath.eats,
+        builder: (context, state) => const EatsPage(),
       ),
-      GoRoute(
-        path: AppRoutePath.setting,
-        name: AppRoutePath.setting,
-        builder: (context, state) => const SettingPage(),
-      ),
+
+      /// 목표 및 데이터 입력/수정
       GoRoute(
         path: AppRoutePath.goal,
         name: AppRoutePath.goal,
@@ -193,6 +214,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         },
       ),
 
+      /// 식단 작성 및 편집 페이지
       GoRoute(
         path: AppRoutePath.mealEditor,
         name: AppRoutePath.mealEditor,
@@ -206,7 +228,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         },
       ),
 
-      // 포스트
+      /// 레시피
       GoRoute(
         path: AppRoutePath.editPost,
         name: AppRoutePath.editPost,

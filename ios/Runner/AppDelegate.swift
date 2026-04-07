@@ -1,6 +1,7 @@
 import Flutter
 import UIKit
 import WidgetKit
+import GoogleMaps
 
 @main // main: Flutter 앱의 iOS 진입점
 @objc class AppDelegate: FlutterAppDelegate { // FlutterAppDelegate: Flutter 엔진을 iOS 앱 생명주기와 연결
@@ -12,6 +13,9 @@ import WidgetKit
         // Flutter 플러그인 자동 등록: SharedPreference 등 Flutter 플러그인을 사용 가능하도록 함
         GeneratedPluginRegistrant.register(with: self)
         
+        // Google Maps SDK 초기화
+        GMSServices.provideAPIKey("AIzaSyDGNnzrRReoWRH1gYVM23PuFRsZg3TWY-s")
+
         // Method Channel 설정
         setupMethodChannel()
         

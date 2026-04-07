@@ -87,7 +87,7 @@
   "sun": "일",
   "no_meal_record": "기록한 식단이 없어요",
   "record_today_meal": "오늘의 식단을 기록해보세요",
-  "meal_date": "{year}년 {month}월 {day}일 식단",
+  "meal_date": "{day} 식단",
   "add_image": "이미지 추가",
   "category": "분류",
   "breakfast": "아침",
@@ -160,6 +160,15 @@
 
 
 
+  "eats": "건강 지도",
+  "steps": "걸음",
+  "kcal": "칼로리",
+  "need_permission": "위치 권한이 필요해요",
+  "request_permission": "지금 권한을 허용하고 내 주변 건강 음식점을 찾아보세요",
+  "allow_access": "재설정",
+
+
+
   "my_info": "내 정보",
   "year_old": "세   ",
   "failed_loading_info": "정보를 불러오지 못했어요.",
@@ -196,6 +205,7 @@
 
   "menu": "메뉴",
   "language_setting": "언어 설정",
+  "date_setting": "날짜 설정",
   "notification_setting": "알림 설정",
   "logout": "로그아웃",
   "withdraw_account": "회원 탈퇴",
@@ -204,6 +214,7 @@
 
 
   "auto_language": "언어 자동 설정",
+  "auto_date": "날짜 자동 설정",
   "no_notifications": "등록한 알림이 없어요",
   "add_notification": "새 알림 추가하기",
   "notification_name": "알림 이름",
