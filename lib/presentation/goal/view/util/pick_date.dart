@@ -2,7 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:vitameal/core/config/l10n/l10n.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
 
-Future<DateTime?> pickDate(BuildContext context) async {
+Future<DateTime?> pickDate({
+  required BuildContext context,
+  required DateTime initialDate,
+}) async {
   DateTime selectedDate = DateTime.now();
 
   return showCupertinoModalPopup<DateTime>(
@@ -52,7 +55,7 @@ Future<DateTime?> pickDate(BuildContext context) async {
             Expanded(
               child: CupertinoDatePicker(
                 mode: CupertinoDatePickerMode.date,
-                initialDateTime: DateTime.now(),
+                initialDateTime: initialDate,
                 minimumDate: DateTime(2000),
                 maximumDate: DateTime(2100),
                 onDateTimeChanged: (date) {

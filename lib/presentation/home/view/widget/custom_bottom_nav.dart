@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:vitameal/core/config/l10n/l10n.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
+import 'package:vitameal/presentation/eats/view_model/eats_view_model.dart';
+import 'package:vitameal/presentation/eats/view_model/step_view_model.dart';
 
-class CustomBottomNav extends StatelessWidget {
+class CustomBottomNav extends ConsumerWidget {
   final int currentIndex;
   final ValueChanged<int> onTap;
 
@@ -14,8 +17,11 @@ class CustomBottomNav extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l = L10n.of(context)!; // 🌎
+
+    final eatsVM = ref.read(eatsViewModelProvider.notifier);
+    final stepVM = ref.read(stepViewModelProvider.notifier);
 
     return SafeArea(
       top: false,
@@ -51,7 +57,12 @@ class CustomBottomNav extends StatelessWidget {
               icon: PhosphorIcons.mapPinArea(),
               label: l.eats,
               isSelected: currentIndex == 2,
-              onTap: () => onTap(2),
+              onTap: () async {
+                onTap(2);
+                // [권한 요청 및 초기화]
+                await eatsVM.init();
+                await stepVM.init();
+              },
             ),
             _NavItem(
               icon: PhosphorIcons.user(),

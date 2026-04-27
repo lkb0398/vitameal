@@ -12,8 +12,12 @@ class DateNotationPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final v = vrc(context);
     final l = L10n.of(context)!; // 🌎
+
+    // 날짜 설정
     final notation = ref.watch(dateNotationViewModelProvider);
+    final notationVM = ref.read(dateNotationViewModelProvider.notifier);
 
     var selected = useState<String>(l.auto_date);
     useEffect(() {
@@ -35,11 +39,7 @@ class DateNotationPage extends HookConsumerWidget {
         centerTitle: true,
         title: Text(
           l.date_setting,
-          style: TextStyle(
-            fontSize: 22,
-            fontWeight: FontWeight.w400,
-            color: vrc(context).text,
-          ),
+          style: TextStyle(fontSize: 22, color: v.text),
         ),
       ),
       body: Padding(
@@ -53,9 +53,7 @@ class DateNotationPage extends HookConsumerWidget {
                 title: l.auto_date,
                 onTap: () {
                   selected.value = l.auto_date;
-                  ref
-                      .read(dateNotationViewModelProvider.notifier)
-                      .setAutoDateNotation();
+                  notationVM.setAutoDateNotation();
                 },
               ),
 
@@ -65,9 +63,7 @@ class DateNotationPage extends HookConsumerWidget {
                 title: 'YYYY-MM-DD',
                 onTap: () {
                   selected.value = 'YYYY-MM-DD';
-                  ref
-                      .read(dateNotationViewModelProvider.notifier)
-                      .setDateNotation(DateNotationType.yyyyMMdd);
+                  notationVM.setDateNotation(DateNotationType.yyyyMMdd);
                 },
               ),
 
@@ -77,9 +73,7 @@ class DateNotationPage extends HookConsumerWidget {
                 title: 'MM-DD-YYYY',
                 onTap: () {
                   selected.value = 'MM-DD-YYYY';
-                  ref
-                      .read(dateNotationViewModelProvider.notifier)
-                      .setDateNotation(DateNotationType.mmDDyyyy);
+                  notationVM.setDateNotation(DateNotationType.mmDDyyyy);
                 },
               ),
 
@@ -89,9 +83,7 @@ class DateNotationPage extends HookConsumerWidget {
                 title: 'DD-MM-YYYY',
                 onTap: () {
                   selected.value = 'DD-MM-YYYY';
-                  ref
-                      .read(dateNotationViewModelProvider.notifier)
-                      .setDateNotation(DateNotationType.ddMMyyyy);
+                  notationVM.setDateNotation(DateNotationType.ddMMyyyy);
                 },
               ),
             ],

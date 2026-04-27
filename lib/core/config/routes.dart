@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:vitameal/core/config/app_router_observer.dart';
+import 'package:vitameal/domain/entity/goals_entity.dart';
 import 'package:vitameal/domain/entity/post_entity.dart';
+import 'package:vitameal/domain/entity/profiles_entity.dart';
+import 'package:vitameal/presentation/auth/view/login_page.dart';
+import 'package:vitameal/presentation/auth/view_model/auth_view_model.dart';
 import 'package:vitameal/presentation/date_notation/view/date_notation_page.dart';
-import 'package:vitameal/presentation/goal/view/page/add_goal_page.dart';
-import 'package:vitameal/presentation/goal/view/page/data_page.dart';
-import 'package:vitameal/presentation/goal/view/page/goal_page.dart';
-import 'package:vitameal/presentation/home/view/page/home_page.dart';
-import 'package:vitameal/presentation/language/view/language_page.dart';
 import 'package:vitameal/presentation/eats/view/page/eats_page.dart';
+import 'package:vitameal/presentation/goal/view/page/add_goal_page.dart';
+import 'package:vitameal/presentation/goal/view/page/goal_page.dart';
+import 'package:vitameal/presentation/goal_data/view/page/goal_data_page.dart';
+import 'package:vitameal/presentation/home/view/page/home_page.dart';
+import 'package:vitameal/presentation/intro/view/intro_page.dart';
+import 'package:vitameal/presentation/language/view/language_page.dart';
 import 'package:vitameal/presentation/meal_editor/view/meal_editor_page.dart';
 import 'package:vitameal/presentation/notification/view/page/notification_page.dart';
 import 'package:vitameal/presentation/onboarding/view/page/onboarding_allergy_page.dart';
@@ -24,9 +29,6 @@ import 'package:vitameal/presentation/post/view/post_detail_page.dart';
 import 'package:vitameal/presentation/post/view/post_page.dart';
 import 'package:vitameal/presentation/setting/view/setting_page.dart';
 import 'package:vitameal/presentation/splash/view/splash_page.dart';
-import 'package:vitameal/presentation/auth/view/login_page.dart';
-import 'package:vitameal/presentation/auth/view_model/auth_view_model.dart';
-import 'package:vitameal/presentation/intro/view/intro_page.dart';
 
 class AppRoutePath {
   static const home = '/';
@@ -136,12 +138,18 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: AppRoutePath.onboardingProfile,
         name: AppRoutePath.onboardingProfile,
-        builder: (context, state) => const OnboardingProfilePage(),
+        builder: (context, state) {
+          final profile = state.extra as ProfilesEntity?;
+          return OnboardingProfilePage(profile: profile);
+        },
       ),
       GoRoute(
         path: AppRoutePath.onboardingPhysical,
         name: AppRoutePath.onboardingPhysical,
-        builder: (context, state) => const OnboardingPhysicalPage(),
+        builder: (context, state) {
+          final profile = state.extra as ProfilesEntity?;
+          return OnboardingPhysicalPage(profile: profile);
+        },
       ),
       GoRoute(
         path: AppRoutePath.onboardingDisease,
@@ -201,16 +209,16 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: AppRoutePath.editGoal,
         name: AppRoutePath.editGoal,
         builder: (context, state) {
-          final goalId = state.extra as String;
-          return AddGoalPage(goalId: goalId);
+          final goal = state.extra as GoalsEntity;
+          return AddGoalPage(goal: goal);
         },
       ),
       GoRoute(
         path: AppRoutePath.data,
         name: AppRoutePath.data,
         builder: (context, state) {
-          final goalId = state.extra as String;
-          return DataPage(goalId: goalId);
+          final goal = state.extra as GoalsEntity;
+          return GoalDataPage(goal: goal);
         },
       ),
 

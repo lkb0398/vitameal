@@ -1,17 +1,18 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tap_debouncer/tap_debouncer.dart';
 import 'package:vitameal/core/config/l10n/l10n.dart';
+import 'package:vitameal/core/config/routes.dart';
 import 'package:vitameal/core/service/analytics_service.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
 import 'package:vitameal/presentation/language/view_model/locale_view_model.dart';
+import 'package:vitameal/presentation/onboarding/view/util/primary_rich_text.dart';
 import 'package:vitameal/presentation/onboarding/view/widget/progress_text.dart';
 import 'package:vitameal/presentation/onboarding/view/widget/select_box.dart';
+import 'package:vitameal/presentation/onboarding/viewmodel/onboarding_page_view_model.dart';
+import 'package:vitameal/presentation/onboarding/viewmodel/user_diseases_view_model.dart';
 import 'package:vitameal/presentation/ui_provider/profiles_provider.dart';
-import 'package:vitameal/presentation/onboarding/viewmodel/onboarding_view_model.dart';
 import 'package:vitameal/presentation/widget/button/done_button.dart';
 
 class OnboardingDiseasePage extends HookConsumerWidget {
@@ -19,72 +20,47 @@ class OnboardingDiseasePage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final f = fxc(context);
     final l = L10n.of(context)!; // 🌎
     final locale =
         ref.watch(localeViewModelProvider) ?? Localizations.localeOf(context);
 
-    // 모바일 가로모드 이상의 디바이스 크기일 때 반응형 UI 적용 위한 변수
+    final isEditMode = ref.watch(isEditFlowProvider);
+    final allDiseasesAsync = ref.watch(diseasesListProvider);
+
+    final diseaseVM = ref.read(userDiseasesViewModelProvider.notifier);
+
+    final state = ref.watch(onboardingPageViewModelProvider);
+    final vm = ref.watch(onboardingPageViewModelProvider.notifier);
+
+    // 모바일 가로모드 이상 반응형 UI 적용
     final bool isWide = MediaQuery.sizeOf(context).width >= 480;
 
-    // 질병 목록
-    final diseasesAsync = ref.watch(diseasesListProvider);
-
-    // 사용자 선택값
-    final selectedDiseases = useState<List<int>>([]);
-
-    // 수정모드 여부
-    final isEditing = ref.watch(isEditFlowProvider);
-
-    // 수정모드 시 기존값 불러오기
-    final selectedAsync = ref.watch(userDiseaseIdsProvider);
-    final didInit = useRef(false);
-    useEffect(() {
-      if (!isEditing) return null;
-      if (didInit.value) return null;
-      final values = selectedAsync.value;
-      if (values == null) return null;
-      didInit.value = true;
-      selectedDiseases.value = values;
-      return null;
-    }, [isEditing, selectedAsync]);
-
     return Scaffold(
+      /// 앱바
       appBar: AppBar(
         leading: IconButton(
           onPressed: context.pop,
-          icon: Icon(Icons.arrow_back_ios, color: fxc(context).textcolor200),
+          icon: Icon(Icons.arrow_back_ios, color: f.textcolor200),
         ),
-
-        /// 단계 표시
-        actions: [isEditing ? SizedBox.shrink() : ProgressText(page: "3")],
-        actionsPadding: EdgeInsets.only(right: 26),
+        actions: [if (!isEditMode) ProgressText(page: "3")],
+        actionsPadding: const EdgeInsets.only(right: 26),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          spacing: 10,
+          spacing: 20,
           children: [
             /// 설명
-            AutoSizeText.rich(
-              TextSpan(
-                style: TextStyle(fontSize: 22, color: vrc(context).text),
-                children: [
-                  TextSpan(
-                    text: l.diseaseTitle,
-                    style: TextStyle(fontWeight: FontWeight.w600),
-                  ),
-                  TextSpan(text: "\n"),
-                  TextSpan(
-                    text: isEditing ? l.editOptional : l.allSelectOptional,
-                  ),
-                ],
-              ),
+            primaryRichText(
+              context,
+              isEditMode ? l.edit_disease : l.onboarding_disease,
             ),
 
             /// 질병 선택
             Expanded(
-              child: diseasesAsync.when(
+              child: allDiseasesAsync.when(
                 loading: () => const Center(child: CircularProgressIndicator()),
                 error: (e, _) => Center(child: Text(l.failed_loading_disease)),
                 data: (diseases) {
@@ -109,18 +85,16 @@ class OnboardingDiseasePage extends HookConsumerWidget {
                       final name = locale == Locale('ko')
                           ? disease.name
                           : disease.nameEn;
-                      final isSelected = selectedDiseases.value.contains(
-                        disease.id,
-                      );
+                      final isSelected = state.diseaseIds.contains(disease.id);
                       return SelectBox(
                         onTap: () {
-                          final current = [...selectedDiseases.value];
+                          final current = [...state.diseaseIds];
                           if (isSelected) {
                             current.remove(disease.id); // 선택된 것 누르면 제거
                           } else {
                             current.add(disease.id); // 선택안된 것 누르면 추가
                           }
-                          selectedDiseases.value = current;
+                          vm.selectDisease(current);
                         },
                         isSelected: isSelected,
                         text: name,
@@ -134,22 +108,18 @@ class OnboardingDiseasePage extends HookConsumerWidget {
         ),
       ),
 
-      /// 하단 버튼
+      /// 완료 버튼
       bottomNavigationBar: TapDebouncer(
         onTap: () async {
-          final disease = selectedDiseases.value;
-          // 질병 정보 업데이트
-          await ref
-              .read(onboardingViewModelProvider.notifier)
-              .saveDiseases(disease);
-          // mounted 체크
+          // [질병 목록 갱신]
+          await diseaseVM.saveDiseases(state.diseaseIds);
+
           if (!context.mounted) return;
-          // 페이지 이동
-          isEditing
-              ? context.push('/edit/allergy')
-              : context.push('/onboarding/allergy');
+          isEditMode
+              ? context.push(AppRoutePath.editAllergy)
+              : context.push(AppRoutePath.onboardingAllergy);
           // 📝
-          for (final d in disease) {
+          for (final d in state.diseaseIds) {
             AnalyticsService.event('profile_saved', p: {'disease': d});
           }
         },
@@ -158,7 +128,7 @@ class OnboardingDiseasePage extends HookConsumerWidget {
             padding: const EdgeInsets.only(bottom: 10),
             child: DoneButton(
               onTap: onTap,
-              backgroundColor: fxc(context).primary400!,
+              backgroundColor: f.primary400!,
               text: l.next,
               textColor: Colors.white,
             ),

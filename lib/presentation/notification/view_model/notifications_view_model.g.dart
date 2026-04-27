@@ -13,14 +13,18 @@ part of 'notifications_view_model.dart';
 const notificationsViewModelProvider = NotificationsViewModelProvider._();
 
 final class NotificationsViewModelProvider
-    extends $NotifierProvider<NotificationsViewModel, void> {
+    extends
+        $AsyncNotifierProvider<
+          NotificationsViewModel,
+          List<NotificationsEntity>?
+        > {
   const NotificationsViewModelProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
         name: r'notificationsViewModelProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -31,34 +35,35 @@ final class NotificationsViewModelProvider
   @$internal
   @override
   NotificationsViewModel create() => NotificationsViewModel();
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(void value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<void>(value),
-    );
-  }
 }
 
 String _$notificationsViewModelHash() =>
-    r'bfec037ba2ec2f12684c7aea05d8c1e3de68269e';
+    r'3bb5a6abc991f9d7bb33ecb454e57a5b1c709971';
 
-abstract class _$NotificationsViewModel extends $Notifier<void> {
-  void build();
+abstract class _$NotificationsViewModel
+    extends $AsyncNotifier<List<NotificationsEntity>?> {
+  FutureOr<List<NotificationsEntity>?> build();
   @$mustCallSuper
   @override
   void runBuild() {
-    build();
-    final ref = this.ref as $Ref<void, void>;
+    final created = build();
+    final ref =
+        this.ref
+            as $Ref<
+              AsyncValue<List<NotificationsEntity>?>,
+              List<NotificationsEntity>?
+            >;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<void, void>,
-              void,
+              AnyNotifier<
+                AsyncValue<List<NotificationsEntity>?>,
+                List<NotificationsEntity>?
+              >,
+              AsyncValue<List<NotificationsEntity>?>,
               Object?,
               Object?
             >;
-    element.handleValue(ref, null);
+    element.handleValue(ref, created);
   }
 }
