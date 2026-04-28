@@ -14,7 +14,6 @@ _NotificationsDto _$NotificationsDtoFromJson(Map<String, dynamic> json) =>
       time: json['time'] as String,
       isEnabled: json['is_enabled'] as bool,
       timezone: json['timezone'] as String,
-      nextFireAt: json['next_fire_at'] as String,
     );
 
 Map<String, dynamic> _$NotificationsDtoToJson(_NotificationsDto instance) =>
@@ -25,5 +24,4 @@ Map<String, dynamic> _$NotificationsDtoToJson(_NotificationsDto instance) =>
       'time': instance.time,
       'is_enabled': instance.isEnabled,
       'timezone': instance.timezone,
-      'next_fire_at': instance.nextFireAt,
     };

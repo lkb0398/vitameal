@@ -9,9 +9,11 @@ class ValidateTextformfield extends HookConsumerWidget {
     super.key,
     required this.readOnly,
     required this.hintText,
-    required this.controller,
+    this.controller,
     this.validator,
     this.onTap,
+    this.onChanged,
+    this.initialValue,
     this.keyboardType,
     this.inputFormatters,
     this.errorText,
@@ -22,10 +24,12 @@ class ValidateTextformfield extends HookConsumerWidget {
   });
   final bool readOnly;
   final String hintText;
-  final TextEditingController controller;
+  final TextEditingController? controller;
   final FormFieldValidator<String>? validator;
 
   final void Function()? onTap;
+  final void Function(String v)? onChanged;
+  final String? initialValue;
   final TextInputType? keyboardType;
   final List<TextInputFormatter>? inputFormatters;
   final String? errorText;
@@ -37,15 +41,15 @@ class ValidateTextformfield extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isValid = useState<bool?>(null);
-    useEffect(() {
-      void listener() {
-        if (validator == null) return;
-        isValid.value = validator!(controller.text) == null;
-      }
+    // useEffect(() {
+    //   void listener() {
+    //     if (validator == null) return;
+    //     isValid.value = validator!(initialValue) == null;
+    //   }
 
-      controller.addListener(listener);
-      return () => controller.removeListener(listener);
-    }, [controller, errorText]);
+    //   controller.addListener(listener);
+    //   return () => controller.removeListener(listener);
+    // }, [controller, errorText]);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -71,6 +75,7 @@ class ValidateTextformfield extends HookConsumerWidget {
                   ),
             Expanded(
               child: TextFormField(
+                initialValue: initialValue,
                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
                 scrollPadding: EdgeInsets.only(
                   bottom: MediaQuery.of(context).viewInsets.bottom + 100,
@@ -121,6 +126,7 @@ class ValidateTextformfield extends HookConsumerWidget {
                         ),
                 ),
                 readOnly: readOnly,
+                onChanged: onChanged,
                 onTap: onTap,
                 onTapOutside: (_) => FocusScope.of(context).unfocus(),
                 autovalidateMode: AutovalidateMode.onUserInteraction,

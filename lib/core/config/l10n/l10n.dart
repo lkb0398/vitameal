@@ -265,101 +265,59 @@ abstract class L10n {
   /// **'widgets'**
   String get intro_4_highlight;
 
-  /// No description provided for @profileTitleAppName.
+  /// No description provided for @onboarding_profile.
   ///
   /// In en, this message translates to:
-  /// **'VitaMeal'**
-  String get profileTitleAppName;
+  /// **'Set up your <profile>\non [VitaMeal].'**
+  String get onboarding_profile;
 
-  /// No description provided for @profileTitleSuffix.
+  /// No description provided for @edit_profile.
   ///
   /// In en, this message translates to:
-  /// **' profile\n'**
-  String get profileTitleSuffix;
+  /// **'Edit your <profile>\non [VitaMeal].'**
+  String get edit_profile;
 
-  /// No description provided for @profileTitleProfile.
+  /// No description provided for @onboarding_physical.
   ///
   /// In en, this message translates to:
-  /// **''**
-  String get profileTitleProfile;
+  /// **'Welcome, <{name}>!\nEnter your basic information.\n(Optional)'**
+  String onboarding_physical(Object name);
 
-  /// No description provided for @profileTitleObject.
+  /// No description provided for @edit_physical.
   ///
   /// In en, this message translates to:
-  /// **''**
-  String get profileTitleObject;
+  /// **'<{name}>,\nEdit your basic information\n(Optional)'**
+  String edit_physical(Object name);
 
-  /// No description provided for @profileTitleEdit.
+  /// No description provided for @onboarding_disease.
   ///
   /// In en, this message translates to:
-  /// **'Edit'**
-  String get profileTitleEdit;
+  /// **'<Health conditions to manage>\nSelect all that apply. (Optional)'**
+  String get onboarding_disease;
 
-  /// No description provided for @profileTitleSet.
+  /// No description provided for @edit_disease.
   ///
   /// In en, this message translates to:
-  /// **'Set up'**
-  String get profileTitleSet;
+  /// **'<Health conditions to manage>\nEdit your selection. (Optional)'**
+  String get edit_disease;
 
-  /// No description provided for @profileTitleEnd.
+  /// No description provided for @onboarding_allergy.
   ///
   /// In en, this message translates to:
-  /// **' your profile.'**
-  String get profileTitleEnd;
+  /// **'Current <food allergies>\nSelect all that apply. (Optional)'**
+  String get onboarding_allergy;
 
-  /// No description provided for @welcomePrefix.
+  /// No description provided for @edit_allergy.
   ///
   /// In en, this message translates to:
-  /// **'Welcome, '**
-  String get welcomePrefix;
+  /// **'Current <food allergies>\nEdit your selection. (Optional)'**
+  String get edit_allergy;
 
   /// No description provided for @member.
   ///
   /// In en, this message translates to:
-  /// **'User'**
+  /// **'member'**
   String get member;
-
-  /// No description provided for @editInfoSuffix.
-  ///
-  /// In en, this message translates to:
-  /// **'\nEdit your basic information. (Optional)'**
-  String get editInfoSuffix;
-
-  /// No description provided for @inputInfoSuffix.
-  ///
-  /// In en, this message translates to:
-  /// **'!\nEnter your basic information. (Optional)'**
-  String get inputInfoSuffix;
-
-  /// No description provided for @diseaseTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Health conditions to manage'**
-  String get diseaseTitle;
-
-  /// No description provided for @allSelectOptional.
-  ///
-  /// In en, this message translates to:
-  /// **'Select all that apply. (Optional)'**
-  String get allSelectOptional;
-
-  /// No description provided for @editOptional.
-  ///
-  /// In en, this message translates to:
-  /// **'Edit your selection. (Optional)'**
-  String get editOptional;
-
-  /// No description provided for @allergyPrefix.
-  ///
-  /// In en, this message translates to:
-  /// **'Current '**
-  String get allergyPrefix;
-
-  /// No description provided for @allergy.
-  ///
-  /// In en, this message translates to:
-  /// **'allergies'**
-  String get allergy;
 
   /// No description provided for @nickname.
   ///
@@ -949,23 +907,23 @@ abstract class L10n {
   /// **'kcal'**
   String get kcal;
 
-  /// No description provided for @need_permission.
+  /// No description provided for @need_location_perm.
   ///
   /// In en, this message translates to:
-  /// **'Location access is required'**
-  String get need_permission;
+  /// **'Enable location permission'**
+  String get need_location_perm;
 
-  /// No description provided for @request_permission.
+  /// No description provided for @request_location_perm.
   ///
   /// In en, this message translates to:
-  /// **'Enable location permission\nto discover healthy restaurants nearby'**
-  String get request_permission;
+  /// **'to discover healthy restaurants nearby'**
+  String get request_location_perm;
 
-  /// No description provided for @allow_access.
+  /// No description provided for @allow_perm.
   ///
   /// In en, this message translates to:
-  /// **'Allow Access'**
-  String get allow_access;
+  /// **'Allow Permission'**
+  String get allow_perm;
 
   /// No description provided for @my_info.
   ///
@@ -1248,6 +1206,24 @@ abstract class L10n {
   /// In en, this message translates to:
   /// **'Please enter a notification name.'**
   String get enter_notification_name;
+
+  /// No description provided for @need_noti_perm.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable notifications'**
+  String get need_noti_perm;
+
+  /// No description provided for @request_noti_perm.
+  ///
+  /// In en, this message translates to:
+  /// **'to get meal reminders\nat your preferred time'**
+  String get request_noti_perm;
+
+  /// No description provided for @open_setting.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Setting'**
+  String get open_setting;
 
   /// No description provided for @meal_tutorial_step_one.
   ///

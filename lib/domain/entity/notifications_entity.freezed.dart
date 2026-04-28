@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$NotificationsEntity {
 
- String? get userId; String? get notiId; String get label; TimeOfDay get time; bool get isEnabled; String get timezone; DateTime get nextFireAt;
+ String? get userId; String? get notiId; String get label; TimeOfDay get time; bool get isEnabled; String get timezone;
 /// Create a copy of NotificationsEntity
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $NotificationsEntityCopyWith<NotificationsEntity> get copyWith => _$Notification
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is NotificationsEntity&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.notiId, notiId) || other.notiId == notiId)&&(identical(other.label, label) || other.label == label)&&(identical(other.time, time) || other.time == time)&&(identical(other.isEnabled, isEnabled) || other.isEnabled == isEnabled)&&(identical(other.timezone, timezone) || other.timezone == timezone)&&(identical(other.nextFireAt, nextFireAt) || other.nextFireAt == nextFireAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is NotificationsEntity&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.notiId, notiId) || other.notiId == notiId)&&(identical(other.label, label) || other.label == label)&&(identical(other.time, time) || other.time == time)&&(identical(other.isEnabled, isEnabled) || other.isEnabled == isEnabled)&&(identical(other.timezone, timezone) || other.timezone == timezone));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,userId,notiId,label,time,isEnabled,timezone,nextFireAt);
+int get hashCode => Object.hash(runtimeType,userId,notiId,label,time,isEnabled,timezone);
 
 @override
 String toString() {
-  return 'NotificationsEntity(userId: $userId, notiId: $notiId, label: $label, time: $time, isEnabled: $isEnabled, timezone: $timezone, nextFireAt: $nextFireAt)';
+  return 'NotificationsEntity(userId: $userId, notiId: $notiId, label: $label, time: $time, isEnabled: $isEnabled, timezone: $timezone)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $NotificationsEntityCopyWith<$Res>  {
   factory $NotificationsEntityCopyWith(NotificationsEntity value, $Res Function(NotificationsEntity) _then) = _$NotificationsEntityCopyWithImpl;
 @useResult
 $Res call({
- String? userId, String? notiId, String label, TimeOfDay time, bool isEnabled, String timezone, DateTime nextFireAt
+ String? userId, String? notiId, String label, TimeOfDay time, bool isEnabled, String timezone
 });
 
 
@@ -62,7 +62,7 @@ class _$NotificationsEntityCopyWithImpl<$Res>
 
 /// Create a copy of NotificationsEntity
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? userId = freezed,Object? notiId = freezed,Object? label = null,Object? time = null,Object? isEnabled = null,Object? timezone = null,Object? nextFireAt = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? userId = freezed,Object? notiId = freezed,Object? label = null,Object? time = null,Object? isEnabled = null,Object? timezone = null,}) {
   return _then(_self.copyWith(
 userId: freezed == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as String?,notiId: freezed == notiId ? _self.notiId : notiId // ignore: cast_nullable_to_non_nullable
@@ -70,8 +70,7 @@ as String?,label: null == label ? _self.label : label // ignore: cast_nullable_t
 as String,time: null == time ? _self.time : time // ignore: cast_nullable_to_non_nullable
 as TimeOfDay,isEnabled: null == isEnabled ? _self.isEnabled : isEnabled // ignore: cast_nullable_to_non_nullable
 as bool,timezone: null == timezone ? _self.timezone : timezone // ignore: cast_nullable_to_non_nullable
-as String,nextFireAt: null == nextFireAt ? _self.nextFireAt : nextFireAt // ignore: cast_nullable_to_non_nullable
-as DateTime,
+as String,
   ));
 }
 
@@ -156,10 +155,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? userId,  String? notiId,  String label,  TimeOfDay time,  bool isEnabled,  String timezone,  DateTime nextFireAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? userId,  String? notiId,  String label,  TimeOfDay time,  bool isEnabled,  String timezone)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _NotificationsEntity() when $default != null:
-return $default(_that.userId,_that.notiId,_that.label,_that.time,_that.isEnabled,_that.timezone,_that.nextFireAt);case _:
+return $default(_that.userId,_that.notiId,_that.label,_that.time,_that.isEnabled,_that.timezone);case _:
   return orElse();
 
 }
@@ -177,10 +176,10 @@ return $default(_that.userId,_that.notiId,_that.label,_that.time,_that.isEnabled
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? userId,  String? notiId,  String label,  TimeOfDay time,  bool isEnabled,  String timezone,  DateTime nextFireAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? userId,  String? notiId,  String label,  TimeOfDay time,  bool isEnabled,  String timezone)  $default,) {final _that = this;
 switch (_that) {
 case _NotificationsEntity():
-return $default(_that.userId,_that.notiId,_that.label,_that.time,_that.isEnabled,_that.timezone,_that.nextFireAt);case _:
+return $default(_that.userId,_that.notiId,_that.label,_that.time,_that.isEnabled,_that.timezone);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -197,10 +196,10 @@ return $default(_that.userId,_that.notiId,_that.label,_that.time,_that.isEnabled
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? userId,  String? notiId,  String label,  TimeOfDay time,  bool isEnabled,  String timezone,  DateTime nextFireAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? userId,  String? notiId,  String label,  TimeOfDay time,  bool isEnabled,  String timezone)?  $default,) {final _that = this;
 switch (_that) {
 case _NotificationsEntity() when $default != null:
-return $default(_that.userId,_that.notiId,_that.label,_that.time,_that.isEnabled,_that.timezone,_that.nextFireAt);case _:
+return $default(_that.userId,_that.notiId,_that.label,_that.time,_that.isEnabled,_that.timezone);case _:
   return null;
 
 }
@@ -212,7 +211,7 @@ return $default(_that.userId,_that.notiId,_that.label,_that.time,_that.isEnabled
 
 
 class _NotificationsEntity implements NotificationsEntity {
-  const _NotificationsEntity({this.userId, this.notiId, required this.label, required this.time, required this.isEnabled, required this.timezone, required this.nextFireAt});
+  const _NotificationsEntity({this.userId, this.notiId, required this.label, required this.time, required this.isEnabled, required this.timezone});
   
 
 @override final  String? userId;
@@ -221,7 +220,6 @@ class _NotificationsEntity implements NotificationsEntity {
 @override final  TimeOfDay time;
 @override final  bool isEnabled;
 @override final  String timezone;
-@override final  DateTime nextFireAt;
 
 /// Create a copy of NotificationsEntity
 /// with the given fields replaced by the non-null parameter values.
@@ -233,16 +231,16 @@ _$NotificationsEntityCopyWith<_NotificationsEntity> get copyWith => __$Notificat
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _NotificationsEntity&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.notiId, notiId) || other.notiId == notiId)&&(identical(other.label, label) || other.label == label)&&(identical(other.time, time) || other.time == time)&&(identical(other.isEnabled, isEnabled) || other.isEnabled == isEnabled)&&(identical(other.timezone, timezone) || other.timezone == timezone)&&(identical(other.nextFireAt, nextFireAt) || other.nextFireAt == nextFireAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _NotificationsEntity&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.notiId, notiId) || other.notiId == notiId)&&(identical(other.label, label) || other.label == label)&&(identical(other.time, time) || other.time == time)&&(identical(other.isEnabled, isEnabled) || other.isEnabled == isEnabled)&&(identical(other.timezone, timezone) || other.timezone == timezone));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,userId,notiId,label,time,isEnabled,timezone,nextFireAt);
+int get hashCode => Object.hash(runtimeType,userId,notiId,label,time,isEnabled,timezone);
 
 @override
 String toString() {
-  return 'NotificationsEntity(userId: $userId, notiId: $notiId, label: $label, time: $time, isEnabled: $isEnabled, timezone: $timezone, nextFireAt: $nextFireAt)';
+  return 'NotificationsEntity(userId: $userId, notiId: $notiId, label: $label, time: $time, isEnabled: $isEnabled, timezone: $timezone)';
 }
 
 
@@ -253,7 +251,7 @@ abstract mixin class _$NotificationsEntityCopyWith<$Res> implements $Notificatio
   factory _$NotificationsEntityCopyWith(_NotificationsEntity value, $Res Function(_NotificationsEntity) _then) = __$NotificationsEntityCopyWithImpl;
 @override @useResult
 $Res call({
- String? userId, String? notiId, String label, TimeOfDay time, bool isEnabled, String timezone, DateTime nextFireAt
+ String? userId, String? notiId, String label, TimeOfDay time, bool isEnabled, String timezone
 });
 
 
@@ -270,7 +268,7 @@ class __$NotificationsEntityCopyWithImpl<$Res>
 
 /// Create a copy of NotificationsEntity
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? userId = freezed,Object? notiId = freezed,Object? label = null,Object? time = null,Object? isEnabled = null,Object? timezone = null,Object? nextFireAt = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? userId = freezed,Object? notiId = freezed,Object? label = null,Object? time = null,Object? isEnabled = null,Object? timezone = null,}) {
   return _then(_NotificationsEntity(
 userId: freezed == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as String?,notiId: freezed == notiId ? _self.notiId : notiId // ignore: cast_nullable_to_non_nullable
@@ -278,8 +276,7 @@ as String?,label: null == label ? _self.label : label // ignore: cast_nullable_t
 as String,time: null == time ? _self.time : time // ignore: cast_nullable_to_non_nullable
 as TimeOfDay,isEnabled: null == isEnabled ? _self.isEnabled : isEnabled // ignore: cast_nullable_to_non_nullable
 as bool,timezone: null == timezone ? _self.timezone : timezone // ignore: cast_nullable_to_non_nullable
-as String,nextFireAt: null == nextFireAt ? _self.nextFireAt : nextFireAt // ignore: cast_nullable_to_non_nullable
-as DateTime,
+as String,
   ));
 }
 

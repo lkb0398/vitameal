@@ -40,16 +40,10 @@ class EatsViewModel extends _$EatsViewModel {
 
   LatLng? _lastCenter;
   bool _isFirstMove = true;
-  bool _initialized = false;
   bool _isRequestingPermission = false;
 
   @override
   EatsState build() {
-    if (!_initialized) {
-      _initialized = true;
-      Future.microtask(init);
-    }
-
     return EatsState(
       eats: [],
       location: null,

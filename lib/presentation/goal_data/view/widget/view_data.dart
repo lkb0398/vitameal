@@ -1,37 +1,44 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tap_debouncer/tap_debouncer.dart';
 import 'package:vitameal/core/config/l10n/l10n.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
 import 'package:vitameal/domain/entity/goals_entity.dart';
-import 'package:vitameal/presentation/goal/view_model/goal_datas_view_model.dart';
+import 'package:vitameal/presentation/goal_data/view_model/goal_data_page_view_model.dart';
+import 'package:vitameal/presentation/goal_data/view_model/goal_datas_view_model.dart';
 import 'package:vitameal/presentation/ui_provider/formatted_date_provider.dart';
-import 'package:vitameal/presentation/ui_provider/goals_provider.dart';
 import 'package:vitameal/presentation/util/date_time_utils.dart';
 import 'package:vitameal/presentation/util/remove_decimals.dart';
 import 'package:vitameal/presentation/widget/dialog/custom_dialog.dart';
 
-class ViewData extends HookConsumerWidget {
-  const ViewData({super.key, required this.isDone, required this.selectedGoal});
+class ViewData extends ConsumerWidget {
+  const ViewData({super.key, required this.goal, required this.isDone});
 
-  final GoalsEntity selectedGoal;
+  final GoalsEntity goal;
   final bool isDone;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final f = fxc(context);
+    final v = vrc(context);
     final l = L10n.of(context)!; // 🌎
 
-    // 선택된 목표의 데이터 불러오기
-    final datasAsync = ref.watch(getGoalDatasProvider(selectedGoal.goalId!));
+    final state = ref.watch(goalDataPageViewModelProvider(selectedGoal: goal));
+    final vm = ref.read(
+      goalDataPageViewModelProvider(selectedGoal: goal).notifier,
+    );
 
-    // 정렬 (false = 최신순, true = 오래된순)
-    final isReversed = useState(false);
+    // 선택된 목표의 데이터 전체 목록
+    final datasAsync = ref.watch(
+      goalDatasViewModelProvider(goalId: state.selectedGoal.goalId!),
+    );
+    final dataVM = ref.read(
+      goalDatasViewModelProvider(goalId: state.selectedGoal.goalId!).notifier,
+    );
 
-    // 삭제 선택값들
-    final selectedDataIds = useState<Set<String>>({});
-    final hasSelected = selectedDataIds.value.isNotEmpty;
+    // 삭제 선택값이 있는지 여부
+    final bool hasSelected = state.selectedDataIds.isNotEmpty;
 
     return Column(
       children: [
@@ -48,7 +55,7 @@ class ViewData extends HookConsumerWidget {
               /// 정렬 dropdown
               DropdownButton2<bool>(
                 underline: SizedBox(),
-                value: isReversed.value,
+                value: state.isReversed,
                 items: [
                   DropdownMenuItem<bool>(
                     value: false,
@@ -69,7 +76,7 @@ class ViewData extends HookConsumerWidget {
                 ],
                 onChanged: (value) {
                   if (value == null) return;
-                  isReversed.value = value;
+                  vm.updateReversed(value);
                 },
                 buttonStyleData: ButtonStyleData(
                   padding: EdgeInsets.only(right: 10),
@@ -78,13 +85,13 @@ class ViewData extends HookConsumerWidget {
                   icon: Icon(
                     Icons.keyboard_arrow_down,
                     size: 20,
-                    color: fxc(context).textcolor300,
+                    color: f.textcolor300,
                   ),
                 ),
                 dropdownStyleData: DropdownStyleData(
                   direction: DropdownDirection.textDirection,
                   decoration: BoxDecoration(
-                    color: vrc(context).background,
+                    color: v.background,
                     borderRadius: BorderRadius.only(
                       bottomLeft: Radius.circular(8),
                       bottomRight: Radius.circular(8),
@@ -105,24 +112,21 @@ class ViewData extends HookConsumerWidget {
                           context: context,
                           builder: (context) {
                             return CustomDialog(
-                              onConfirm: () async {
-                                // 데이터 삭제
-                                await ref
-                                    .read(goalDatasViewModelProvider.notifier)
-                                    .deleteDatas(
-                                      selectedDataIds.value.toList(),
-                                    );
-                                // mounted 체크
-                                if (!context.mounted) return;
-                                Navigator.pop(context);
-                                // 선택 초기화
-                                selectedDataIds.value = {};
-                                // UI 반영
-                                ref.invalidate(getGoalDatasProvider);
-                              },
                               title: l.confirm_delete,
                               confirmText: l.delete,
                               cancelText: l.cancel,
+                              onConfirm: () async {
+                                // [데이터 삭제]
+                                await dataVM.deleteDatas(
+                                  state.selectedDataIds.toList(),
+                                );
+
+                                if (!context.mounted) return;
+                                Navigator.pop(context);
+
+                                // 선택 초기화
+                                vm.updateIds({});
+                              },
                             );
                           },
                         );
@@ -136,9 +140,7 @@ class ViewData extends HookConsumerWidget {
                       style: TextStyle(
                         fontSize: 11,
                         fontWeight: FontWeight.w500,
-                        color: hasSelected
-                            ? fxc(context).secondary400
-                            : fxc(context).textcolor300,
+                        color: hasSelected ? f.secondary400 : f.textcolor300,
                       ),
                     ),
                   );
@@ -149,7 +151,7 @@ class ViewData extends HookConsumerWidget {
         ),
         datasAsync.when(
           loading: () => const Center(child: CircularProgressIndicator()),
-          error: (e, _) => Center(child: Text('error: $e')),
+          error: (_, _) => const SizedBox.shrink(),
           data: (datas) {
             // 데이터 없을 때 화면
             if (datas == null || datas.isEmpty) {
@@ -158,12 +160,12 @@ class ViewData extends HookConsumerWidget {
                 child: Center(
                   child: Text(
                     l.add_data_hint,
-                    style: TextStyle(color: fxc(context).textcolor300),
+                    style: TextStyle(color: f.textcolor300),
                   ),
                 ),
               );
             }
-            final displayDatas = isReversed.value
+            final displayDatas = state.isReversed
                 ? datas.reversed.toList()
                 : datas;
 
@@ -174,7 +176,7 @@ class ViewData extends HookConsumerWidget {
                 absorbing: isDone ? true : false, // true 면 터치 차단
                 child: Container(
                   decoration: BoxDecoration(
-                    color: isDone ? fxc(context).textcolor100 : null,
+                    color: isDone ? f.textcolor100 : null,
                   ),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -184,17 +186,16 @@ class ViewData extends HookConsumerWidget {
                       itemCount: displayDatas.length,
                       itemBuilder: (BuildContext context, int index) {
                         final data = displayDatas[index];
-                        final isSelected = selectedDataIds.value.contains(
+                        final isSelected = state.selectedDataIds.contains(
                           data.dataId,
                         );
 
+                        /// 데이터 정보
                         return Container(
                           padding: EdgeInsets.only(left: 10),
                           decoration: BoxDecoration(
                             border: Border(
-                              bottom: BorderSide(
-                                color: fxc(context).textcolor200!,
-                              ),
+                              bottom: BorderSide(color: f.textcolor200!),
                             ),
                           ),
                           height: 58,
@@ -208,44 +209,44 @@ class ViewData extends HookConsumerWidget {
                                   style: TextStyle(
                                     fontSize: 11,
                                     color: isDone
-                                        ? fxc(context).textcolor300
-                                        : fxc(context).textcolor400,
+                                        ? f.textcolor300
+                                        : f.textcolor400,
                                   ),
                                 ),
                               ),
                               Expanded(
                                 child: Text(
-                                  "${removeDecimals(data.dataValue)} ${selectedGoal.goalUnit}",
+                                  "${removeDecimals(data.dataValue)} ${goal.goalUnit}",
                                   style: TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w500,
-                                    color: isDone
-                                        ? fxc(context).textcolor300
-                                        : vrc(context).text,
+                                    color: isDone ? f.textcolor300 : v.text,
                                   ),
                                   overflow: TextOverflow.ellipsis,
                                   textAlign: TextAlign.end,
                                 ),
                               ),
+
+                              /// 삭제 선택 버튼
                               IconButton(
                                 icon: Icon(
                                   isSelected
                                       ? Icons.check_circle
                                       : Icons.radio_button_unchecked,
                                   color: isSelected
-                                      ? fxc(context).secondary400
+                                      ? f.secondary400
                                       : isDone
-                                      ? fxc(context).textcolor300
-                                      : fxc(context).textcolor200,
+                                      ? f.textcolor300
+                                      : f.textcolor200,
                                 ),
                                 onPressed: () {
-                                  final newSet = {...selectedDataIds.value};
+                                  final newSet = {...state.selectedDataIds};
                                   if (isSelected) {
                                     newSet.remove(data.dataId);
                                   } else {
                                     newSet.add(data.dataId!);
                                   }
-                                  selectedDataIds.value = newSet;
+                                  vm.updateIds(newSet);
                                 },
                               ),
                             ],

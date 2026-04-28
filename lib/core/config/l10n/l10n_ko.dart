@@ -95,52 +95,35 @@ class L10nKo extends L10n {
   String get intro_4_highlight => '위젯';
 
   @override
-  String get profileTitleAppName => 'VitaMeal';
+  String get onboarding_profile => '[VitaMeal]에서 사용할\n<프로필>을 설정해주세요.';
 
   @override
-  String get profileTitleSuffix => '에서 사용할\n';
+  String get edit_profile => '[VitaMeal]에서 사용할\n<프로필>을 수정해주세요.';
 
   @override
-  String get profileTitleProfile => '프로필';
+  String onboarding_physical(Object name) {
+    return '반갑습니다, <$name>님!\n기본 정보를 입력해주세요. (선택)';
+  }
 
   @override
-  String get profileTitleObject => '을 ';
+  String edit_physical(Object name) {
+    return '<$name>님의\n기본 정보를 수정해주세요. (선택)';
+  }
 
   @override
-  String get profileTitleEdit => '수정';
+  String get onboarding_disease => '<관리가 필요한 질환>을\n모두 선택해주세요. (선택)';
 
   @override
-  String get profileTitleSet => '설정';
+  String get edit_disease => '<관리가 필요한 질환>을\n수정해주세요. (선택)';
 
   @override
-  String get profileTitleEnd => '해주세요.';
+  String get onboarding_allergy => '현재 겪고 있는 <알레르기>를\n모두 선택해주세요. (선택)';
 
   @override
-  String get welcomePrefix => '반갑습니다, ';
+  String get edit_allergy => '현재 겪고 있는 <알레르기>를\n수정해주세요. (선택)';
 
   @override
   String get member => '회원';
-
-  @override
-  String get editInfoSuffix => '님의\n기본 정보를 수정해주세요. (선택)';
-
-  @override
-  String get inputInfoSuffix => '님!\n기본 정보를 입력해주세요. (선택)';
-
-  @override
-  String get diseaseTitle => '관리가 필요한 질환';
-
-  @override
-  String get allSelectOptional => '모두 선택해주세요. (선택)';
-
-  @override
-  String get editOptional => '수정해주세요. (선택)';
-
-  @override
-  String get allergyPrefix => '현재 겪고 있는 ';
-
-  @override
-  String get allergy => '알레르기';
 
   @override
   String get nickname => '닉네임';
@@ -442,13 +425,13 @@ class L10nKo extends L10n {
   String get kcal => '칼로리';
 
   @override
-  String get need_permission => '위치 권한이 필요해요';
+  String get need_location_perm => '위치 권한이 필요해요';
 
   @override
-  String get request_permission => '지금 권한을 허용하고 내 주변 건강 음식점을 찾아보세요';
+  String get request_location_perm => '지금 권한을 허용하고 내 주변 건강 음식점을 찾아보세요';
 
   @override
-  String get allow_access => '재설정';
+  String get allow_perm => '권한 설정';
 
   @override
   String get my_info => '내 정보';
@@ -590,6 +573,15 @@ class L10nKo extends L10n {
 
   @override
   String get enter_notification_name => '알림 이름을 입력해주세요.';
+
+  @override
+  String get need_noti_perm => '알림 권한이 필요해요';
+
+  @override
+  String get request_noti_perm => '지금 권한을 허용하고\n원하는 시간에 식사 알림을 받으세요';
+
+  @override
+  String get open_setting => '설정으로 이동';
 
   @override
   String get meal_tutorial_step_one => '아래로 당기면 한 달 성취도를\n한눈에 볼 수 있어요.';

@@ -9,16 +9,16 @@ class GoalDatasRepositoryImpl implements GoalDatasRepository {
   final GoalDatasDataSource dataSource;
 
   @override
-  Future<List<GoalDatasEntity>?> getGoalDatas(String goalId) async {
-    final dtos = await dataSource.getGoalDatas(goalId);
+  Future<List<GoalDatasEntity>?> readDatas(String goalId) async {
+    final dtos = await dataSource.readDatas(goalId);
     if (dtos == null) return [];
     return dtos.map(GoalDatasMapper.toEntity).toList();
   }
 
   @override
-  Future<void> saveData(GoalDatasEntity entity) async {
+  Future<void> createData(GoalDatasEntity entity) async {
     final dto = GoalDatasMapper.toDto(entity);
-    await dataSource.saveData(dto);
+    await dataSource.createData(dto);
   }
 
   @override

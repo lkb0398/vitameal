@@ -20,7 +20,7 @@ final class StepViewModelProvider
         argument: null,
         retry: null,
         name: r'stepViewModelProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -43,7 +43,7 @@ final class StepViewModelProvider
   }
 }
 
-String _$stepViewModelHash() => r'7ec0d2be90c25416596f471a2c93f31c8a18951f';
+String _$stepViewModelHash() => r'30058c524129648b6fce610ece6e3726556a0f98';
 
 abstract class _$StepViewModel
     extends $Notifier<({double calories, int steps})> {

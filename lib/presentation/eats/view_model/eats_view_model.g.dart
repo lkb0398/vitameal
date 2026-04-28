@@ -44,7 +44,7 @@ final class EatsViewModelProvider
   }
 }
 
-String _$eatsViewModelHash() => r'd031d9619850cf290a5d7d630d5cc437d8a10624';
+String _$eatsViewModelHash() => r'9f99579787133067409d2bd7cf0e5635a86e6bab';
 
 /// ViewModel
 

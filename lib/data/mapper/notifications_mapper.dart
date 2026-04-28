@@ -12,7 +12,6 @@ class NotificationsMapper {
       time: timeOfDayToString(entity.time),
       isEnabled: entity.isEnabled,
       timezone: entity.timezone,
-      nextFireAt: entity.nextFireAt.toIso8601String(),
     );
   }
 
@@ -25,7 +24,6 @@ class NotificationsMapper {
       time: stringToTimeOfDay(dto.time),
       isEnabled: dto.isEnabled,
       timezone: dto.timezone,
-      nextFireAt: DateTime.parse(dto.nextFireAt),
     );
   }
 

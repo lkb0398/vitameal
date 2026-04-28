@@ -13,7 +13,10 @@ class StepCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l = L10n.of(context)!; // 🌎
     final f = fxc(context);
-    final vm = ref.watch(stepViewModelProvider);
+
+    final state = ref.watch(stepViewModelProvider);
+    final steps = state.steps;
+    final calories = state.calories;
 
     return Container(
       padding: const EdgeInsets.only(right: 20),
@@ -23,7 +26,7 @@ class StepCard extends ConsumerWidget {
         children: [
           PhosphorIcon(PhosphorIcons.sneakerMove(), color: f.textcolor300),
           Text(
-            "  ${vm.steps} ${l.steps}  |  ${vm.calories.toStringAsFixed(0)} ${l.kcal}",
+            "  $steps ${l.steps}  |  ${calories.toStringAsFixed(0)} ${l.kcal}",
             style: TextStyle(
               color: f.textcolor300,
               fontSize: 18,
