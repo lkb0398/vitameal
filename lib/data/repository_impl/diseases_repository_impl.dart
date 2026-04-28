@@ -9,21 +9,21 @@ class DiseasesRepositoryImpl implements DiseasesRepository {
   final DiseasesDataSource dataSource;
 
   @override
-  Future<List<DiseasesEntity>> getAllDiseases() async {
-    final dtos = await dataSource.fetchAll();
+  Future<List<DiseasesEntity>> readAllDiseases() async {
+    final dtos = await dataSource.readAllDiseases();
     return dtos.map((e) => e.toEntity()).toList();
   }
 
   @override
-  Future<void> saveUserDiseases({
+  Future<void> upsertUserDiseases({
     required String userId,
     required List<int> diseaseIds,
   }) async {
-    await dataSource.saveUserDiseases(userId: userId, diseaseIds: diseaseIds);
+    await dataSource.upsertUserDiseases(userId: userId, diseaseIds: diseaseIds);
   }
 
   @override
-  Future<List<int>> getUserDiseases(String userId) async {
-    return await dataSource.getUserDiseases(userId);
+  Future<List<int>> readUserDiseases(String userId) async {
+    return await dataSource.readUserDiseases(userId);
   }
 }

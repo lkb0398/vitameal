@@ -1,20 +1,37 @@
 import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:permission_handler/permission_handler.dart';
 
-/// 🔔 FCM 수신 처리
+/// 🔔 알림 수신 처리
 class NotificationService {
-  static final FlutterLocalNotificationsPlugin plugin =
-      FlutterLocalNotificationsPlugin();
+  static final _plugin = FlutterLocalNotificationsPlugin();
 
-  static Future<void> initialize() async {
+  // [알림 권한 요청]
+  Future<void> requestPermission() async {
+    await Permission.notification.request();
+  }
+
+  // [권한 허용 여부 확인]
+  Future<bool> isPermissionGranted() async {
+    final status = await Permission.notification.status;
+    return status.isGranted;
+  }
+
+  // 알림용 채널 (Android)
+  static const String _channelId = 'vitameal_alarm'; // id (고정)
+  static const String _channelName = 'vitameal Alarm'; // 채널명 (설정 화면에 노출됨)
+  static const String _channelDesc = 'Scheduled alarm notifications'; // 채널설명
+
+  // [초기화]
+  static Future<void> init() async {
     // 로컬 알림 초기화
     const androidInit = AndroidInitializationSettings('@mipmap/ic_launcher');
     const iosInit = DarwinInitializationSettings();
     const settings = InitializationSettings(android: androidInit, iOS: iosInit);
-    await plugin.initialize(settings);
+    await _plugin.initialize(settings);
 
-    // 시스템 알림 허용 (Background, Terminated, iOS Foreground 용)
+    // 시스템 알림 허용 (iOS Foreground / Background / Terminated 용)
     await FirebaseMessaging.instance
         .setForegroundNotificationPresentationOptions(
           alert: true,
@@ -22,7 +39,7 @@ class NotificationService {
           sound: true,
         );
 
-    // Foreground 수신 > 로컬 알림 (Android Foreground 용)
+    // Foreground 수신 > 로컬 알림 표시 (Android Foreground 용)
     FirebaseMessaging.onMessage.listen((message) async {
       if (Platform.isAndroid) {
         await showLocalNotification(message);
@@ -30,17 +47,11 @@ class NotificationService {
     });
   }
 
-  // 알람용 고정 채널 (Android)
-  static const String _channelId = 'vitameal_alarm'; // id (고정)
-  static const String _channelName = 'vitameal Alarm'; // 채널명 (설정 화면에 노출됨)
-  static const String _channelDesc = 'Scheduled alarm notifications'; // 채널설명
-
-  // 로컬 알림 표시 (Android Foreground 용)
+  // [로컬 알림 표시]
   static Future<void> showLocalNotification(RemoteMessage message) async {
     final data = message.data;
-    final label = (data['label'] ?? message.notification?.title ?? '알람')
+    final label = (data['label'] ?? message.notification?.title ?? '알림')
         .toString();
-    // final time = (data['time'] ?? '').toString();
 
     // 🤍 로컬 알림 커스텀
     final title = 'vitameal';
@@ -66,19 +77,19 @@ class NotificationService {
       threadIdentifier: _channelId, // 알림 그룹화
     );
 
-    // alarm_id 기반 notificationId 생성
-    final notiId = _stableNotificationId(data['alarm_id']?.toString());
+    // noti_id 기반 id 생성
+    final notiId = _stableNotificationId(data['noti_id']?.toString());
 
-    await plugin.show(
+    await _plugin.show(
       notiId,
       title,
       body,
       NotificationDetails(android: androidDetails, iOS: iosDetails),
-      payload: data['alarm_id']?.toString(),
+      payload: data['noti_id']?.toString(),
     );
   }
 
-  // alarm_id (uuid) > int (로컬 알림 id)
+  // [noti_id (uuid) > int (로컬 알림 id)]
   static int _stableNotificationId(String? alarmId) {
     if (alarmId == null || alarmId.isEmpty) {
       // fallback: 현재시간 기반 (중복 위험 낮음)

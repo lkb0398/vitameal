@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$NotificationsDto {
 
-@JsonKey(name: 'user_id') String? get userId;@JsonKey(name: 'noti_id') String? get notiId; String get label; String get time;@JsonKey(name: 'is_enabled') bool get isEnabled; String get timezone;@JsonKey(name: 'next_fire_at') String get nextFireAt;
+@JsonKey(name: 'user_id') String? get userId;@JsonKey(name: 'noti_id') String? get notiId; String get label; String get time;@JsonKey(name: 'is_enabled') bool get isEnabled; String get timezone;
 /// Create a copy of NotificationsDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $NotificationsDtoCopyWith<NotificationsDto> get copyWith => _$NotificationsDtoCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is NotificationsDto&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.notiId, notiId) || other.notiId == notiId)&&(identical(other.label, label) || other.label == label)&&(identical(other.time, time) || other.time == time)&&(identical(other.isEnabled, isEnabled) || other.isEnabled == isEnabled)&&(identical(other.timezone, timezone) || other.timezone == timezone)&&(identical(other.nextFireAt, nextFireAt) || other.nextFireAt == nextFireAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is NotificationsDto&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.notiId, notiId) || other.notiId == notiId)&&(identical(other.label, label) || other.label == label)&&(identical(other.time, time) || other.time == time)&&(identical(other.isEnabled, isEnabled) || other.isEnabled == isEnabled)&&(identical(other.timezone, timezone) || other.timezone == timezone));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,userId,notiId,label,time,isEnabled,timezone,nextFireAt);
+int get hashCode => Object.hash(runtimeType,userId,notiId,label,time,isEnabled,timezone);
 
 @override
 String toString() {
-  return 'NotificationsDto(userId: $userId, notiId: $notiId, label: $label, time: $time, isEnabled: $isEnabled, timezone: $timezone, nextFireAt: $nextFireAt)';
+  return 'NotificationsDto(userId: $userId, notiId: $notiId, label: $label, time: $time, isEnabled: $isEnabled, timezone: $timezone)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $NotificationsDtoCopyWith<$Res>  {
   factory $NotificationsDtoCopyWith(NotificationsDto value, $Res Function(NotificationsDto) _then) = _$NotificationsDtoCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'user_id') String? userId,@JsonKey(name: 'noti_id') String? notiId, String label, String time,@JsonKey(name: 'is_enabled') bool isEnabled, String timezone,@JsonKey(name: 'next_fire_at') String nextFireAt
+@JsonKey(name: 'user_id') String? userId,@JsonKey(name: 'noti_id') String? notiId, String label, String time,@JsonKey(name: 'is_enabled') bool isEnabled, String timezone
 });
 
 
@@ -65,7 +65,7 @@ class _$NotificationsDtoCopyWithImpl<$Res>
 
 /// Create a copy of NotificationsDto
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? userId = freezed,Object? notiId = freezed,Object? label = null,Object? time = null,Object? isEnabled = null,Object? timezone = null,Object? nextFireAt = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? userId = freezed,Object? notiId = freezed,Object? label = null,Object? time = null,Object? isEnabled = null,Object? timezone = null,}) {
   return _then(_self.copyWith(
 userId: freezed == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as String?,notiId: freezed == notiId ? _self.notiId : notiId // ignore: cast_nullable_to_non_nullable
@@ -73,7 +73,6 @@ as String?,label: null == label ? _self.label : label // ignore: cast_nullable_t
 as String,time: null == time ? _self.time : time // ignore: cast_nullable_to_non_nullable
 as String,isEnabled: null == isEnabled ? _self.isEnabled : isEnabled // ignore: cast_nullable_to_non_nullable
 as bool,timezone: null == timezone ? _self.timezone : timezone // ignore: cast_nullable_to_non_nullable
-as String,nextFireAt: null == nextFireAt ? _self.nextFireAt : nextFireAt // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }
@@ -159,10 +158,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'user_id')  String? userId, @JsonKey(name: 'noti_id')  String? notiId,  String label,  String time, @JsonKey(name: 'is_enabled')  bool isEnabled,  String timezone, @JsonKey(name: 'next_fire_at')  String nextFireAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'user_id')  String? userId, @JsonKey(name: 'noti_id')  String? notiId,  String label,  String time, @JsonKey(name: 'is_enabled')  bool isEnabled,  String timezone)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _NotificationsDto() when $default != null:
-return $default(_that.userId,_that.notiId,_that.label,_that.time,_that.isEnabled,_that.timezone,_that.nextFireAt);case _:
+return $default(_that.userId,_that.notiId,_that.label,_that.time,_that.isEnabled,_that.timezone);case _:
   return orElse();
 
 }
@@ -180,10 +179,10 @@ return $default(_that.userId,_that.notiId,_that.label,_that.time,_that.isEnabled
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'user_id')  String? userId, @JsonKey(name: 'noti_id')  String? notiId,  String label,  String time, @JsonKey(name: 'is_enabled')  bool isEnabled,  String timezone, @JsonKey(name: 'next_fire_at')  String nextFireAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'user_id')  String? userId, @JsonKey(name: 'noti_id')  String? notiId,  String label,  String time, @JsonKey(name: 'is_enabled')  bool isEnabled,  String timezone)  $default,) {final _that = this;
 switch (_that) {
 case _NotificationsDto():
-return $default(_that.userId,_that.notiId,_that.label,_that.time,_that.isEnabled,_that.timezone,_that.nextFireAt);case _:
+return $default(_that.userId,_that.notiId,_that.label,_that.time,_that.isEnabled,_that.timezone);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -200,10 +199,10 @@ return $default(_that.userId,_that.notiId,_that.label,_that.time,_that.isEnabled
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'user_id')  String? userId, @JsonKey(name: 'noti_id')  String? notiId,  String label,  String time, @JsonKey(name: 'is_enabled')  bool isEnabled,  String timezone, @JsonKey(name: 'next_fire_at')  String nextFireAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'user_id')  String? userId, @JsonKey(name: 'noti_id')  String? notiId,  String label,  String time, @JsonKey(name: 'is_enabled')  bool isEnabled,  String timezone)?  $default,) {final _that = this;
 switch (_that) {
 case _NotificationsDto() when $default != null:
-return $default(_that.userId,_that.notiId,_that.label,_that.time,_that.isEnabled,_that.timezone,_that.nextFireAt);case _:
+return $default(_that.userId,_that.notiId,_that.label,_that.time,_that.isEnabled,_that.timezone);case _:
   return null;
 
 }
@@ -215,7 +214,7 @@ return $default(_that.userId,_that.notiId,_that.label,_that.time,_that.isEnabled
 @JsonSerializable()
 
 class _NotificationsDto implements NotificationsDto {
-  const _NotificationsDto({@JsonKey(name: 'user_id') this.userId, @JsonKey(name: 'noti_id') this.notiId, required this.label, required this.time, @JsonKey(name: 'is_enabled') required this.isEnabled, required this.timezone, @JsonKey(name: 'next_fire_at') required this.nextFireAt});
+  const _NotificationsDto({@JsonKey(name: 'user_id') this.userId, @JsonKey(name: 'noti_id') this.notiId, required this.label, required this.time, @JsonKey(name: 'is_enabled') required this.isEnabled, required this.timezone});
   factory _NotificationsDto.fromJson(Map<String, dynamic> json) => _$NotificationsDtoFromJson(json);
 
 @override@JsonKey(name: 'user_id') final  String? userId;
@@ -224,7 +223,6 @@ class _NotificationsDto implements NotificationsDto {
 @override final  String time;
 @override@JsonKey(name: 'is_enabled') final  bool isEnabled;
 @override final  String timezone;
-@override@JsonKey(name: 'next_fire_at') final  String nextFireAt;
 
 /// Create a copy of NotificationsDto
 /// with the given fields replaced by the non-null parameter values.
@@ -239,16 +237,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _NotificationsDto&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.notiId, notiId) || other.notiId == notiId)&&(identical(other.label, label) || other.label == label)&&(identical(other.time, time) || other.time == time)&&(identical(other.isEnabled, isEnabled) || other.isEnabled == isEnabled)&&(identical(other.timezone, timezone) || other.timezone == timezone)&&(identical(other.nextFireAt, nextFireAt) || other.nextFireAt == nextFireAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _NotificationsDto&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.notiId, notiId) || other.notiId == notiId)&&(identical(other.label, label) || other.label == label)&&(identical(other.time, time) || other.time == time)&&(identical(other.isEnabled, isEnabled) || other.isEnabled == isEnabled)&&(identical(other.timezone, timezone) || other.timezone == timezone));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,userId,notiId,label,time,isEnabled,timezone,nextFireAt);
+int get hashCode => Object.hash(runtimeType,userId,notiId,label,time,isEnabled,timezone);
 
 @override
 String toString() {
-  return 'NotificationsDto(userId: $userId, notiId: $notiId, label: $label, time: $time, isEnabled: $isEnabled, timezone: $timezone, nextFireAt: $nextFireAt)';
+  return 'NotificationsDto(userId: $userId, notiId: $notiId, label: $label, time: $time, isEnabled: $isEnabled, timezone: $timezone)';
 }
 
 
@@ -259,7 +257,7 @@ abstract mixin class _$NotificationsDtoCopyWith<$Res> implements $NotificationsD
   factory _$NotificationsDtoCopyWith(_NotificationsDto value, $Res Function(_NotificationsDto) _then) = __$NotificationsDtoCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'user_id') String? userId,@JsonKey(name: 'noti_id') String? notiId, String label, String time,@JsonKey(name: 'is_enabled') bool isEnabled, String timezone,@JsonKey(name: 'next_fire_at') String nextFireAt
+@JsonKey(name: 'user_id') String? userId,@JsonKey(name: 'noti_id') String? notiId, String label, String time,@JsonKey(name: 'is_enabled') bool isEnabled, String timezone
 });
 
 
@@ -276,7 +274,7 @@ class __$NotificationsDtoCopyWithImpl<$Res>
 
 /// Create a copy of NotificationsDto
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? userId = freezed,Object? notiId = freezed,Object? label = null,Object? time = null,Object? isEnabled = null,Object? timezone = null,Object? nextFireAt = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? userId = freezed,Object? notiId = freezed,Object? label = null,Object? time = null,Object? isEnabled = null,Object? timezone = null,}) {
   return _then(_NotificationsDto(
 userId: freezed == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as String?,notiId: freezed == notiId ? _self.notiId : notiId // ignore: cast_nullable_to_non_nullable
@@ -284,7 +282,6 @@ as String?,label: null == label ? _self.label : label // ignore: cast_nullable_t
 as String,time: null == time ? _self.time : time // ignore: cast_nullable_to_non_nullable
 as String,isEnabled: null == isEnabled ? _self.isEnabled : isEnabled // ignore: cast_nullable_to_non_nullable
 as bool,timezone: null == timezone ? _self.timezone : timezone // ignore: cast_nullable_to_non_nullable
-as String,nextFireAt: null == nextFireAt ? _self.nextFireAt : nextFireAt // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }

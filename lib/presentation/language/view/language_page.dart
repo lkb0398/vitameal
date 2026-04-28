@@ -11,8 +11,12 @@ class LanguagePage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final v = vrc(context);
     final l = L10n.of(context)!; // 🌎
+
+    // 언어 설정
     final locale = ref.watch(localeViewModelProvider);
+    final localeVM = ref.read(localeViewModelProvider.notifier);
 
     var selected = useState<String>(l.auto_language);
     useEffect(() {
@@ -32,11 +36,7 @@ class LanguagePage extends HookConsumerWidget {
         centerTitle: true,
         title: Text(
           l.language_setting,
-          style: TextStyle(
-            fontSize: 22,
-            fontWeight: FontWeight.w400,
-            color: vrc(context).text,
-          ),
+          style: TextStyle(fontSize: 22, color: v.text),
         ),
       ),
       body: Padding(
@@ -50,7 +50,7 @@ class LanguagePage extends HookConsumerWidget {
                 title: l.auto_language,
                 onTap: () {
                   selected.value = l.auto_language;
-                  ref.read(localeViewModelProvider.notifier).clearLocale();
+                  localeVM.clearLocale();
                 },
               ),
 
@@ -60,9 +60,7 @@ class LanguagePage extends HookConsumerWidget {
                 title: '한국어',
                 onTap: () {
                   selected.value = '한국어';
-                  ref
-                      .read(localeViewModelProvider.notifier)
-                      .setLocale(const Locale('ko'));
+                  localeVM.setLocale(const Locale('ko'));
                 },
               ),
 
@@ -72,9 +70,7 @@ class LanguagePage extends HookConsumerWidget {
                 title: 'English',
                 onTap: () {
                   selected.value = 'English';
-                  ref
-                      .read(localeViewModelProvider.notifier)
-                      .setLocale(const Locale('en'));
+                  localeVM.setLocale(const Locale('en'));
                 },
               ),
             ],

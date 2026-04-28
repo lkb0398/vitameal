@@ -12,7 +12,6 @@ abstract class NotificationsDto with _$NotificationsDto {
     required String time,
     @JsonKey(name: 'is_enabled') required bool isEnabled,
     required String timezone,
-    @JsonKey(name: 'next_fire_at') required String nextFireAt,
   }) = _NotificationsDto;
 
   factory NotificationsDto.fromJson(Map<String, dynamic> json) =>
