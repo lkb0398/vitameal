@@ -64,109 +64,106 @@ class AddDataBottomSheet extends HookConsumerWidget {
           top: 10,
           bottom: MediaQuery.of(context).viewInsets.bottom,
         ),
-        child: SizedBox(
-          height: 280,
-          child: Column(
-            spacing: 10,
-            children: [
-              /// 상단 바
-              Container(
-                width: 40,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: f.textcolor200,
-                  borderRadius: BorderRadius.circular(2),
-                ),
+        child: Column(
+          spacing: 10,
+          children: [
+            /// 상단 바
+            Container(
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: f.textcolor200,
+                borderRadius: BorderRadius.circular(2),
               ),
+            ),
 
-              /// 데이터 입력창
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  spacing: 10,
-                  children: [
-                    Text(
-                      l.add_data,
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
+            /// 데이터 입력창
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                spacing: 10,
+                children: [
+                  Text(
+                    l.add_data,
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                  ),
 
-                    /// 데이터 날짜
-                    ValidateTextformfield(
-                      readOnly: true,
-                      title: l.date,
-                      hintText:
-                          "ex. ${ref.watch(formattedDateProvider(DateTime(2000, 1, 31)))}  13:30",
-                      controller: dataDateController,
-                      onTap: () async {
-                        final selectedDate = await pickDateTime(context);
-                        if (selectedDate == null) return;
-                        vm.updateSelectedDate(selectedDate);
-                      },
-                    ),
+                  /// 데이터 날짜
+                  ValidateTextformfield(
+                    readOnly: true,
+                    title: l.date,
+                    hintText:
+                        "ex. ${ref.watch(formattedDateProvider(DateTime(2000, 1, 31)))}  13:30",
+                    controller: dataDateController,
+                    onTap: () async {
+                      final selectedDate = await pickDateTime(context);
+                      if (selectedDate == null) return;
+                      vm.updateSelectedDate(selectedDate);
+                    },
+                  ),
 
-                    /// 데이터 수치
-                    ValidateTextformfield(
-                      readOnly: false,
-                      title: l.value,
-                      hintText: "ex. 5.0",
-                      helperText: "",
-                      validator: validateDouble,
-                      keyboardType: const TextInputType.numberWithOptions(
-                        decimal: true,
-                      ),
-                      onChanged: (v) => vm.updateValue(v),
-                      initialValue: state.value.toString(),
+                  /// 데이터 수치
+                  ValidateTextformfield(
+                    readOnly: false,
+                    title: l.value,
+                    hintText: "ex. 5.0",
+                    helperText: "",
+                    validator: validateDouble,
+                    keyboardType: const TextInputType.numberWithOptions(
+                      decimal: true,
                     ),
-                  ],
-                ),
+                    onChanged: (v) => vm.updateValue(v),
+                    initialValue: state.value.toString(),
+                  ),
+                ],
               ),
+            ),
 
-              /// 완료 버튼
-              TapDebouncer(
-                onTap: () async {
-                  // 사용자 입력값 검증 > 통과 안되면 진행 막기
-                  if (!enabled) {
-                    return;
-                  }
+            /// 완료 버튼
+            TapDebouncer(
+              onTap: () async {
+                // 사용자 입력값 검증 > 통과 안되면 진행 막기
+                if (!enabled) {
+                  return;
+                }
 
-                  // [데이터 추가]
-                  await dataVM.addData(
-                    goalId: state.selectedGoal.goalId!,
-                    dataDate: state.selectedDate!,
-                    dataValue: double.tryParse(state.value) ?? 0,
-                  );
+                // [데이터 추가]
+                await dataVM.addData(
+                  goalId: state.selectedGoal.goalId!,
+                  dataDate: state.selectedDate!,
+                  dataValue: double.tryParse(state.value) ?? 0,
+                );
 
-                  if (!context.mounted) return;
-                  Navigator.pop(context);
+                if (!context.mounted) return;
+                Navigator.pop(context);
 
-                  // 입력값 초기화
-                  vm.updateValue('');
-                  vm.updateSelectedDate(null);
+                // 입력값 초기화
+                vm.updateValue('');
+                vm.updateSelectedDate(null);
 
-                  // 📝
-                  AnalyticsService.event(
-                    'goal_actoin',
-                    p: {'action': 'add_data'},
-                  );
-                },
+                // 📝
+                AnalyticsService.event(
+                  'goal_actoin',
+                  p: {'action': 'add_data'},
+                );
+              },
 
-                builder: (BuildContext context, TapDebouncerFunc? onTap) {
-                  return DoneButton(
+              builder: (BuildContext context, TapDebouncerFunc? onTap) {
+                return SafeArea(
+                  top: false,
+                  child: DoneButton(
                     onTap: onTap,
                     backgroundColor: enabled
                         ? f.secondary100!
                         : f.textcolor300!,
                     textColor: enabled ? f.secondary400! : Colors.white,
                     text: l.complete,
-                  );
-                },
-              ),
-            ],
-          ),
+                  ),
+                );
+              },
+            ),
+          ],
         ),
       ),
     );

@@ -3,7 +3,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:vitameal/data/dto/notifications_dto.dart';
 
 abstract interface class NotificationDataSource {
-  Future<List<NotificationsDto>?> readNotis();
+  Future<List<NotificationsDto>?> readNotis(String userId);
   Future<void> createNoti(NotificationsDto dto);
   Future<void> updateNoti(NotificationsDto dto);
   Future<void> deleteNoti(String notiId);
@@ -15,11 +15,12 @@ class NotificationsDataSourceImpl implements NotificationDataSource {
   final SupabaseClient client;
 
   @override // R (전체)
-  Future<List<NotificationsDto>?> readNotis() async {
+  Future<List<NotificationsDto>?> readNotis(String userId) async {
     try {
       final response = await client
           .from('notifications')
           .select()
+          .eq('user_id', userId)
           .order('time', ascending: true) // 알림 시간순 정렬
           .order('created_at', ascending: true);
       return (response as List)

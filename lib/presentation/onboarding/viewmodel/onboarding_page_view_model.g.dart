@@ -10,23 +10,30 @@ part of 'onboarding_page_view_model.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(OnboardingPageViewModel)
-const onboardingPageViewModelProvider = OnboardingPageViewModelProvider._();
+const onboardingPageViewModelProvider = OnboardingPageViewModelFamily._();
 
 final class OnboardingPageViewModelProvider
     extends $NotifierProvider<OnboardingPageViewModel, OnboardingPageState> {
-  const OnboardingPageViewModelProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'onboardingPageViewModelProvider',
-        isAutoDispose: false,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
+  const OnboardingPageViewModelProvider._({
+    required OnboardingPageViewModelFamily super.from,
+    required bool super.argument,
+  }) : super(
+         retry: null,
+         name: r'onboardingPageViewModelProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
 
   @override
   String debugGetCreateSourceHash() => _$onboardingPageViewModelHash();
+
+  @override
+  String toString() {
+    return r'onboardingPageViewModelProvider'
+        ''
+        '($argument)';
+  }
 
   @$internal
   @override
@@ -39,18 +46,57 @@ final class OnboardingPageViewModelProvider
       providerOverride: $SyncValueProvider<OnboardingPageState>(value),
     );
   }
+
+  @override
+  bool operator ==(Object other) {
+    return other is OnboardingPageViewModelProvider &&
+        other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
 }
 
 String _$onboardingPageViewModelHash() =>
-    r'70d9702cd2cb923dfa01218c515e6f1a479d1b37';
+    r'5345642245d9ef5631f1f1b3e96cbe1b550568fb';
+
+final class OnboardingPageViewModelFamily extends $Family
+    with
+        $ClassFamilyOverride<
+          OnboardingPageViewModel,
+          OnboardingPageState,
+          OnboardingPageState,
+          OnboardingPageState,
+          bool
+        > {
+  const OnboardingPageViewModelFamily._()
+    : super(
+        retry: null,
+        name: r'onboardingPageViewModelProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  OnboardingPageViewModelProvider call(bool isEditMode) =>
+      OnboardingPageViewModelProvider._(argument: isEditMode, from: this);
+
+  @override
+  String toString() => r'onboardingPageViewModelProvider';
+}
 
 abstract class _$OnboardingPageViewModel
     extends $Notifier<OnboardingPageState> {
-  OnboardingPageState build();
+  late final _$args = ref.$arg as bool;
+  bool get isEditMode => _$args;
+
+  OnboardingPageState build(bool isEditMode);
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
+    final created = build(_$args);
     final ref = this.ref as $Ref<OnboardingPageState, OnboardingPageState>;
     final element =
         ref.element

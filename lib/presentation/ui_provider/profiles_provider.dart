@@ -41,7 +41,7 @@ class OnboardingState extends _$OnboardingState {
 
 @riverpod
 Future<bool> onboardingCompleted(Ref ref) async {
-  final userId = ref.read(userIdProvider);
+  final userId = ref.watch(userIdProvider);
   final profile = await ref
       .read(profilesRepositoryProvider)
       .readMyProfile(userId);

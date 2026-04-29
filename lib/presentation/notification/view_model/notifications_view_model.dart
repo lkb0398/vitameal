@@ -12,12 +12,13 @@ class NotificationsViewModel extends _$NotificationsViewModel {
   // State : 알림 전체 목록 (Async)
   @override
   Future<List<NotificationsEntity>?> build() async {
-    return ref.read(notificationsRepositoryProvider).readNotis();
+    final userId = ref.watch(userIdProvider);
+    return ref.read(notificationsRepositoryProvider).readNotis(userId);
   }
 
   // [알림 추가]
   Future<void> addNoti({required String label, required TimeOfDay time}) async {
-    final userId = ref.read(userIdProvider);
+    final userId = ref.watch(userIdProvider);
     final timezone = await _getTimezone();
     final newNoti = NotificationsEntity(
       userId: userId,

@@ -16,7 +16,9 @@ import 'package:vitameal/presentation/ui_provider/profiles_provider.dart';
 import 'package:vitameal/presentation/widget/button/done_button.dart';
 
 class OnboardingAllergyPage extends HookConsumerWidget {
-  const OnboardingAllergyPage({super.key});
+  const OnboardingAllergyPage({super.key, required this.isEditMode});
+
+  final bool isEditMode;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -25,13 +27,11 @@ class OnboardingAllergyPage extends HookConsumerWidget {
     final locale =
         ref.read(localeViewModelProvider) ?? Localizations.localeOf(context);
 
-    final isEditMode = ref.watch(isEditFlowProvider);
     final allAllergiesAsync = ref.watch(allergiesListProvider);
-
     final allergyVM = ref.read(userAllergiesViewModelProvider.notifier);
 
-    final state = ref.watch(onboardingPageViewModelProvider);
-    final vm = ref.watch(onboardingPageViewModelProvider.notifier);
+    final state = ref.watch(onboardingPageViewModelProvider(isEditMode));
+    final vm = ref.watch(onboardingPageViewModelProvider(isEditMode).notifier);
 
     // 모바일 가로모드 이상 반응형 UI 적용
     final bool isWide = MediaQuery.sizeOf(context).width >= 480;
@@ -111,13 +111,14 @@ class OnboardingAllergyPage extends HookConsumerWidget {
       /// 완료 버튼
       bottomNavigationBar: TapDebouncer(
         onTap: () async {
+          // 화면 깜빡임 (페이지 상태 초기화) 방지 위해 페이지 이동 먼저
+          isEditMode
+              ? context.go(AppRoutePath.home)
+              : context.push(AppRoutePath.done);
+
           // [알레르기 목록 갱신]
           await allergyVM.saveAllergies(state.allergyIds);
 
-          if (!context.mounted) return;
-          isEditMode
-              ? context.go(AppRoutePath.home)
-              : context.push(AppRoutePath.onboardingDone);
           // 📝
           for (final a in state.allergyIds) {
             AnalyticsService.event('profile_saved', p: {'allergy': a});
@@ -126,14 +127,11 @@ class OnboardingAllergyPage extends HookConsumerWidget {
         builder: (BuildContext context, TapDebouncerFunc? onTap) {
           return SafeArea(
             top: false,
-            child: Padding(
-              padding: const EdgeInsets.only(bottom: 10),
-              child: DoneButton(
-                onTap: onTap,
-                backgroundColor: fxc(context).primary400!,
-                text: isEditMode ? l.edit_complete : l.next,
-                textColor: Colors.white,
-              ),
+            child: DoneButton(
+              onTap: onTap,
+              backgroundColor: f.primary400!,
+              text: isEditMode ? l.edit_complete : l.next,
+              textColor: Colors.white,
             ),
           );
         },

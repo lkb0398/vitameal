@@ -5,7 +5,6 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:vitameal/core/config/app_router_observer.dart';
 import 'package:vitameal/domain/entity/goals_entity.dart';
 import 'package:vitameal/domain/entity/post_entity.dart';
-import 'package:vitameal/domain/entity/profiles_entity.dart';
 import 'package:vitameal/presentation/auth/view/login_page.dart';
 import 'package:vitameal/presentation/auth/view_model/auth_view_model.dart';
 import 'package:vitameal/presentation/date_notation/view/date_notation_page.dart';
@@ -42,15 +41,11 @@ class AppRoutePath {
   static const language = '/language';
   static const date = '/date';
   // 사용자 정보 입력/수정
-  static const onboardingProfile = '/onboarding/profile';
-  static const onboardingPhysical = '/onboarding/physical';
-  static const onboardingDisease = '/onboarding/disease';
-  static const onboardingAllergy = '/onboarding/allergy';
-  static const onboardingDone = '/onboarding/done';
-  static const editProfile = '/edit/profile';
-  static const editPhysical = '/edit/physical';
-  static const editDisease = '/edit/disease';
-  static const editAllergy = '/edit/allergy';
+  static const profile = '/profile';
+  static const physical = '/physical';
+  static const disease = '/disease';
+  static const allergy = '/allergy';
+  static const done = '/done';
   // 목표 및 데이터 입력/수정
   static const goal = '/goal';
   static const addGoal = '/add/goal';
@@ -136,55 +131,41 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const DateNotationPage(),
       ),
       GoRoute(
-        path: AppRoutePath.onboardingProfile,
-        name: AppRoutePath.onboardingProfile,
+        path: AppRoutePath.profile,
+        name: AppRoutePath.profile,
         builder: (context, state) {
-          final profile = state.extra as ProfilesEntity?;
-          return OnboardingProfilePage(profile: profile);
+          final isEditMode = state.extra as bool;
+          return OnboardingProfilePage(isEditMode: isEditMode);
         },
       ),
       GoRoute(
-        path: AppRoutePath.onboardingPhysical,
-        name: AppRoutePath.onboardingPhysical,
+        path: AppRoutePath.physical,
+        name: AppRoutePath.physical,
         builder: (context, state) {
-          final profile = state.extra as ProfilesEntity?;
-          return OnboardingPhysicalPage(profile: profile);
+          final isEditMode = state.extra as bool;
+          return OnboardingPhysicalPage(isEditMode: isEditMode);
         },
       ),
       GoRoute(
-        path: AppRoutePath.onboardingDisease,
-        name: AppRoutePath.onboardingDisease,
-        builder: (context, state) => const OnboardingDiseasePage(),
+        path: AppRoutePath.disease,
+        name: AppRoutePath.disease,
+        builder: (context, state) {
+          final isEditMode = state.extra as bool;
+          return OnboardingDiseasePage(isEditMode: isEditMode);
+        },
       ),
       GoRoute(
-        path: AppRoutePath.onboardingAllergy,
-        name: AppRoutePath.onboardingAllergy,
-        builder: (context, state) => const OnboardingAllergyPage(),
+        path: AppRoutePath.allergy,
+        name: AppRoutePath.allergy,
+        builder: (context, state) {
+          final isEditMode = state.extra as bool;
+          return OnboardingAllergyPage(isEditMode: isEditMode);
+        },
       ),
       GoRoute(
-        path: AppRoutePath.onboardingDone,
-        name: AppRoutePath.onboardingDone,
+        path: AppRoutePath.done,
+        name: AppRoutePath.done,
         builder: (context, state) => const OnboardingDonePage(),
-      ),
-      GoRoute(
-        path: AppRoutePath.editProfile,
-        name: AppRoutePath.editProfile,
-        builder: (context, state) => const OnboardingProfilePage(),
-      ),
-      GoRoute(
-        path: AppRoutePath.editPhysical,
-        name: AppRoutePath.editPhysical,
-        builder: (context, state) => const OnboardingPhysicalPage(),
-      ),
-      GoRoute(
-        path: AppRoutePath.editDisease,
-        name: AppRoutePath.editDisease,
-        builder: (context, state) => const OnboardingDiseasePage(),
-      ),
-      GoRoute(
-        path: AppRoutePath.editAllergy,
-        name: AppRoutePath.editAllergy,
-        builder: (context, state) => const OnboardingAllergyPage(),
       ),
 
       /// 건강 지도

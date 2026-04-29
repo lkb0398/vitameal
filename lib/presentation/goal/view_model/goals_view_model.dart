@@ -10,7 +10,8 @@ class GoalsViewModel extends _$GoalsViewModel {
   // State : 목표 전체 목록 (Async)
   @override
   Future<List<GoalsEntity>?> build() async {
-    return ref.read(goalsRepositoryProvider).readGoals();
+    final userId = ref.watch(userIdProvider);
+    return ref.read(goalsRepositoryProvider).readGoals(userId);
   }
 
   // [목표 추가]
@@ -20,7 +21,7 @@ class GoalsViewModel extends _$GoalsViewModel {
     required double value,
     required DateTime date,
   }) async {
-    final userId = ref.read(userIdProvider);
+    final userId = ref.watch(userIdProvider);
     final newGoal = GoalsEntity(
       userId: userId,
       goalTitle: title,

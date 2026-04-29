@@ -9,8 +9,8 @@ class GoalsRepositoryImpl implements GoalsRepository {
   final GoalsDataSource dataSource;
 
   @override
-  Future<List<GoalsEntity>?> readGoals() async {
-    final dtos = await dataSource.readGoals();
+  Future<List<GoalsEntity>?> readGoals(String userId) async {
+    final dtos = await dataSource.readGoals(userId);
     if (dtos == null) return [];
     return dtos.map(GoalsMapper.toEntity).toList();
   }

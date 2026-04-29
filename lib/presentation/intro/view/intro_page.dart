@@ -41,7 +41,8 @@ class IntroPage extends HookConsumerWidget {
       ),
     ];
 
-    void navigateToOnboarding() => context.push(AppRoutePath.onboardingProfile);
+    void navigateToOnboarding() =>
+        context.push(AppRoutePath.profile, extra: false);
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,

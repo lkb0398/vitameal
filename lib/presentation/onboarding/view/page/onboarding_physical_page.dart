@@ -8,33 +8,29 @@ import 'package:vitameal/core/config/l10n/l10n.dart';
 import 'package:vitameal/core/config/routes.dart';
 import 'package:vitameal/core/service/analytics_service.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
-import 'package:vitameal/domain/entity/profiles_entity.dart';
 import 'package:vitameal/domain/enum/gender_type_enum.dart';
 import 'package:vitameal/presentation/onboarding/view/util/primary_rich_text.dart';
 import 'package:vitameal/presentation/onboarding/view/widget/progress_text.dart';
 import 'package:vitameal/presentation/onboarding/view/widget/select_box.dart';
 import 'package:vitameal/presentation/onboarding/viewmodel/onboarding_page_view_model.dart';
 import 'package:vitameal/presentation/onboarding/viewmodel/profiles_view_model.dart';
-import 'package:vitameal/presentation/ui_provider/profiles_provider.dart';
 import 'package:vitameal/presentation/widget/button/done_button.dart';
 import 'package:vitameal/presentation/widget/validate_textformfield.dart';
 
 class OnboardingPhysicalPage extends HookConsumerWidget {
-  const OnboardingPhysicalPage({super.key, this.profile});
+  const OnboardingPhysicalPage({super.key, required this.isEditMode});
 
-  final ProfilesEntity? profile;
+  final bool isEditMode;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final f = fxc(context);
     final l = L10n.of(context)!; // 🌎
 
-    final isEditMode = ref.watch(isEditFlowProvider);
-
     final profileVM = ref.read(profilesViewModelProvider.notifier);
 
-    final state = ref.watch(onboardingPageViewModelProvider);
-    final vm = ref.read(onboardingPageViewModelProvider.notifier);
+    final state = ref.watch(onboardingPageViewModelProvider(isEditMode));
+    final vm = ref.read(onboardingPageViewModelProvider(isEditMode).notifier);
 
     // (출생년도) 입력값 검증 메시지
     String? validateBirthYear(String? value) {
@@ -236,6 +232,8 @@ class OnboardingPhysicalPage extends HookConsumerWidget {
           if (!enabled) {
             return;
           }
+          // 화면 깜빡임 (페이지 상태 초기화) 방지 위해 페이지 이동 먼저
+          context.push(AppRoutePath.disease, extra: isEditMode);
 
           // 프로필 업데이트
           await profileVM.updatePhysical(
@@ -245,10 +243,6 @@ class OnboardingPhysicalPage extends HookConsumerWidget {
             weightKg: double.tryParse(state.weight!),
           );
 
-          if (!context.mounted) return;
-          isEditMode
-              ? context.push(AppRoutePath.editDisease)
-              : context.push(AppRoutePath.onboardingDisease);
           // 📝
           AnalyticsService.event(
             'profile_saved',
@@ -261,14 +255,11 @@ class OnboardingPhysicalPage extends HookConsumerWidget {
         builder: (BuildContext context, TapDebouncerFunc? onTap) {
           return SafeArea(
             top: false,
-            child: Padding(
-              padding: const EdgeInsets.only(bottom: 10),
-              child: DoneButton(
-                onTap: onTap,
-                backgroundColor: fxc(context).primary400!,
-                text: l.next,
-                textColor: Colors.white,
-              ),
+            child: DoneButton(
+              onTap: onTap,
+              backgroundColor: f.primary400!,
+              text: l.next,
+              textColor: Colors.white,
             ),
           );
         },
