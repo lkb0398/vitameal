@@ -205,13 +205,18 @@ class AddGoalPage extends HookConsumerWidget {
         },
 
         builder: (BuildContext context, TapDebouncerFunc? onTap) {
-          return Padding(
-            padding: const EdgeInsets.only(bottom: 10),
-            child: DoneButton(
-              onTap: onTap,
-              text: l.complete,
-              backgroundColor: enabled ? f.secondary400! : f.textcolor200!,
-              textColor: Colors.white,
+          return SafeArea(
+            top: false,
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 10),
+              child: DoneButton(
+                onTap: onTap,
+                text: l.complete,
+                backgroundColor: enabled
+                    ? fxc(context).secondary400!
+                    : fxc(context).textcolor200!,
+                textColor: Colors.white,
+              ),
             ),
           );
         },

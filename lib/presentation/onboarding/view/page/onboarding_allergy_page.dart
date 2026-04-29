@@ -124,13 +124,16 @@ class OnboardingAllergyPage extends HookConsumerWidget {
           }
         },
         builder: (BuildContext context, TapDebouncerFunc? onTap) {
-          return Padding(
-            padding: const EdgeInsets.only(bottom: 10),
-            child: DoneButton(
-              onTap: onTap,
-              backgroundColor: f.primary400!,
-              text: isEditMode ? l.edit_complete : l.next,
-              textColor: Colors.white,
+          return SafeArea(
+            top: false,
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 10),
+              child: DoneButton(
+                onTap: onTap,
+                backgroundColor: fxc(context).primary400!,
+                text: isEditMode ? l.edit_complete : l.next,
+                textColor: Colors.white,
+              ),
             ),
           );
         },
