@@ -596,7 +596,7 @@ class L10nKo extends L10n {
   String get meal_feedback => '식단 피드백';
 
   @override
-  String get meal_analysis => '식단 분석';
+  String get meal_analysis => '식단 영양 분석';
 
   @override
   String get good_thing => '좋아요';

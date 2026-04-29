@@ -1252,7 +1252,7 @@ abstract class L10n {
   /// No description provided for @meal_analysis.
   ///
   /// In en, this message translates to:
-  /// **'Analysis'**
+  /// **'Nutrition Analysis'**
   String get meal_analysis;
 
   /// No description provided for @good_thing.
