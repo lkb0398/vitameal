@@ -401,99 +401,112 @@ class MealCalendarPage extends HookConsumerWidget {
                     )!;
 
                     return SizedBox(
-                      key: calendarKey, // 튜토리얼용 키
                       height: _headerHeight + calendarHeight,
-                      child: Column(
+                      child: Stack(
                         children: [
-                          // ----- 상단 고정 영역 -----
-                          SizedBox(height: _headerHeight, child: header),
+                          Column(
+                            children: [
+                              // ----- 상단 고정 영역 -----
+                              SizedBox(height: _headerHeight, child: header),
 
-                          // ----- 캘린더 영역 -----
-                          SizedBox(
-                            // ClipRect와 calendarHeight를 통해 실제 보이는 부분 제어
-                            height: calendarHeight,
-                            child: ClipRect(
-                              child: Stack(
-                                children: [
-                                  // 스크롤 진행도에 따라 위로 translate 해서 선택 주가 맨 위에 오게
-                                  Transform.translate(
-                                    offset: Offset(0, translateY),
-                                    child: OverflowBox(
-                                      minHeight:
-                                          monthCalendarHeight, // 오버플로우 방지, 항상 월 캘린더 높이로
-                                      maxHeight:
-                                          monthCalendarHeight, // 오버플로우 방지, 항상 월 캘린더 높이로
-                                      alignment: Alignment.topCenter,
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 6,
-                                        ),
-                                        child: MonthCalendar(
-                                          focusedDay: focusedDay.value,
-                                          selectedDay: selectedDay.value,
-                                          rowHeight: rowHeight,
-                                          barAreaHeight: barArea,
-                                          barColorByDay: colorOfDay,
-                                          onDayTap: onDayTapped,
-                                          calendarFormat: isWeekModeLocal
-                                              ? CalendarFormat.week
-                                              : CalendarFormat.month,
-                                          onPageChanged: onPageChanged,
+                              // ----- 캘린더 영역 -----
+                              SizedBox(
+                                // ClipRect와 calendarHeight를 통해 실제 보이는 부분 제어
+                                height: calendarHeight,
+                                child: ClipRect(
+                                  child: Stack(
+                                    children: [
+                                      // 스크롤 진행도에 따라 위로 translate 해서 선택 주가 맨 위에 오게
+                                      Transform.translate(
+                                        offset: Offset(0, translateY),
+                                        child: OverflowBox(
+                                          minHeight:
+                                              monthCalendarHeight, // 오버플로우 방지, 항상 월 캘린더 높이로
+                                          maxHeight:
+                                              monthCalendarHeight, // 오버플로우 방지, 항상 월 캘린더 높이로
+                                          alignment: Alignment.topCenter,
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 6,
+                                            ),
+                                            child: MonthCalendar(
+                                              focusedDay: focusedDay.value,
+                                              selectedDay: selectedDay.value,
+                                              rowHeight: rowHeight,
+                                              barAreaHeight: barArea,
+                                              barColorByDay: colorOfDay,
+                                              onDayTap: onDayTapped,
+                                              calendarFormat: isWeekModeLocal
+                                                  ? CalendarFormat.week
+                                                  : CalendarFormat.month,
+                                              onPageChanged: onPageChanged,
+                                            ),
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ),
 
-                                  // 수직 드래그 감지
-                                  Positioned.fill(
-                                    child: GestureDetector(
-                                      behavior: HitTestBehavior.translucent,
-                                      // 드래그 시작 위치 저장
-                                      onVerticalDragStart: (details) {
-                                        dragStartY.value =
-                                            details.globalPosition.dy;
-                                        dragEndY.value =
-                                            details.globalPosition.dy;
-                                      },
-                                      // 드래그 중 현재 위치 업데이트
-                                      onVerticalDragUpdate: (details) {
-                                        dragEndY.value =
-                                            details.globalPosition.dy;
-                                      },
-                                      onVerticalDragEnd: (details) {
-                                        if (dragStartY.value == null ||
-                                            dragEndY.value == null)
-                                          return;
-                                        // 드래그 방향 체크
-                                        final dragDistance =
-                                            dragEndY.value! - dragStartY.value!;
-                                        dragStartY.value = null;
-                                        dragEndY.value = null;
-                                        // 최소 50px 드래그
-                                        if (dragDistance.abs() < 50) return;
-                                        // 위로 드래그 (Month -> Week)
-                                        if (dragDistance < 0) {
-                                          if (!isWeekModeLocal) {
-                                            collapseCtrl.animateTo(
-                                              1.0,
-                                              curve: Curves.easeOutCubic,
-                                            );
-                                          }
-                                        } else {
-                                          // 아래로 드래그 (Week -> Month)
-                                          if (isWeekModeLocal) {
-                                            collapseCtrl.animateTo(
-                                              0.0,
-                                              curve: Curves.easeOutCubic,
-                                            );
-                                          }
-                                        }
-                                      },
-                                    ),
+                                      // 수직 드래그 감지
+                                      Positioned.fill(
+                                        child: GestureDetector(
+                                          behavior: HitTestBehavior.translucent,
+                                          // 드래그 시작 위치 저장
+                                          onVerticalDragStart: (details) {
+                                            dragStartY.value =
+                                                details.globalPosition.dy;
+                                            dragEndY.value =
+                                                details.globalPosition.dy;
+                                          },
+                                          // 드래그 중 현재 위치 업데이트
+                                          onVerticalDragUpdate: (details) {
+                                            dragEndY.value =
+                                                details.globalPosition.dy;
+                                          },
+                                          onVerticalDragEnd: (details) {
+                                            if (dragStartY.value == null ||
+                                                dragEndY.value == null)
+                                              return;
+                                            // 드래그 방향 체크
+                                            final dragDistance =
+                                                dragEndY.value! -
+                                                dragStartY.value!;
+                                            dragStartY.value = null;
+                                            dragEndY.value = null;
+                                            // 최소 50px 드래그
+                                            if (dragDistance.abs() < 50) return;
+                                            // 위로 드래그 (Month -> Week)
+                                            if (dragDistance < 0) {
+                                              if (!isWeekModeLocal) {
+                                                collapseCtrl.animateTo(
+                                                  1.0,
+                                                  curve: Curves.easeOutCubic,
+                                                );
+                                              }
+                                            } else {
+                                              // 아래로 드래그 (Week -> Month)
+                                              if (isWeekModeLocal) {
+                                                collapseCtrl.animateTo(
+                                                  0.0,
+                                                  curve: Curves.easeOutCubic,
+                                                );
+                                              }
+                                            }
+                                          },
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ],
+                                ),
                               ),
-                            ),
+                            ],
+                          ),
+
+                          // 튜토리얼용 키: 년.월라벨 아래 요일행부터 날짜 영역까지
+                          Positioned(
+                            top: _headerHeight - 30,
+                            left: 0,
+                            right: 0,
+                            bottom: 0,
+                            child: SizedBox(key: calendarKey),
                           ),
                         ],
                       ),
