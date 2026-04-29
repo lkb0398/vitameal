@@ -33,8 +33,14 @@ class AiAnalysisDetailDialog extends HookWidget {
     }, [pageController]);
 
     final conditionFeedbacks = analysis.conditionFeedback;
-    final pageCount = conditionFeedbacks.length;
-    final hasPages = pageCount > 0;
+    final hasConditionPages = conditionFeedbacks.isNotEmpty;
+    // 기저질환 피드백 페이지 + 마지막에 영양분석 페이지 1개
+    final totalPages = conditionFeedbacks.length + 1;
+    final isLastPage = currentPage.value == totalPages - 1;
+
+    final headerTitle = hasConditionPages
+        ? (isLastPage ? l.meal_analysis : l.feedback)
+        : l.meal_feedback;
 
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
@@ -49,23 +55,14 @@ class AiAnalysisDetailDialog extends HookWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  hasPages
-                      ? Text(
-                          l.feedback,
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: vrc(context).text,
-                          ),
-                        )
-                      : Text(
-                          l.meal_feedback,
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: vrc(context).text,
-                          ),
-                        ),
+                  Text(
+                    headerTitle,
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: vrc(context).text,
+                    ),
+                  ),
                   IconButton(
                     icon: Icon(PhosphorIcons.x()),
                     onPressed: () => Navigator.of(context).pop(),
@@ -76,41 +73,51 @@ class AiAnalysisDetailDialog extends HookWidget {
             const SizedBox(height: 16),
 
             // 페이지 뷰 (슬라이드)
-            if (hasPages)
-              Expanded(
-                child: PageView.builder(
-                  controller: pageController,
-                  itemCount: pageCount,
-                  itemBuilder: (context, index) {
-                    final feedback = conditionFeedbacks[index];
-                    return Padding(
-                      padding: const EdgeInsets.only(
-                        left: 20,
-                        right: 20,
-                        bottom: 20,
-                      ),
-                      child: ConditionFeedbackPage(feedback: feedback),
-                    );
-                  },
-                ),
-              )
-            else
-              Expanded(child: GeneralFeedbackPage(analysis: analysis)),
+            Expanded(
+              child: PageView.builder(
+                controller: pageController,
+                itemCount: totalPages,
+                itemBuilder: (context, index) {
+                  if (!hasConditionPages || index == totalPages - 1) {
+                    // 마지막 페이지 일반 영양피드백
+                    return GeneralFeedbackPage(analysis: analysis);
+                  }
+                  return Padding(
+                    padding: const EdgeInsets.only(
+                      left: 20,
+                      right: 20,
+                      bottom: 20,
+                    ),
+                    child: ConditionFeedbackPage(
+                      // 기저질환피드백
+                      feedback: conditionFeedbacks[index],
+                    ),
+                  );
+                },
+              ),
+            ),
 
             const SizedBox(height: 16),
 
             // 페이지 인디케이터
-            if (pageCount > 1) ...[
+            if (hasConditionPages) ...[
               Padding(
-                padding: const EdgeInsets.only(bottom: 20),
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 20),
                 child: PageIndicator(
-                  pageCount: pageCount,
+                  pageCount: totalPages,
                   currentPage: currentPage.value,
+                  onPrev: () => pageController.previousPage(
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeInOut,
+                  ),
+                  onNext: () => pageController.nextPage(
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeInOut,
+                  ),
                 ),
               ),
-            ],
-
-            if (!hasPages) const SizedBox(height: 6),
+            ] else
+              const SizedBox(height: 6),
           ],
         ),
       ),

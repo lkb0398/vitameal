@@ -226,13 +226,18 @@ class OnboardingProfilePage extends HookConsumerWidget {
           }
         },
         builder: (BuildContext context, TapDebouncerFunc? onTap) {
-          return Padding(
-            padding: const EdgeInsets.only(bottom: 10),
-            child: DoneButton(
-              onTap: onTap,
-              backgroundColor: enabled ? f.primary400! : f.textcolor300!,
-              text: isEditMode ? l.edit_complete : l.next,
-              textColor: Colors.white,
+          return SafeArea(
+            top: false,
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 10),
+              child: DoneButton(
+                onTap: onTap,
+                backgroundColor: enabled
+                    ? fxc(context).primary400!
+                    : fxc(context).textcolor300!,
+                text: isEditMode ? l.edit_complete : l.next,
+                textColor: Colors.white,
+              ),
             ),
           );
         },

@@ -55,23 +55,26 @@ class OnboardingDonePage extends HookConsumerWidget {
       ),
 
       /// 완료 버튼
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.only(bottom: 10),
-        child: DoneButton(
-          onTap: () async {
-            // [프로필 수정]
-            await profileVM.updateProfile(onboardingCompleted: true);
-            // 로컬 라우팅 상태도 즉시 true로 반영
-            ref.read(onboardingStateProvider.notifier).set(true);
+      bottomNavigationBar: SafeArea(
+        top: false,
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: 10),
+          child: DoneButton(
+            onTap: () async {
+              // [프로필 수정]
+              await profileVM.updateProfile(onboardingCompleted: true);
+              // 로컬 라우팅 상태도 즉시 true로 반영
+              ref.read(onboardingStateProvider.notifier).set(true);
 
-            if (!context.mounted) return;
-            context.go(AppRoutePath.home);
-            // 📝
-            AnalyticsService.event('obd_completed');
-          },
-          backgroundColor: f.primary400!,
-          text: l.start,
-          textColor: Colors.white,
+              if (!context.mounted) return;
+              context.go(AppRoutePath.home);
+              // 📝
+              AnalyticsService.event('obd_completed');
+            },
+            backgroundColor: f.primary400!,
+            text: l.start,
+            textColor: Colors.white,
+          ),
         ),
       ),
     );
