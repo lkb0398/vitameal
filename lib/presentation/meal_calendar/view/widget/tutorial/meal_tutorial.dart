@@ -52,7 +52,7 @@ class MealTutorial {
       }
     }
 
-    // TutorialCoachMark 생성 후 show
+    // TutorialCoachMark 생성
     _current = TutorialCoachMark(
       targets: _buildTargets(
         calendarKey,
@@ -72,11 +72,18 @@ class MealTutorial {
         _dismiss();
         return true;
       },
-    )..show(context: context);
+    );
 
-    // 최초 스탭 (calendar) 시작
+    // 레이아웃 안정화 후 show
+    // Android 15 부터 edge-to-edge 강제 적용으로 앱 시작 시 window insets(시스템 바 영역 정보)를 비동기로 통보함
+    // insets 완전 정착까지 대기하여 첫번째 포커싱에 정확한 좌표를 사용하도록 fix
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!context.mounted) return;
+      Future.delayed(const Duration(milliseconds: 100), () {
+        if (!context.mounted || _current == null) return;
+        _current?.show(context: context);
+      });
+
       Future.delayed(const Duration(milliseconds: _initAnimMs), () {
         if (_current == null || !context.mounted) return;
 
@@ -90,7 +97,7 @@ class MealTutorial {
           // SwipeDownHint를 원하는 좌표에 출력
           _swipeHintEntry = OverlayEntry(
             builder: (_) => Positioned(
-              top: pos.dy + 84 + 4,
+              top: pos.dy + 30 + 4,
               // 목요일(4번째)과 금요일(5번째) 사이
               // 4.0 * (size.width - 12.0) / 7.0 = 4칸의 셀 너비
               left: pos.dx + 6.0 + 4.0 * (size.width - 12.0) / 7.0 - 16.0,

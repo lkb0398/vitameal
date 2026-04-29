@@ -137,7 +137,7 @@ class Graph extends HookConsumerWidget {
                 getDotPainter: (spot, percent, barData, index) {
                   return FlDotCirclePainter(
                     radius: 3,
-                    color: Colors.transparent,
+                    color: vrc(context).infoContainer!,
                     strokeWidth: 1,
                     strokeColor: f.secondary400!,
                   );
