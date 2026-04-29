@@ -610,7 +610,7 @@ class L10nEn extends L10n {
   String get meal_feedback => 'Meal Feedback';
 
   @override
-  String get meal_analysis => 'Analysis';
+  String get meal_analysis => 'Nutrition Analysis';
 
   @override
   String get good_thing => 'Good';
