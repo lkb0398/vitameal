@@ -9,8 +9,8 @@ class NotificationsRepositoryImpl implements NotificationsRepository {
   final NotificationDataSource dataSource;
 
   @override
-  Future<List<NotificationsEntity>?> readNotis() async {
-    final dtos = await dataSource.readNotis();
+  Future<List<NotificationsEntity>?> readNotis(String userId) async {
+    final dtos = await dataSource.readNotis(userId);
     if (dtos == null) return [];
     return dtos.map(NotificationsMapper.toEntity).toList();
   }

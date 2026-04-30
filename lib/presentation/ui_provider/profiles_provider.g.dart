@@ -235,7 +235,7 @@ final class OnboardingCompletedProvider
 }
 
 String _$onboardingCompletedHash() =>
-    r'46a29442963a18680f01befd24c05119b36dc614';
+    r'ec0ccf006eb881a275fa698363bbed103f685a3c';
 
 @ProviderFor(diseasesList)
 const diseasesListProvider = DiseasesListProvider._();

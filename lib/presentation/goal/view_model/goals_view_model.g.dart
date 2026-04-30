@@ -33,7 +33,7 @@ final class GoalsViewModelProvider
   GoalsViewModel create() => GoalsViewModel();
 }
 
-String _$goalsViewModelHash() => r'4bb43f97263b2ac950c29a03ca2eeac6febadafc';
+String _$goalsViewModelHash() => r'2076024187ee1a57bcc54aeb8a43360bc51e815e';
 
 abstract class _$GoalsViewModel extends $AsyncNotifier<List<GoalsEntity>?> {
   FutureOr<List<GoalsEntity>?> build();

@@ -18,13 +18,13 @@ class ProfilesViewModel extends _$ProfilesViewModel {
 
   // [데이터 불러오기]
   Future<ProfilesEntity?> _loadState() async {
-    final userId = ref.read(userIdProvider);
+    final userId = ref.watch(userIdProvider);
     return ref.read(profilesRepositoryProvider).readMyProfile(userId);
   }
 
   // [프로필 이미지 업로드]
   Future<String> uploadProfileImage(File file) async {
-    final userId = ref.read(userIdProvider);
+    final userId = ref.watch(userIdProvider);
     return ref
         .read(profilesRepositoryProvider)
         .uploadProfileImage(userId: userId, file: file);
@@ -32,7 +32,7 @@ class ProfilesViewModel extends _$ProfilesViewModel {
 
   // [닉네임 중복 체크]
   Future<bool> checkNickname(String nickname) {
-    return ref.read(profilesRepositoryProvider).isNicknameDuplicated(nickname);
+    return ref.watch(profilesRepositoryProvider).isNicknameDuplicated(nickname);
   }
 
   // [프로필 수정]
@@ -41,7 +41,7 @@ class ProfilesViewModel extends _$ProfilesViewModel {
     String? photoUrl,
     bool? onboardingCompleted,
   }) async {
-    final userId = ref.read(userIdProvider);
+    final userId = ref.watch(userIdProvider);
 
     // 낙관적 업데이트
     final prev = state.value;
@@ -66,7 +66,6 @@ class ProfilesViewModel extends _$ProfilesViewModel {
               onboardingCompleted: onboardingCompleted,
             ),
           );
-      ref.invalidateSelf(); // 갱신
     } catch (e) {
       state = AsyncData(prev); // 롤백
       rethrow;
@@ -80,7 +79,7 @@ class ProfilesViewModel extends _$ProfilesViewModel {
     double? heightCm,
     double? weightKg,
   }) async {
-    final userId = ref.read(userIdProvider);
+    final userId = ref.watch(userIdProvider);
 
     // 낙관적 업데이트
     final prev = state.value;
@@ -107,7 +106,6 @@ class ProfilesViewModel extends _$ProfilesViewModel {
               weightKg: weightKg,
             ),
           );
-      ref.invalidateSelf(); // 갱신
     } catch (e) {
       state = AsyncData(prev); // 롤백
       rethrow;

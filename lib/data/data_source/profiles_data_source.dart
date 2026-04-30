@@ -5,7 +5,7 @@ import 'package:vitameal/data/dto/profiles_dto.dart';
 import 'package:vitameal/domain/entity/profiles_entity.dart';
 
 abstract interface class ProfilesDataSource {
-  Future<ProfilesDto?> getMyProfile(String userId);
+  Future<ProfilesDto?> readMyProfile(String userId);
   Future<void> updateProfile(ProfilesEntity entity);
   Future<void> updatePhysical(ProfilesEntity entity);
   Future<String> uploadProfileImage({
@@ -21,7 +21,7 @@ class ProfilesDataSourceImpl implements ProfilesDataSource {
   final SupabaseClient client;
 
   @override // R
-  Future<ProfilesDto?> getMyProfile(String userId) async {
+  Future<ProfilesDto?> readMyProfile(String userId) async {
     try {
       final data = await client
           .from('profiles')

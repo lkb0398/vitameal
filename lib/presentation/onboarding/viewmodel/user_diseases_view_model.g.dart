@@ -34,7 +34,7 @@ final class UserDiseasesViewModelProvider
 }
 
 String _$userDiseasesViewModelHash() =>
-    r'b8ee61ffa0bdff2814caca5261a081cc2b385496';
+    r'91f939195241cd53622a3735858f83f7dc00a06b';
 
 abstract class _$UserDiseasesViewModel extends $AsyncNotifier<List<int>> {
   FutureOr<List<int>> build();

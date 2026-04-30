@@ -48,8 +48,6 @@ class HealthTagViewModel extends _$HealthTagViewModel {
 
   // 사용자 질병 entity 목록
   Future<List<DiseasesEntity>> _diseaseEntities() async {
-    // final userId = ref.read(userIdProvider);
-
     final repo = ref.read(diseasesRepositoryProvider);
     final ids = await ref.watch(userDiseasesViewModelProvider.future);
     final allDiseases = await repo.readAllDiseases();
@@ -61,8 +59,6 @@ class HealthTagViewModel extends _$HealthTagViewModel {
 
   // 사용자 알레르기 entity 목록
   Future<List<AllergiesEntity>> _allergyEntities() async {
-    // final userId = ref.read(userIdProvider);
-
     final repo = ref.read(allergiesRepositoryProvider);
     final ids = await ref.watch(userAllergiesViewModelProvider.future);
     final allAllergies = await repo.readAllAllergies();
