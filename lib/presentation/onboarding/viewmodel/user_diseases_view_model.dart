@@ -14,13 +14,13 @@ class UserDiseasesViewModel extends _$UserDiseasesViewModel {
 
   // [데이터 불러오기]
   Future<List<int>> _loadState() async {
-    final userId = ref.read(userIdProvider);
+    final userId = ref.watch(userIdProvider);
     return ref.read(diseasesRepositoryProvider).readUserDiseases(userId);
   }
 
   // [질병 목록 갱신]
   Future<void> saveDiseases(List<int> selectedIds) async {
-    final userId = ref.read(userIdProvider);
+    final userId = ref.watch(userIdProvider);
 
     // 낙관적 업데이트
     final current = state.value ?? [];
@@ -31,7 +31,6 @@ class UserDiseasesViewModel extends _$UserDiseasesViewModel {
       await ref
           .read(diseasesRepositoryProvider)
           .upsertUserDiseases(userId: userId, diseaseIds: selectedIds);
-      ref.invalidateSelf(); // 갱신
     } catch (e) {
       state = AsyncData(current); // 롤백
     }

@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:vitameal/core/config/l10n/l10n.dart';
@@ -11,7 +12,7 @@ import 'package:vitameal/presentation/language/view_model/locale_view_model.dart
 import 'package:vitameal/presentation/onboarding/viewmodel/profiles_view_model.dart';
 import 'package:vitameal/presentation/util/remove_decimals.dart';
 
-class ViewPhysical extends ConsumerWidget {
+class ViewPhysical extends HookConsumerWidget {
   const ViewPhysical({super.key});
 
   @override
@@ -22,6 +23,13 @@ class ViewPhysical extends ConsumerWidget {
 
     final profileAsync = ref.watch(profilesViewModelProvider);
     final healthTagsAsync = ref.watch(healthTagViewModelProvider);
+
+    // preload
+    useEffect(() {
+      ref.read(profilesViewModelProvider.future);
+      ref.read(healthTagViewModelProvider.future);
+      return null;
+    }, []);
 
     return profileAsync.when(
       loading: () => const SizedBox.shrink(),
@@ -38,7 +46,7 @@ class ViewPhysical extends ConsumerWidget {
 
         return BorderedContainer(
           title: l.my_info,
-          onTap: () => context.push(AppRoutePath.editPhysical, extra: profile),
+          onTap: () => context.push(AppRoutePath.physical, extra: true),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             spacing: 10,

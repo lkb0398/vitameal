@@ -51,103 +51,100 @@ class AddNotiBottomSheet extends HookConsumerWidget {
           top: 10,
           bottom: MediaQuery.of(context).viewInsets.bottom,
         ),
-        child: SizedBox(
-          height: 340,
-          child: Column(
-            spacing: 10,
-            children: [
-              /// 상단 바
-              Container(
-                width: 40,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: f.textcolor200,
-                  borderRadius: BorderRadius.circular(2),
-                ),
+        child: Column(
+          spacing: 10,
+          children: [
+            /// 상단 바
+            Container(
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: f.textcolor200,
+                borderRadius: BorderRadius.circular(2),
               ),
+            ),
 
-              /// 알림명 입력창
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: ValidateTextformfield(
-                  label: l.notification_name,
-                  readOnly: false,
-                  hintText: l.breakfast_alarm,
-                  helperText: "",
-                  validator: validateLabel,
-                  controller: labelController,
-                  onChanged: (v) => vm.updateLabel(v),
-                ),
+            /// 알림명 입력창
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: ValidateTextformfield(
+                label: l.notification_name,
+                readOnly: false,
+                hintText: l.breakfast_alarm,
+                helperText: "",
+                validator: validateLabel,
+                controller: labelController,
+                onChanged: (v) => vm.updateLabel(v),
               ),
+            ),
 
-              /// 시간 선택
-              SizedBox(
-                height: 120,
-                child: CupertinoDatePicker(
-                  mode: CupertinoDatePickerMode.time,
-                  use24hFormat: false,
-                  initialDateTime: DateTime(
-                    2000,
-                    1,
-                    1,
-                    initialTime.hour,
-                    initialTime.minute,
-                  ),
-                  onDateTimeChanged: (dateTime) {
-                    final time = TimeOfDay(
-                      hour: dateTime.hour,
-                      minute: dateTime.minute,
-                    );
-                    vm.updateSelectedTime(time);
-                  },
+            /// 시간 선택
+            SizedBox(
+              height: 120,
+              child: CupertinoDatePicker(
+                mode: CupertinoDatePickerMode.time,
+                use24hFormat: false,
+                initialDateTime: DateTime(
+                  2000,
+                  1,
+                  1,
+                  initialTime.hour,
+                  initialTime.minute,
                 ),
-              ),
-
-              /// 완료 버튼
-              TapDebouncer(
-                onTap: () async {
-                  // 사용자 입력값 검증 > 통과 안되면 진행 막기
-                  final label = labelController.text.trim();
-                  if (validateLabel(label) != null) {
-                    return;
-                  }
-
-                  if (isEditMode) {
-                    // 1. [알림 수정]
-                    await notiVM.updateNoti(
-                      prev: noti!,
-                      label: state.label!,
-                      time: state.selectedTime!,
-                    );
-                  } else {
-                    // 2. [알림 추가]
-                    await notiVM.addNoti(
-                      label: state.label!,
-                      time: state.selectedTime!,
-                    );
-                  }
-
-                  if (!context.mounted) return;
-                  Navigator.pop(context);
-                  // 📝
-                  AnalyticsService.event(
-                    'noti_action',
-                    p: {'action': 'create'},
+                onDateTimeChanged: (dateTime) {
+                  final time = TimeOfDay(
+                    hour: dateTime.hour,
+                    minute: dateTime.minute,
                   );
+                  vm.updateSelectedTime(time);
                 },
-                builder: (BuildContext context, TapDebouncerFunc? onTap) {
-                  final enabled = state.label?.trim().isNotEmpty ?? false;
+              ),
+            ),
 
-                  return DoneButton(
+            /// 완료 버튼
+            TapDebouncer(
+              onTap: () async {
+                // 사용자 입력값 검증 > 통과 안되면 진행 막기
+                final label = labelController.text.trim();
+                if (validateLabel(label) != null) {
+                  return;
+                }
+
+                if (isEditMode) {
+                  // 1. [알림 수정]
+                  await notiVM.updateNoti(
+                    prev: noti!,
+                    label: state.label!,
+                    time: state.selectedTime!,
+                  );
+                } else {
+                  // 2. [알림 추가]
+                  await notiVM.addNoti(
+                    label: state.label!,
+                    time: state.selectedTime!,
+                  );
+                }
+
+                if (!context.mounted) return;
+                Navigator.pop(context);
+                // 📝
+                AnalyticsService.event('noti_action', p: {'action': 'create'});
+              },
+              builder: (BuildContext context, TapDebouncerFunc? onTap) {
+                final enabled = state.label?.trim().isNotEmpty ?? false;
+
+                return SafeArea(
+                  top: false,
+                  child: DoneButton(
                     onTap: onTap,
                     backgroundColor: enabled ? f.primary100! : f.textcolor300!,
                     text: l.complete,
                     textColor: enabled ? f.primary600! : Colors.white,
-                  );
-                },
-              ),
-            ],
-          ),
+                  ),
+                );
+              },
+            ),
+          ],
         ),
       ),
     );

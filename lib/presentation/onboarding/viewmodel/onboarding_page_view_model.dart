@@ -4,7 +4,6 @@ import 'package:vitameal/domain/enum/gender_type_enum.dart';
 import 'package:vitameal/presentation/onboarding/viewmodel/profiles_view_model.dart';
 import 'package:vitameal/presentation/onboarding/viewmodel/user_allergies_view_model.dart';
 import 'package:vitameal/presentation/onboarding/viewmodel/user_diseases_view_model.dart';
-import 'package:vitameal/presentation/ui_provider/profiles_provider.dart';
 
 part 'onboarding_page_view_model.freezed.dart';
 part 'onboarding_page_view_model.g.dart';
@@ -31,30 +30,26 @@ abstract class OnboardingPageState with _$OnboardingPageState {
 
 // ==================== ViewModel ====================
 
-@Riverpod(keepAlive: true)
+@riverpod
 class OnboardingPageViewModel extends _$OnboardingPageViewModel {
-  bool _initialized = false;
-
   @override
-  OnboardingPageState build() {
-    final isEditMode = ref.watch(isEditFlowProvider);
-
-    if (isEditMode && !_initialized) {
-      _initialized = true;
-
+  OnboardingPageState build(bool isEditMode) {
+    if (!isEditMode) {
+      return OnboardingPageState(); // 항상 초기화
+    }
+    if (isEditMode) {
       Future.microtask(() async {
         await _initProfile();
         await _initDiseases();
         await _initAllergies();
       });
     }
-
     return OnboardingPageState();
   }
 
   // [수정모드 시 상태 초기값 세팅]
   Future<void> _initProfile() async {
-    final profile = await ref.read(profilesViewModelProvider.future);
+    final profile = await ref.watch(profilesViewModelProvider.future);
     if (profile == null) return;
 
     state = state.copyWith(
@@ -68,12 +63,12 @@ class OnboardingPageViewModel extends _$OnboardingPageViewModel {
   }
 
   Future<void> _initDiseases() async {
-    final ids = await ref.read(userDiseasesViewModelProvider.future);
+    final ids = await ref.watch(userDiseasesViewModelProvider.future);
     state = state.copyWith(diseaseIds: ids);
   }
 
   Future<void> _initAllergies() async {
-    final ids = await ref.read(userAllergiesViewModelProvider.future);
+    final ids = await ref.watch(userAllergiesViewModelProvider.future);
     state = state.copyWith(allergyIds: ids);
   }
 

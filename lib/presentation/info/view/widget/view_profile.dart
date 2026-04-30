@@ -1,11 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:vitameal/core/config/routes.dart';
 import 'package:vitameal/presentation/onboarding/viewmodel/profiles_view_model.dart';
 
-class ViewProfile extends ConsumerWidget {
+class ViewProfile extends HookConsumerWidget {
   const ViewProfile({super.key});
 
   @override
@@ -19,13 +20,19 @@ class ViewProfile extends ConsumerWidget {
       width: 48,
     );
 
+    // preload
+    useEffect(() {
+      ref.read(profilesViewModelProvider.future);
+      return null;
+    }, []);
+
     return profileAsync.when(
       loading: () => Row(spacing: 14, children: [defaultImg, const Text("")]),
       error: (_, __) =>
           Row(spacing: 14, children: [defaultImg, const Text("")]),
       data: (profile) {
         return InkWell(
-          onTap: () => context.push(AppRoutePath.editProfile, extra: profile),
+          onTap: () => context.push(AppRoutePath.profile, extra: true),
           child: Row(
             spacing: 14,
             children: [

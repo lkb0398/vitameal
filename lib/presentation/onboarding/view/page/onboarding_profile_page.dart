@@ -10,19 +10,17 @@ import 'package:vitameal/core/config/l10n/l10n.dart';
 import 'package:vitameal/core/config/routes.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
 import 'package:vitameal/data/data_source/profiles_data_source.dart';
-import 'package:vitameal/domain/entity/profiles_entity.dart';
 import 'package:vitameal/presentation/onboarding/view/util/primary_rich_text.dart';
 import 'package:vitameal/presentation/onboarding/view/widget/progress_text.dart';
 import 'package:vitameal/presentation/onboarding/viewmodel/onboarding_page_view_model.dart';
 import 'package:vitameal/presentation/onboarding/viewmodel/profiles_view_model.dart';
-import 'package:vitameal/presentation/ui_provider/profiles_provider.dart';
 import 'package:vitameal/presentation/widget/button/done_button.dart';
 import 'package:vitameal/presentation/widget/validate_textformfield.dart';
 
 class OnboardingProfilePage extends HookConsumerWidget {
-  const OnboardingProfilePage({super.key, this.profile});
+  const OnboardingProfilePage({super.key, required this.isEditMode});
 
-  final ProfilesEntity? profile;
+  final bool isEditMode;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -30,12 +28,10 @@ class OnboardingProfilePage extends HookConsumerWidget {
     final v = vrc(context);
     final l = L10n.of(context)!; // 🌎
 
-    final isEditMode = ref.watch(isEditFlowProvider);
-
     final profileVM = ref.read(profilesViewModelProvider.notifier);
 
-    final state = ref.watch(onboardingPageViewModelProvider);
-    final vm = ref.read(onboardingPageViewModelProvider.notifier);
+    final state = ref.watch(onboardingPageViewModelProvider(isEditMode));
+    final vm = ref.read(onboardingPageViewModelProvider(isEditMode).notifier);
 
     // (프로필 사진) 사용자 갤러리에서 사진 가져오기
     Future<void> pickFromGallery() async {
@@ -77,7 +73,7 @@ class OnboardingProfilePage extends HookConsumerWidget {
         validateNickname(state.name) == null && state.nicknameError == null;
 
     // 입력값 바뀌면 서버 에러 제거
-    ref.listen(onboardingPageViewModelProvider, (prev, next) {
+    ref.listen(onboardingPageViewModelProvider(isEditMode), (prev, next) {
       if (prev?.name != next.name) {
         if (next.nicknameError != null) {
           vm.updateNicknameError(null);
@@ -210,16 +206,17 @@ class OnboardingProfilePage extends HookConsumerWidget {
           if (!enabled) return;
 
           try {
+            // 화면 깜빡임 (페이지 상태 초기화) 방지 위해 페이지 이동 먼저
+            isEditMode
+                ? context.go(AppRoutePath.home)
+                : context.push(AppRoutePath.physical, extra: false);
+
             // [프로필 수정]
             await profileVM.updateProfile(
               nickname: state.name,
               photoUrl: state.url,
             );
 
-            if (!context.mounted) return;
-            isEditMode
-                ? context.go(AppRoutePath.home)
-                : context.push(AppRoutePath.onboardingPhysical);
             // 닉네임 중복 시
           } on DuplicateNicknameException {
             vm.updateNicknameError(l.duplicate_nickname);
@@ -228,16 +225,11 @@ class OnboardingProfilePage extends HookConsumerWidget {
         builder: (BuildContext context, TapDebouncerFunc? onTap) {
           return SafeArea(
             top: false,
-            child: Padding(
-              padding: const EdgeInsets.only(bottom: 10),
-              child: DoneButton(
-                onTap: onTap,
-                backgroundColor: enabled
-                    ? fxc(context).primary400!
-                    : fxc(context).textcolor300!,
-                text: isEditMode ? l.edit_complete : l.next,
-                textColor: Colors.white,
-              ),
+            child: DoneButton(
+              onTap: onTap,
+              backgroundColor: enabled ? f.primary400! : f.textcolor300!,
+              text: isEditMode ? l.edit_complete : l.next,
+              textColor: Colors.white,
             ),
           );
         },
