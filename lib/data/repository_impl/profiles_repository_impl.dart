@@ -10,8 +10,8 @@ class ProfilesRepositoryImpl implements ProfilesRepository {
   final ProfilesDataSource dataSource;
 
   @override
-  Future<ProfilesEntity?> getMyProfile(String userId) async {
-    final dto = await dataSource.getMyProfile(userId);
+  Future<ProfilesEntity?> readMyProfile(String userId) async {
+    final dto = await dataSource.readMyProfile(userId);
     if (dto == null) return null;
     return ProfilesMapper.toEntity(dto);
   }

@@ -3,8 +3,8 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:vitameal/data/dto/goal_datas_dto.dart';
 
 abstract interface class GoalDatasDataSource {
-  Future<List<GoalDatasDto>?> getGoalDatas(String goalId);
-  Future<void> saveData(GoalDatasDto dto);
+  Future<List<GoalDatasDto>?> readDatas(String goalId);
+  Future<void> createData(GoalDatasDto dto);
   Future<void> deleteDatas(List<String> dataIds);
 }
 
@@ -14,7 +14,7 @@ class GoalDatasDataSourceImpl implements GoalDatasDataSource {
   final SupabaseClient client;
 
   @override // R (전체)
-  Future<List<GoalDatasDto>?> getGoalDatas(String goalId) async {
+  Future<List<GoalDatasDto>?> readDatas(String goalId) async {
     try {
       final response = await client
           .from('goal_datas')
@@ -32,7 +32,7 @@ class GoalDatasDataSourceImpl implements GoalDatasDataSource {
   }
 
   @override // C
-  Future<void> saveData(GoalDatasDto dto) async {
+  Future<void> createData(GoalDatasDto dto) async {
     try {
       final map = {
         'goal_id': dto.goalId,

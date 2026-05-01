@@ -8,13 +8,14 @@ part 'date_notation_view_model.g.dart';
 class DateNotationViewModel extends _$DateNotationViewModel {
   static const _key = 'date_notation';
 
+  // State : 날짜 설정
   @override
   DateNotationType? build() {
     _loadAndSetDateNotation();
     return null;
   }
 
-  // 저장된 값 불러오기
+  // [저장된 값 불러오기]
   Future<void> _loadAndSetDateNotation() async {
     final prefs = await SharedPreferences.getInstance();
     final value = prefs.getString(_key);
@@ -23,14 +24,14 @@ class DateNotationViewModel extends _$DateNotationViewModel {
     }
   }
 
-  // 날짜 형식 설정 + 저장
+  // [날짜 형식 설정 + 저장]
   Future<void> setDateNotation(DateNotationType type) async {
     state = type;
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_key, type.name);
   }
 
-  // 자동 설정 (locale 기반) + 저장 제거
+  // [자동 설정 (locale 기반) + 저장 제거]
   Future<void> setAutoDateNotation() async {
     state = null;
     final prefs = await SharedPreferences.getInstance();

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:vitameal/core/config/firebase_options.dart';
@@ -48,25 +49,26 @@ Future<T?> _safe<T>(
 }
 
 Future<void> main() async {
-  // 📝 Zone 에러(비동기)
+  // 📝 Zone 에러 (비동기)
   runZonedGuarded(
     () async {
       WidgetsFlutterBinding.ensureInitialized();
-      // 가로모드 막기
+      // 화면 세로모드 고정
       await SystemChrome.setPreferredOrientations([
         DeviceOrientation.portraitUp,
-      ]); // 화면 세로모드 고정
+      ]);
 
       await dotenv.load(fileName: ".env");
       KakaoSdk.init(nativeAppKey: dotenv.get('KAKAO_NATIVE_APP_KEY'));
       debugPrint("현재 환경 키 해시: ${await KakaoSdk.origin}");
 
+      // Supabase 초기화
       await _safe(
+        label: 'Supabase.initialize',
         () => Supabase.initialize(
           url: dotenv.get('SUPABASE_URL'),
           anonKey: dotenv.get('SUPABASE_ANON_KEY'),
         ),
-        label: 'Supabase.initialize',
       );
 
       // 온보딩 완료여부 동기화
@@ -83,33 +85,42 @@ Future<void> main() async {
         debugPrint('초기 데이터 로딩 중 오류 발생: $e');
       }
 
-      // 🔔 Firebase 초기화
+      // Firebase 초기화
       await _safe(
+        label: 'Firebase.initializeApp',
         () => Firebase.initializeApp(
           options: DefaultFirebaseOptions.currentPlatform,
         ),
-        label: 'Firebase.initializeApp',
+      );
+      // 디버그모드 에서는 Crashlytics 끄기
+      await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(
+        !kDebugMode,
       );
       // FCM Background 핸들러 등록 (main 에서)
-      await _safe(() async {
-        FirebaseMessaging.onBackgroundMessage(
-          firebaseMessagingBackgroundHandler,
-        );
-      }, label: 'FCM background handler');
-      // Firebase 관련 설정 (토큰, 권한)
       await _safe(
-        () => FirebaseService.initialize(),
+        label: 'FCM background handler',
+        () async => FirebaseMessaging.onBackgroundMessage(
+          firebaseMessagingBackgroundHandler,
+        ),
+      );
+      // FCM 토큰 관련 설정
+      await _safe(
         label: 'FirebaseService.initialize',
+        () => FirebaseService.init(),
       );
       // 알림 리스너 설정
       await _safe(
-        () => NotificationService.initialize(),
         label: 'NotificationService.initialize',
+        () => NotificationService.init(),
       );
 
       // 📝 Flutter 프레임워크 에러
       FlutterError.onError = (details) {
-        FirebaseCrashlytics.instance.recordFlutterFatalError(details);
+        if (!kDebugMode) {
+          FirebaseCrashlytics.instance.recordFlutterFatalError(details);
+        } else {
+          FlutterError.dumpErrorToConsole(details);
+        }
       };
 
       runApp(
@@ -123,7 +134,11 @@ Future<void> main() async {
       AnalyticsService.appOpen();
     },
     (error, stack) {
-      FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+      if (!kDebugMode) {
+        FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+      } else {
+        debugPrint("ERROR: $error");
+      }
     },
   );
 }

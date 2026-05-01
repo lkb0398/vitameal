@@ -4,6 +4,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:vitameal/core/di/provider.dart';
 import 'package:vitameal/core/service/firebase_service.dart';
+import 'package:vitameal/presentation/ui_provider/profiles_provider.dart';
 
 part 'auth_view_model.g.dart';
 
@@ -58,6 +59,8 @@ class AuthViewModel extends _$AuthViewModel {
   }
 
   Future<void> logout() async {
+    ref.invalidate(userIdProvider); // user 초기화
+
     try {
       // 🔔 로그아웃 시 토큰 삭제
       await FirebaseService.deleteToken();
@@ -75,6 +78,8 @@ class AuthViewModel extends _$AuthViewModel {
     VoidCallback? onSuccess,
     VoidCallback? onError,
   }) async {
+    ref.invalidate(userIdProvider); // user 초기화
+
     if (_isLoading) return;
 
     _isLoading = true;

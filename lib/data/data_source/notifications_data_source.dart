@@ -3,8 +3,8 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:vitameal/data/dto/notifications_dto.dart';
 
 abstract interface class NotificationDataSource {
-  Future<List<NotificationsDto>?> getAllNotis();
-  Future<void> saveNoti(NotificationsDto dto);
+  Future<List<NotificationsDto>?> readNotis(String userId);
+  Future<void> createNoti(NotificationsDto dto);
   Future<void> updateNoti(NotificationsDto dto);
   Future<void> deleteNoti(String notiId);
 }
@@ -15,11 +15,12 @@ class NotificationsDataSourceImpl implements NotificationDataSource {
   final SupabaseClient client;
 
   @override // R (전체)
-  Future<List<NotificationsDto>?> getAllNotis() async {
+  Future<List<NotificationsDto>?> readNotis(String userId) async {
     try {
       final response = await client
           .from('notifications')
           .select()
+          .eq('user_id', userId)
           .order('time', ascending: true) // 알림 시간순 정렬
           .order('created_at', ascending: true);
       return (response as List)
@@ -35,7 +36,7 @@ class NotificationsDataSourceImpl implements NotificationDataSource {
   }
 
   @override // C
-  Future<void> saveNoti(NotificationsDto dto) async {
+  Future<void> createNoti(NotificationsDto dto) async {
     try {
       final map = {
         'user_id': dto.userId,
@@ -43,7 +44,7 @@ class NotificationsDataSourceImpl implements NotificationDataSource {
         'time': dto.time,
         'is_enabled': dto.isEnabled,
         'timezone': dto.timezone,
-        'next_fire_at': dto.nextFireAt,
+        // 'next_fire_at': dto.nextFireAt,
       };
       await client.from('notifications').insert(map);
     } on PostgrestException catch (e, s) {
@@ -63,7 +64,7 @@ class NotificationsDataSourceImpl implements NotificationDataSource {
         'time': dto.time,
         'is_enabled': dto.isEnabled,
         'timezone': dto.timezone,
-        'next_fire_at': dto.nextFireAt,
+        // 'next_fire_at': dto.nextFireAt,
       };
       await client.from('notifications').update(map).eq('noti_id', dto.notiId!);
     } on PostgrestException catch (e, s) {

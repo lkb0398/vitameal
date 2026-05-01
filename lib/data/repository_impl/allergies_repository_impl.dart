@@ -9,21 +9,24 @@ class AllergiesRepositoryImpl implements AllergiesRepository {
   final AllergiesDataSource dataSource;
 
   @override
-  Future<List<AllergiesEntity>> getAllAllergies() async {
-    final dtos = await dataSource.fetchAll();
+  Future<List<AllergiesEntity>> readAllAllergies() async {
+    final dtos = await dataSource.readAllAllergies();
     return dtos.map((e) => e.toEntity()).toList();
   }
 
   @override
-  Future<void> saveUserAllergies({
+  Future<void> upsertUserAllergies({
     required String userId,
     required List<int> allergyIds,
   }) async {
-    await dataSource.saveUserAllergies(userId: userId, allergyIds: allergyIds);
+    await dataSource.upsertUserAllergies(
+      userId: userId,
+      allergyIds: allergyIds,
+    );
   }
 
   @override
-  Future<List<int>> getUserAllergies(String userId) async {
-    return await dataSource.getUserAllergies(userId);
+  Future<List<int>> readUserAllergies(String userId) async {
+    return await dataSource.readUserAllergies(userId);
   }
 }

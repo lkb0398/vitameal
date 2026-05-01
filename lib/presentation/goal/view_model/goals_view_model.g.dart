@@ -13,14 +13,14 @@ part of 'goals_view_model.dart';
 const goalsViewModelProvider = GoalsViewModelProvider._();
 
 final class GoalsViewModelProvider
-    extends $NotifierProvider<GoalsViewModel, void> {
+    extends $AsyncNotifierProvider<GoalsViewModel, List<GoalsEntity>?> {
   const GoalsViewModelProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
         name: r'goalsViewModelProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -31,33 +31,26 @@ final class GoalsViewModelProvider
   @$internal
   @override
   GoalsViewModel create() => GoalsViewModel();
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(void value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<void>(value),
-    );
-  }
 }
 
-String _$goalsViewModelHash() => r'fc99b30933edcd9c638e65fb5553d55592b2fae7';
+String _$goalsViewModelHash() => r'2076024187ee1a57bcc54aeb8a43360bc51e815e';
 
-abstract class _$GoalsViewModel extends $Notifier<void> {
-  void build();
+abstract class _$GoalsViewModel extends $AsyncNotifier<List<GoalsEntity>?> {
+  FutureOr<List<GoalsEntity>?> build();
   @$mustCallSuper
   @override
   void runBuild() {
-    build();
-    final ref = this.ref as $Ref<void, void>;
+    final created = build();
+    final ref =
+        this.ref as $Ref<AsyncValue<List<GoalsEntity>?>, List<GoalsEntity>?>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<void, void>,
-              void,
+              AnyNotifier<AsyncValue<List<GoalsEntity>?>, List<GoalsEntity>?>,
+              AsyncValue<List<GoalsEntity>?>,
               Object?,
               Object?
             >;
-    element.handleValue(ref, null);
+    element.handleValue(ref, created);
   }
 }

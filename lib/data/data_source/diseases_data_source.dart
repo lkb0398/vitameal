@@ -3,12 +3,12 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:vitameal/data/dto/diseases_dto.dart';
 
 abstract interface class DiseasesDataSource {
-  Future<List<DiseasesDto>> fetchAll();
-  Future<void> saveUserDiseases({
+  Future<List<DiseasesDto>> readAllDiseases();
+  Future<void> upsertUserDiseases({
     required String userId,
     required List<int> diseaseIds,
   });
-  Future<List<int>> getUserDiseases(String userId);
+  Future<List<int>> readUserDiseases(String userId);
 }
 
 class DiseasesDataSourceImpl implements DiseasesDataSource {
@@ -17,7 +17,7 @@ class DiseasesDataSourceImpl implements DiseasesDataSource {
   final SupabaseClient client;
 
   @override
-  Future<List<DiseasesDto>> fetchAll() async {
+  Future<List<DiseasesDto>> readAllDiseases() async {
     try {
       final result = await client.from('diseases').select();
       return (result as List).map((e) => DiseasesDto.fromJson(e)).toList();
@@ -31,7 +31,7 @@ class DiseasesDataSourceImpl implements DiseasesDataSource {
   }
 
   @override // R
-  Future<List<int>> getUserDiseases(String userId) async {
+  Future<List<int>> readUserDiseases(String userId) async {
     try {
       final result = await client
           .from('user_diseases')
@@ -52,7 +52,7 @@ class DiseasesDataSourceImpl implements DiseasesDataSource {
   }
 
   @override // C
-  Future<void> saveUserDiseases({
+  Future<void> upsertUserDiseases({
     required String userId,
     required List<int> diseaseIds,
   }) async {

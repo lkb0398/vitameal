@@ -4,17 +4,19 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:vitameal/core/config/l10n/l10n.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
-import 'package:vitameal/domain/entity/goal_datas_entity.dart';
+import 'package:vitameal/presentation/info/view_model/main_goal_view_model.dart';
 import 'package:vitameal/presentation/ui_provider/formatted_date_provider.dart';
 
 class Graph extends HookConsumerWidget {
-  const Graph({super.key, required this.datas});
-
-  final List<GoalDatasEntity> datas;
+  const Graph({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final f = fxc(context);
+    final v = vrc(context);
     final l = L10n.of(context)!; // 🌎
+
+    final datas = ref.watch(mainGoalViewModelProvider).latest5Datas ?? [];
 
     // 데이터 없을 때 화면
     if (datas.isEmpty) {
@@ -24,7 +26,7 @@ class Graph extends HookConsumerWidget {
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w500,
-            color: fxc(context).textcolor100,
+            color: f.textcolor100,
           ),
         ),
       );
@@ -82,7 +84,7 @@ class Graph extends HookConsumerWidget {
                     style: TextStyle(
                       fontSize: 11,
                       fontWeight: FontWeight.w500,
-                      color: fxc(context).textcolor300,
+                      color: f.textcolor300,
                     ),
                   );
                 },
@@ -106,7 +108,7 @@ class Graph extends HookConsumerWidget {
                       style: TextStyle(
                         fontSize: 11,
                         fontWeight: FontWeight.w500,
-                        color: fxc(context).textcolor300,
+                        color: f.textcolor300,
                       ),
                     ),
                   );
@@ -128,26 +130,23 @@ class Graph extends HookConsumerWidget {
                     FlSpot(index.toDouble(), sortedDatas[index].dataValue),
               ),
               isCurved: false,
-              color: fxc(context).secondary400,
+              color: f.secondary400,
               barWidth: 1,
               dotData: FlDotData(
                 show: true,
                 getDotPainter: (spot, percent, barData, index) {
                   return FlDotCirclePainter(
                     radius: 3,
-                    color: Colors.transparent,
+                    color: vrc(context).infoContainer!,
                     strokeWidth: 1,
-                    strokeColor: fxc(context).secondary400!,
+                    strokeColor: f.secondary400!,
                   );
                 },
               ),
               belowBarData: BarAreaData(
                 show: true,
                 gradient: LinearGradient(
-                  colors: [
-                    fxc(context).secondary400!,
-                    vrc(context).background!,
-                  ],
+                  colors: [f.secondary400!, v.background!],
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                 ),
@@ -160,7 +159,7 @@ class Graph extends HookConsumerWidget {
             enabled: true,
             touchTooltipData: LineTouchTooltipData(
               getTooltipColor: (LineBarSpot spot) {
-                return fxc(context).secondary400!; // 배경색
+                return f.secondary400!; // 배경색
               },
               tooltipBorderRadius: BorderRadius.circular(8),
               tooltipPadding: const EdgeInsets.symmetric(

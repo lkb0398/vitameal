@@ -3,12 +3,12 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:vitameal/data/dto/allergies_dto.dart';
 
 abstract interface class AllergiesDataSource {
-  Future<List<AllergiesDto>> fetchAll();
-  Future<void> saveUserAllergies({
+  Future<List<AllergiesDto>> readAllAllergies();
+  Future<void> upsertUserAllergies({
     required String userId,
     required List<int> allergyIds,
   });
-  Future<List<int>> getUserAllergies(String userId);
+  Future<List<int>> readUserAllergies(String userId);
 }
 
 class AllergiesDataSourceImpl implements AllergiesDataSource {
@@ -17,7 +17,7 @@ class AllergiesDataSourceImpl implements AllergiesDataSource {
   final SupabaseClient client;
 
   @override
-  Future<List<AllergiesDto>> fetchAll() async {
+  Future<List<AllergiesDto>> readAllAllergies() async {
     try {
       final result = await client.from('allergies').select();
       return (result as List).map((e) => AllergiesDto.fromJson(e)).toList();
@@ -31,7 +31,7 @@ class AllergiesDataSourceImpl implements AllergiesDataSource {
   }
 
   @override // R
-  Future<List<int>> getUserAllergies(String userId) async {
+  Future<List<int>> readUserAllergies(String userId) async {
     try {
       final result = await client
           .from('user_allergies')
@@ -52,7 +52,7 @@ class AllergiesDataSourceImpl implements AllergiesDataSource {
   }
 
   @override // C
-  Future<void> saveUserAllergies({
+  Future<void> upsertUserAllergies({
     required String userId,
     required List<int> allergyIds,
   }) async {

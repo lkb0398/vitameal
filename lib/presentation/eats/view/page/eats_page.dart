@@ -5,6 +5,7 @@ import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:vitameal/core/theme/app_theme.dart';
 import 'package:vitameal/domain/entity/tag_entity.dart';
+import 'package:vitameal/presentation/eats/view_model/step_view_model.dart';
 import 'package:vitameal/presentation/language/view_model/locale_view_model.dart';
 import 'package:vitameal/presentation/eats/view/widget/no_permission_view.dart';
 import 'package:vitameal/presentation/eats/view/widget/step_card.dart';
@@ -40,10 +41,9 @@ class _EatsPageState extends ConsumerState<EatsPage> {
   @override
   void initState() {
     super.initState();
-    final vm = ref.read(eatsViewModelProvider.notifier);
-    vm.itemScrollController = _itemScrollController;
-    vm.tagScrollController = _tagScrollController;
-    Future.microtask(() => ref.read(eatsViewModelProvider.notifier).init());
+    final eatsVM = ref.read(eatsViewModelProvider.notifier);
+    eatsVM.itemScrollController = _itemScrollController;
+    eatsVM.tagScrollController = _tagScrollController;
   }
 
   @override
@@ -61,13 +61,9 @@ class _EatsPageState extends ConsumerState<EatsPage> {
     final state = ref.watch(eatsViewModelProvider);
     final vm = ref.read(eatsViewModelProvider.notifier);
 
-    // 권한 로딩 화면
-    if (state.permission == PermissionState.loading) {
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
-    }
-
     // 권한 없을 때 화면
-    if (state.permission == PermissionState.denied ||
+    if (state.permission == PermissionState.loading ||
+        state.permission == PermissionState.denied ||
         state.permission == PermissionState.deniedForever) {
       return const NoPermissionView();
     }
@@ -82,7 +78,7 @@ class _EatsPageState extends ConsumerState<EatsPage> {
         body: Column(
           children: [
             /// 만보기
-            StepCard(),
+            const StepCard(),
 
             Expanded(
               child: Stack(

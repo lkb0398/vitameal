@@ -12,6 +12,5 @@ abstract class NotificationsEntity with _$NotificationsEntity {
     required TimeOfDay time,
     required bool isEnabled,
     required String timezone,
-    required DateTime nextFireAt,
   }) = _NotificationsEntity;
 }

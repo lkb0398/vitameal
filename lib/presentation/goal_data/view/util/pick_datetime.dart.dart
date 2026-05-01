@@ -7,6 +7,8 @@ Future<DateTime?> pickDateTime(BuildContext context) async {
   final date = await _pickCupertinoDate(context);
   if (date == null) return null;
 
+  if (!context.mounted) return null;
+
   final time = await _pickCupertinoTime(context);
   if (time == null) return null;
 

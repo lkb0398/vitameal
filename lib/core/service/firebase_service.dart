@@ -3,37 +3,33 @@ import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-/// 🔔 Firebase + FCM 기본 세팅
+/// 🔔 FCM token 관리
 class FirebaseService {
   static final _messaging = FirebaseMessaging.instance;
   static final _client = Supabase.instance.client;
 
-  static Future<void> initialize() async {
-    await requestPermission();
-    await saveFcmToken();
-    listenTokenRefresh();
+  // [초기화]
+  static Future<void> init() async {
+    await saveFcmToken(); // fcm 토큰 저장
+    listenTokenRefresh(); // 토큰 갱신 감지
   }
 
-  // 알림 권한 요청
-  static Future<void> requestPermission() async {
-    await _messaging.requestPermission(alert: true, badge: true, sound: true);
-  }
-
-  // FCM 토큰 발급 + Supabase 저장
+  // [토큰 저장]
   static Future<void> saveFcmToken() async {
     final userId = _client.auth.currentUser?.id;
     if (userId == null) return;
+    print('userId : 🩷 $userId');
 
-    // 애뮬레이터에서 실행 하기 위해...
+    // 토큰 발급
     if (Platform.isIOS) {
       final apnsToken = await _messaging.getAPNSToken();
       if (apnsToken == null || apnsToken.isEmpty) return;
     }
     final token = await _messaging.getToken();
     if (token == null) return;
+    print('token : 🩷 $token');
 
-    print('my fcm token : 🩷 $token');
-
+    // supabase 저장
     await _client.from('fcm_tokens').upsert({
       'user_id': userId,
       'fcm_token': token,
@@ -41,10 +37,12 @@ class FirebaseService {
     }, onConflict: 'user_id');
   }
 
-  // 토큰 갱신 감지
+  // [토큰 갱신]
   static void listenTokenRefresh() {
+    final userId = _client.auth.currentUser?.id;
+    if (userId == null) return;
+
     _messaging.onTokenRefresh.listen((token) async {
-      final userId = _client.auth.currentUser?.id;
       await _client.from('fcm_tokens').upsert({
         'user_id': userId,
         'fcm_token': token,
@@ -53,8 +51,11 @@ class FirebaseService {
     });
   }
 
+  // [토큰 삭제]
   static Future<void> deleteToken() async {
-    final userId = _client.auth.currentUser!.id;
+    final userId = _client.auth.currentUser?.id;
+    if (userId == null) return;
+
     await Supabase.instance.client
         .from('fcm_tokens')
         .delete()

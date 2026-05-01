@@ -97,52 +97,39 @@ class L10nEn extends L10n {
   String get intro_4_highlight => 'widgets';
 
   @override
-  String get profileTitleAppName => 'VitaMeal';
+  String get onboarding_profile => 'Set up your <profile>\non [VitaMeal].';
 
   @override
-  String get profileTitleSuffix => ' profile\n';
+  String get edit_profile => 'Edit your <profile>\non [VitaMeal].';
 
   @override
-  String get profileTitleProfile => '';
+  String onboarding_physical(Object name) {
+    return 'Welcome, <$name>!\nEnter your basic information.\n(Optional)';
+  }
 
   @override
-  String get profileTitleObject => '';
+  String edit_physical(Object name) {
+    return '<$name>,\nEdit your basic information\n(Optional)';
+  }
 
   @override
-  String get profileTitleEdit => 'Edit';
+  String get onboarding_disease =>
+      '<Health conditions to manage>\nSelect all that apply. (Optional)';
 
   @override
-  String get profileTitleSet => 'Set up';
+  String get edit_disease =>
+      '<Health conditions to manage>\nEdit your selection. (Optional)';
 
   @override
-  String get profileTitleEnd => ' your profile.';
+  String get onboarding_allergy =>
+      'Current <food allergies>\nSelect all that apply. (Optional)';
 
   @override
-  String get welcomePrefix => 'Welcome, ';
+  String get edit_allergy =>
+      'Current <food allergies>\nEdit your selection. (Optional)';
 
   @override
-  String get member => 'User';
-
-  @override
-  String get editInfoSuffix => '\nEdit your basic information. (Optional)';
-
-  @override
-  String get inputInfoSuffix => '!\nEnter your basic information. (Optional)';
-
-  @override
-  String get diseaseTitle => 'Health conditions to manage';
-
-  @override
-  String get allSelectOptional => 'Select all that apply. (Optional)';
-
-  @override
-  String get editOptional => 'Edit your selection. (Optional)';
-
-  @override
-  String get allergyPrefix => 'Current ';
-
-  @override
-  String get allergy => 'allergies';
+  String get member => 'member';
 
   @override
   String get nickname => 'Nickname';
@@ -448,14 +435,13 @@ class L10nEn extends L10n {
   String get kcal => 'kcal';
 
   @override
-  String get need_permission => 'Location access is required';
+  String get need_location_perm => 'Enable location permission';
 
   @override
-  String get request_permission =>
-      'Enable location permission\nto discover healthy restaurants nearby';
+  String get request_location_perm => 'to discover healthy restaurants nearby';
 
   @override
-  String get allow_access => 'Allow Access';
+  String get allow_perm => 'Allow Permission';
 
   @override
   String get my_info => 'My Info';
@@ -600,6 +586,16 @@ class L10nEn extends L10n {
   String get enter_notification_name => 'Please enter a notification name.';
 
   @override
+  String get need_noti_perm => 'Enable notifications';
+
+  @override
+  String get request_noti_perm =>
+      'to get meal reminders\nat your preferred time';
+
+  @override
+  String get open_setting => 'Open Setting';
+
+  @override
   String get meal_tutorial_step_one =>
       'Swipe down to view your monthly summary.';
 
@@ -614,7 +610,7 @@ class L10nEn extends L10n {
   String get meal_feedback => 'Meal Feedback';
 
   @override
-  String get meal_analysis => 'Analysis';
+  String get meal_analysis => 'Nutrition Analysis';
 
   @override
   String get good_thing => 'Good';

@@ -9,16 +9,16 @@ class GoalsRepositoryImpl implements GoalsRepository {
   final GoalsDataSource dataSource;
 
   @override
-  Future<List<GoalsEntity>?> getAllGoals() async {
-    final dtos = await dataSource.getAllGoals();
+  Future<List<GoalsEntity>?> readGoals(String userId) async {
+    final dtos = await dataSource.readGoals(userId);
     if (dtos == null) return [];
     return dtos.map(GoalsMapper.toEntity).toList();
   }
 
   @override
-  Future<void> saveGoal(GoalsEntity entity) async {
+  Future<void> createGoal(GoalsEntity entity) async {
     final dto = GoalsMapper.toDto(entity);
-    await dataSource.saveGoal(dto);
+    await dataSource.createGoal(dto);
   }
 
   @override

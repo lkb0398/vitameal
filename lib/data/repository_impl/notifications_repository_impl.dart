@@ -9,16 +9,16 @@ class NotificationsRepositoryImpl implements NotificationsRepository {
   final NotificationDataSource dataSource;
 
   @override
-  Future<List<NotificationsEntity>?> getAllNotis() async {
-    final dtos = await dataSource.getAllNotis();
+  Future<List<NotificationsEntity>?> readNotis(String userId) async {
+    final dtos = await dataSource.readNotis(userId);
     if (dtos == null) return [];
     return dtos.map(NotificationsMapper.toEntity).toList();
   }
 
   @override
-  Future<void> saveNoti(NotificationsEntity entity) async {
+  Future<void> createNoti(NotificationsEntity entity) async {
     final dto = NotificationsMapper.toDto(entity);
-    await dataSource.saveNoti(dto);
+    await dataSource.createNoti(dto);
   }
 
   @override

@@ -40,24 +40,16 @@
   "intro_4_title": "Manage meals more easily\nwith widgets",
   "intro_4_highlight": "widgets",
 
-
-
-  "profileTitleAppName": "VitaMeal",
-  "profileTitleSuffix": " profile\n",
-  "profileTitleProfile": "",
-  "profileTitleObject": "",
-  "profileTitleEdit": "Edit",
-  "profileTitleSet": "Set up",
-  "profileTitleEnd": " your profile.",
-  "welcomePrefix": "Welcome, ",
-  "member": "User",
-  "editInfoSuffix": "\nEdit your basic information. (Optional)",
-  "inputInfoSuffix": "!\nEnter your basic information. (Optional)",
-  "diseaseTitle": "Health conditions to manage",
-  "allSelectOptional": "Select all that apply. (Optional)",
-  "editOptional": "Edit your selection. (Optional)",
-  "allergyPrefix": "Current ",
-  "allergy": "allergies",
+  "onboarding_profile": "Set up your <profile>\non [VitaMeal].",
+  "edit_profile": "Edit your <profile>\non [VitaMeal].",
+  "onboarding_physical": "Welcome, <{name}>!\nEnter your basic information.\n(Optional)",
+  "edit_physical": "<{name}>,\nEdit your basic information\n(Optional)",
+  "onboarding_disease": "<Health conditions to manage>\nSelect all that apply. (Optional)",
+  "edit_disease": "<Health conditions to manage>\nEdit your selection. (Optional)",
+  "onboarding_allergy": "Current <food allergies>\nSelect all that apply. (Optional)",
+  "edit_allergy": "Current <food allergies>\nEdit your selection. (Optional)",
+  
+  "member": "member",
   "nickname": "Nickname",
   "nickname_example": "Vitameal",
   "nickname_max_length": "Nickname must be 10 characters or less.",
@@ -165,9 +157,9 @@
   "eats": "Eats",
   "steps": "steps",
   "kcal": "kcal",
-  "need_permission": "Location access is required",
-  "request_permission": "Enable location permission\nto discover healthy restaurants nearby",
-  "allow_access": "Allow Access",
+  "need_location_perm": "Enable location permission",
+  "request_location_perm": "to discover healthy restaurants nearby",
+  "allow_perm": "Allow Permission",
 
 
 
@@ -224,6 +216,9 @@
   "notification_name": "Notification Name",
   "breakfast_alarm": "Breakfast",
   "enter_notification_name": "Please enter a notification name.",
+  "need_noti_perm": "Enable notifications",
+  "request_noti_perm": "to get meal reminders\nat your preferred time",
+  "open_setting": "Open Setting",
 
 
   
@@ -234,7 +229,7 @@
   
   
   "meal_feedback": "Meal Feedback",
-  "meal_analysis": "Analysis",
+  "meal_analysis": "Nutrition Analysis",
   "good_thing": "Good",
   "bad_thing": "Improve",
   "next_step": "Next steps"

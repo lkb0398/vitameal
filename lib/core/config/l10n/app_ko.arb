@@ -40,23 +40,16 @@
   "intro_4_title": "위젯으로 식단 관리를\n더욱 더 간편하게",
   "intro_4_highlight": "위젯",
 
+  "onboarding_profile": "[VitaMeal]에서 사용할\n<프로필>을 설정해주세요.",
+  "edit_profile": "[VitaMeal]에서 사용할\n<프로필>을 수정해주세요.",
+  "onboarding_physical": "반갑습니다, <{name}>님!\n기본 정보를 입력해주세요. (선택)",
+  "edit_physical": "<{name}>님의\n기본 정보를 수정해주세요. (선택)",
+  "onboarding_disease": "<관리가 필요한 질환>을\n모두 선택해주세요. (선택)",
+  "edit_disease": "<관리가 필요한 질환>을\n수정해주세요. (선택)",
+  "onboarding_allergy": "현재 겪고 있는 <알레르기>를\n모두 선택해주세요. (선택)",
+  "edit_allergy": "현재 겪고 있는 <알레르기>를\n수정해주세요. (선택)",
 
-  "profileTitleAppName": "VitaMeal",
-  "profileTitleSuffix": "에서 사용할\n",
-  "profileTitleProfile": "프로필",
-  "profileTitleObject": "을 ",
-  "profileTitleEdit": "수정",
-  "profileTitleSet": "설정",
-  "profileTitleEnd": "해주세요.",
-  "welcomePrefix": "반갑습니다, ",
   "member": "회원",
-  "editInfoSuffix": "님의\n기본 정보를 수정해주세요. (선택)",
-  "inputInfoSuffix": "님!\n기본 정보를 입력해주세요. (선택)",
-  "diseaseTitle": "관리가 필요한 질환",
-  "allSelectOptional": "모두 선택해주세요. (선택)",
-  "editOptional": "수정해주세요. (선택)",
-  "allergyPrefix": "현재 겪고 있는 ",
-  "allergy": "알레르기",
   "nickname": "닉네임",
   "nickname_example": "김비타밀",
   "nickname_max_length": "닉네임은 10글자 이하로 입력해주세요.",
@@ -163,9 +156,9 @@
   "eats": "건강 지도",
   "steps": "걸음",
   "kcal": "칼로리",
-  "need_permission": "위치 권한이 필요해요",
-  "request_permission": "지금 권한을 허용하고 내 주변 건강 음식점을 찾아보세요",
-  "allow_access": "재설정",
+  "need_location_perm": "위치 권한이 필요해요",
+  "request_location_perm": "지금 권한을 허용하고 내 주변 건강 음식점을 찾아보세요",
+  "allow_perm": "권한 설정",
 
 
 
@@ -198,7 +191,7 @@
   "target": "목표",
   "goal_already_done": "이미 달성한 목표입니다!",
   "enter_value": "수치를 입력해주세요.",
-    "set_as_representative": "대표로 설정할까요?",
+  "set_as_representative": "대표로 설정할까요?",
   "goal_already_achieved": "이미 달성한 목표에는 데이터를 추가할 수 없어요.",
 
 
@@ -220,6 +213,9 @@
   "notification_name": "알림 이름",
   "breakfast_alarm": "아침 식사",
   "enter_notification_name": "알림 이름을 입력해주세요.",
+  "need_noti_perm": "알림 권한이 필요해요",
+  "request_noti_perm": "지금 권한을 허용하고\n원하는 시간에 식사 알림을 받으세요",
+  "open_setting": "설정으로 이동",
 
 
 
@@ -230,7 +226,7 @@
   
   
   "meal_feedback": "식단 피드백",
-  "meal_analysis": "식단 분석",
+  "meal_analysis": "식단 영양 분석",
   "good_thing": "좋아요",
   "bad_thing": "아쉬워요",
   "next_step": "다음 식사에 참고해보세요"
